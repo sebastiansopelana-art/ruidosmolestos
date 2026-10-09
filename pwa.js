@@ -1,57 +1,8 @@
-if ('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-let installPrompt;
-window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;const b=document.getElementById('install-app');b.hidden=false;b.addEventListener('click',async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;b.hidden=true;},{once:true})});
-window.addEventListener('appinstalled',()=>{document.getElementById('install-app').hidden=true});
-
-const audio=document.getElementById('radio-audio');
-const play=document.getElementById('play-radio');
-const status=document.getElementById('radio-status');
-const volume=document.getElementById('radio-volume');
-const bar=document.querySelector('.radio-bar');
-const STREAM='https://stream.radiofmdellago.com.ar/stream';
-audio.src=STREAM;
-audio.volume=Number(localStorage.getItem('rm-radio-volume') ?? 1);
-volume.value=audio.volume;
-function ui(on,msg){play.textContent=on?'⏸ PAUSAR EN VIVO':'▶ ESCUCHAR EN VIVO';play.setAttribute('aria-pressed',String(on));bar.classList.toggle('playing',on);status.textContent=msg||(on?'Transmitiendo ahora · FM del Lago 102.5':'Radio pausada');}
-async function startRadio(remember=true){if(!horarioRadio())return;try{
-function stopRadio(){audio.pause();localStorage.setItem('rm-radio-autoplay','0');ui(false)}
-play.addEventListener('click',()=>audio.paused?startRadio(true):stopRadio());
-volume.addEventListener('input',()=>{audio.volume=Number(volume.value);localStorage.setItem('rm-radio-volume',String(audio.volume))});
-audio.addEventListener('playing',()=>ui(true));
-audio.addEventListener('waiting',()=>{status.textContent='Reconectando…'});
-audio.addEventListener('error',()=>ui(false,'No pudimos conectar con la señal. Intentá nuevamente.'));
-if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:'FM del Lago 102.5 · En vivo',artist:'Ruidos Molestos',album:'Un insoportable programa de rock',artwork:[{src:'/icon-192.png',sizes:'192x192',type:'image/png'},{src:'/icon-512.png',sizes:'512x512',type:'image/png'}]});navigator.mediaSession.setActionHandler('play',()=>startRadio(true));navigator.mediaSession.setActionHandler('pause',stopRadio)}
-// Los navegadores pueden bloquear audio con sonido sin interacción previa. Si el oyente ya eligió escuchar, intentamos reanudar automáticamente.
-if(localStorage.getItem('rm-radio-autoplay')==='1') window.addEventListener('load',()=>startRadio(false));
-
-const horarioRadio = () => {
-  const hora = new Intl.DateTimeFormat('en-GB', {
-    timeZone: 'America/Argentina/Buenos_Aires',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23'
-  }).format(new Date());
-
-  return hora >= '18:50' && hora < '22:00';
-};
-
-function controlarHorarioRadio() {
-  const habilitado = horarioRadio();
-
-  play.disabled = !habilitado;
-
-  if (!habilitado) {
-    audio.pause();
-    audio.removeAttribute('src');
-    audio.load();
-    play.textContent = 'PRÓXIMA TRANSMISIÓN 18:50';
-    status.textContent = 'Fuera del horario de transmisión';
-    bar.classList.remove('playing');
-  } else {
-    if (!audio.getAttribute('src')) audio.src = STREAM;
-    if (audio.paused) play.textContent = '▶ ESCUCHAR EN VIVO';
-  }
-}
-
-controlarHorarioRadio();
-setInterval(controlarHorarioRadio, 10000);
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+let installPrompt;const install=document.getElementById('install-app');addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e;install.hidden=false});install.onclick=async()=>{if(!installPrompt)return;installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;install.hidden=true};addEventListener('appinstalled',()=>install.hidden=true);
+const audio=document.getElementById('radio-audio'),play=document.getElementById('play-radio'),status=document.getElementById('radio-status'),volume=document.getElementById('radio-volume');const STREAM='https://stream.radiofmdellago.com.ar/stream';const LABEL='En el Aire desde las 18:50.-';
+function arNow(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Argentina/Buenos_Aires',weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());return Object.fromEntries(parts.map(x=>[x.type,x.value]))}
+function enabled(){const n=arNow(),days=['Mon','Tue','Wed','Fri'];return days.includes(n.weekday)&&((n.hour>'18'||(n.hour==='18'&&n.minute>='50'))&&n.hour<'22')}
+function ui(){status.textContent=LABEL;const on=!audio.paused;play.textContent=on?'⏸ PAUSAR EN VIVO':'▶ ESCUCHAR EN VIVO';play.disabled=!enabled();if(!enabled()&&on){audio.pause();audio.removeAttribute('src');audio.load()}}
+async function start(){if(!enabled())return ui();if(!audio.src)audio.src=STREAM;try{await audio.play();localStorage.setItem('rm-radio','1')}catch{}ui()}
+function stop(){audio.pause();localStorage.setItem('rm-radio','0');ui()}play.onclick=()=>audio.paused?start():stop();volume.value=localStorage.getItem('rm-volume')??'1';audio.volume=+volume.value;volume.oninput=()=>{audio.volume=+volume.value;localStorage.setItem('rm-volume',volume.value)};audio.onplaying=ui;audio.onpause=ui;ui();setInterval(ui,15000);
