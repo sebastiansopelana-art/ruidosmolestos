@@ -48,3 +48,5 @@
   .sectionhead h2{font-size:clamp(2rem,3.2vw,3.2rem);line-height:1}
   .sectionhead .kicker{font-size:.62rem}
 }
+
+@media(min-width:900px){.brand p{font-size:clamp(.7rem,.9vw,.9rem);letter-spacing:.07em;white-space:nowrap}}
