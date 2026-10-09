@@ -1,1 +1,50 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#090909"><title>Lecturas del Día · Ruidos Molestos</title><link rel="stylesheet" href="/aire/aire.css?v=2"></head><body><section id="access" class="access"><div class="access-box"><span>RUIDOS MOLESTOS · CABINA</span><h1>LECTURAS DEL DÍA</h1><p>Ingresá el código para abrir tu hoja de aire.</p><form id="code-form"><input id="code" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••" aria-label="Código de acceso"><button>INGRESAR</button></form><p id="error" class="error"></p></div></section><main id="reader" hidden><header class="reader-head"><a href="/">← RUIDOS MOLESTOS</a><div><strong>LECTURAS DEL DÍA</strong><small>Hoja de aire</small></div><button id="exit">SALIR</button></header><div class="reader-tools"><button id="smaller">A−</button><button id="larger">A+</button><button id="edit">EDITAR</button><button id="save" hidden>GUARDAR</button></div><article class="paper"><div id="read-view"></div><textarea id="editor" hidden spellcheck="true" placeholder="Pegá acá las historias que vas a leer hoy..."></textarea></article></main><script src="/aire/aire.js?v=1"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lecturas del Día · Ruidos Molestos</title>
+<style>
+*{box-sizing:border-box} [hidden]{display:none!important}
+body{margin:0;background:#0b0b0b;font-family:Arial,sans-serif}
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;color:white}
+.box{width:100%;max-width:420px;text-align:center}.box h1{font-family:Georgia,serif;font-size:42px;margin:0 0 12px}.box p{color:#aaa}
+input{width:100%;font-size:32px;text-align:center;letter-spacing:10px;padding:16px;margin:18px 0;background:#171717;border:1px solid #777;color:white}
+button{cursor:pointer;padding:15px 22px;background:#111;color:white;border:1px solid #777;font-weight:bold}
+#login button{width:100%}#error{color:#ddd;min-height:24px}
+#page{min-height:100vh;background:#eae5db;color:#171717}
+.top{position:sticky;top:0;background:#111;color:white;padding:12px;display:flex;gap:8px;align-items:center;justify-content:center;z-index:2}
+.top button{padding:10px 16px}.paper{max-width:1000px;margin:auto;padding:70px 7vw 120px}
+#text{white-space:pre-wrap;font-family:Georgia,serif;font-size:32px;line-height:1.7}
+textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;resize:none;font-family:Georgia,serif;font-size:28px;line-height:1.7;color:#171717}
+@media(max-width:600px){.paper{padding:45px 22px 100px}#text{font-size:25px}.box h1{font-size:34px}}
+</style>
+</head>
+<body>
+<section id="login">
+ <div class="box"><h1>LECTURAS DEL DÍA</h1><p>Ingresá tu código</p>
+ <input id="pass" type="password" inputmode="numeric" maxlength="4" autofocus>
+ <button id="enter">ENTRAR</button><div id="error"></div></div>
+</section>
+<section id="page" hidden>
+ <div class="top"><button id="minus">A−</button><button id="plus">A+</button><button id="editBtn">EDITAR</button><button id="saveBtn" hidden>GUARDAR</button><button id="exitBtn">SALIR</button></div>
+ <div class="paper"><div id="text"></div><textarea id="editor" hidden placeholder="Pegá acá las historias del día..."></textarea></div>
+</section>
+<script>
+(function(){
+ const login=document.getElementById('login'),page=document.getElementById('page'),pass=document.getElementById('pass'),error=document.getElementById('error'),text=document.getElementById('text'),editor=document.getElementById('editor'),editBtn=document.getElementById('editBtn'),saveBtn=document.getElementById('saveBtn');
+ let size=32;
+ function show(){login.hidden=true;page.hidden=false;render()}
+ function render(){text.textContent=localStorage.getItem('rm_lectura')||'No hay una lectura cargada. Tocá EDITAR para pegar las historias del día.'}
+ function enter(){if(pass.value==='0253'){sessionStorage.setItem('rm_pass','ok');show()}else{error.textContent='Código incorrecto';pass.value='';pass.focus()}}
+ document.getElementById('enter').onclick=enter;
+ pass.addEventListener('keydown',function(e){if(e.key==='Enter')enter()});
+ if(sessionStorage.getItem('rm_pass')==='ok')show();
+ editBtn.onclick=function(){editor.value=localStorage.getItem('rm_lectura')||'';text.hidden=true;editor.hidden=false;editBtn.hidden=true;saveBtn.hidden=false;editor.focus()};
+ saveBtn.onclick=function(){localStorage.setItem('rm_lectura',editor.value);editor.hidden=true;text.hidden=false;saveBtn.hidden=true;editBtn.hidden=false;render()};
+ document.getElementById('plus').onclick=function(){size=Math.min(48,size+2);text.style.fontSize=size+'px'};
+ document.getElementById('minus').onclick=function(){size=Math.max(18,size-2);text.style.fontSize=size+'px'};
+ document.getElementById('exitBtn').onclick=function(){sessionStorage.removeItem('rm_pass');location.reload()};
+})();
+</script>
+</body></html>
