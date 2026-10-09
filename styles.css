@@ -106,3 +106,12 @@ a.imported-song:hover{background:rgba(183,212,220,.16)}
 .chapter-musician-photo{display:block;width:150px;height:150px;object-fit:cover;object-position:center top;filter:grayscale(1);border:1px solid #555;margin:16px 0 24px}
 
 .history-entry{max-width:920px;margin:32px auto 80px;padding:32px;text-align:center;background:rgba(0,0,0,.55);border:1px solid #666}.history-entry h2{font-size:clamp(1.7rem,4vw,3rem)}.history-entry-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}.history-entry-links a{color:#fff;border:1px solid #a79c88;background:rgba(0,0,0,.55);padding:15px 24px;text-decoration:none;font-weight:700}
+
+/* Historias: foto + nombre, una debajo de la otra */
+.story-links{max-width:920px;margin:30px auto 90px;padding:0 22px;display:flex;flex-direction:column;gap:28px}
+.story-links>h2{text-align:center;font-family:Georgia,serif;font-size:clamp(2.2rem,5vw,4rem);margin:0 0 8px}
+.story-card{display:flex;flex-direction:column;align-items:center;text-align:center;color:#fff;text-decoration:none;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.18);padding:18px}
+.story-card img{display:block;width:100%;max-width:720px;aspect-ratio:16/9;object-fit:cover;object-position:center;filter:grayscale(1);border:1px solid #555}
+.story-card strong{display:block;padding:18px 10px 5px;font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:.04em}
+.story-card:hover{border-color:var(--accent)}
+@media(max-width:650px){.story-links{padding:0 12px;gap:22px}.story-card{padding:10px}.story-card img{aspect-ratio:4/3}}
