@@ -8,7 +8,7 @@ if(host){
  let group=null;
  for(const line of lines){
  const t=line.trim();if(!t||t==='---')continue;
- if(/^# CAPÍTULO \d/.test(t)){chapter++;music=false;group=document.createElement('section');group.className='imported-chapter';article.append(group);continue}
+ if(/^# CAPÍTULO \d/.test(t)){chapter++;music=false;group=document.createElement('section');group.className='imported-chapter';article.append(group);const photos=['Alvin_lee_en_1975.jpg','Alvin_Lee_1978.jpg','Alvin_lee_noir_%26_blanc103.jpg','Alvin_lee_noir_%26_blanc107.jpg'];const pic=document.createElement('img');pic.className='chapter-musician-photo';pic.src='https://commons.wikimedia.org/wiki/Special:FilePath/'+photos[chapter-1]+'?width=300';pic.alt='Alvin Lee, fotografía de archivo';pic.loading='lazy';group.append(pic);continue}
  if(/^## LA MÚSICA DEL CAPÍTULO/.test(t)){music=true;const ul=document.createElement('div');ul.className='imported-songs';const start=(chapter-1)*4;for(const [name,url] of songs.slice(start,start+4)){const el=document.createElement(url?'a':'div');el.className='imported-song';el.textContent=name;if(url){el.href=url;el.target='_blank';el.rel='noopener noreferrer'}ul.append(el)}group?.append(ul);continue}
  if(music)continue;
  if(/^# RUIDOS MOLESTOS/.test(t)||/^## ALVIN LEE/.test(t))continue;
