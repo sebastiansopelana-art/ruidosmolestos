@@ -104,3 +104,5 @@ a.imported-song:hover{background:rgba(183,212,220,.16)}
 @media(max-width:650px){.imported-heading{flex-direction:column;text-align:center}.imported-heading img{width:140px;height:140px}.imported-programs{padding:0 12px}}
 
 .chapter-musician-photo{display:block;width:150px;height:150px;object-fit:cover;object-position:center top;filter:grayscale(1);border:1px solid #555;margin:16px 0 24px}
+
+.history-entry{max-width:920px;margin:32px auto 80px;padding:32px;text-align:center;background:rgba(0,0,0,.55);border:1px solid #666}.history-entry h2{font-size:clamp(1.7rem,4vw,3rem)}.history-entry-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:22px}.history-entry-links a{color:#fff;border:1px solid #a79c88;background:rgba(0,0,0,.55);padding:15px 24px;text-decoration:none;font-weight:700}
