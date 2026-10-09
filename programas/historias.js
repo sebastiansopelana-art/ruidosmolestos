@@ -2,7 +2,7 @@ const target=document.getElementById('story'),id=new URLSearchParams(location.se
 const data={
  'alvin-lee':{name:'ALVIN LEE',sub:'El hombre que pasó el resto de su vida escapando de once minutos',photo:'https://commons.wikimedia.org/wiki/Special:FilePath/Alvin_Lee.jpg?width=400',file:'/programas/alvin-lee.md',songs:[
  ['I Can’t Keep from Crying Sometimes',null],['Hear Me Calling','IhqMiNOWH-I'],['No Title',null],['I’m Going Home (antes de Woodstock)',null],
- ['I’m Going Home (Woodstock)',null],['Love Like a Man','TCXUMawZs7Q'],['I’d Love to Change the World','K0dTx76FkiA'],['On the Road to Freedom',null],
+ ['I’m Going Home (Woodstock)','q60dSLfN7g4'],['Love Like a Man','TCXUMawZs7Q'],['I’d Love to Change the World','K0dTx76FkiA'],['On the Road to Freedom','0cpxBae1JKU'],
  ['The Bluest Blues',null],['Real Life Blues',null],['Let’s Boogie',null],['I’m Going Home (Tennessee)',null],
  ['Still on the Road to Freedom',null],['Back in ’69',null],['Love Like a Man 2',null],['I’m Going Home',null]
  ]},
