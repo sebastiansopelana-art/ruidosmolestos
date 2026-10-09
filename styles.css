@@ -87,3 +87,18 @@
   .reader-script{font-size:var(--reader-size,2rem);line-height:1.72;color:#fff}
   footer{background:rgba(7,7,7,.42)}
 }
+
+/* Historias importadas: lectura transparente y fotografías proporcionadas */
+.imported-programs{max-width:980px;margin:0 auto 80px;padding:0 22px}
+.imported-program{padding:32px clamp(18px,4vw,50px);background:rgba(0,0,0,.56);border:1px solid rgba(255,255,255,.16);backdrop-filter:blur(2px)}
+.imported-heading{display:flex;gap:25px;align-items:center;margin-bottom:36px}
+.imported-heading img{width:160px;height:160px;object-fit:cover;object-position:center;border:1px solid #666;filter:grayscale(1);flex-shrink:0}
+.imported-heading h2{font:700 clamp(2rem,5vw,4rem) Georgia,serif;margin:8px 0}
+.imported-heading p{font-size:1.1rem;line-height:1.5}
+.imported-chapter{border-top:1px solid #555;padding:25px 0;margin-top:32px}
+.imported-chapter h3{font:700 clamp(1.5rem,3vw,2.4rem) Georgia,serif}
+.imported-chapter p{font:1.08rem/1.75 Georgia,serif;margin:.55em 0;text-shadow:0 1px 3px #000}
+.imported-songs{display:flex;flex-direction:column;gap:7px;margin:25px 0}
+.imported-song{display:block;padding:12px 16px;color:#fff;background:rgba(0,0,0,.45);border-left:3px solid var(--accent);text-decoration:none}
+a.imported-song:hover{background:rgba(183,212,220,.16)}
+@media(max-width:650px){.imported-heading{flex-direction:column;text-align:center}.imported-heading img{width:140px;height:140px}.imported-programs{padding:0 12px}}
