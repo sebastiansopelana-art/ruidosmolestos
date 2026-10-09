@@ -102,3 +102,5 @@
 .imported-song{display:block;padding:12px 16px;color:#fff;background:rgba(0,0,0,.45);border-left:3px solid var(--accent);text-decoration:none}
 a.imported-song:hover{background:rgba(183,212,220,.16)}
 @media(max-width:650px){.imported-heading{flex-direction:column;text-align:center}.imported-heading img{width:140px;height:140px}.imported-programs{padding:0 12px}}
+
+.chapter-musician-photo{display:block;width:150px;height:150px;object-fit:cover;object-position:center top;filter:grayscale(1);border:1px solid #555;margin:16px 0 24px}
