@@ -7,3 +7,12 @@
 .brand h1{font-size:clamp(2.2rem,6vw,4.6rem)}
 .brand p{font-size:clamp(1.05rem,2.4vw,1.55rem);letter-spacing:.13em}
 .brand small{font-size:clamp(1rem,2vw,1.3rem);font-weight:700;color:#eee8de;margin-top:12px}
+
+/* Escritorio: contenido a la izquierda para mantener visible a Big Mama y el fondo */
+@media(min-width:900px){
+  .hero{justify-content:flex-start;text-align:left;padding-left:5vw;padding-right:48vw}
+  .hero-copy{max-width:520px}
+  .presentacion{margin-left:5vw;margin-right:auto;align-items:flex-start;text-align:left;max-width:620px}
+  .toolbar{margin-left:5vw;margin-right:auto;justify-content:flex-start;max-width:720px}
+  .program-feed{margin-left:5vw;margin-right:auto;max-width:720px}
+}
