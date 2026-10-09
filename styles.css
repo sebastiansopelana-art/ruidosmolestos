@@ -115,3 +115,5 @@ a.imported-song:hover{background:rgba(183,212,220,.16)}
 .story-card strong{display:block;padding:18px 10px 5px;font-family:Georgia,serif;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:.04em}
 .story-card:hover{border-color:var(--accent)}
 @media(max-width:650px){.story-links{padding:0 12px;gap:22px}.story-card{padding:10px}.story-card img{aspect-ratio:4/3}}
+
+.studio-link{appearance:none;cursor:pointer;border:1px solid #777;background:#111;color:#fff;padding:13px 20px;font-weight:800;letter-spacing:.06em;font-family:inherit}.studio-link:hover{border-color:var(--accent)}
