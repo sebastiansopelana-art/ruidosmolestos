@@ -16,3 +16,22 @@
   .toolbar{margin-left:5vw;margin-right:auto;justify-content:flex-start;max-width:720px}
   .program-feed{margin-left:5vw;margin-right:auto;max-width:720px}
 }
+
+/* Layout definitivo: columna izquierda + Big Mama/fondo siempre visibles */
+@media(min-width:900px){
+  body{background:#070707 url('/fondo-blues-estacion.png') center right/cover fixed no-repeat}
+  body:before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(90deg,#070707 0%,#070707f2 38%,#07070788 58%,#07070722 78%)}
+  header{width:48%;min-height:0;align-items:flex-start;text-align:left;padding:22px 4vw;background:#070707e8;border-right:1px solid var(--line)}
+  header nav{justify-content:flex-start}
+  .radio{width:48%;position:sticky;top:0;justify-content:flex-start;text-align:left;padding-left:4vw;background:#090909e8;border-right:1px solid var(--line)}
+  .radio-actions{justify-content:flex-start}
+  main{width:48%;background:#070707dc;border-right:1px solid var(--line)}
+  .hero{display:none}
+  .presentacion{margin:48px 4vw;padding:0;max-width:none;flex-direction:row;gap:22px;align-items:center;text-align:left}
+  .presentacion img{width:120px;height:120px;flex:0 0 120px}
+  .presentacion h2{font-size:clamp(2rem,4vw,3.4rem);margin:8px 0}
+  footer{width:48%;background:#070707e8;border-right:1px solid var(--line)}
+  #studio{margin:0;padding:0 4vw;max-width:none}
+  .panel{margin-left:0;margin-right:0}
+}
+@media(min-width:1400px){header,.radio,main,footer{width:44%}}
