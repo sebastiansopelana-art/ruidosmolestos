@@ -31,3 +31,40 @@ section.append(el('p','',t.replace(/\*\*/g,'').replace(/\s*\/{1,2}\s*$/,'').repl
 if(id==='sumo')local.append(el('p','','Archivo recuperado: contiene la historia de Sumo; las historias restantes del programa 33 todavía no están disponibles.'));
 }).then(()=>target.append(article)).catch(()=>{local.textContent='No se pudo cargar la historia.';target.append(article)})}
 (async()=>{for(const id of ['alvin-lee','sumo'])await renderStory(id)})();
+
+
+/* Historias públicas recuperadas del programa 36: nunca cargar borradores privados. */
+const recovered36=[
+ {id:'tb-walker',name:'T-BONE WALKER',position:1,photo:'T-Bone_Walker_1972.jpg'},
+ {id:'gatemouth-brown',name:'CLARENCE “GATEMOUTH” BROWN',position:2,photo:'Clarence_"Gatemouth"_Brown_with_guitar_in_the_1940s_-_Duke-Peacock_Records_publicity_photo.jpg'},
+ {id:'johnny-watson',name:'JOHNNY “GUITAR” WATSON',position:3,photo:'Johnny_Guitar_Watson_1987.jpg'},
+ {id:'jimmie-vaughan',name:'JIMMIE VAUGHAN',position:4,photo:'Jimmie_Vaughan_by_Gage_Skidmore_2.jpg'}
+];
+const supaBase='https://nmcycgpwptxydxbookxw.supabase.co/rest/v1/';
+const publicKey='sb_publishable_r39P3znJOOFew7nQVQ4Skw_ygk_xvvM';
+async function publicFetch(endpoint){
+ const res=await fetch(supaBase+endpoint,{headers:{apikey:publicKey}});
+ if(!res.ok)throw Error('No se pudo recuperar el programa');
+ return res.json();
+}
+async function renderRecovered36(){
+ const programs=await publicFetch('programs?select=id&number=eq.36&status=in.(live,archived)&limit=1');
+ if(!programs.length)return;
+ const chapters=await publicFetch('chapters?select=id,title,position,public_text&program_id=eq.'+encodeURIComponent(programs[0].id)+'&order=position.asc');
+ for(const item of recovered36){
+  const ch=chapters.find(x=>x.position===item.position);
+  if(!ch||!ch.public_text?.trim())continue;
+  const article=document.createElement('article');article.className='history-article';article.id=item.id;
+  const head=document.createElement('div');head.className='story-hero';
+  const img=document.createElement('img');img.src='https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(item.photo)+'?width=500';img.alt=item.name;img.loading='lazy';
+  const title=document.createElement('div'),h=document.createElement('h1');h.textContent=item.name;
+  const sub=document.createElement('p');sub.textContent=ch.title;title.append(h,sub);head.append(img,title);article.append(head);
+  const body=document.createElement('div');body.className='recovered-story';
+  for(const para of ch.public_text.split(/\n\s*\n/)){
+   if(!para.trim())continue;
+   const p=document.createElement('p');p.textContent=para.trim();body.append(p);
+  }
+  article.append(body);target.append(article);
+ }
+}
+renderRecovered36().catch(e=>console.error('No se pudieron cargar las historias públicas:',e));
