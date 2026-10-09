@@ -50,3 +50,18 @@
 }
 
 @media(min-width:900px){.brand p{font-size:clamp(.7rem,.9vw,.9rem);letter-spacing:.07em;white-space:nowrap}}
+
+/* Prueba editorial: lectura sobre fondo fijo */
+@media(min-width:900px){
+  body{background-attachment:fixed}
+  main{width:45%;background:linear-gradient(90deg,rgba(7,7,7,.97),rgba(7,7,7,.86) 82%,rgba(7,7,7,.68));box-shadow:18px 0 45px rgba(0,0,0,.3)}
+  header,.radio,footer{width:45%;background:rgba(7,7,7,.9);backdrop-filter:blur(3px)}
+  .presentacion{padding:22px 0;border-top:1px solid rgba(183,212,220,.18);border-bottom:1px solid rgba(183,212,220,.18)}
+  #studio{padding:0 3.5vw 70px}
+  .panel{background:rgba(13,13,13,.82);backdrop-filter:blur(4px)}
+  .reader-tools{background:rgba(7,7,7,.9);backdrop-filter:blur(6px)}
+  #reader-content{max-width:680px;padding:42px 3.5vw 110px}
+  .reader-script{font-size:clamp(1.45rem,1.65vw,1.85rem);line-height:1.78}
+  .reader-section{padding:48px 0}
+}
+@media(min-width:1400px){main,header,.radio,footer{width:42%}}
