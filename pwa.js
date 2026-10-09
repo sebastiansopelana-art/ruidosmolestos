@@ -13,7 +13,7 @@ audio.src=STREAM;
 audio.volume=Number(localStorage.getItem('rm-radio-volume') ?? 1);
 volume.value=audio.volume;
 function ui(on,msg){play.textContent=on?'⏸ PAUSAR EN VIVO':'▶ ESCUCHAR EN VIVO';play.setAttribute('aria-pressed',String(on));bar.classList.toggle('playing',on);status.textContent=msg||(on?'Transmitiendo ahora · FM del Lago 102.5':'Radio pausada');}
-async function startRadio(remember=true){try{status.textContent='Conectando…';await audio.play();if(remember)localStorage.setItem('rm-radio-autoplay','1');ui(true)}catch(e){ui(false,'Radio pausada');}}
+async function startRadio(remember=true){if(!horarioRadio())return;try{
 function stopRadio(){audio.pause();localStorage.setItem('rm-radio-autoplay','0');ui(false)}
 play.addEventListener('click',()=>audio.paused?startRadio(true):stopRadio());
 volume.addEventListener('input',()=>{audio.volume=Number(volume.value);localStorage.setItem('rm-radio-volume',String(audio.volume))});
@@ -23,3 +23,35 @@ audio.addEventListener('error',()=>ui(false,'No pudimos conectar con la señal. 
 if('mediaSession' in navigator){navigator.mediaSession.metadata=new MediaMetadata({title:'FM del Lago 102.5 · En vivo',artist:'Ruidos Molestos',album:'Un insoportable programa de rock',artwork:[{src:'/icon-192.png',sizes:'192x192',type:'image/png'},{src:'/icon-512.png',sizes:'512x512',type:'image/png'}]});navigator.mediaSession.setActionHandler('play',()=>startRadio(true));navigator.mediaSession.setActionHandler('pause',stopRadio)}
 // Los navegadores pueden bloquear audio con sonido sin interacción previa. Si el oyente ya eligió escuchar, intentamos reanudar automáticamente.
 if(localStorage.getItem('rm-radio-autoplay')==='1') window.addEventListener('load',()=>startRadio(false));
+
+const horarioRadio = () => {
+  const hora = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'America/Argentina/Buenos_Aires',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).format(new Date());
+
+  return hora >= '18:50' && hora < '22:00';
+};
+
+function controlarHorarioRadio() {
+  const habilitado = horarioRadio();
+
+  play.disabled = !habilitado;
+
+  if (!habilitado) {
+    audio.pause();
+    audio.removeAttribute('src');
+    audio.load();
+    play.textContent = 'PRÓXIMA TRANSMISIÓN 18:50';
+    status.textContent = 'Fuera del horario de transmisión';
+    bar.classList.remove('playing');
+  } else {
+    if (!audio.getAttribute('src')) audio.src = STREAM;
+    if (audio.paused) play.textContent = '▶ ESCUCHAR EN VIVO';
+  }
+}
+
+controlarHorarioRadio();
+setInterval(controlarHorarioRadio, 10000);
