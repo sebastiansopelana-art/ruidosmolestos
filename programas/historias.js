@@ -64,7 +64,21 @@ async function renderRecovered36(){
    if(!para.trim())continue;
    const p=document.createElement('p');p.textContent=para.trim();body.append(p);
   }
-  article.append(body);target.append(article);
+  article.append(body);
+  const tracks=await publicFetch('songs?select=position,title,artist_name&chapter_id=eq.'+encodeURIComponent(ch.id)+'&order=position.asc');
+  if(tracks.length){
+   const songBox=document.createElement('div');songBox.className='songs';
+   for(const s of tracks){
+    const row=document.createElement('div');row.className='song';
+    const a=document.createElement('a');
+    a.href='https://www.youtube.com/results?search_query='+encodeURIComponent((s.artist_name||'')+' '+(s.title||''));
+    a.target='_blank';a.rel='noopener noreferrer';a.textContent='▶ '+s.artist_name+' — '+s.title+' · BUSCAR EN YOUTUBE';
+    a.style.color='#fff';a.style.textDecoration='none';a.style.display='block';a.style.padding='3px';
+    row.append(a);songBox.append(row);
+   }
+   article.append(songBox);
+  }
+  target.append(article);
  }
 }
 renderRecovered36().catch(e=>console.error('No se pudieron cargar las historias públicas:',e));
