@@ -85,7 +85,7 @@
   .reader-tools{background:rgba(5,5,5,.58);backdrop-filter:blur(5px)}
   #reader-content{max-width:900px;margin:auto;padding:45px 42px 120px;background:rgba(0,0,0,.42);text-shadow:0 2px 5px #000}
   .reader-script{font-size:var(--reader-size,2rem);line-height:1.72;color:#fff}
-  footer{background:rgba(7,7,7,.45)}
+  footer{background:rgba(7,7,7,.60)}
 }
 
 /* Historias importadas: lectura transparente y fotografías proporcionadas */
