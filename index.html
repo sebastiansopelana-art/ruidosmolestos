@@ -26,6 +26,31 @@
 .radio-actions label input[type=range]{width:100px!important;accent-color:#e31924!important}
 #play-radio,#install-app{background:rgba(12,12,12,.82)!important;color:#e31924!important}
 @media(max-width:700px){.radio-actions{grid-template-columns:repeat(3,1fr)!important}.radio-actions>button,.radio-actions>label{width:100%!important;height:36px!important;background:rgba(12,12,12,.82)!important;color:#e31924!important}}
+
+/* Los tres controles replican exactamente la caja exterior del contador */
+.radio-actions{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important;align-items:stretch!important}
+.radio-actions>button,.radio-actions>label{
+box-sizing:border-box!important;
+width:100%!important;
+min-width:0!important;
+height:auto!important;
+min-height:58px!important;
+margin:0!important;
+padding:5px 7px 6px!important;
+display:flex!important;
+align-items:center!important;
+justify-content:center!important;
+background:rgba(12,12,12,.82)!important;
+border:1px solid rgba(255,255,255,.28)!important;
+border-radius:7px!important;
+box-shadow:inset 0 0 10px rgba(255,255,255,.03)!important;
+color:#e31924!important;
+font:800 10px/1.15 Arial,sans-serif!important;
+letter-spacing:.08em!important
+}
+.radio-actions label input[type=range]{width:105px!important;max-width:75%!important;margin:0!important;accent-color:#e31924!important}
+@media(min-width:701px){.radio>.next-show{width:475px!important;box-sizing:border-box!important}.radio>.radio-actions{width:475px!important}}
+@media(max-width:700px){.radio>.next-show,.radio>.radio-actions{width:94%!important;max-width:475px!important;box-sizing:border-box!important}.radio-actions>button,.radio-actions>label{min-height:52px!important;font-size:8px!important;padding:4px!important}.radio-actions label input[type=range]{width:70px!important}}
 </style></head><body>
 <header><div class="brand"><span class="kicker">FM DEL LAGO · 102.5 · SAN MARTÍN DE LOS ANDES</span><h1>RUIDOS MOLESTOS</h1><p>Un Insoportable Programa de Rock</p></div><nav><button class="studio-link" type="button" onclick="window.location.href=&quot;/aire/&quot;">PRODUCCIÓN</button></nav></header>
 <section class="radio"><div class="next-show"><div class="next-title">PRÓXIMA EMISIÓN</div><div id="next-show-date"></div><div class="counter-grid"><div><b id="cd-days">00</b><span>DÍAS</span></div><div><b id="cd-hours">00</b><span>HORAS</span></div><div><b id="cd-minutes">00</b><span>MINUTOS</span></div><div><b id="cd-seconds">00</b><span>SEGUNDOS</span></div></div><div id="next-show-clock" hidden></div></div><div class="radio-actions"><button id="play-radio">▶ ESCUCHAR EN VIVO</button><label>🔊 <input id="radio-volume" type="range" min="0" max="1" step=".05" value="1"></label><button id="install-app" class="install-app">⬇ BAJÁ LA APP</button></div><audio id="radio-audio" preload="none" playsinline></audio></section>
