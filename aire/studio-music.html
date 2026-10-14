@@ -858,37 +858,6 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 #prodList .proditem.cue-warning{animation:rm-separator-warning .45s ease-in-out infinite!important;border-color:#ffcf55!important}
 @media(prefers-reduced-motion:reduce){#prodList .proditem.cue-warning{animation:rm-separator-warning 1s step-end infinite!important}}
 
-/* Ajuste exclusivo para el monitor ancho del estudio; el LG compacto conserva su disposición. */
-@media(min-width:1450px){
- .workspace{gap:clamp(12px,1.1vw,24px)!important}
- .workspace>.panel{min-width:0!important;padding:clamp(12px,1.1vw,24px)!important}
- .panel.air>.production-test #prodList{grid-template-columns:repeat(9,minmax(0,1fr))!important;gap:clamp(6px,.65vw,13px)!important}
- .panel.air>.production-test .proditem{min-width:0!important;padding:clamp(6px,.6vw,12px)!important}
- .panel.air>.production-test .proditem button{min-height:clamp(39px,2.6vw,55px)!important;font-size:clamp(11px,.8vw,15px)!important}
- .panel.air .bigcontrols button{min-height:clamp(43px,3vw,64px)!important;font-size:clamp(12px,.95vw,18px)!important}
- .panel.air .switches label{min-height:clamp(43px,3vw,64px)!important;font-size:clamp(11px,.8vw,16px)!important}
- .workspace>.panel:nth-of-type(2){column-gap:clamp(12px,1vw,24px)!important}
- .curtaincontrols{grid-template-columns:repeat(4,minmax(0,1fr))!important}
- .curtaincontrols button{min-height:clamp(43px,2.7vw,58px)!important;font-size:clamp(11px,.8vw,15px)!important}
-}
-
-/* Ajuste por ancho efectivo: no achicar el contenido para forzar dos paneles. */
-.workspace{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:clamp(10px,1vw,20px)!important}
-.workspace>.panel{width:100%!important;min-width:0!important}
-@media(min-width:1500px){.workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)!important}}
-@media(min-width:1500px){.workspace>.panel:nth-of-type(2){grid-template-columns:minmax(0,1fr)!important}.workspace>.panel:nth-of-type(2)>.programlivehead,.workspace>.panel:nth-of-type(2)>#list,.workspace>.panel:nth-of-type(2)>.auxdeck,.workspace>.panel:nth-of-type(2)>.tools{grid-column:1!important;grid-row:auto!important}}
-@media(min-width:1900px){.workspace>.panel:nth-of-type(2){grid-template-columns:repeat(2,minmax(0,1fr))!important}.workspace>.panel:nth-of-type(2)>.programlivehead{grid-column:1!important;grid-row:1!important}.workspace>.panel:nth-of-type(2)>#list{grid-column:1!important;grid-row:2!important}.workspace>.panel:nth-of-type(2)>.auxdeck{grid-column:2!important;grid-row:1/3!important}.workspace>.panel:nth-of-type(2)>.tools{grid-column:1/-1!important;grid-row:3!important}}
-
-
-/* Corrección puntual: porcentaje de volumen dentro del panel y carga del programa alineada. */
-.auxdeck .volumeControl{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;gap:8px!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow:hidden!important}
-.auxdeck .volumeControl input[type=range]{width:100%!important;min-width:0!important;max-width:100%!important;margin:0!important}
-.auxdeck .volumeControl b{white-space:nowrap!important;min-width:0!important;font-size:clamp(10px,.8vw,13px)!important}
-.auxdeck .volumeControl b:last-child{justify-self:end!important;text-align:right!important;padding-right:3px!important}
-.workspace>.panel:nth-of-type(2)>.programlivehead{height:auto!important;min-height:38px!important;display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important;overflow:visible!important}
-.programtitleline{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:6px!important;min-width:0!important;max-width:100%!important}
-.program-number-live,.program-load-live{position:static!important;transform:none!important;flex-shrink:0!important;margin-top:0!important;align-self:center!important}
-.programlivestatus{display:flex!important;align-items:center!important;flex-wrap:wrap!important;min-width:0!important;margin-left:0!important}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
