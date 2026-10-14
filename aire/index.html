@@ -70,7 +70,7 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
  if(rmAuthorized())show();else{sessionStorage.removeItem(RM_SESSION_KEY);sessionStorage.removeItem(RM_DAY_KEY)}
  document.getElementById('openRedaccion').onclick=async function(){document.getElementById('hub').hidden=true;page.hidden=false;text.textContent='Cargando redacción del Programa 43…';try{const response=await fetch('/aire/programas/43.txt',{cache:'no-store'});if(!response.ok)throw Error('No se encontró el libreto');program43Text=await response.text();render()}catch(e){text.textContent='No se pudo cargar el Programa 43: '+e.message}};
  document.getElementById('openIA').onclick=function(){location.assign('/aire/ia-chat.html')};
- document.getElementById('openStudio').onclick=function(){window.open('/aire/studio-music.html?instance='+Date.now(),'_blank','noopener')};
+ document.getElementById('openStudio').onclick=function(){location.assign('/aire/studio-music.html?instance='+Date.now())};
  document.getElementById('hubExit').onclick=function(){sessionStorage.removeItem('rm_pass');location.reload()};
  editBtn.onclick=function(){editor.value=localStorage.getItem(PROGRAM43_KEY)||program43Text||DEFAULT_PROGRAM;text.hidden=true;editor.hidden=false;editBtn.hidden=true;saveBtn.hidden=false;editor.focus()};
  saveBtn.onclick=function(){localStorage.setItem(PROGRAM43_KEY,editor.value);editor.hidden=true;text.hidden=false;saveBtn.hidden=true;editBtn.hidden=false;render()};
