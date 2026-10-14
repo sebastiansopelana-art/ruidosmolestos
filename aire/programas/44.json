@@ -1,87 +1,109 @@
 {
   "programa": 44,
-  "titulo": "Prueba Studio · Los Redondos · 16 temas",
-  "tipo": "seleccion_nueva_de_prueba",
+  "titulo": "Ruidos Molestos 44 · Texas: el blues que construyó Austin",
+  "estado": "beta-investigacion",
+  "artistas": [
+    "W.C. Clark",
+    "Angela Strehli",
+    "Lou Ann Barton",
+    "Jimmie Vaughan"
+  ],
   "tracks": [
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota La bestia pop",
-      "label": "Los Redondos — La bestia pop",
-      "album": "Gulp!"
+      "query": "W.C. Clark Heart of Gold",
+      "label": "W.C. Clark — Heart of Gold",
+      "album": "Heart of Gold",
+      "bloque": 1
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Superlógico",
-      "label": "Los Redondos — Superlógico",
-      "album": "Gulp!"
+      "query": "W.C. Clark Cold Shot",
+      "label": "W.C. Clark — Cold Shot",
+      "album": "Heart of Gold",
+      "bloque": 1
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Criminal Mambo",
-      "label": "Los Redondos — Criminal Mambo",
-      "album": "Gulp!"
+      "query": "W.C. Clark Rough Edges",
+      "label": "W.C. Clark — Rough Edges",
+      "album": "Texas Soul",
+      "bloque": 1
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Ji Ji Ji",
-      "label": "Los Redondos — Ji Ji Ji",
-      "album": "Oktubre"
+      "query": "W.C. Clark The Blues Is at Hand",
+      "label": "W.C. Clark — The Blues Is at Hand",
+      "album": "Heart of Gold",
+      "bloque": 1
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Motor Psico",
-      "label": "Los Redondos — Motor Psico",
-      "album": "Oktubre"
+      "query": "Angela Strehli Stranger Blues",
+      "label": "Angela Strehli — Stranger Blues",
+      "album": "Soul Shake",
+      "bloque": 2
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Música para pastillas",
-      "label": "Los Redondos — Música para pastillas",
-      "album": "Oktubre"
+      "query": "Angela Strehli 20% Alcohol",
+      "label": "Angela Strehli — 20% Alcohol",
+      "album": "Soul Shake",
+      "bloque": 2
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Vencedores vencidos",
-      "label": "Los Redondos — Vencedores vencidos",
-      "album": "Un baión para el ojo idiota"
+      "query": "Angela Strehli Soul Shake",
+      "label": "Angela Strehli — Soul Shake",
+      "album": "Soul Shake",
+      "bloque": 2
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Todo un palo",
-      "label": "Los Redondos — Todo un palo",
-      "album": "Un baión para el ojo idiota"
+      "query": "Angela Strehli SRV",
+      "label": "Angela Strehli — SRV",
+      "album": "Ace of Blues",
+      "bloque": 2
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Nuestro amo juega al esclavo",
-      "label": "Los Redondos — Nuestro amo juega al esclavo",
-      "album": "Bang Bang"
+      "query": "Lou Ann Barton Sugar Coated Love",
+      "label": "Lou Ann Barton — Sugar Coated Love",
+      "album": "Read My Lips",
+      "bloque": 3
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Esa estrella era mi lujo",
-      "label": "Los Redondos — Esa estrella era mi lujo",
-      "album": "Bang Bang"
+      "query": "Lou Ann Barton You'll Lose a Good Thing",
+      "label": "Lou Ann Barton — You'll Lose a Good Thing",
+      "album": "Read My Lips",
+      "bloque": 3
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota El pibe de los astilleros",
-      "label": "Los Redondos — El pibe de los astilleros",
-      "album": "La mosca y la sopa"
+      "query": "Lou Ann Barton Shake Your Hips",
+      "label": "Lou Ann Barton — Shake Your Hips",
+      "album": "Read My Lips",
+      "bloque": 3
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Un poco de amor francés",
-      "label": "Los Redondos — Un poco de amor francés",
-      "album": "La mosca y la sopa"
+      "query": "Lou Ann Barton You Can Have My Husband",
+      "label": "Lou Ann Barton — You Can Have My Husband",
+      "album": "Read My Lips",
+      "bloque": 3
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Un ángel para tu soledad",
-      "label": "Los Redondos — Un ángel para tu soledad",
-      "album": "Lobo suelto cordero atado"
+      "query": "Jimmie Vaughan Boom-Bapa-Boom",
+      "label": "Jimmie Vaughan — Boom-Bapa-Boom",
+      "album": "Strange Pleasure",
+      "bloque": 4
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Juguetes perdidos",
-      "label": "Los Redondos — Juguetes perdidos",
-      "album": "Luzbelito"
+      "query": "Jimmie Vaughan Six Strings Down",
+      "label": "Jimmie Vaughan — Six Strings Down",
+      "album": "Strange Pleasure",
+      "bloque": 4
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota Gualicho",
-      "label": "Los Redondos — Gualicho",
-      "album": "Último bondi a Finisterre"
+      "query": "Jimmie Vaughan Without You",
+      "label": "Jimmie Vaughan — Without You",
+      "album": "Do You Get the Blues?",
+      "bloque": 4
     },
     {
-      "query": "Patricio Rey y sus Redonditos de Ricota El templo de Momo",
-      "label": "Los Redondos — El templo de Momo",
-      "album": "Momo Sampler"
+      "query": "Jimmie Vaughan In the Middle of the Night",
+      "label": "Jimmie Vaughan — In the Middle of the Night",
+      "album": "Do You Get the Blues?",
+      "bloque": 4
     }
   ]
 }
