@@ -858,7 +858,16 @@ $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='Arrow
    const rr=await fetch('/api/ytmusic-search?q='+encodeURIComponent(t.query+' High Quality Audio'),{cache:'no-store'});
    const dd=await rr.json();
    if(!rr.ok||!dd.results?.length)throw Error('sin resultado');
-   return {ok:true,index:i,track:{...dd.results[0],planned:t.label,program:Number(n),block:t.bloque||Math.floor(i/4)+1}};
+   const norm=s=>String(s||'').toLowerCase();
+   const candidates=dd.results.filter(x=>{
+    const hay=norm(x.title+' '+x.artist);
+    const tooLong=Number(x.durationSeconds||0)>1200;
+    const albumDump=/full\s*album|complete\s*album|entire\s*album|full\s*lp|album\s*completo|álbum\s*completo/.test(hay);
+    return !tooLong&&!albumDump
+   });
+   const chosen=candidates[0];
+   if(!chosen)throw Error('solo aparecieron álbumes completos o audios demasiado largos');
+   return {ok:true,index:i,track:{...chosen,planned:t.label,program:Number(n),block:t.bloque||Math.floor(i/4)+1}};
   }catch(_){return {ok:false,index:i,label:t.label}}}));
   const nextList=resolved.filter(x=>x.ok).sort((a,b)=>a.index-b.index).map(x=>x.track);
   const missing=resolved.filter(x=>!x.ok).sort((a,b)=>a.index-b.index).map(x=>x.label);
