@@ -923,6 +923,8 @@ $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='Arrow
   const missing=resolved.filter(x=>!x.ok).sort((a,b)=>a.index-b.index).map(x=>x.label);
   if(!nextList.length)throw Error('No se pudo encontrar ninguna canción del Programa '+n+'.');
   list=nextList;idx=-1;gapTriggered=false;save();render();
+  // Precarga el primer tema en el reproductor sin emitirlo: al apretar PLAY ya está bufferizado.
+  if(ready&&list[0]?.id){try{player.cueVideoById({videoId:list[0].id,startSeconds:0})}catch(_){}}
   document.querySelector('.sectiontitle').textContent='PROGRAMA '+n+(mf.titulo?' · '+mf.titulo:'');
   document.querySelector('.programmeta').textContent=nextList.length+' TEMAS · 4 BLOQUES · RUIDOS MOLESTOS';
   if($('programState'))$('programState').textContent=nextList.length+'/16 cargados'+(missing.length?' · Faltan '+missing.length:' · PROGRAMA LISTO');
