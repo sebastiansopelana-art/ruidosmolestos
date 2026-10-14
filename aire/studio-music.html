@@ -871,6 +871,13 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
  .curtaincontrols{grid-template-columns:repeat(4,minmax(0,1fr))!important}
  .curtaincontrols button{min-height:clamp(43px,2.7vw,58px)!important;font-size:clamp(11px,.8vw,15px)!important}
 }
+
+/* Ajuste por ancho efectivo: no achicar el contenido para forzar dos paneles. */
+.workspace{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:clamp(10px,1vw,20px)!important}
+.workspace>.panel{width:100%!important;min-width:0!important}
+@media(min-width:1500px){.workspace{grid-template-columns:minmax(0,1fr) minmax(0,1.2fr)!important}}
+@media(min-width:1500px){.workspace>.panel:nth-of-type(2){grid-template-columns:minmax(0,1fr)!important}.workspace>.panel:nth-of-type(2)>.programlivehead,.workspace>.panel:nth-of-type(2)>#list,.workspace>.panel:nth-of-type(2)>.auxdeck,.workspace>.panel:nth-of-type(2)>.tools{grid-column:1!important;grid-row:auto!important}}
+@media(min-width:1900px){.workspace>.panel:nth-of-type(2){grid-template-columns:repeat(2,minmax(0,1fr))!important}.workspace>.panel:nth-of-type(2)>.programlivehead{grid-column:1!important;grid-row:1!important}.workspace>.panel:nth-of-type(2)>#list{grid-column:1!important;grid-row:2!important}.workspace>.panel:nth-of-type(2)>.auxdeck{grid-column:2!important;grid-row:1/3!important}.workspace>.panel:nth-of-type(2)>.tools{grid-column:1/-1!important;grid-row:3!important}}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
