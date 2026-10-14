@@ -634,6 +634,39 @@ padding-right:158px!important
  font-variant-numeric:tabular-nums!important;
 }
 .panel.air>.transport .seekmarks{color:#a9cadb!important}
+
+/* BETA 1 · cabecera: volumen y separadores compactos, SONANDO AHORA protagonista */
+header{
+ grid-template-columns:minmax(235px,1.05fr) minmax(130px,.52fr) minmax(420px,2fr) minmax(185px,.72fr)!important;
+ grid-template-rows:46px!important;
+}
+header .headvolume{grid-column:2!important}
+header .headnow{grid-column:3!important}
+header .headsecos{grid-column:4!important}
+header .headvolume,header .headnow,header .headsecos{
+ height:46px!important;min-height:46px!important;max-height:46px!important;padding:4px 7px!important
+}
+header .headvolume{grid-template-columns:auto minmax(55px,1fr) auto!important;gap:5px!important}
+header .headvolume span{font-size:7px!important;letter-spacing:.7px!important}
+header .headvolume b{font-size:9px!important}
+header .headsecos{gap:4px!important}
+header .headsecos>span{font-size:7px!important;letter-spacing:.45px!important}
+header .manualSecoBtn{
+ height:25px!important;min-height:25px!important;padding:3px 5px!important;
+ gap:3px!important;font-size:7px!important;line-height:1!important
+}
+header #headSecoMode{font-size:7px!important}
+header .headnow{grid-template-columns:minmax(0,1fr) auto!important;padding:3px 9px!important}
+header .headnow>span{font-size:8px!important}
+header .headnow>b{font-size:14px!important}
+header .headnow>small{font-size:9px!important}
+header .headnow>strong{font-size:19px!important}
+header .headvu{inset:3px 8px!important;gap:3px!important;opacity:.5!important;justify-content:flex-end!important}
+header .headvu i{width:7px!important}
+@media(max-width:1050px) and (min-width:901px){
+ header{grid-template-columns:minmax(210px,1fr) minmax(115px,.5fr) minmax(330px,1.7fr) minmax(165px,.7fr)!important}
+ header .headsecos>span{display:none!important}
+}
 </style></head><body><main><header><div class="brandwrap"><img class="brandlogo" src="/icon-192.png" alt="Ruidos Molestos"><div class="brandpanel"><div class="brand">RUIDOS MOLESTOS</div><div class="studio-title">ESTUDIO</div><div class="subtitle">REPRODUCTOR Y PROGRAMACIÓN</div></div></div><div class="headvolume"><span>VOLUMEN</span><input id="volumeHead" type="range" min="0" max="100" value="100" aria-label="Volumen de salida"><b id="volumeHeadValue">100%</b></div><div class="headnow"><div class="headvu" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span>SONANDO AHORA</span><b id="headNow">Sin tema seleccionado</b><small id="headArtist">—</small><strong id="headElapsed">00:00</strong></div><div class="headsecos"><span>SEPARADORES · AUTO / MANUAL</span><label class="manualSecoBtn"><input id="prodAuto" type="checkbox"> DISPARAR SECOS MANUALMENTE</label><b id="headSecoMode">AUTOMÁTICO</b></div><a href="/aire/audio-real.html">🎚 RUIDOS MOLESTOS AIRE · VÚMETROS REALES →</a></header>
 <div class="workspace">
 <section class="panel air"><div id="airFlag" class="airflag"><span class="dot"></span> AL AIRE</div><div id="now" class="now">Sin tema seleccionado</div><div id="artist" class="artist">Cargá el programa para comenzar</div><div class="meterlabel"><span class="tag">NIVEL L / R</span><span id="meterMode" class="sim">YOUTUBE · SIN MEDICIÓN PCM</span></div><div class="meters"><div class="meterrow"><b>L</b><div class="meterbar"><div id="meterL" class="meterfill"></div></div><span id="dbL" class="meterdb">-∞</span></div><div class="meterrow"><b>R</b><div class="meterbar"><div id="meterR" class="meterfill"></div></div><span id="dbR" class="meterdb">-∞</span></div></div><div class="meterscale"><span>-40</span><span>-24</span><span>-12</span><span>-6</span><span>-3</span><span>0 dB</span></div><div class="row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button id="captureAudio" type="button">🎚 CAPTURAR AUDIO DE ESTA PESTAÑA</button><button id="stopCapture" type="button" disabled>DETENER MEDICIÓN</button></div><div id="captureStatus" class="meta" role="status" style="margin-top:7px">Para medir YouTube: autorizá compartir esta pestaña y activá «Compartir audio de la pestaña». No se graba ni se envía audio.</div><div class="volumeControl"><b>VOLUMEN</b><input id="volume" type="range" min="0" max="100" value="100" aria-label="Volumen de salida"><b id="volumeValue">80%</b></div><div class="transport"><span id="elapsed" class="clock">00:00</span><div class="seekwrap"><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Posición de reproducción"><div id="seekMarks" class="seekmarks"></div></div><span id="remaining" class="clock remain">-00:00</span></div><div class="controls bigcontrols"><button id="back">◀ 10 s</button><button id="play" class="primary">▶ PLAY</button><button id="pause">Ⅱ PAUSA</button><button id="stop">■ STOP</button><button id="next">▶| SIGUIENTE</button><button id="forward">10 s ▶</button></div><div class="switches"><label><input id="auto" type="checkbox"> AUTO</label><label><input id="antigap" type="checkbox" checked> ANTI-BACHE</label><label>CORTE <input id="gapSeconds" type="number" min="0.5" max="8" step="0.5" value="2" style="width:62px"> s</label></div><div class="production-test">
