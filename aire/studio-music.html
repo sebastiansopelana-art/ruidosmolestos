@@ -858,6 +858,10 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 #prodList .proditem.cue-warning{animation:rm-separator-warning .45s ease-in-out infinite!important;border-color:#ffcf55!important}
 @media(prefers-reduced-motion:reduce){#prodList .proditem.cue-warning{animation:rm-separator-warning 1s step-end infinite!important}}
 
+
+/* Ocultar únicamente la cifra y el porcentaje del volumen; conservar el deslizador. */
+.auxdeck .volumeControl #auxVolumeValue{display:none!important}
+.auxdeck .volumeControl{min-width:0!important}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
