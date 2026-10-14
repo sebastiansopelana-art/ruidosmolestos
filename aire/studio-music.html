@@ -879,20 +879,6 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 @media(min-width:1500px){.workspace>.panel:nth-of-type(2){grid-template-columns:minmax(0,1fr)!important}.workspace>.panel:nth-of-type(2)>.programlivehead,.workspace>.panel:nth-of-type(2)>#list,.workspace>.panel:nth-of-type(2)>.auxdeck,.workspace>.panel:nth-of-type(2)>.tools{grid-column:1!important;grid-row:auto!important}}
 @media(min-width:1900px){.workspace>.panel:nth-of-type(2){grid-template-columns:repeat(2,minmax(0,1fr))!important}.workspace>.panel:nth-of-type(2)>.programlivehead{grid-column:1!important;grid-row:1!important}.workspace>.panel:nth-of-type(2)>#list{grid-column:1!important;grid-row:2!important}.workspace>.panel:nth-of-type(2)>.auxdeck{grid-column:2!important;grid-row:1/3!important}.workspace>.panel:nth-of-type(2)>.tools{grid-column:1/-1!important;grid-row:3!important}}
 
-/* Monitor principal: prioridad a legibilidad y proporciones, sin cambiar el LG compacto. */
-@media(min-width:1450px){
- .workspace{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:14px!important}
- .workspace>.panel{width:100%!important;max-width:100%!important}
- .panel.air>.production-test #prodList{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:10px!important}
- .panel.air>.production-test .proditem{min-height:100px!important;padding:10px!important}
- .panel.air>.production-test .proditem b{font-size:clamp(12px,.9vw,16px)!important;line-height:1.3!important;white-space:normal!important;overflow-wrap:anywhere!important}
- .panel.air>.production-test .proditem button{min-height:42px!important;font-size:clamp(12px,.9vw,16px)!important}
- .workspace>.panel:nth-of-type(2){display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:14px!important}
- .workspace>.panel:nth-of-type(2)>.programlivehead{grid-column:1!important;grid-row:1!important}
- .workspace>.panel:nth-of-type(2)>#list{grid-column:1!important;grid-row:2!important}
- .workspace>.panel:nth-of-type(2)>.auxdeck{grid-column:2!important;grid-row:1/3!important}
- .workspace>.panel:nth-of-type(2)>.tools{grid-column:1/-1!important;grid-row:3!important}
-}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
