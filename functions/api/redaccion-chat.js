@@ -8,10 +8,11 @@ export async function onRequestPost({request,env}){
   const messages=(Array.isArray(body.messages)?body.messages:[]).slice(-18).filter(m=>['user','assistant'].includes(m.role)&&typeof m.content==='string').map(m=>({role:m.role,content:m.content.slice(0,7000)}));
   if(!messages.length||messages.at(-1).role!=='user')return new Response(JSON.stringify({error:'Falta el mensaje'}),{status:400,headers});
   const draft=typeof body.draft==='string'?body.draft.slice(-14000):'';
-  const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'Authorization':'Bearer '+env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model:env.OPENAI_MODEL||'gpt-5.5',instructions:INSTRUCTIONS+'\nPROGRAMA ACTUAL: '+program+(draft?'\nBORRADOR ACTUAL DEL LIBRETO (contexto, no modificar directamente):\n'+draft:''),input:messages,store:false,max_output_tokens:3000})});
+  const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{'Authorization':'Bearer '+env.OPENAI_API_KEY,'Content-Type':'application/json'},body:JSON.stringify({model:env.OPENAI_MODEL||'gpt-5-mini',instructions:INSTRUCTIONS+'\nPROGRAMA ACTUAL: '+program+(draft?'\nBORRADOR ACTUAL DEL LIBRETO (contexto, no modificar directamente):\n'+draft:''),input:messages,store:false,max_output_tokens:3000})});
   const data=await response.json();
   if(!response.ok)return new Response(JSON.stringify({error:data?.error?.message||'Error del proveedor de IA'}),{status:502,headers});
   const reply=(data.output||[]).filter(o=>o.type==='message').flatMap(o=>o.content||[]).filter(x=>x.type==='output_text').map(x=>x.text).join('\n').trim();
   return new Response(JSON.stringify({reply:reply||'No llegó contenido de respuesta.'}),{headers});
  }catch(e){return new Response(JSON.stringify({error:'Error de conexión con el asistente'}),{status:500,headers})}
 }
+export async function onRequestGet({env}){return new Response(JSON.stringify({configured:!!env.OPENAI_API_KEY}),{headers:{'Content-Type':'application/json','Cache-Control':'no-store'}})}
