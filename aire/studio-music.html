@@ -867,6 +867,12 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 @keyframes rm-block-separator-blink{0%,100%{background:#58360a;box-shadow:inset 0 0 0 2px #ffcb55}50%{background:#9b590d;box-shadow:inset 0 0 0 2px #ffe398,0 0 12px #ffbc40}}
 #list .track.prodplan.rm-separator-onair{animation:rm-block-separator-blink .65s ease-in-out infinite!important;color:#fff!important}
 #list .rm-separator-clock{display:inline-block;margin-left:5px;font-variant-numeric:tabular-nums;font-weight:900;color:#ffdf8a}
+
+/* Mantener REPRODUCTOR 2 visible al recorrer los cuatro bloques. */
+@media(min-width:901px){
+ .workspace>.panel:nth-of-type(2){align-items:start!important;overflow:visible!important}
+ .workspace>.panel:nth-of-type(2)>.auxdeck{position:sticky!important;top:12px!important;align-self:start!important;z-index:8!important;max-height:calc(100vh - 24px)!important;overflow-y:auto!important;transform:none!important}
+}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
