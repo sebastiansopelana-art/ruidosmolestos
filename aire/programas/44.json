@@ -1,108 +1,92 @@
 {
   "programa": 44,
-  "titulo": "Ruidos Molestos 44 · Texas: el blues que construyó Austin",
-  "estado": "beta-investigacion",
+  "titulo": "Ruidos Molestos 44 · El grito del acero · Blues slide",
+  "estado": "beta-2",
   "artistas": [
-    "W.C. Clark",
-    "Angela Strehli",
-    "Lou Ann Barton",
-    "Jimmie Vaughan"
+    "Tampa Red",
+    "Robert Nighthawk",
+    "Earl Hooker",
+    "J.B. Hutto"
   ],
   "tracks": [
     {
-      "query": "W.C. Clark Heart of Gold",
-      "label": "W.C. Clark — Heart of Gold",
-      "album": "Heart of Gold",
+      "query": "Tampa Red It Hurts Me Too",
+      "label": "Tampa Red — It Hurts Me Too",
       "bloque": 1
     },
     {
-      "query": "W.C. Clark Cold Shot",
-      "label": "W.C. Clark — Cold Shot",
-      "album": "Heart of Gold",
+      "query": "Tampa Red Black Angel Blues",
+      "label": "Tampa Red — Black Angel Blues",
       "bloque": 1
     },
     {
-      "query": "W.C. Clark Rough Edges",
-      "label": "W.C. Clark — Rough Edges",
-      "album": "Texas Soul",
+      "query": "Tampa Red Anna Lou Blues",
+      "label": "Tampa Red — Anna Lou Blues",
       "bloque": 1
     },
     {
-      "query": "W.C. Clark The Blues Is at Hand",
-      "label": "W.C. Clark — The Blues Is at Hand",
-      "album": "Heart of Gold",
+      "query": "Tampa Red Bumble Bee Blues",
+      "label": "Tampa Red — Bumble Bee Blues",
       "bloque": 1
     },
     {
-      "query": "Angela Strehli Stranger Blues",
-      "label": "Angela Strehli — Stranger Blues",
-      "album": "Soul Shake",
+      "query": "Robert Nighthawk Prowling Night Hawk",
+      "label": "Robert Nighthawk — Prowling Night Hawk",
       "bloque": 2
     },
     {
-      "query": "Angela Strehli 20% Alcohol",
-      "label": "Angela Strehli — 20% Alcohol",
-      "album": "Soul Shake",
+      "query": "Robert Nighthawk Sweet Black Angel",
+      "label": "Robert Nighthawk — Sweet Black Angel",
       "bloque": 2
     },
     {
-      "query": "Angela Strehli Soul Shake",
-      "label": "Angela Strehli — Soul Shake",
-      "album": "Soul Shake",
+      "query": "Robert Nighthawk Anna Lee",
+      "label": "Robert Nighthawk — Anna Lee",
       "bloque": 2
     },
     {
-      "query": "Angela Strehli SRV",
-      "label": "Angela Strehli — SRV",
-      "album": "Ace of Blues",
+      "query": "Robert Nighthawk Crying Won't Help You",
+      "label": "Robert Nighthawk — Crying Won't Help You",
       "bloque": 2
     },
     {
-      "query": "Lou Ann Barton Sugar Coated Love",
-      "label": "Lou Ann Barton — Sugar Coated Love",
-      "album": "Read My Lips",
+      "query": "Earl Hooker Blue Guitar",
+      "label": "Earl Hooker — Blue Guitar",
       "bloque": 3
     },
     {
-      "query": "Lou Ann Barton You'll Lose a Good Thing",
-      "label": "Lou Ann Barton — You'll Lose a Good Thing",
-      "album": "Read My Lips",
+      "query": "Earl Hooker Blues in D Natural",
+      "label": "Earl Hooker — Blues in D Natural",
       "bloque": 3
     },
     {
-      "query": "Lou Ann Barton Shake Your Hips",
-      "label": "Lou Ann Barton — Shake Your Hips",
-      "album": "Read My Lips",
+      "query": "Earl Hooker The Hucklebuck",
+      "label": "Earl Hooker — The Hucklebuck",
       "bloque": 3
     },
     {
-      "query": "Lou Ann Barton You Can Have My Husband",
-      "label": "Lou Ann Barton — You Can Have My Husband",
-      "album": "Read My Lips",
+      "query": "Earl Hooker End of the Blues",
+      "label": "Earl Hooker — End of the Blues",
       "bloque": 3
     },
     {
-      "query": "Jimmie Vaughan Boom-Bapa-Boom",
-      "label": "Jimmie Vaughan — Boom-Bapa-Boom",
-      "album": "Strange Pleasure",
+      "query": "J.B. Hutto Going Ahead",
+      "label": "J.B. Hutto — Going Ahead",
       "bloque": 4
     },
     {
-      "query": "Jimmie Vaughan Six Strings Down",
-      "label": "Jimmie Vaughan — Six Strings Down",
-      "album": "Strange Pleasure",
+      "query": "J.B. Hutto Hip Shakin",
+      "label": "J.B. Hutto — Hip Shakin",
       "bloque": 4
     },
     {
-      "query": "Jimmie Vaughan Without You",
-      "label": "Jimmie Vaughan — Without You",
-      "album": "Do You Get the Blues?",
+      "query": "J.B. Hutto Look on Yonder Wall",
+      "label": "J.B. Hutto — Look on Yonder Wall",
       "bloque": 4
     },
     {
-      "query": "Jimmie Vaughan In the Middle of the Night",
-      "label": "Jimmie Vaughan — In the Middle of the Night",
-      "album": "Do You Get the Blues?",
+      "query": "J.B. Hutto Too Much Alcohol",
+      "label": "J.B. Hutto — Too Much Alcohol",
       "bloque": 4
     }
   ]
