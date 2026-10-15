@@ -859,6 +859,9 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 @media(prefers-reduced-motion:reduce){#prodList .proditem.cue-warning{animation:rm-separator-warning 1s step-end infinite!important}}
 
 
+/* Ocultar control CORTE redundante, sin alterar lógica de reproducción. */
+.panel.air .switches label:has(#gapSeconds){display:none!important}
+.panel.air .switches #gapSeconds{display:none!important}
 /* Ocultar únicamente la cifra y el porcentaje del volumen; conservar el deslizador. */
 .auxdeck .volumeControl #auxVolumeValue{display:none!important}
 .auxdeck .volumeControl{min-width:0!important}
