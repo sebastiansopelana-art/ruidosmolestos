@@ -743,6 +743,9 @@ blockDeck.querySelector('.buttons').addEventListener('click',e=>{
 blockDeck.querySelector('.vol').addEventListener('input',e=>{if(blockYTActive)blockYT?.setVolume(Number(e.target.value))});
 blockDeck.querySelector('.seek').addEventListener('input',e=>{if(blockYTActive&&blockYTReady){const d=blockYT.getDuration?.()||0;if(d)blockYT.seekTo(d*Number(e.target.value)/1000,true)}});
 // Continuidad automática opcional: canción → separador precargado → siguiente canción.
+const rmSeparatorNames=["02 Rock Eco RM Seco.mp3","04 Seco Insoportable Corto Telefonico.mp3","05 Seco Insoportable Corto.mp3","06 Seco Nosotros Solo te Ofrecemos.mp3","07 Seco RM Insoportable PdR.mp3","08 Seco SS Recorrido Insopor.mp3","09 Seco Subite RM.mp3","10 Seco Vos y Yo sabemos.mp3"];
+const rmSeparatorLabels=["Rock Eco","Insoportable corto","Insoportable corto 2","Nosotros solo","RM insoportable","Sebastián Sopelana","Subite RM","Seco, vos y yo"];
+const rmSeparatorBase='https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/';
 const autoSepControl=document.createElement('label');autoSepControl.className='rm-auto-sep';
 const autoSepCheck=document.createElement('input');autoSepCheck.type='checkbox';
 const autoSepText=document.createElement('span');autoSepText.textContent='SEPARADORES AUTOMÁTICOS';
@@ -817,9 +820,6 @@ const auxNative=decks[1].querySelector('.footer input[type=file]');decks[1].quer
 function drawAux(){auxItems.replaceChildren();if(!auxFiles.length){const d=document.createElement('div');d.className='hint';d.textContent='Playlist vacía. Agregá archivos de audio.';auxItems.append(d)}for(const [i,f] of auxFiles.entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const b=document.createElement('button');b.textContent='▶';b.onclick=()=>{const dt=new DataTransfer();auxFiles.forEach(file=>dt.items.add(file));auxNative.files=dt.files;auxNative.dispatchEvent(new Event('change',{bubbles:true}));for(let k=0;k<i;k++)decks[1].querySelector('[data-action=next]').click();decks[1].querySelector('[data-action=play]').click()};row.append(t,b);auxItems.append(row)}}
 auxFile.onchange=()=>{auxFiles.push(...Array.from(auxFile.files));auxFile.value='';drawAux()};drawAux();
 
-const rmSeparatorNames=["02 Rock Eco RM Seco.mp3","04 Seco Insoportable Corto Telefonico.mp3","05 Seco Insoportable Corto.mp3","06 Seco Nosotros Solo te Ofrecemos.mp3","07 Seco RM Insoportable PdR.mp3","08 Seco SS Recorrido Insopor.mp3","09 Seco Subite RM.mp3","10 Seco Vos y Yo sabemos.mp3"];
-const rmSeparatorLabels=["Rock Eco","Insoportable corto","Insoportable corto 2","Nosotros solo","RM insoportable","Sebastián Sopelana","Subite RM","Seco, vos y yo"];
-const rmSeparatorBase='https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/';
 /* Separadores precargados: reproducción inmediata desde memoria cuando está disponible */
 const rmAudioContext=window.AudioContext||window.webkitAudioContext;
 const rmContext=rmAudioContext?new rmAudioContext():null;
