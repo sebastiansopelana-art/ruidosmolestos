@@ -881,7 +881,7 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 #list .rm-pat-mini{display:flex;align-items:center;gap:5px;flex:0 0 auto;min-width:0}
 #list .rm-pat-range{width:78px;min-width:45px;height:12px;margin:0;accent-color:#86b8e3;cursor:pointer}
 #list .rm-pat-repeat{min-width:24px!important;width:24px;height:25px;padding:0!important;font-size:17px;line-height:1}
-#list .rm-pat-repeat.rm-pat-repeat-on{color:#a9ffb9!important;border-color:#80ce94!important;background:#255338!important}
+#list .rm-pat-repeat.rm-pat-repeat-on,#list .rm-pat-repeat[aria-pressed="true"]{color:#fff!important;border:2px solid #7ef3a4!important;background:#16804b!important;box-shadow:0 0 0 2px rgba(126,243,164,.35),0 0 9px rgba(126,243,164,.65)!important;font-weight:900!important}
 @media(max-width:650px){#list .rm-pat-range{width:52px}#list .rm-pat-mini{gap:3px}}
 </style></head><body><script>
 (function(){
@@ -918,7 +918,7 @@ let prodLastSeco='';function prodRandomSeco(){const a=prodRecords.filter(x=>x.ty
 var rmPatRepeat=false;
 function rmTogglePatRepeat(){rmPatRepeat=!rmPatRepeat;rmRefreshPatMini();const x=prodRecords.find(v=>v.type==='cortina'&&/Pat Metheny/i.test(v.name));if(x&&prodCurrent===x.id)prodAudio.loop=rmPatRepeat}
 window.rmTogglePatRepeat=rmTogglePatRepeat;
-function rmRefreshPatMini(){const x=prodRecords.find(v=>v.type==='cortina'&&/Pat Metheny/i.test(v.name));const active=!!x&&prodCurrent===x.id;const d=active&&Number.isFinite(prodAudio.duration)?prodAudio.duration:0;document.querySelectorAll('.rm-pat-mini').forEach(box=>{const btn=box.querySelector('.rm-pat-repeat'),range=box.querySelector('.rm-pat-range');if(btn){btn.classList.toggle('rm-pat-repeat-on',rmPatRepeat);btn.setAttribute('aria-pressed',String(rmPatRepeat))}if(range&&document.activeElement!==range)range.value=d?Math.round((prodAudio.currentTime||0)/d*1000):0})}
+function rmRefreshPatMini(){const x=prodRecords.find(v=>v.type==='cortina'&&/Pat Metheny/i.test(v.name));const active=!!x&&prodCurrent===x.id;const d=active&&Number.isFinite(prodAudio.duration)?prodAudio.duration:0;document.querySelectorAll('.rm-pat-mini').forEach(box=>{const btn=box.querySelector('.rm-pat-repeat'),range=box.querySelector('.rm-pat-range');if(btn){btn.classList.toggle('rm-pat-repeat-on',rmPatRepeat);btn.setAttribute('aria-pressed',String(rmPatRepeat));btn.textContent=rmPatRepeat?'↻ ✓':'↻';btn.title=rmPatRepeat?'Repetición activada':'Activar repetición'}if(range&&document.activeElement!==range)range.value=d?Math.round((prodAudio.currentTime||0)/d*1000):0})}
 $('list').addEventListener('input',e=>{if(!e.target.matches('.rm-pat-range'))return;const x=prodRecords.find(v=>v.type==='cortina'&&/Pat Metheny/i.test(v.name));const d=prodAudio.duration;if(x&&prodCurrent===x.id&&Number.isFinite(d)&&d>0)prodAudio.currentTime=d*Number(e.target.value)/1000});
 setInterval(rmRefreshPatMini,300);
 function prodAutoNext(){if(prodStarting||prodCurrent)return;const pos=((idx%4)+4)%4;if(pos>=3){const cue=prodRecords.find(v=>v.name==='Ya Volvemos');if(cue){prodPlay(cue.id,'tandaOut');$('status').textContent='YA VOLVEMOS · FIN DE BLOQUE';}else{$('status').textContent='FIN DE BLOQUE · FALTA YA VOLVEMOS';setProgramLiveState('LISTO')}return}if($('auto').checked&&!$('prodAuto').checked){playAutoSeco(true);return}prodNextTrack()}
