@@ -311,6 +311,15 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .buttons button[data-action="pause"][data-running="true"],
 .player .buttons button[data-action="repeat"][aria-pressed="true"],
 .player .buttons button[data-flash="true"]{color:#fff!important}
+
+/* Los siete ICONOS internos comparten tamaño, relleno y color exactos. */
+.player .buttons button .rm-transport-icon{display:block!important;width:24px!important;height:24px!important;min-width:24px!important;min-height:24px!important;flex:0 0 24px;overflow:visible;fill:currentColor!important;stroke:none!important}
+.player .buttons button[data-action="repeat"] .rm-transport-icon{fill:none!important;stroke:currentColor!important;stroke-width:2.6!important;stroke-linecap:round;stroke-linejoin:round}
+.player .buttons button{color:#163d32!important}
+.player .buttons button[data-action="play"][data-running="true"],
+.player .buttons button[data-action="pause"][data-running="true"],
+.player .buttons button[data-action="repeat"][aria-pressed="true"],
+.player .buttons button[data-flash="true"]{color:#fff!important}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -324,7 +333,7 @@ function buildPlayer(number){
  const setState=t=>$('.state').textContent=t;
  function load(i,autoplay){if(i<0||i>=tracks.length)return;idx=i;audio.src=tracks[i].url;$('.track').textContent=tracks[i].name;$('.artist').textContent=tracks[i].name.includes(' - ')?tracks[i].name.split(' - ')[0]:'ARCHIVO LOCAL';$('.full-route').textContent=tracks[i].name;$('.full-route').title=tracks[i].name;$('.seek').value=0;setState('CARGADO');if(autoplay)audio.play().catch(()=>setState('TOCÁ PLAY'))}
  const actions={back:()=>{audio.currentTime=Math.max(0,(audio.currentTime||0)-10)},play:()=>{if(idx<0&&tracks.length)load(0,false);if(idx>=0)audio.play().catch(()=>setState('TOCÁ PLAY'))},pause:()=>audio.pause(),stop:()=>{audio.pause();audio.currentTime=0;setState('DETENIDO')},next:()=>{if(idx+1<tracks.length)load(idx+1,true)},repeat:()=>{repeat=!repeat;root.querySelector('[data-action="repeat"]').setAttribute('aria-pressed',String(repeat))},forward:()=>{if(Number.isFinite(audio.duration))audio.currentTime=Math.min(audio.duration,(audio.currentTime||0)+10)}};
- for(const [id,symbol,title] of icons){const btn=document.createElement('button');btn.type='button';btn.textContent=symbol;btn.title=title;btn.setAttribute('aria-label',title);btn.dataset.action=id;if(id==='repeat')btn.setAttribute('aria-pressed','false');btn.addEventListener('click',actions[id]);$('.buttons').append(btn)}
+ for(const [id,symbol,title] of icons){const btn=document.createElement('button');btn.type='button';btn.innerHTML='<svg class="rm-transport-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+({"back":"<path d='M11 5 L3 12 L11 19 Z'/><path d='M21 5 L13 12 L21 19 Z'/>","play":"<path d='M7 4 L20 12 L7 20 Z'/>","pause":"<rect x='5' y='4' width='5' height='16' rx='1'/><rect x='14' y='4' width='5' height='16' rx='1'/>","stop":"<rect x='4' y='4' width='16' height='16' rx='1.5'/>","next":"<path d='M3 5 L11 12 L3 19 Z'/><path d='M13 5 L21 12 L13 19 Z'/>","repeat":"<path d='M5 9 V7 Q5 5 8 5 H19 L16 2 M19 5 L16 8'/><path d='M19 15 V17 Q19 19 16 19 H5 L8 16 M5 19 L8 22'/>","forward":"<path d='M3 5 L11 12 L3 19 Z'/><path d='M13 5 L21 12 L13 19 Z'/>"})[id]+'</svg>';btn.title=title;btn.setAttribute('aria-label',title);btn.dataset.action=id;if(id==='repeat')btn.setAttribute('aria-pressed','false');btn.addEventListener('click',actions[id]);$('.buttons').append(btn)}
  $('.file input').addEventListener('change',e=>{audio.pause();urls.forEach(URL.revokeObjectURL);urls=[];tracks=Array.from(e.target.files||[]).map(f=>{const url=URL.createObjectURL(f);urls.push(url);return {url,name:f.name.replace(/\.[^.]+$/,'')}});idx=-1;if(tracks.length)load(0,false)});
  $('.vol').addEventListener('input',e=>{audio.volume=Number(e.target.value)/100;$('.volvalue').textContent=e.target.value+'%'});
  $('.seek').addEventListener('input',e=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=audio.duration*Number(e.target.value)/1000});
