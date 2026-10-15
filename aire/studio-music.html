@@ -663,13 +663,35 @@ const blockHost=document.createElement('div');blockHost.id='rm-block-youtube';bl
 let blockYT=null,blockYTReady=false,blockYTActive=false,blockYTLoading=false,blockCurrent=-1,blockRepeat=false,blockTick=null;
 const blockPlaylist=()=>blocks[activeBlock];
 function blockStatus(message){programInfo.textContent=message}
+let blockFactsSequence=0;
+async function loadBlockFacts(f){
+ const facts=blockDeck.querySelector('.rm-song-facts');
+ if(!facts)return;
+ const seq=++blockFactsSequence;
+ const year=facts.querySelector('[data-fact="year"]'),writers=facts.querySelector('[data-fact="writers"]'),label=facts.querySelector('[data-fact="label"]');
+ year.textContent='Consultando…';writers.textContent='Consultando…';label.textContent='Consultando…';
+ const parts=String(f.name||'').split(' — ');
+ const artist=parts.shift()||'',title=parts.join(' — ')||f.name;
+ try{
+  const response=await fetch('/api/song-facts?title='+encodeURIComponent(title)+'&artist='+encodeURIComponent(artist),{cache:'no-store'});
+  if(!response.ok)throw Error('Sin datos');
+  const data=await response.json();if(seq!==blockFactsSequence)return;
+  year.textContent=data.year||'Sin confirmar';
+  writers.textContent=data.writers?.length?data.writers.join(', '):'Sin confirmar';
+  label.textContent=data.label||'Sin confirmar';
+ }catch(_){if(seq!==blockFactsSequence)return;year.textContent='Sin verificar';writers.textContent='Sin verificar';label.textContent='Sin verificar'}
+}
+function setBlockAir(on){
+ blockDeck.querySelector('.heading .air').dataset.live=String(!!on);
+ blockDeck.dataset.playbackState=on?'REPRODUCIENDO':'PAUSADO';
+}
 function blockYTInit(){
  if(blockYT||!window.YT?.Player)return;
  blockYT=new YT.Player('rm-block-youtube',{height:'1',width:'1',playerVars:{playsinline:1,controls:0,origin:location.origin},events:{
  onReady:()=>{blockYTReady=true;blockYT.setVolume(Number(blockDeck.querySelector('.vol').value)||85)},
  onStateChange:e=>{
   const state=e.data;
-  blockDeck.querySelector('.air').dataset.live=String(state===YT.PlayerState.PLAYING);
+  setBlockAir(state===YT.PlayerState.PLAYING);
   if(state===YT.PlayerState.PLAYING){blockYTActive=true;blockDeck.dataset.playbackState='REPRODUCIENDO'}
   if(state===YT.PlayerState.PAUSED||state===YT.PlayerState.CUED){blockDeck.dataset.playbackState='PAUSADO'}
   if(state===YT.PlayerState.ENDED&&blockYTActive){
@@ -712,7 +734,7 @@ blockDeck.querySelector('.buttons').addEventListener('click',e=>{
  const action=e.target.closest('[data-action]')?.dataset.action;
  if(action==='play'){if(autoSepPending)autoSepAudio.play().catch(()=>{});else blockYT?.playVideo()}
  if(action==='pause'){blockYT?.pauseVideo();autoSepAudio.pause()}
- if(action==='stop'){stopAutoSep();blockYT?.stopVideo();blockYTActive=false;blockDeck.querySelector('.air').dataset.live='false'}
+ if(action==='stop'){stopAutoSep();blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}
  if(action==='repeat')blockRepeat=!blockRepeat;
  if(action==='next'&&blockCurrent+1<blockPlaylist().length)playBlockTrack(blockCurrent+1);
  if(action==='back')blockYT?.seekTo(Math.max(0,(blockYT.getCurrentTime?.()||0)-10),true);
@@ -737,19 +759,19 @@ function playAutoSeparator(nextIndex){
  autoSepPending={block:activeBlock,index:nextIndex};
  autoSepAudio.src=rmSeparatorBase+encodeURIComponent(file);
  autoSepAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
- blockStatus('SEPARADOR AUTOMÁTICO · '+rmSeparatorLabels[separatorIndex]);
+ blockStatus('SEPARADOR AUTOMÁTICO · '+rmSeparatorLabels[separatorIndex]);setBlockAir(true);
  blockDeck.querySelector('.screen .track').textContent=rmSeparatorLabels[separatorIndex];
  blockDeck.querySelector('.screen .artist').textContent='SEPARADOR · RUIDOS MOLESTOS';
  autoSepAudio.play().catch(()=>{const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
 }
-autoSepAudio.addEventListener('ended',()=>{const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
-autoSepAudio.addEventListener('error',()=>{const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
+autoSepAudio.addEventListener('ended',()=>{setBlockAir(false);const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
+autoSepAudio.addEventListener('error',()=>{setBlockAir(false);const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index){
  stopAutoSep();
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
  if(f.programTrack){
-  blockCurrent=index;blockYTActive=true;
+  blockCurrent=index;blockYTActive=true;loadBlockFacts(f);
   blockDeck.querySelector('.screen .track').textContent=f.name.split(' — ').slice(1).join(' — ')||f.name;
   blockDeck.querySelector('.screen .artist').textContent=f.name.split(' — ')[0]||'PROGRAMA 44';
   blockDeck.querySelector('.full-route').textContent='PROGRAMA 44 · BLOQUE '+(activeBlock+1);
