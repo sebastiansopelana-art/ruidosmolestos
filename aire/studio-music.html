@@ -600,6 +600,7 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .players>.player>.footer{margin:2px 0 4px!important;min-height:29px}
 .players>.player>.below{margin-top:0!important}
 @media(max-width:850px){.players>.player>.buttons{gap:3px}.players>.player>.buttons button{height:35px}.players>.player>.volume{gap:5px}}
+.entry .rm-duration{flex:0 0 48px;min-width:48px;text-align:right;font:700 11px ui-monospace,monospace;color:#b8d9ec;white-space:nowrap}.entry>span:first-child{flex:1;min-width:0}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -656,6 +657,8 @@ const makePanel=(title)=>{const panel=document.createElement('section');panel.cl
 const blockPanel=makePanel('BLOQUES DEL PROGRAMA'),auxPanel=makePanel('PLAYLIST AUXILIAR');
 decks[0].append(blockPanel);decks[1].append(auxPanel);
 const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
+const rmDurationText=s=>Number(s)>0&&Number.isFinite(Number(s))?fmt(Number(s)):'--:--';
+function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{file.rmDuration=a.duration;URL.revokeObjectURL(url);done()};a.onerror=()=>URL.revokeObjectURL(url);a.src=url}
 const programRow=document.createElement('div');programRow.className='rm-program-row';
 const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 44';programLoad.title='Cargar los cuatro bloques del programa 44 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
@@ -667,7 +670,7 @@ async function loadStudioProgram(number=44){
   if(!response.ok)throw Error('No se encontró el programa');
   const manifest=await response.json();
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
-  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true}));
+  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,durationSeconds:t.durationSeconds||0}));
   activeBlock=0;drawBlocks();
   programLoad.textContent='PROGRAMA Nº '+number;
   programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES';
@@ -740,7 +743,7 @@ async function blockResolve(f){
  if(!response.ok)throw Error('No se pudo buscar la grabación');
  const candidates=(data.results||[]).filter(x=>x.id&&Number(x.durationSeconds||0)<1200&&!/full\\s*album|complete\\s*album/i.test(x.title||''));
  if(!candidates.length)throw Error('No hay grabación reproducible');
- f.videoId=candidates[0].id;return f.videoId;
+ f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;drawBlocks();return f.videoId;
 }
 function blockRefreshTime(){
  if(!blockYTActive||!blockYTReady)return;
@@ -749,6 +752,7 @@ function blockRefreshTime(){
  blockDeck.querySelector('.remaining').textContent='-'+fmt(Math.max(0,duration-current));
  blockDeck.querySelector('.screen-countdown strong').textContent=duration?fmt(Math.max(0,duration-current)):'--:--';
  if(duration>0)blockDeck.querySelector('.seek').value=Math.round(current/duration*1000);
+  const item=blockPlaylist()[blockCurrent];if(duration>0&&item&&Math.abs((item.durationSeconds||0)-duration)>1){item.durationSeconds=duration;drawBlocks()}
  if(duration>0&&duration-current<=2&&duration-current>0&&!autoSepTriggered&&blockYT.getPlayerState?.()===YT.PlayerState.PLAYING)startAutoMix();
 }
 blockTick=setInterval(blockRefreshTime,350);
@@ -830,20 +834,20 @@ function drawBlocks(){
   const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
   t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
   t.addEventListener('dblclick',()=>playBlockTrack(i));
-  row.append(t);blockItems.append(row);
+  const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.durationSeconds||f.rmDuration);row.append(t,duration);blockItems.append(row);
  }
 }
 
 loadStudioProgram(44);
-blockFile.onchange=()=>{blocks[activeBlock].push(...Array.from(blockFile.files));blockFile.value='';drawBlocks()};drawBlocks();
+blockFile.onchange=()=>{const files=Array.from(blockFile.files);blocks[activeBlock].push(...files);blockFile.value='';drawBlocks();files.forEach(f=>rmReadFileDuration(f,drawBlocks))};drawBlocks();
 const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar en YouTube';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
 search.onsubmit=e=>{e.preventDefault();if(q.value.trim())window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q.value.trim()),'_blank','noopener')};
 const auxNote=document.createElement('div');auxNote.className='sub';auxNote.textContent='Búsqueda externa · reproducción local de archivos';auxPanel.append(auxNote);
 const auxItems=document.createElement('div');auxItems.className='items';auxPanel.append(auxItems);
 const auxUpload=document.createElement('label');auxUpload.className='upload';auxUpload.textContent='＋ AGREGAR A PLAYLIST';const auxFile=document.createElement('input');auxFile.type='file';auxFile.accept='audio/*';auxFile.multiple=true;auxUpload.append(auxFile);auxPanel.append(auxUpload);
 const auxNative=decks[1].querySelector('.footer input[type=file]');decks[1].querySelector('.footer .file').style.display='none';
-function drawAux(){auxItems.replaceChildren();if(!auxFiles.length){const d=document.createElement('div');d.className='hint';d.textContent='Playlist vacía. Agregá archivos de audio.';auxItems.append(d)}for(const [i,f] of auxFiles.entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const b=document.createElement('button');b.textContent='▶';b.onclick=()=>{const dt=new DataTransfer();auxFiles.forEach(file=>dt.items.add(file));auxNative.files=dt.files;auxNative.dispatchEvent(new Event('change',{bubbles:true}));for(let k=0;k<i;k++)decks[1].querySelector('[data-action=next]').click();decks[1].querySelector('[data-action=play]').click()};row.append(t,b);auxItems.append(row)}}
-auxFile.onchange=()=>{auxFiles.push(...Array.from(auxFile.files));auxFile.value='';drawAux()};drawAux();
+function drawAux(){auxItems.replaceChildren();if(!auxFiles.length){const d=document.createElement('div');d.className='hint';d.textContent='Playlist vacía. Agregá archivos de audio.';auxItems.append(d)}for(const [i,f] of auxFiles.entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const b=document.createElement('button');b.textContent='▶';b.onclick=()=>{const dt=new DataTransfer();auxFiles.forEach(file=>dt.items.add(file));auxNative.files=dt.files;auxNative.dispatchEvent(new Event('change',{bubbles:true}));for(let k=0;k<i;k++)decks[1].querySelector('[data-action=next]').click();decks[1].querySelector('[data-action=play]').click()};const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.rmDuration);row.append(t,duration,b);auxItems.append(row)}}
+auxFile.onchange=()=>{const files=Array.from(auxFile.files);auxFiles.push(...files);auxFile.value='';drawAux();files.forEach(f=>rmReadFileDuration(f,drawAux))};drawAux();
 
 /* Separadores precargados: reproducción inmediata desde memoria cuando está disponible */
 const rmAudioContext=window.AudioContext||window.webkitAudioContext;
@@ -972,7 +976,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
 const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);deck.dataset.playbackState=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
- function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
+ function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0;if(d>0&&ytQueue[current]&&Math.abs((ytQueue[current].durationSeconds||0)-d)>1){ytQueue[current].durationSeconds=d;save();render()}const t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
  function render(){
  list.replaceChildren();
  if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
@@ -981,7 +985,7 @@ const fmtAux=n=>fmt(Number(n)||0);
   const label=document.createElement('span');label.textContent=(i+1)+'. '+x.title+' — '+(x.artist||'');label.title=x.title+' — '+(x.artist||'');label.classList.add('aux-doubleplay');label.addEventListener('dblclick',()=>playIndex(i));
   const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.className='aux-remove';remove.title='Eliminar de la playlist';remove.setAttribute('aria-label','Eliminar '+x.title);
   remove.onclick=()=>{const wasCurrent=i===current;const wasPlaying=playing;if(wasCurrent)stop();ytQueue.splice(i,1);if(i<current)current--;else if(wasCurrent){current=-1;if(wasPlaying&&ytQueue.length)playIndex(Math.min(i,ytQueue.length-1))}save();render()};
-  row.append(label,remove);list.append(row)
+  const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(x.durationSeconds);row.append(label,duration,remove);list.append(row)
  })
 }
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
