@@ -823,4 +823,23 @@ document.addEventListener('keydown',event=>{
  event.preventDefault();
  button.click();
 });
+
+/* Solicitar pantalla completa al iniciar y en la primera interacción permitida.
+   El navegador puede exigir un gesto explícito del operador. */
+(()=>{
+ let pending=true;
+ const tryFullscreen=()=>{
+  if(document.fullscreenElement){pending=false;return}
+  if(!pending||!document.documentElement.requestFullscreen)return;
+  try{
+   const result=document.documentElement.requestFullscreen({navigationUI:'hide'});
+   if(result&&typeof result.then==='function')result.then(()=>{pending=false}).catch(()=>{});
+  }catch(_){}
+ };
+ document.addEventListener('DOMContentLoaded',()=>{tryFullscreen()},{once:true});
+ const firstGesture=()=>{if(pending)tryFullscreen()};
+ document.addEventListener('pointerdown',firstGesture,{capture:true});
+ document.addEventListener('keydown',firstGesture,{capture:true});
+ document.addEventListener('fullscreenchange',()=>{if(document.fullscreenElement)pending=false;else pending=true});
+})();
 </script></body></html>
