@@ -1,105 +1,121 @@
 {
   "programa": 45,
-  "titulo": "Ruidos Molestos 45 · Los que se fueron de Jethro Tull",
-  "estado": "guion-ampliado-musica-pendiente-de-verificacion",
+  "titulo": "Ruidos Molestos 45 · Los caminos que vuelven a cruzarse",
+  "estado": "repertorio-discografico-verificado-enlaces-y-reproduccion-pendientes",
   "artistas": [
-    "Jethro Tull",
     "Blodwyn Pig",
+    "The Mick Abrahams Band",
     "Wild Turkey",
     "Aviator"
   ],
-  "nota": "16 temas distribuidos en cuatro bloques. Consultas de búsqueda configuradas; enlaces concretos y reproducción en estudio pendientes de verificación. No considerar listo para emisión.",
+  "nota": "16 títulos contrastados con discografías. No hay URL directa ni videoId de YouTube validado; NO considerar probado para emisión. Correcciones: Wild Turkey 'Dulwich Fox' es de Battle Hymn (1971); Aviator 'Time on Our Side' no figura en Turbulence y se sustituye por 'Way of the World'; Blodwyn Pig 'See My Way' aparece en Getting to This y en la edición estadounidense de Ahead Rings Out.",
   "tracks": [
     {
-      "query": "Jethro Tull My Sunday Feeling official audio",
-      "label": "Jethro Tull — My Sunday Feeling",
-      "bloque": 1
-    },
-    {
-      "query": "Jethro Tull Beggar's Farm official audio",
-      "label": "Jethro Tull — Beggar's Farm",
-      "bloque": 1
-    },
-    {
-      "query": "Jethro Tull A New Day Yesterday official audio",
-      "label": "Jethro Tull — A New Day Yesterday",
-      "bloque": 1
-    },
-    {
-      "query": "Jethro Tull Nothing Is Easy official audio",
-      "label": "Jethro Tull — Nothing Is Easy",
-      "bloque": 1
-    },
-    {
-      "query": "Blodwyn Pig It's Only Love official audio",
-      "label": "Blodwyn Pig — It's Only Love",
-      "bloque": 2
-    },
-    {
-      "query": "Blodwyn Pig Dear Jill official audio",
+      "query": "Blodwyn Pig Dear Jill album audio",
       "label": "Blodwyn Pig — Dear Jill",
-      "bloque": 2
+      "bloque": 1,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Blodwyn Pig The Modern Alchemist official audio",
+      "query": "Blodwyn Pig It's Only Love album audio",
+      "label": "Blodwyn Pig — It's Only Love",
+      "bloque": 1,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
+    },
+    {
+      "query": "Blodwyn Pig The Modern Alchemist album audio",
       "label": "Blodwyn Pig — The Modern Alchemist",
-      "bloque": 2
+      "bloque": 1,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Blodwyn Pig Ain't Ya Coming Home, Babe? official audio",
-      "label": "Blodwyn Pig — Ain't Ya Coming Home, Babe?",
-      "bloque": 2
+      "query": "Blodwyn Pig See My Way album audio",
+      "label": "Blodwyn Pig — See My Way",
+      "bloque": 1,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Wild Turkey Battle Hymn official audio",
+      "query": "The Mick Abrahams Band Greyhound Bus album audio",
+      "label": "The Mick Abrahams Band — Greyhound Bus",
+      "bloque": 2,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
+    },
+    {
+      "query": "The Mick Abrahams Band Why Do You Do Me This Way album audio",
+      "label": "The Mick Abrahams Band — Why Do You Do Me This Way",
+      "bloque": 2,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
+    },
+    {
+      "query": "The Mick Abrahams Band Seasons album audio",
+      "label": "The Mick Abrahams Band — Seasons",
+      "bloque": 2,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
+    },
+    {
+      "query": "The Mick Abrahams Band You'll Never Get It From Me album audio",
+      "label": "The Mick Abrahams Band — You'll Never Get It From Me",
+      "bloque": 2,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
+    },
+    {
+      "query": "Wild Turkey Battle Hymn album audio",
       "label": "Wild Turkey — Battle Hymn",
-      "bloque": 3
+      "bloque": 3,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Wild Turkey Butterfly official audio",
+      "query": "Wild Turkey Butterfly album audio",
       "label": "Wild Turkey — Butterfly",
-      "bloque": 3
+      "bloque": 3,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Wild Turkey Twelve Streets of Cobbled Black official audio",
+      "query": "Wild Turkey Twelve Streets of Cobbled Black album audio",
       "label": "Wild Turkey — Twelve Streets of Cobbled Black",
-      "bloque": 3
+      "bloque": 3,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Wild Turkey Dulwich Fox official audio",
+      "query": "Wild Turkey Dulwich Fox album audio",
       "label": "Wild Turkey — Dulwich Fox",
-      "bloque": 3
+      "bloque": 3,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Aviator Your Loving Is My Home official audio",
+      "query": "Aviator Your Loving Is My Home album audio",
       "label": "Aviator — Your Loving Is My Home",
-      "bloque": 4
+      "bloque": 4,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Aviator Keep Your Heart Right official audio",
+      "query": "Aviator Keep Your Heart Right album audio",
       "label": "Aviator — Keep Your Heart Right",
-      "bloque": 4
+      "bloque": 4,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Aviator Evil Eye official audio",
+      "query": "Aviator Evil Eye album audio",
       "label": "Aviator — Evil Eye",
-      "bloque": 4
+      "bloque": 4,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     },
     {
-      "query": "Aviator Time on Our Side official audio",
-      "label": "Aviator — Time on Our Side",
-      "bloque": 4
+      "query": "Aviator Way of the World album audio",
+      "label": "Aviator — Way of the World",
+      "bloque": 4,
+      "verificacion": "titulo-y-artista-confirmados; video-y-reproduccion-no-verificados"
     }
   ],
   "bloques": [
     {
       "numero": 1,
-      "artista": "Jethro Tull",
+      "artista": "Blodwyn Pig",
       "cantidadTemas": 4
     },
     {
       "numero": 2,
-      "artista": "Blodwyn Pig",
+      "artista": "The Mick Abrahams Band",
       "cantidadTemas": 4
     },
     {
