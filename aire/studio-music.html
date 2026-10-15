@@ -258,6 +258,20 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .buttons button[data-action="stop"],
 .player .buttons button[data-action="repeat"]{font-size:27px!important;font-weight:900!important}
 .player .buttons button[data-action="stop"]{font-size:30px!important}
+
+/* Destello coordinado: animar OPACIDAD, no background (los fondos Glass usan !important). */
+@keyframes rmSyncedFlash{
+  0%,49%{opacity:1;filter:brightness(1.28) drop-shadow(0 0 5px rgba(255,255,255,.65))}
+  50%,100%{opacity:.32;filter:brightness(.66)}
+}
+.player .buttons button[data-action="play"][data-running="true"],
+.player .buttons button[data-action="pause"][data-running="true"],
+.player .buttons button[data-action="repeat"][aria-pressed="true"],
+.player .buttons button[data-flash="true"],
+.player .separator-pad .sep-cell button[data-playing="true"],
+.player .footer>.air[data-live="true"]{
+ animation:rmSyncedFlash .7s steps(1,end) infinite!important;
+}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
