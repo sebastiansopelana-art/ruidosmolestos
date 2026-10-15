@@ -712,8 +712,9 @@ async function loadStudioProgram(number=44){
   const manifest=await response.json();
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
   for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
+  for(const t of blocks.flat()){const cached=rmVideoCache[t.query];if(!t.videoId&&cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){t.videoId=cached.id;t.durationSeconds=t.durationSeconds||cached.durationSeconds||0}}
   activeBlock=0;drawBlocks();
-   const pending=blocks.flat().filter(t=>t.programTrack);let cursor=0;
+   const pending=blocks.flat().filter(t=>t.programTrack&&!t.videoId);let cursor=0;
    for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track)}catch(_){}}})();
   programLoad.textContent='PROGRAMA Nº '+number;
   programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
@@ -794,14 +795,26 @@ function blockEnsureYT(){
  if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)}
 }
 blockEnsureYT();
+const rmVideoCacheKey='rm-program-video-ids-v1';
+let rmVideoCache={};
+try{rmVideoCache=JSON.parse(localStorage.getItem(rmVideoCacheKey)||'{}')||{}}catch(_){rmVideoCache={}}
+const rmResolveInFlight=new Map();
 async function blockResolve(f){
  if(f.videoId)return f.videoId;
+ const cached=rmVideoCache[f.query];
+ if(cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){f.videoId=cached.id;f.durationSeconds=f.durationSeconds||cached.durationSeconds||0;return f.videoId}
+ if(rmResolveInFlight.has(f.query))return rmResolveInFlight.get(f.query).then(id=>{f.videoId=id;return id});
+ const request=blockSearchResolve(f);
+ rmResolveInFlight.set(f.query,request);
+ try{return await request}finally{rmResolveInFlight.delete(f.query)}
+}
+async function blockSearchResolve(f){
  const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(f.query+' High Quality Audio'));
  const data=await response.json();
  if(!response.ok)throw Error('No se pudo buscar la grabación');
  const candidates=(data.results||[]).filter(x=>x.id&&Number(x.durationSeconds||0)<1200&&!/full\\s*album|complete\\s*album/i.test(x.title||''));
  if(!candidates.length)throw Error('No hay grabación reproducible');
- f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;refreshBlockDurations();return f.videoId;
+ f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;rmVideoCache[f.query]={id:f.videoId,durationSeconds:f.durationSeconds};try{localStorage.setItem(rmVideoCacheKey,JSON.stringify(rmVideoCache))}catch(_){}refreshBlockDurations();return f.videoId;
 }
 function blockRefreshTime(){
  if(!blockYTActive||!blockYTReady)return;
