@@ -226,6 +226,13 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .separator-pad .sep-cell:nth-child(2) button:hover{background:#e4fff0!important}
 .player .separator-pad .sep-cell:nth-child(3) button:hover{background:#f1eaff!important}
 .player .separator-pad .sep-cell:nth-child(4) button:hover{background:#fff0dc!important}
+
+/* Paleta Glass uniforme entre transporte y separadores, sin cambiar geometría. */
+.player .buttons button:nth-child(4n+1){background:linear-gradient(145deg,#d5eafa,#8cb9db)!important;border-color:#a9d3f0!important;color:#183a55!important}
+.player .buttons button:nth-child(4n+2){background:linear-gradient(145deg,#d7f2e5,#85c7aa)!important;border-color:#a3e1c6!important;color:#174937!important}
+.player .buttons button:nth-child(4n+3){background:linear-gradient(145deg,#e7def8,#b2a0df)!important;border-color:#cbb9ef!important;color:#3d2c67!important}
+.player .buttons button:nth-child(4n){background:linear-gradient(145deg,#f9e8d4,#ddb18a)!important;border-color:#f2cfad!important;color:#684022!important}
+.player .buttons button{backdrop-filter:blur(12px) saturate(145%);-webkit-backdrop-filter:blur(12px) saturate(145%);box-shadow:inset 0 1px 0 #ffffffb0,0 2px 6px #0002!important}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -387,13 +394,23 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <input class="rm-intro-edit" aria-label="Segundos hasta que entra la voz" placeholder="--:--" title="Marcá manualmente el momento de entrada de voz de esta versión"></span>';
  deck.querySelector('.screen-countdown').before(facts);
  const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]'),introField=facts.querySelector('.rm-intro-edit');
+ const introReadout=document.createElement('strong');introReadout.className='rm-voice-remaining';introReadout.textContent='VOZ: SIN DATO';facts.append(introReadout);
+ const introSeconds=()=>{const v=String(introField.value||'').trim();if(!/^(?:\\d+:)?\\d+(?:\\.\\d+)?$/.test(v))return null;const p=v.split(':').map(Number);return p.length===2?p[0]*60+p[1]:p[0]};
+ function updateVoiceCountdown(time){
+  const cue=introSeconds();
+  if(cue===null){introReadout.textContent='VOZ: SIN DATO';return}
+  const remaining=Math.max(0,cue-(Number(time)||0));
+  introReadout.textContent=remaining>0?'VOZ EN '+fmt(remaining):'VOZ ENTRÓ';
+ }
+ introField.hidden=true;
+
  let factSeq=0;
  const introKey=id=>'rm-song-intro-'+id;
  introField.addEventListener('change',()=>{if(current<0)return;try{localStorage.setItem(introKey(ytQueue[current].id),introField.value.trim())}catch(e){}});
  async function loadSongFacts(x){
  const seq=++factSeq;
  yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';
- try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}
+ try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}updateVoiceCountdown(0)
  if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='Audio del estudio';return}
  const title=String(x.title||'').replace(/\([^)]*(official|audio|lyrics|video|remaster)[^)]*\)/ig,'').replace(/\[[^\]]*\]/g,'').trim();
  const artist=String(x.artist||'').replace(/\s*[-–]\s*Topic$/i,'').trim();
@@ -408,7 +425,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
 const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
- function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
+ function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--';updateVoiceCountdown(t)}catch(e){}}
  function render(){
  list.replaceChildren();
  if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
