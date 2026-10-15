@@ -64,6 +64,14 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .footer>.air{white-space:nowrap;font-weight:900;letter-spacing:.04em;color:#b4c8d7;background:#162d3d;border-color:#526f83}
 .player .footer>.air[data-live="true"]{color:#fff!important;background:#df182b!important;border:1px solid #ff8792!important;animation:rmOnAirBlink .6s steps(1,end) infinite!important;box-shadow:0 0 11px #ff233d99}
 @keyframes rmOnAirBlink{0%,49%{background:#ff172e;box-shadow:0 0 15px 3px #ff263f;color:#fff}50%,100%{background:#580713;box-shadow:none;color:#ffb6c0}}
+
+/* Parpadeo unificado: rojo únicamente, tanto en separadores como EN EL AIRE. */
+.separator-pad .sep-cell button[data-playing="true"]{animation:rmOnlyRedBlink .62s steps(1,end) infinite!important;outline:2px solid #ffb1b8!important;outline-offset:1px!important}
+.player .footer>.air[data-live="true"]{animation:rmOnlyRedBlink .62s steps(1,end) infinite!important}
+@keyframes rmOnlyRedBlink{
+  0%,49%{background:#ff1735!important;background-color:#ff1735!important;color:#fff!important;border-color:#ff8997!important;box-shadow:0 0 14px 3px #ff1735aa!important}
+  50%,100%{background:#680b19!important;background-color:#680b19!important;color:#fff!important;border-color:#b63749!important;box-shadow:none!important}
+}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
