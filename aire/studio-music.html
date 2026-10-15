@@ -956,7 +956,7 @@ function drawBlocks(){
 
 loadStudioProgram(44);
 blockFile.onchange=()=>{const files=Array.from(blockFile.files);blocks[activeBlock].push(...files);blockFile.value='';drawBlocks();files.forEach(f=>rmReadFileDuration(f,drawBlocks))};drawBlocks();
-const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar en YouTube';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
+const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
 search.onsubmit=e=>{e.preventDefault();if(q.value.trim())window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q.value.trim()),'_blank','noopener')};
 const auxNote=document.createElement('div');auxNote.className='sub';auxNote.textContent='Búsqueda externa · reproducción local de archivos';auxPanel.append(auxNote);
 const auxItems=document.createElement('div');auxItems.className='items';auxPanel.append(auxItems);
