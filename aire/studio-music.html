@@ -894,6 +894,23 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
  .workspace>.panel:nth-of-type(2)>.auxdeck::-webkit-scrollbar{width:6px}
  .workspace>.panel:nth-of-type(2)>.auxdeck::-webkit-scrollbar-thumb{background:#425b69;border-radius:8px}
 }
+/* CORTINAS · panel compacto de consola, coherente con Reproductor 2. */
+.auxdeck .curtainbank{margin-top:12px!important;padding:11px!important;border:1px solid #344b59!important;border-radius:7px!important;background:#0b141a!important;container-type:inline-size}
+.auxdeck .curtainhead{display:flex!important;flex-wrap:wrap!important;gap:5px 12px!important;margin-bottom:10px!important;padding-bottom:8px!important;border-bottom:1px solid #293c48!important}
+.auxdeck .curtainhead>b{font-size:12px!important;letter-spacing:1.2px!important;color:#e0edf4!important}
+.auxdeck .curtainhead>span{font-size:9px!important;letter-spacing:.25px!important;color:#8ba1af!important}
+.auxdeck .curtainlist{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+.auxdeck .curtaincard{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:9px!important;min-width:0!important;padding:10px!important;border:1px solid #334c5a!important;border-radius:6px!important;background:linear-gradient(180deg,#172630,#101a21)!important;box-shadow:none!important}
+.auxdeck .curtaincard>b{display:block!important;font-size:11px!important;line-height:1.35!important;color:#dcebf3!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.auxdeck .curtaincontrols{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;width:100%!important}
+.auxdeck .curtaincontrols button{min-width:0!important;width:100%!important;min-height:32px!important;height:auto!important;padding:6px 2px!important;border-radius:4px!important;font-size:9px!important;line-height:1.1!important;white-space:normal!important;overflow-wrap:anywhere!important;font-weight:800!important}
+.auxdeck .curtaincontrols [data-curtain-play]{background:#173e31!important;border-color:#347d5d!important;color:#d9ffeb!important}
+.auxdeck .curtaincontrols [data-curtain-repeat],.auxdeck .curtaincontrols [data-curtain-restart]{background:#1a3040!important;border-color:#47667a!important;color:#dbeefa!important}
+.auxdeck .curtaincontrols [data-curtain-pause]{background:#493a20!important;border-color:#8e7342!important;color:#fff0ce!important}
+.auxdeck .curtaincontrols [data-curtain-stop]{background:#43282c!important;border-color:#87545b!important;color:#ffe2e6!important}
+.auxdeck .curtaincard.live{border-color:#c69b4b!important;background:linear-gradient(180deg,#2b281d,#1a201d)!important;box-shadow:inset 3px 0 #e4b85d!important}
+@container (max-width:440px){.auxdeck .curtaincontrols{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+
 /* Salida mínima de pantalla completa: no ocupa espacio en la cabecera. */
 #studioFullscreen{position:fixed!important;top:5px!important;right:6px!important;z-index:2147483647!important;width:24px!important;height:24px!important;min-width:24px!important;padding:0!important;margin:0!important;border:1px solid #60717b!important;border-radius:4px!important;background:#121a20dd!important;color:#e5eef4!important;font-size:19px!important;line-height:20px!important;cursor:pointer!important;box-shadow:none!important}
 #studioFullscreen[hidden]{display:none!important}
