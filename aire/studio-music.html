@@ -224,7 +224,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  seek.addEventListener('pointerdown',()=>dragging=true,true);
  seek.addEventListener('input',()=>{dragging=true;if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;elapsed.textContent=fmtAux(d*Number(seek.value)/1000)}},true);
  seek.addEventListener('change',e=>{if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;if(activeProduction)productionAudio.currentTime=d*Number(seek.value)/1000;else if(ready)player.seekTo(d*Number(seek.value)/1000,true)}dragging=false;e.stopImmediatePropagation()},true);
- seek.addEventListener('pointerup',()=>{if(ready&&current>=0){const d=player.getDuration()||0;player.seekTo(d*Number(seek.value)/1000,true)}dragging=false},true);
+ seek.addEventListener('pointerup',()=>{if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;if(activeProduction)productionAudio.currentTime=d*Number(seek.value)/1000;else if(ready)player.seekTo(d*Number(seek.value)/1000,true)}dragging=false},true);
  vol.addEventListener('input',()=>{if(activeProduction)productionAudio.volume=Number(vol.value)/100;else if(ready)player.setVolume(Number(vol.value)||0)},true);
  productionAudio.addEventListener('playing',()=>{if(activeProduction)live(true)});productionAudio.addEventListener('pause',()=>{if(activeProduction)live(false)});productionAudio.addEventListener('ended',()=>{if(!activeProduction)return;if(repeat)playIndex(current);else next()});
  function initializeYT(){if(!window.YT?.Player){setTimeout(initializeYT,200);return}
