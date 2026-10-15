@@ -764,12 +764,25 @@ function blockYTInit(){
    const next=blockCurrent+1;
    if(blockRepeat)playBlockTrack(blockCurrent);
    else if(next<blockPlaylist().length){if(!autoSepTriggered)startAutoMix();autoSepSongEnded=true;finishAutoMix()}
-   else{blockYTActive=false;blockDeck.querySelector('.air').dataset.live='false';blockStatus('Terminó el bloque '+(activeBlock+1))}
+   else{blockYTActive=false;setBlockAir(false);playBlockEndSeparator()}
   }
  },
  onError:()=>{blockStatus('La grabación seleccionada no se puede reproducir; probá otra');blockDeck.querySelector('.air').dataset.live='false'}
  }});
 }
+/* Cierre de cada bloque: Ya volvemos, sin pasar automáticamente al bloque siguiente. */
+const blockEndAudio=new Audio('https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Ya%20Volvemos%20Tanda.mp3');
+blockEndAudio.preload='auto';
+function stopBlockEndSeparator(){blockEndAudio.pause();blockEndAudio.currentTime=0}
+function playBlockEndSeparator(){
+ stopAutoSep();stopBlockEndSeparator();
+ blockEndAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
+ blockStatus('YA VOLVEMOS · FIN DEL BLOQUE '+(activeBlock+1));
+ blockEndAudio.play().catch(()=>{setBlockAir(false);blockStatus('Terminó el bloque '+(activeBlock+1)+' · No se pudo reproducir Ya volvemos')});
+}
+blockEndAudio.addEventListener('play',()=>setBlockAir(true));
+blockEndAudio.addEventListener('ended',()=>{setBlockAir(false);blockStatus('BLOQUE '+(activeBlock+1)+' FINALIZADO · DETENIDO')});
+blockEndAudio.addEventListener('pause',()=>{if(!blockEndAudio.ended)setBlockAir(false)});
 function blockEnsureYT(){
  if(window.YT?.Player){blockYTInit();return}
  const previous=window.onYouTubeIframeAPIReady;
@@ -802,13 +815,13 @@ blockDeck.querySelector('.buttons').addEventListener('click',e=>{
  const action=e.target.closest('[data-action]')?.dataset.action;
  if(action==='play'){blockYT?.playVideo();if(autoSepPending&&!autoSepFinished)autoSepAudio.play().catch(()=>{})}
  if(action==='pause'){blockYT?.pauseVideo();autoSepAudio.pause()}
- if(action==='stop'){stopAutoSep();blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}
+ if(action==='stop'){stopBlockEndSeparator();stopAutoSep();blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}
  if(action==='repeat')blockRepeat=!blockRepeat;
  if(action==='next'&&blockCurrent+1<blockPlaylist().length)playBlockTrack(blockCurrent+1);
  if(action==='back')blockYT?.seekTo(Math.max(0,(blockYT.getCurrentTime?.()||0)-10),true);
  if(action==='forward')blockYT?.seekTo((blockYT.getCurrentTime?.()||0)+10,true);
 },true);
-blockDeck.querySelector('.vol').addEventListener('input',e=>{if(blockYTActive)blockYT?.setVolume(Number(e.target.value))});
+blockDeck.querySelector('.vol').addEventListener('input',e=>{blockEndAudio.volume=Number(e.target.value)/100;if(blockYTActive)blockYT?.setVolume(Number(e.target.value))});
 blockDeck.querySelector('.seek').addEventListener('input',e=>{if(blockYTActive&&blockYTReady){const d=blockYT.getDuration?.()||0;if(d)blockYT.seekTo(d*Number(e.target.value)/1000,true)}});
 // Continuidad automática opcional: canción → separador precargado → siguiente canción.
 const rmSeparatorNames=["02 Rock Eco RM Seco.mp3","04 Seco Insoportable Corto Telefonico.mp3","05 Seco Insoportable Corto.mp3","06 Seco Nosotros Solo te Ofrecemos.mp3","07 Seco RM Insoportable PdR.mp3","08 Seco SS Recorrido Insopor.mp3","09 Seco Subite RM.mp3","10 Seco Vos y Yo sabemos.mp3"];
@@ -841,6 +854,7 @@ autoSepAudio.addEventListener('ended',()=>{autoSepFinished=true;finishAutoMix()}
 autoSepAudio.addEventListener('error',()=>{autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index){
+  stopBlockEndSeparator();
   window.dispatchEvent(new Event('rm-block-takeover'));
   stopAutoSep();
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
