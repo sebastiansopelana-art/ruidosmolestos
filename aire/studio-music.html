@@ -1111,7 +1111,7 @@ const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
 const rmDurationText=s=>Number(s)>0&&Number.isFinite(Number(s))?fmt(Number(s)):'--:--';
 function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{file.rmDuration=a.duration;URL.revokeObjectURL(url);done()};a.onerror=()=>URL.revokeObjectURL(url);a.src=url}
 const programRow=document.createElement('div');programRow.className='rm-program-row';
-const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 45';programLoad.title='Cargar los cuatro bloques del programa 45 desde la biblioteca del estudio';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA';programLoad.title='Cargar los cuatro bloques del programa 45 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
 const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';/* La información de estado ya se muestra en el reproductor; no agregar renglón debajo de bloques. */
 async function loadStudioProgram(number=44){
@@ -1127,7 +1127,7 @@ async function loadStudioProgram(number=44){
   activeBlock=0;drawBlocks();
    const pending=blocks.flat().filter(t=>t.programTrack&&!t.videoId);let cursor=0;
    for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track);refreshBlockDurations()}catch(_){}}})();
-  programLoad.textContent='PROGRAMA Nº '+number;
+  programLoad.textContent='CARGAR PROGRAMA';
   programInfo.textContent=(manifest.titulo||'PROGRAMA '+number).toUpperCase()+' · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
