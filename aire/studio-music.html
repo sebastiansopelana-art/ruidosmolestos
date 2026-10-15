@@ -884,7 +884,7 @@ function blockRefreshTime(){
  blockDeck.querySelector('.elapsed').textContent=fmt(current);
  blockDeck.querySelector('.remaining').textContent='-'+fmt(Math.max(0,duration-current));
  blockDeck.querySelector('.screen-countdown strong').textContent=duration?fmt(Math.max(0,duration-current)):'--:--';
- if(duration>0)blockDeck.querySelector('.seek').value=Math.round(current/duration*1000);
+ if(duration>0&&!blockSeekDragging)blockDeck.querySelector('.seek').value=Math.round(current/duration*1000);
   const item=blockPlaylist()[blockCurrent];if(duration>0&&item&&Math.abs((item.durationSeconds||0)-duration)>1){item.durationSeconds=duration;refreshBlockDurations()}
  if(duration>0&&duration-current<=2&&duration-current>0&&blockYT.getPlayerState?.()===YT.PlayerState.PLAYING){
   if(blockCurrent===blockPlaylist().length-1){if(!blockRepeat&&!blockEndStarted)playBlockEndSeparator()}
@@ -904,7 +904,14 @@ blockDeck.querySelector('.buttons').addEventListener('click',e=>{
  if(action==='forward')blockYT?.seekTo((blockYT.getCurrentTime?.()||0)+10,true);
 },true);
 blockDeck.querySelector('.vol').addEventListener('input',e=>{blockEndAudio.volume=Number(e.target.value)/100;if(blockYTActive)blockYT?.setVolume(Number(e.target.value))});
-blockDeck.querySelector('.seek').addEventListener('input',e=>{if(blockYTActive&&blockYTReady){const d=blockYT.getDuration?.()||0;if(d)blockYT.seekTo(d*Number(e.target.value)/1000,true)}});
+let blockSeekDragging=false;
+const blockSeek=blockDeck.querySelector('.seek');
+function commitBlockSeek(){if(blockYTActive&&blockYTReady){const d=Number(blockYT.getDuration?.()||0);if(d>0){blockYT.seekTo(d*Number(blockSeek.value)/1000,true);if(blockYT.getPlayerState?.()===YT.PlayerState.PAUSED)blockYT.playVideo()}}blockSeekDragging=false}
+blockSeek.addEventListener('pointerdown',()=>{blockSeekDragging=true});
+blockSeek.addEventListener('input',()=>{blockSeekDragging=true;const d=blockYTActive&&blockYTReady?Number(blockYT.getDuration?.()||0):0;if(d)blockDeck.querySelector('.elapsed').textContent=fmt(d*Number(blockSeek.value)/1000)});
+blockSeek.addEventListener('change',commitBlockSeek);
+blockSeek.addEventListener('pointerup',()=>{if(blockSeekDragging)commitBlockSeek()});
+blockSeek.addEventListener('pointercancel',()=>{blockSeekDragging=false});
 // Continuidad automática opcional: canción → separador precargado → siguiente canción.
 const rmSeparatorNames=["02 Rock Eco RM Seco.mp3","04 Seco Insoportable Corto Telefonico.mp3","05 Seco Insoportable Corto.mp3","06 Seco Nosotros Solo te Ofrecemos.mp3","07 Seco RM Insoportable PdR.mp3","08 Seco SS Recorrido Insopor.mp3","09 Seco Subite RM.mp3","10 Seco Vos y Yo sabemos.mp3"];
 const rmSeparatorLabels=["Rock Eco","Insoportable corto","Insoportable corto 2","Nosotros solo","RM insoportable","Sebastián Sopelana","Subite RM","Seco, vos y yo"];
@@ -1228,10 +1235,13 @@ const fmtAux=n=>fmt(Number(n)||0);
    if(action==='repeat'){repeat=!repeat;btn.setAttribute('aria-pressed',String(repeat))}
   },true)
  }
- seek.addEventListener('pointerdown',()=>dragging=true,true);
- seek.addEventListener('input',()=>{dragging=true;if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;elapsed.textContent=fmtAux(d*Number(seek.value)/1000)}},true);
- seek.addEventListener('change',e=>{if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;if(activeProduction)productionAudio.currentTime=d*Number(seek.value)/1000;else if(ready)player.seekTo(d*Number(seek.value)/1000,true)}dragging=false;e.stopImmediatePropagation()},true);
- seek.addEventListener('pointerup',()=>{if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;if(activeProduction)productionAudio.currentTime=d*Number(seek.value)/1000;else if(ready)player.seekTo(d*Number(seek.value)/1000,true)}dragging=false},true);
+ const seekDuration=()=>activeProduction?(patOverlapActive?patOverlapAudio.duration:productionAudio.duration)||0:ready&&player?player.getDuration()||0:0;
+ function commitAuxSeek(){if(current>=0){const d=seekDuration();if(d>0){const seconds=d*Number(seek.value)/1000;if(activeProduction){const audio=patOverlapActive?patOverlapAudio:productionAudio;audio.currentTime=seconds;if(audio.paused)audio.play().catch(()=>{})}else if(ready){player.seekTo(seconds,true);if(player.getPlayerState?.()===YT.PlayerState.PAUSED)player.playVideo()}}}dragging=false}
+ seek.addEventListener('pointerdown',()=>{dragging=true},true);
+ seek.addEventListener('input',()=>{dragging=true;if(current>=0){const d=seekDuration();if(d)elapsed.textContent=fmtAux(d*Number(seek.value)/1000)}},true);
+ seek.addEventListener('change',e=>{commitAuxSeek();e.stopImmediatePropagation()},true);
+ seek.addEventListener('pointerup',()=>{if(dragging)commitAuxSeek()},true);
+ seek.addEventListener('pointercancel',()=>{dragging=false},true);
  vol.addEventListener('input',()=>{if(activeProduction)productionAudio.volume=Number(vol.value)/100;else if(ready)player.setVolume(Number(vol.value)||0)},true);
  productionAudio.addEventListener('playing',()=>{if(activeProduction)live(true)});productionAudio.addEventListener('pause',()=>{if(activeProduction&&!patOverlapActive)live(false)});function startPatOverlap(){
   if(patOverlapStarted||stopRequested||ytQueue[current]?.id!=='rm-prod-9')return;
