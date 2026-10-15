@@ -385,6 +385,25 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
  .player .screen .separator-pad{right:53px!important;gap:3px!important}
  .player .screen .separator-pad .sep-cell button{font-size:8px!important;padding:0 1px!important}
 }
+
+/* EN EL AIRE reemplaza el estado LISTO/REPRODUCIENDO en la cabecera. */
+.player .heading>.air{
+ display:inline-flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+ padding:5px 11px!important;
+ border-radius:6px!important;
+ border:1px solid #526879!important;
+ background:#203344!important;
+ color:#cbd8e1!important;
+ font-size:12px!important;
+ font-weight:900!important;
+ letter-spacing:.08em!important;
+ white-space:nowrap!important;
+}
+.player .heading>.air[data-live="true"]{
+ animation:rmOnlyRedBlink .62s steps(1,end) infinite!important;
+}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -392,10 +411,10 @@ const icons=[['back','⏪','Retroceder 10 segundos'],['play','▶','Reproducir']
 const fmt=n=>{n=Math.max(0,Math.floor(Number(n)||0));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')};
 function buildPlayer(number){
  const root=document.createElement('section');root.className='player';root.setAttribute('aria-label','Reproductor '+number);
- root.innerHTML='<div class="heading"><h2>REPRODUCTOR '+number+'</h2><span class="state">LISTO</span></div><div class="screen"><div class="track">Sin tema cargado</div><div class="artist">Seleccioná archivos de audio para reproducir</div><div class="full-route" title="Ruta completa del audio">—</div><div class="screen-countdown">RESTANTE <strong>--:--</strong></div></div><div class="timeline"><span class="time elapsed">00:00</span><input class="seek" type="range" min="0" max="1000" value="0" aria-label="Posición de reproducción"><span class="time remaining">-00:00</span></div><div class="buttons"></div><div class="volume"><span>VOLUMEN</span><input class="vol" type="range" min="0" max="100" value="85" aria-label="Volumen"><span class="volvalue">85%</span></div><div class="footer"><span class="air" data-live="false">EN EL AIRE</span><label class="file">＋ CARGAR AUDIO<input type="file" accept="audio/*" multiple></label></div>';
+ root.innerHTML='<div class="heading"><h2>REPRODUCTOR '+number+'</h2><span class="air" data-live="false">EN EL AIRE</span></div><div class="screen"><div class="track">Sin tema cargado</div><div class="artist">Seleccioná archivos de audio para reproducir</div><div class="full-route" title="Ruta completa del audio">—</div><div class="screen-countdown">RESTANTE <strong>--:--</strong></div></div><div class="timeline"><span class="time elapsed">00:00</span><input class="seek" type="range" min="0" max="1000" value="0" aria-label="Posición de reproducción"><span class="time remaining">-00:00</span></div><div class="buttons"></div><div class="volume"><span>VOLUMEN</span><input class="vol" type="range" min="0" max="100" value="85" aria-label="Volumen"><span class="volvalue">85%</span></div><div class="footer"><label class="file">＋ CARGAR AUDIO<input type="file" accept="audio/*" multiple></label></div>';
  const $=sel=>root.querySelector(sel),audio=new Audio();audio.preload='metadata';audio.volume=.85;
  let tracks=[],idx=-1,repeat=false,urls=[];
- const setState=t=>$('.state').textContent=t;
+ const setState=t=>{root.dataset.playbackState=t};
  function load(i,autoplay){if(i<0||i>=tracks.length)return;idx=i;audio.src=tracks[i].url;$('.track').textContent=tracks[i].name;$('.artist').textContent=tracks[i].name.includes(' - ')?tracks[i].name.split(' - ')[0]:'ARCHIVO LOCAL';$('.full-route').textContent=tracks[i].name;$('.full-route').title=tracks[i].name;$('.seek').value=0;setState('CARGADO');if(autoplay)audio.play().catch(()=>setState('TOCÁ PLAY'))}
  const actions={back:()=>{audio.currentTime=Math.max(0,(audio.currentTime||0)-10)},play:()=>{if(idx<0&&tracks.length)load(0,false);if(idx>=0)audio.play().catch(()=>setState('TOCÁ PLAY'))},pause:()=>audio.pause(),stop:()=>{audio.pause();audio.currentTime=0;setState('DETENIDO')},next:()=>{if(idx+1<tracks.length)load(idx+1,true)},repeat:()=>{repeat=!repeat;root.querySelector('[data-action="repeat"]').setAttribute('aria-pressed',String(repeat))},forward:()=>{if(Number.isFinite(audio.duration))audio.currentTime=Math.min(audio.duration,(audio.currentTime||0)+10)}};
  for(const [id,symbol,title] of icons){const btn=document.createElement('button');btn.type='button';btn.innerHTML='<svg class="rm-transport-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+({"back":"<path d='M11 5 L3 12 L11 19 Z'/><path d='M21 5 L13 12 L21 19 Z'/>","play":"<path d='M7 4 L20 12 L7 20 Z'/>","pause":"<rect x='5' y='4' width='5' height='16' rx='1'/><rect x='14' y='4' width='5' height='16' rx='1'/>","stop":"<rect x='4' y='4' width='16' height='16' rx='1.5'/>","next":"<path d='M3 5 L11 12 L3 19 Z'/><path d='M13 5 L21 12 L13 19 Z'/>","repeat":"<path d='M5 9 V7 Q5 5 8 5 H19 L16 2 M19 5 L16 8'/><path d='M19 15 V17 Q19 19 16 19 H5 L8 16 M5 19 L8 22'/>","forward":"<path d='M3 5 L11 12 L3 19 Z'/><path d='M13 5 L21 12 L13 19 Z'/>"})[id]+'</svg>';btn.title=title;btn.setAttribute('aria-label',title);btn.dataset.action=id;if(id==='repeat')btn.setAttribute('aria-pressed','false');btn.addEventListener('click',actions[id]);$('.buttons').append(btn)}
@@ -441,7 +460,7 @@ const rmSeparatorBase='https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/objec
 const rmAudioContext=window.AudioContext||window.webkitAudioContext;
 const rmContext=rmAudioContext?new rmAudioContext():null;
 for(const [deckIndex,deck] of decks.entries()){
- const footer=deck.querySelector('.footer'),air=footer.querySelector('.air'),pad=document.createElement('div');
+ const footer=deck.querySelector('.footer'),air=deck.querySelector('.heading .air'),pad=document.createElement('div');
  pad.className='separator-pad';pad.setAttribute('aria-label','Separadores '+(deckIndex*4+1)+' a '+(deckIndex*4+4));deck.querySelector('.screen').append(pad);
  const urls=rmSeparatorNames.slice(deckIndex*4,deckIndex*4+4).map(name=>rmSeparatorBase+encodeURIComponent(name));
  const buffers=[null,null,null,null],elements=urls.map(url=>{const a=new Audio();a.preload='auto';a.src=url;a.load();return a});
@@ -541,7 +560,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
  const localSearch=query=>{const words=norm(query).split(/\s+/).filter(Boolean);return rmProductionCatalog.filter(x=>words.every(w=>norm(x.title+' '+x.artist+' '+x.file).includes(w)))};
  const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
- const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),state=deck.querySelector('.state'),air=deck.querySelector('.air'),vol=deck.querySelector('.vol');
+ const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),air=deck.querySelector('.heading .air'),vol=deck.querySelector('.vol');
  
  const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span>';
  deck.querySelector('.screen-countdown').before(facts);
@@ -563,7 +582,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
 }
 const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
- function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
+ function live(on){playing=!!on;air.dataset.live=String(playing);deck.dataset.playbackState=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
  function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
  function render(){
  list.replaceChildren();
