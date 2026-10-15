@@ -152,6 +152,10 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
  animation:rmSeparatorOnOff .65s step-end infinite!important;
  will-change:background-color,opacity
 }
+
+.player .rm-song-facts .rm-intro-countdown{font-size:12px;letter-spacing:.03em;color:#d4f8e0;white-space:nowrap}
+.player .rm-song-facts .rm-intro-countdown[data-imminent="true"]{color:#ffb649}
+.player .rm-song-facts .rm-mark-voice{background:#27546a;border:1px solid #6992a7;border-radius:4px;color:#fff;font-size:10px;font-weight:800;padding:2px 5px;cursor:pointer}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -313,13 +317,36 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <input class="rm-intro-edit" aria-label="Segundos hasta que entra la voz" placeholder="--:--" title="Marcá manualmente el momento de entrada de voz de esta versión"></span>';
  deck.querySelector('.screen-countdown').before(facts);
  const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]'),introField=facts.querySelector('.rm-intro-edit');
+ const introCountdown=document.createElement('strong');introCountdown.className='rm-intro-countdown';introCountdown.textContent='SIN MARCAR';
+ const markIntro=document.createElement('button');markIntro.type='button';markIntro.className='rm-mark-voice';markIntro.textContent='MARCAR VOZ';markIntro.title='Mientras escuchás, presioná justo cuando empieza a cantar para guardar el segundo de entrada de esta versión';
+ facts.append(introCountdown,markIntro);
+ const parseIntro=value=>{const s=String(value||'').trim();if(!/^(?:\\d+:)?\\d+(?:\\.\\d+)?$/.test(s))return null;const parts=s.split(':').map(Number);const seconds=parts.length===2?parts[0]*60+parts[1]:parts[0];return Number.isFinite(seconds)&&seconds>=0?seconds:null};
+ const voiceSeconds=()=>parseIntro(introField.value);
+ const currentAuxTime=()=>activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;
+ function refreshIntroCountdown(){
+  if(current<0){introCountdown.textContent='SIN TEMA';return}
+  const target=voiceSeconds();
+  if(target===null){introCountdown.textContent='INTRO SIN MEDIR';return}
+  const left=Math.max(0,target-currentAuxTime());
+  introCountdown.textContent=left>0?'VOZ EN '+fmt(left):'VOZ ENTRÓ';
+  introCountdown.dataset.imminent=String(left>0&&left<=5);
+ }
+ markIntro.addEventListener('click',()=>{
+  if(current<0)return;
+  const seconds=currentAuxTime();
+  introField.value=fmt(seconds);
+  try{localStorage.setItem(introKey(ytQueue[current].id),introField.value)}catch(e){}
+  refreshIntroCountdown()
+ });
+ introField.addEventListener('input',refreshIntroCountdown);
+
  let factSeq=0;
  const introKey=id=>'rm-song-intro-'+id;
  introField.addEventListener('change',()=>{if(current<0)return;try{localStorage.setItem(introKey(ytQueue[current].id),introField.value.trim())}catch(e){}});
  async function loadSongFacts(x){
  const seq=++factSeq;
  yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';
- try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}
+ try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}refreshIntroCountdown();
  if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='Audio del estudio';return}
  const title=String(x.title||'').replace(/\([^)]*(official|audio|lyrics|video|remaster)[^)]*\)/ig,'').replace(/\[[^\]]*\]/g,'').trim();
  const artist=String(x.artist||'').replace(/\s*[-–]\s*Topic$/i,'').trim();
@@ -334,7 +361,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
 const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
- function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
+ function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--';refreshIntroCountdown()}catch(e){}}
  function render(){
  list.replaceChildren();
  if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
@@ -350,7 +377,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
  function stop(){stopRequested=true;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);refreshIntroCountdown();render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
