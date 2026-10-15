@@ -483,8 +483,14 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .rm-studio-credit{flex:none;text-align:right;color:#9fb8ca;font-size:12px;letter-spacing:.03em;white-space:nowrap}
 .rm-studio-credit strong{color:#f0f7fc;font-weight:800}
 @media(max-width:680px){.rm-studio-brand{padding:9px;gap:8px}.rm-studio-logo{width:36px;height:36px}.rm-studio-brand-left{gap:7px}.rm-studio-title{font-size:9px;letter-spacing:0}.rm-studio-title strong{font-size:11px;letter-spacing:0}.rm-studio-credit{font-size:9px;white-space:normal;max-width:100px}}
+
+/* ESTUDIO ocupa exactamente el ancho visual de RUIDOS MOLESTOS. */
+.rm-studio-title{display:inline-flex;flex-direction:column;align-items:stretch;width:max-content;max-width:100%;line-height:1.15!important}
+.rm-studio-title strong{display:block;white-space:nowrap}
+.rm-studio-title .rm-studio-subtitle{display:block;width:100%;font-size:12px;font-weight:900;letter-spacing:.3em;color:#b8d5e8;text-align:justify;text-align-last:justify;line-height:1.45}
+@media(max-width:680px){.rm-studio-title .rm-studio-subtitle{font-size:9px;letter-spacing:.18em}}
 </style></head>
-<body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS</strong> ESTUDIO</div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
+<body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS</strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
 const icons=[['back','⏪','Retroceder 10 segundos'],['play','▶','Reproducir'],['pause','⏸','Pausar'],['stop','■','Detener'],['next','⏭','Siguiente tema'],['repeat','↻','Repetir tema'],['forward','⏩','Adelantar 10 segundos']];
 const fmt=n=>{n=Math.max(0,Math.floor(Number(n)||0));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')};
