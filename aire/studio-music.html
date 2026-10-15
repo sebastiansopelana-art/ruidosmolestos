@@ -59,6 +59,11 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 @media(prefers-reduced-motion:reduce){
  .separator-pad .sep-cell button[data-playing="true"]{animation:rmSeparatorPulse .9s steps(1,end) infinite!important}
 }
+
+/* Indicador EN EL AIRE: rojo intermitente exclusivamente al reproducir el deck */
+.player .footer>.air{white-space:nowrap;font-weight:900;letter-spacing:.04em;color:#b4c8d7;background:#162d3d;border-color:#526f83}
+.player .footer>.air[data-live="true"]{color:#fff!important;background:#df182b!important;border:1px solid #ff8792!important;animation:rmOnAirBlink .6s steps(1,end) infinite!important;box-shadow:0 0 11px #ff233d99}
+@keyframes rmOnAirBlink{0%,49%{background:#ff172e;box-shadow:0 0 15px 3px #ff263f;color:#fff}50%,100%{background:#580713;box-shadow:none;color:#ffb6c0}}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -66,7 +71,7 @@ const icons=[['back','⏪','Retroceder 10 segundos'],['play','▶','Reproducir']
 const fmt=n=>{n=Math.max(0,Math.floor(Number(n)||0));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')};
 function buildPlayer(number){
  const root=document.createElement('section');root.className='player';root.setAttribute('aria-label','Reproductor '+number);
- root.innerHTML='<div class="heading"><h2>REPRODUCTOR '+number+'</h2><span class="state">LISTO</span></div><div class="screen"><div class="track">Sin tema cargado</div><div class="artist">Seleccioná archivos de audio para reproducir</div></div><div class="timeline"><span class="time elapsed">00:00</span><input class="seek" type="range" min="0" max="1000" value="0" aria-label="Posición de reproducción"><span class="time remaining">-00:00</span></div><div class="buttons"></div><div class="volume"><span>VOLUMEN</span><input class="vol" type="range" min="0" max="100" value="85" aria-label="Volumen"><span class="volvalue">85%</span></div><div class="footer"><span class="air">FUERA DEL AIRE</span><label class="file">＋ CARGAR AUDIO<input type="file" accept="audio/*" multiple></label></div>';
+ root.innerHTML='<div class="heading"><h2>REPRODUCTOR '+number+'</h2><span class="state">LISTO</span></div><div class="screen"><div class="track">Sin tema cargado</div><div class="artist">Seleccioná archivos de audio para reproducir</div></div><div class="timeline"><span class="time elapsed">00:00</span><input class="seek" type="range" min="0" max="1000" value="0" aria-label="Posición de reproducción"><span class="time remaining">-00:00</span></div><div class="buttons"></div><div class="volume"><span>VOLUMEN</span><input class="vol" type="range" min="0" max="100" value="85" aria-label="Volumen"><span class="volvalue">85%</span></div><div class="footer"><span class="air" data-live="false">EN EL AIRE</span><label class="file">＋ CARGAR AUDIO<input type="file" accept="audio/*" multiple></label></div>';
  const $=sel=>root.querySelector(sel),audio=new Audio();audio.preload='metadata';audio.volume=.85;
  let tracks=[],idx=-1,repeat=false,urls=[];
  const setState=t=>$('.state').textContent=t;
@@ -78,10 +83,10 @@ function buildPlayer(number){
  $('.seek').addEventListener('input',e=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=audio.duration*Number(e.target.value)/1000});
  audio.addEventListener('timeupdate',()=>{const d=audio.duration;$('.elapsed').textContent=fmt(audio.currentTime);$('.remaining').textContent='-'+fmt(Number.isFinite(d)?d-audio.currentTime:0);$('.seek').value=Number.isFinite(d)&&d>0?Math.round(audio.currentTime/d*1000):0});
  audio.addEventListener('loadedmetadata',()=>{$('.remaining').textContent='-'+fmt(audio.duration)});
- audio.addEventListener('play',()=>{setState('REPRODUCIENDO');$('.air').textContent='● EN EL AIRE'});
- audio.addEventListener('pause',()=>{if(!audio.ended)setState('PAUSADO');$('.air').textContent='FUERA DEL AIRE'});
+ audio.addEventListener('play',()=>{setState('REPRODUCIENDO');$('.air').dataset.live='true'});
+ audio.addEventListener('pause',()=>{if(!audio.ended)setState('PAUSADO');$('.air').dataset.live='false'});
  audio.addEventListener('ended',()=>{if(repeat){audio.currentTime=0;audio.play().catch(()=>{})}else if(idx+1<tracks.length)load(idx+1,true);else{setState('FINALIZADO');$('.air').textContent='FUERA DEL AIRE'}});
- audio.addEventListener('error',()=>setState('ERROR DE AUDIO'));
+ audio.addEventListener('error',()=>{setState('ERROR DE AUDIO');$('.air').dataset.live='false'});
  return root
 }
 document.getElementById('players').append(buildPlayer(1),buildPlayer(2));
