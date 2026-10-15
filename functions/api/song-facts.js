@@ -10,7 +10,7 @@ export async function onRequestGet({request}){
   if(!data.recordings?.length&&artist)data=await mb('recording/?query='+encodeURIComponent('recording:"'+title.replace(/"/g,'')+'"')+'&fmt=json&limit=10');
   const choices=(data.recordings||[]).filter(r=>norm(r.title)===norm(title));
   const best=choices.find(r=>!artist||norm((r['artist-credit']||[]).map(a=>a.name||a.artist?.name||'').join(' ')).includes(norm(artist)))||choices[0];
-  if(!best)return new Response(JSON.stringify({year:null,writers:[],source:'MusicBrainz',matched:false}),{headers});
+  if(!best)return new Response(JSON.stringify({year:null,writers:[],label:null,source:'MusicBrainz',matched:false}),{headers});
   const year=best['first-release-date']?.slice(0,4)||null;
   let writers=[];
   try{
@@ -21,6 +21,16 @@ export async function onRequestGet({request}){
     writers=[...new Set((detail.relations||[]).filter(r=>['composer','lyricist','writer'].includes(r.type)).map(r=>r.artist?.name).filter(Boolean))];
    }
   }catch(e){}
-  return new Response(JSON.stringify({year,writers,source:'MusicBrainz',matched:true}),{headers});
+  let label=null;
+  try{
+   const detail=await mb('recording/'+encodeURIComponent(best.id)+'?inc=releases&fmt=json');
+   const releases=(detail.releases||[]).slice().sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999'));
+   for(const release of releases.slice(0,4)){
+    const releaseDetail=await mb('release/'+encodeURIComponent(release.id)+'?inc=labels&fmt=json');
+    const found=(releaseDetail['label-info']||[]).map(x=>x.label?.name).find(x=>x&&x!=='[no label]');
+    if(found){label=found;break}
+   }
+  }catch(e){}
+  return new Response(JSON.stringify({year,writers,label,source:'MusicBrainz',matched:true}),{headers});
  }catch(e){return new Response(JSON.stringify({error:'Music metadata service unavailable'}),{status:503,headers:{...headers,'Cache-Control':'no-store'}})}
 }
