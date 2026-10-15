@@ -929,6 +929,17 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 #list .rm-pat-repeat{min-width:24px!important;width:24px;height:25px;padding:0!important;font-size:17px;line-height:1}
 #list .rm-pat-repeat.rm-pat-repeat-on,#list .rm-pat-repeat[aria-pressed="true"]{color:#fff!important;border:2px solid #7ef3a4!important;background:#16804b!important;box-shadow:0 0 0 2px rgba(126,243,164,.35),0 0 9px rgba(126,243,164,.65)!important;font-weight:900!important}
 @media(max-width:650px){#list .rm-pat-range{width:52px}#list .rm-pat-mini{gap:3px}}
+/* Cortinas dentro de los bloques: misma línea visual que las pistas, controles compactos. */
+#list .track.prodplan:has(.rm-pat-mini){display:grid!important;grid-template-columns:22px minmax(0,1fr) auto!important;align-items:center!important;gap:8px!important;min-height:47px!important;padding:7px 9px!important;border:1px solid #456275!important;border-left:3px solid #6a9bb5!important;border-radius:5px!important;background:linear-gradient(90deg,#162732,#101a21)!important}
+#list .track.prodplan:has(.rm-pat-mini)>div:nth-child(2){min-width:0!important}
+#list .track.prodplan:has(.rm-pat-mini)>div:nth-child(2)>b{display:block!important;font-size:10px!important;letter-spacing:.4px!important;color:#d8eaf4!important;white-space:normal!important}
+#list .track.prodplan:has(.rm-pat-mini) .meta{font-size:8px!important;line-height:1.35!important;color:#91a8b6!important}
+#list .rm-pat-mini{display:flex!important;align-items:center!important;gap:6px!important;flex:0 0 auto!important}
+#list .rm-pat-mini button{height:29px!important;min-height:29px!important;border-radius:4px!important;font-weight:800!important}
+#list .rm-pat-mini .rm-pat-repeat{width:32px!important;min-width:32px!important;padding:0!important;font-size:17px!important;background:#203746!important;border:1px solid #557588!important}
+#list .rm-pat-mini button:not(.rm-pat-repeat){min-width:69px!important;padding:4px 9px!important;font-size:10px!important;background:#174c36!important;border:1px solid #398360!important;color:#e3ffed!important}
+#list .rm-pat-range{display:none!important}
+@media(max-width:560px){#list .track.prodplan:has(.rm-pat-mini){grid-template-columns:18px minmax(0,1fr)!important}#list .rm-pat-mini{grid-column:2!important;justify-content:flex-start!important}}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
