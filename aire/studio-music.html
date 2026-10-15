@@ -671,6 +671,17 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players .below .rm-block-cue>span:first-child{font-weight:750;color:#f4fbff;user-select:none}
 #players .below .rm-block-cue[data-playing=true]{animation:rmCuePlaying .85s ease-in-out infinite!important;border:2px solid #bdeaff!important}
 @media(prefers-reduced-motion:reduce){#players .below .rm-block-cue[data-playing=true]{animation:none!important;outline:3px solid #fff!important}}
+
+/* Misma paleta violeta pastel del control PAUSA para los cuatro bloques y las cortinas. */
+#players .below .rm-block-cue,
+#players .rm-aux-fixed .rm-cue-intro,
+#players .rm-aux-fixed .rm-cue-narration{background:linear-gradient(145deg,#e7def8,#b2a0df)!important;border-color:#cbb9ef!important;color:#3d2c67!important}
+#players .below .rm-block-cue>span:first-child,
+#players .rm-aux-fixed .rm-cue-button .aux-doubleplay{color:#3d2c67!important;font-weight:800}
+#players .below .rm-block-cue .rm-duration,
+#players .rm-aux-fixed .rm-cue-button .rm-duration{color:#3d2c67!important}
+#players .below .rm-block-cue[data-playing=true],
+#players .rm-aux-fixed .rm-cue-button[data-playing=true]{border-color:#7153b0!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
