@@ -580,7 +580,7 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 
 /* Ajuste de alineación solicitado: título y carga en una fila; subtítulo inmediatamente debajo. */
 .player>.below{margin-top:0!important;gap:4px!important;padding-top:7px!important}
-.player{gap:2px!important}
+.player{gap:0!important}.player>.footer{margin-bottom:0!important}.player>.below{margin-top:0!important}
 .below>h3{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:27px}
 .below>h3 .rm-program-row{display:block;flex:0 0 25%;max-width:25%}
 .below>h3 .rm-program-load{display:block;width:100%;height:27px;padding:4px 2px;line-height:1.1;font-size:9px}
@@ -808,7 +808,7 @@ function playBlockTrack(index){
 }
 function drawBlocks(){
  tabs.replaceChildren();
- for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{activeBlock=b;drawBlocks()};tabs.append(btn)}
+ for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{if(activeBlock!==b){stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1}activeBlock=b;drawBlocks()};tabs.append(btn)}
  blockItems.replaceChildren();
  if(!blocks[activeBlock].length){const d=document.createElement('div');d.className='hint';d.textContent='Todavía no hay temas en este bloque.';blockItems.append(d)}
  for(const [i,f] of blocks[activeBlock].entries()){
