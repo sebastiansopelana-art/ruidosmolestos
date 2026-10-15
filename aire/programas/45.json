@@ -1,0 +1,94 @@
+{
+  "programa": 45,
+  "titulo": "Ruidos Molestos 45 · Los que se fueron de Jethro Tull",
+  "estado": "prueba-musical",
+  "artistas": [
+    "Jethro Tull",
+    "Blodwyn Pig",
+    "Wild Turkey",
+    "Aviator"
+  ],
+  "nota": "Selección de prueba. Los IDs de YouTube se resuelven por búsqueda al cargar; reproducción no verificada.",
+  "tracks": [
+    {
+      "query": "Jethro Tull My Sunday Feeling official audio",
+      "label": "Jethro Tull — My Sunday Feeling",
+      "bloque": 1
+    },
+    {
+      "query": "Jethro Tull Beggar's Farm official audio",
+      "label": "Jethro Tull — Beggar's Farm",
+      "bloque": 1
+    },
+    {
+      "query": "Jethro Tull A New Day Yesterday official audio",
+      "label": "Jethro Tull — A New Day Yesterday",
+      "bloque": 1
+    },
+    {
+      "query": "Jethro Tull Nothing Is Easy official audio",
+      "label": "Jethro Tull — Nothing Is Easy",
+      "bloque": 1
+    },
+    {
+      "query": "Blodwyn Pig It's Only Love official audio",
+      "label": "Blodwyn Pig — It's Only Love",
+      "bloque": 2
+    },
+    {
+      "query": "Blodwyn Pig Dear Jill official audio",
+      "label": "Blodwyn Pig — Dear Jill",
+      "bloque": 2
+    },
+    {
+      "query": "Blodwyn Pig The Modern Alchemist official audio",
+      "label": "Blodwyn Pig — The Modern Alchemist",
+      "bloque": 2
+    },
+    {
+      "query": "Blodwyn Pig Ain't Ya Coming Home, Babe? official audio",
+      "label": "Blodwyn Pig — Ain't Ya Coming Home, Babe?",
+      "bloque": 2
+    },
+    {
+      "query": "Wild Turkey Battle Hymn official audio",
+      "label": "Wild Turkey — Battle Hymn",
+      "bloque": 3
+    },
+    {
+      "query": "Wild Turkey Butterfly official audio",
+      "label": "Wild Turkey — Butterfly",
+      "bloque": 3
+    },
+    {
+      "query": "Wild Turkey Twelve Streets of Cobbled Black official audio",
+      "label": "Wild Turkey — Twelve Streets of Cobbled Black",
+      "bloque": 3
+    },
+    {
+      "query": "Wild Turkey Dulwich Fox official audio",
+      "label": "Wild Turkey — Dulwich Fox",
+      "bloque": 3
+    },
+    {
+      "query": "Aviator Your Loving Is My Home official audio",
+      "label": "Aviator — Your Loving Is My Home",
+      "bloque": 4
+    },
+    {
+      "query": "Aviator Keep Your Heart Right official audio",
+      "label": "Aviator — Keep Your Heart Right",
+      "bloque": 4
+    },
+    {
+      "query": "Aviator Evil Eye official audio",
+      "label": "Aviator — Evil Eye",
+      "bloque": 4
+    },
+    {
+      "query": "Aviator Time on Our Side official audio",
+      "label": "Aviator — Time on Our Side",
+      "bloque": 4
+    }
+  ]
+}
