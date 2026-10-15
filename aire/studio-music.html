@@ -424,18 +424,40 @@ const fmtAux=n=>fmt(Number(n)||0);
    row.append(play,load);suggestionBox.append(row)
   })
  }
- async function lookup(query){const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(query),{cache:'no-store'});const data=await response.json();if(!response.ok)throw Error(data.error||'No se pudo buscar');return (data.results||[]).filter(x=>x.id&&x.title)}
+ const searchCache=new Map();let activeSearch=null;
+ const normalizedQuery=q=>String(q||'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/\\s+/g,' ').trim();
+ async function lookup(query,signal){
+  const key=normalizedQuery(query);
+  if(searchCache.has(key))return searchCache.get(key);
+  const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(query),{signal});
+  const data=await response.json();if(!response.ok)throw Error(data.error||'No se pudo buscar');
+  const found=(data.results||[]).filter(x=>x.id&&x.title);
+  searchCache.set(key,found);
+  if(searchCache.size>90)searchCache.delete(searchCache.keys().next().value);
+  return found
+ }
  function startSearch(query){
   clearTimeout(searchTimer);const seq=++searchSeq;
-  const local=localSearch(query);setSuggestions(local);if(!query)return;
-  status(local.length?'Producción RM primero · después YouTube Music':'Buscando en YouTube Music…');
-  searchTimer=setTimeout(async()=>{try{
-   const found=await lookup(query+' High Quality Audio');
-   if(seq!==searchSeq||field.value.trim()!==query)return;
-   results=[...local,...found];setSuggestions(results,true);
-   status(local.length+' de producción RM · '+found.length+' de YouTube Music · Enter reproduce · CARGAR agrega a la derecha');
-  }catch(e){if(seq===searchSeq){results=local;setSuggestions(local,true);status(local.length?'Producción RM disponible · YouTube no respondió':'Error de YouTube: '+e.message)}}
-  },220)
+  if(activeSearch){activeSearch.abort();activeSearch=null}
+  const local=localSearch(query),key=normalizedQuery(query);
+  const exact=searchCache.get(key);
+  const cached=exact||[...searchCache.entries()].filter(([k])=>k.startsWith(key)&&key.length>=2).flatMap(([,v])=>v).filter(x=>normalizedQuery(x.title+' '+(x.artist||'')).includes(key)||normalizedQuery((x.artist||'')+' '+x.title).includes(key)).slice(0,12);
+  setSuggestions([...local,...cached]);
+  if(!query){results=[];return}
+  if(exact){results=[...local,...exact];status('Resultados inmediatos · Enter reproduce · CARGAR agrega');return}
+  status(cached.length?'Sugerencias instantáneas · buscando más…':'Buscando coincidencias…');
+  searchTimer=setTimeout(async()=>{
+   const controller=new AbortController();activeSearch=controller;
+   try{
+    const found=await lookup(query,controller.signal);
+    if(seq!==searchSeq||field.value.trim()!==query)return;
+    results=[...local,...found];setSuggestions(results,true);
+    status(local.length+' de producción RM · '+found.length+' de YouTube Music · Enter reproduce · CARGAR agrega a la derecha');
+   }catch(e){
+    if(e.name==='AbortError')return;
+    if(seq===searchSeq){results=[...local,...cached];setSuggestions(results,true);status(cached.length?'Mostrando resultados guardados · YouTube no respondió':'Error de YouTube: '+e.message)}
+   }finally{if(activeSearch===controller)activeSearch=null}
+  },110)
  }
  field.addEventListener('input',()=>startSearch(field.value.trim()));
  field.addEventListener('keydown',e=>{
