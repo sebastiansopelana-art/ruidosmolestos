@@ -979,23 +979,25 @@ $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='Arrow
   const mf=await response.json();
   if(!Array.isArray(mf.tracks)||mf.tracks.length!==16)throw Error('Programa '+n+' incompleto: '+(mf.tracks?.length||0)+'/16 canciones.');
   if($('programState'))$('programState').textContent='Programa '+n+' · buscando 16 canciones en paralelo…';
-  const resolved=await Promise.all(mf.tracks.map(async(t,i)=>{try{
-   const queries=[t.query+' High Quality Audio',t.query];
-   let chosen=null;
-   for(const query of queries){try{
-    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),6500);
-    let rr;try{rr=await fetch('/api/ytmusic-search?q='+encodeURIComponent(query),{cache:'no-store',signal:controller.signal})}finally{clearTimeout(timeout)}
-    if(!rr.ok)continue;
-    const dd=await rr.json();
-    const candidates=(dd.results||[]).filter(x=>x.id&&Number(x.durationSeconds||0)<=1200&&!/full\\s*album|complete\\s*album|entire\\s*album|full\\s*lp/i.test(String(x.title||'')));
-    if(candidates.length){chosen=candidates[0];break}
-   }catch(_){}}
-   if(!chosen)throw Error('sin resultado');
-   return {ok:true,index:i,track:{...chosen,planned:t.label,program:Number(n),block:t.bloque||Math.floor(i/4)+1}};
-  }catch(_){return {ok:false,index:i,label:t.label}}}));
+  const cacheKey='rm-program-resolved-'+n;
+  let cached=[];try{cached=JSON.parse(localStorage.getItem(cacheKey)||'[]');if(!Array.isArray(cached))cached=[]}catch(_){}
+  const resolved=await Promise.all(mf.tracks.map(async(t,i)=>{
+   const old=cached[i];if(old?.id&&old?.planned===t.label)return {ok:true,index:i,track:old};
+   for(const query of [t.query,t.query+' official audio']){
+    try{
+     const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),3500);
+     let rr;try{rr=await fetch('/api/ytmusic-search?q='+encodeURIComponent(query),{cache:'no-store',signal:controller.signal})}finally{clearTimeout(timeout)}
+     if(!rr.ok)continue;const dd=await rr.json();
+     const chosen=(dd.results||[]).find(x=>x.id&&Number(x.durationSeconds||0)<=1200&&!/full album|complete album|entire album|full lp/i.test(String(x.title||'')));
+     if(chosen)return {ok:true,index:i,track:{...chosen,planned:t.label,program:Number(n),block:t.bloque||Math.floor(i/4)+1}};
+    }catch(_){}
+   }
+   return {ok:false,index:i,label:t.label};
+  }));
   const nextList=resolved.filter(x=>x.ok).sort((a,b)=>a.index-b.index).map(x=>x.track);
   const missing=resolved.filter(x=>!x.ok).sort((a,b)=>a.index-b.index).map(x=>x.label);
   if(!nextList.length)throw Error('No se pudo encontrar ninguna canción del Programa '+n+'.');
+  try{localStorage.setItem(cacheKey,JSON.stringify(resolved.map(x=>x.ok?x.track:null)))}catch(_){}
   list=nextList;idx=-1;gapTriggered=false;save();render();
   // Precarga el primer tema en el reproductor sin emitirlo: al apretar PLAY ya está bufferizado.
   if(ready&&list[0]?.id){try{player.cueVideoById({videoId:list[0].id,startSeconds:0})}catch(_){}}
