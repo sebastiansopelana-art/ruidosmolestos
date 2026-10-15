@@ -610,6 +610,9 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .players>.player{gap:4px!important}
 .players>.player>.footer{margin:0!important;min-height:27px!important}
 .players>.player>.below{margin-top:0!important}
+/* Vista unificada de los cuatro bloques en reproductor 1. */
+.rm-block-divider{font-size:10px;font-weight:900;letter-spacing:.1em;color:#b8e6ff;border-bottom:1px solid #507a96;padding:7px 4px 3px;margin:3px 0 2px}
+.player>.below .items .entry{padding-top:4px;padding-bottom:4px}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -836,18 +839,26 @@ function playBlockTrack(index){
  for(let k=0;k<position;k++)next.click();
  decks[0].querySelector('[data-action=play]').click();
 }
-function refreshBlockDurations(){[...blockItems.querySelectorAll('.entry .rm-duration')].forEach((node,i)=>{const f=blocks[activeBlock][i];if(f)node.textContent=rmDurationText(f.durationSeconds||f.rmDuration)})}
+function refreshBlockDurations(){
+ for(const row of blockItems.querySelectorAll('.entry[data-block][data-index]')){
+  const f=blocks[Number(row.dataset.block)]?.[Number(row.dataset.index)];
+  if(f)row.querySelector('.rm-duration').textContent=rmDurationText(f.durationSeconds||f.rmDuration);
+ }
+}
 function drawBlocks(){
- tabs.replaceChildren();
- for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{if(activeBlock!==b){stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1}activeBlock=b;drawBlocks()};tabs.append(btn)}
+ tabs.style.display='none';
  blockItems.replaceChildren();
- if(!blocks[activeBlock].length){const d=document.createElement('div');d.className='hint';d.textContent='Todavía no hay temas en este bloque.';blockItems.append(d)}
- for(const [i,f] of blocks[activeBlock].entries()){
-  const row=document.createElement('div');row.className='entry';
-  const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
-  t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
-  row.addEventListener('dblclick',()=>playBlockTrack(i));
-  const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.durationSeconds||f.rmDuration);row.append(t,duration);blockItems.append(row);
+ for(let b=0;b<4;b++){
+  const heading=document.createElement('div');heading.className='rm-block-divider';heading.textContent='BLOQUE '+(b+1);blockItems.append(heading);
+  if(!blocks[b].length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Sin temas cargados';blockItems.append(empty);continue}
+  for(const [i,f] of blocks[b].entries()){
+   const row=document.createElement('div');row.className='entry';row.dataset.block=b;row.dataset.index=i;
+   const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
+   t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
+   row.addEventListener('dblclick',()=>{if(activeBlock!==b){stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1;activeBlock=b}playBlockTrack(i)});
+   const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.durationSeconds||f.rmDuration);
+   row.append(t,duration);blockItems.append(row);
+  }
  }
 }
 
