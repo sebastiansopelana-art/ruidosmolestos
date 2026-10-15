@@ -532,6 +532,34 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .screen .rm-song-facts>span{display:flex;flex-direction:column;gap:2px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .player .screen .rm-song-facts b{color:#93c8e3!important;font-size:9px;letter-spacing:.06em}
 @media(max-width:680px){.player .screen .rm-song-facts{gap:4px!important}.player .screen .rm-song-facts b{font-size:8px}}
+
+/* Metadatos fluidos: cada campo ocupa sólo lo que necesita su contenido. */
+.player .screen .rm-song-facts{
+ display:flex!important;
+ flex-wrap:wrap!important;
+ justify-content:flex-start!important;
+ align-items:baseline!important;
+ column-gap:10px!important;
+ row-gap:3px!important;
+ width:100%!important;
+}
+.player .screen .rm-song-facts>span{
+ display:inline-flex!important;
+ flex-direction:row!important;
+ align-items:baseline!important;
+ gap:4px!important;
+ flex:0 1 auto!important;
+ width:auto!important;
+ max-width:100%!important;
+ min-width:0!important;
+ white-space:normal!important;
+ overflow:visible!important;
+}
+.player .screen .rm-song-facts>span>[data-fact]{
+ overflow-wrap:anywhere;
+ min-width:0;
+}
+@media(max-width:680px){.player .screen .rm-song-facts{column-gap:7px!important;row-gap:2px!important}}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
