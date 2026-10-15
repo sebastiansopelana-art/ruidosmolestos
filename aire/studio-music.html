@@ -1111,7 +1111,7 @@ const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
 const rmDurationText=s=>Number(s)>0&&Number.isFinite(Number(s))?fmt(Number(s)):'--:--';
 function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{file.rmDuration=a.duration;URL.revokeObjectURL(url);done()};a.onerror=()=>URL.revokeObjectURL(url);a.src=url}
 const programRow=document.createElement('div');programRow.className='rm-program-row';
-const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 44';programLoad.title='Cargar los cuatro bloques del programa 44 desde la biblioteca del estudio';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 45';programLoad.title='Cargar los cuatro bloques del programa 45 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
 const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';/* La información de estado ya se muestra en el reproductor; no agregar renglón debajo de bloques. */
 async function loadStudioProgram(number=44){
@@ -1120,6 +1120,7 @@ async function loadStudioProgram(number=44){
   const response=await fetch('/aire/programas/'+encodeURIComponent(number)+'.json',{cache:'no-store'});
   if(!response.ok)throw Error('No se encontró el programa');
   const manifest=await response.json();
+  window.rmLoadedProgram=number;
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
   for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
   for(const t of blocks.flat()){const cached=rmVideoCache[t.query];if(!t.videoId&&cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){t.videoId=cached.id;t.durationSeconds=t.durationSeconds||cached.durationSeconds||0}}
@@ -1127,11 +1128,11 @@ async function loadStudioProgram(number=44){
    const pending=blocks.flat().filter(t=>t.programTrack&&!t.videoId);let cursor=0;
    for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track);refreshBlockDurations()}catch(_){}}})();
   programLoad.textContent='PROGRAMA Nº '+number;
-  programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
+  programInfo.textContent=(manifest.titulo||'PROGRAMA '+number).toUpperCase()+' · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
 }
-programLoad.addEventListener('click',()=>loadStudioProgram(44));
+programLoad.addEventListener('click',()=>loadStudioProgram(45));
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);/* Control de carga oculto; se conserva el input para no alterar los manejadores. */
@@ -1413,8 +1414,8 @@ function playBlockTrack(index){
  if(f.programTrack){
   blockCurrent=index;blockYTActive=true;loadBlockFacts(f);
   blockDeck.querySelector('.screen .track').textContent=f.name.split(' — ').slice(1).join(' — ')||f.name;
-  blockDeck.querySelector('.screen .artist').textContent=f.name.split(' — ')[0]||'PROGRAMA 44';
-  blockDeck.querySelector('.full-route').textContent='PROGRAMA 44 · BLOQUE '+(activeBlock+1);
+  blockDeck.querySelector('.screen .artist').textContent=f.name.split(' — ')[0]||'PROGRAMA '+(window.rmLoadedProgram||45);
+  blockDeck.querySelector('.full-route').textContent='PROGRAMA '+(window.rmLoadedProgram||45)+' · BLOQUE '+(activeBlock+1);
   blockStatus('Buscando audio · '+f.name);
   const selectedBlock=activeBlock,selectedIndex=index;
   blockResolve(f).then(id=>{
