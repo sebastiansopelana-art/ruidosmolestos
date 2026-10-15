@@ -320,6 +320,41 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .buttons button[data-action="pause"][data-running="true"],
 .player .buttons button[data-action="repeat"][aria-pressed="true"],
 .player .buttons button[data-flash="true"]{color:#fff!important}
+
+/* Tiempo restante: esquina superior derecha idéntica en ambos reproductores.
+   Vúmetros conservados al extremo derecho; el contador ocupa su propio espacio. */
+.player .screen{position:relative!important;padding-right:220px!important}
+.player .screen .screen-countdown{
+ position:absolute!important;
+ top:12px!important;
+ right:65px!important;
+ width:142px!important;
+ margin:0!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:flex-start!important;
+ gap:3px!important;
+ text-align:center!important;
+ font-size:13px!important;
+ font-weight:900!important;
+ letter-spacing:.13em!important;
+ line-height:1.2!important;
+ color:#bcd9ec!important;
+ white-space:nowrap!important;
+}
+.player .screen .screen-countdown strong{
+ display:block!important;
+ font:900 32px/1.15 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+ letter-spacing:.015em!important;
+ color:#fff!important;
+ font-variant-numeric:tabular-nums!important;
+}
+@media(max-width:680px){
+ .player .screen{padding-right:170px!important}
+ .player .screen .screen-countdown{right:53px!important;width:108px!important;font-size:11px!important}
+ .player .screen .screen-countdown strong{font-size:25px!important}
+}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
