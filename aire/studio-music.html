@@ -1124,7 +1124,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  window.addEventListener('rm-block-takeover',()=>stop());
  function stop(){stopRequested=true;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
  function playIndex(i){if(i<0||i>=ytQueue.length)return;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
- productionAudio.addEventListener('loadedmetadata',()=>{const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
+ productionAudio.addEventListener('loadedmetadata',()=>{if(ytQueue[current]?.id==='rm-prod-9'){const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(pat&&!patOverlapAudio.src){patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';patOverlapAudio.load()}}const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
@@ -1204,13 +1204,14 @@ const fmtAux=n=>fmt(Number(n)||0);
  productionAudio.addEventListener('playing',()=>{if(activeProduction)live(true)});productionAudio.addEventListener('pause',()=>{if(activeProduction&&!patOverlapActive)live(false)});function startPatOverlap(){
   if(patOverlapStarted||stopRequested||ytQueue[current]?.id!=='rm-prod-9')return;
   const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(!pat)return;
-  patOverlapStarted=true;patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';
+  patOverlapStarted=true;if(!patOverlapAudio.src)patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';
+  patOverlapAudio.currentTime=0;
   patOverlapAudio.volume=Number(vol.value)/100;
   patOverlapAudio.play().then(()=>{if(stopRequested||!patOverlapStarted){patOverlapAudio.pause();return}patOverlapActive=true;status('MEZCLA · Ya volvimos + Pat Metheny');render()}).catch(()=>{patOverlapStarted=false;status('No se pudo iniciar la cortina Pat Metheny')});
  }
  productionAudio.addEventListener('ended',()=>{
   if(!activeProduction||stopRequested)return;
-  if(patOverlapActive){current=ytQueue.findIndex(x=>x.id==='rm-prod-11');track.textContent=ytQueue[current]?.title||'Pat Metheny';artist.textContent=ytQueue[current]?.artist||'PRODUCCIÓN RM';deck.querySelector('.full-route').textContent='Cortina Pat Metheny';render();live(true);return}
+  if(patOverlapStarted){current=ytQueue.findIndex(x=>x.id==='rm-prod-11');track.textContent=ytQueue[current]?.title||'Pat Metheny';artist.textContent=ytQueue[current]?.artist||'PRODUCCIÓN RM';deck.querySelector('.full-route').textContent='Cortina Pat Metheny';render();live(true);return}
   if(repeat)playIndex(current);else next()
  });
  patOverlapAudio.addEventListener('ended',()=>{if(!patOverlapActive||stopRequested)return;patOverlapActive=false;patOverlapStarted=false;if(repeat)playIndex(current);else next()});
