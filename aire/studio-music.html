@@ -104,6 +104,14 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 /* Playlist auxiliar: sólo título y cruz de eliminación; todo el transporte arriba */
 .player .below .aux-youtube-item .aux-remove{flex:0 0 23px;width:23px;height:23px;line-height:1;padding:0;font-size:18px;font-weight:900;background:#6b2332;border-color:#bb6475;color:#fff}
 .player .below .aux-youtube-item .aux-remove:hover{background:#a72b43}
+
+/* Ficha radial compacta del tema, sin modificar las columnas del estudio */
+.player .screen{height:166px;min-height:166px}
+.player .screen .rm-song-facts{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10px;color:#d7e8f4;line-height:1.35}
+.player .screen .rm-song-facts span{min-width:0}
+.player .screen .rm-song-facts b{color:#9cc7df}
+.player .screen .rm-intro-edit{background:#16384b;color:#fff;border:1px solid #587d96;border-radius:3px;width:48px;padding:2px 3px;font-size:10px;font-family:ui-monospace,monospace}
+.player .screen .rm-intro-edit:focus{outline:1px solid #9cdfff}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -204,7 +212,39 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const localSearch=query=>{const words=norm(query).split(/\s+/).filter(Boolean);return rmProductionCatalog.filter(x=>words.every(w=>norm(x.title+' '+x.artist+' '+x.file).includes(w)))};
  const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
  const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),state=deck.querySelector('.state'),air=deck.querySelector('.air'),vol=deck.querySelector('.vol');
- const fmtAux=n=>fmt(Number(n)||0);
+ 
+ const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <input class="rm-intro-edit" aria-label="Segundos hasta que entra la voz" placeholder="--:--" title="Marcá manualmente el momento de entrada de voz de esta versión"></span>';
+ deck.querySelector('.screen-countdown').before(facts);
+ const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]'),introField=facts.querySelector('.rm-intro-edit');
+ let factSeq=0;
+ const introKey=id=>'rm-song-intro-'+id;
+ introField.addEventListener('change',()=>{if(current<0)return;try{localStorage.setItem(introKey(ytQueue[current].id),introField.value.trim())}catch(e){}});
+ async function loadSongFacts(x){
+  const seq=++factSeq;yearNode.textContent='Consultando…';writerNode.textContent='Sin verificar';
+  introField.value=localStorage.getItem(introKey(x.id))||'';
+  if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='No corresponde';introField.placeholder='—';return}
+  introField.placeholder='--:--';
+  try{
+   const query='recording:'+x.title+' AND artist:'+(x.artist||'');
+   const url='https://musicbrainz.org/ws/2/recording/?query='+encodeURIComponent(query)+'&fmt=json&limit=5';
+   const response=await fetch(url,{headers:{'Accept':'application/json'}});
+   if(!response.ok)throw Error('metadata unavailable');
+   const data=await response.json();if(seq!==factSeq)return;
+   const first=(data.recordings||[]).find(y=>y['first-release-date']&&y.score>=85);
+   yearNode.textContent=first?.['first-release-date']?.slice(0,4)||'Sin verificar';
+   if(!first?.id)return;
+   const detail=await fetch('https://musicbrainz.org/ws/2/recording/'+encodeURIComponent(first.id)+'?inc=work-rels&fmt=json',{headers:{'Accept':'application/json'}});
+   if(!detail.ok)return;
+   const full=await detail.json();if(seq!==factSeq)return;
+   const work=(full.relations||[]).find(y=>y.type==='performance'&&y.work)?.work;
+   if(!work?.id)return;
+   const wr=await fetch('https://musicbrainz.org/ws/2/work/'+encodeURIComponent(work.id)+'?inc=artist-rels&fmt=json',{headers:{'Accept':'application/json'}});
+   if(!wr.ok)return;const workData=await wr.json();if(seq!==factSeq)return;
+   const authors=[...new Set((workData.relations||[]).filter(y=>['composer','lyricist','writer'].includes(y.type)).map(y=>y.artist?.name).filter(Boolean))];
+   if(authors.length)writerNode.textContent=authors.join(', ');
+  }catch(e){if(seq===factSeq)yearNode.textContent='Sin verificar'}
+ }
+const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
  function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
@@ -223,7 +263,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
  function stop(){productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  function next(){if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
