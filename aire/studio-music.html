@@ -1129,4 +1129,28 @@ $('loadProgram').onclick=()=>loadProgramNumber($('programNumber').value,$('loadP
  document.addEventListener('keydown',e=>{if(e.key==='Escape')return;enter()},{capture:true});
  document.addEventListener('fullscreenchange',refresh);refresh();
 })();
-</script></body></html>
+</script><style id="dual-deck-live">/* DUAL DECK LAYOUT — conserva controles y motores existentes */
+.workspace{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:12px!important;align-items:start!important}
+.workspace>.panel{min-width:0!important;border-radius:10px!important;background:linear-gradient(145deg,#131e25,#090e12)!important;padding:12px!important}
+.workspace>.panel.air{display:flex!important;flex-direction:column!important;gap:8px!important;position:relative!important;top:auto!important;border:1px solid #a96d3c!important}
+.workspace>.panel:nth-of-type(2){display:flex!important;flex-direction:column!important;gap:8px!important;border:1px solid #2b85ac!important}
+.workspace>.panel.air:before{content:"REPRODUCTOR 1 · BLOQUES";color:#f2ad72;font-weight:900;font-size:15px;letter-spacing:.1em;border-bottom:1px solid #654631;padding:8px}
+.workspace>.panel:nth-of-type(2):before{content:"REPRODUCTOR 2 · AUXILIAR";color:#75cff5;font-weight:900;font-size:15px;letter-spacing:.1em;border-bottom:1px solid #27576b;padding:8px}
+.workspace>.panel.air .airflag{display:flex!important;align-self:flex-start!important}
+.workspace>.panel.air .artist{display:block!important}
+.workspace>.panel.air .now{font-size:19px!important}
+.workspace>.panel.air .transport{display:flex!important;width:100%!important}
+.workspace>.panel.air .controls{display:flex!important;flex-wrap:wrap!important;justify-content:center!important}
+.workspace>.panel:nth-of-type(2)>.sectiontitle,.workspace>.panel:nth-of-type(2)>.programmeta,.workspace>.panel:nth-of-type(2)>.programActions,.workspace>.panel:nth-of-type(2)>#programState{display:none!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck{display:flex!important;flex-direction:column!important;gap:8px!important;border:0!important;background:transparent!important;padding:0!important;margin:0!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxhead{display:none!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxload{border:1px solid #28576b!important;background:#0a151c!important;padding:12px!important;border-radius:8px!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxqueue{max-height:400px!important;min-height:140px!important;overflow:auto!important}
+.workspace>.panel:nth-of-type(2)>.tools{display:none!important}
+.workspace>.panel.air>#list{display:block!important;width:100%!important;margin:8px 0 0!important}
+.workspace>.panel.air>#list .block{border:1px solid #694630!important;background:#12171b!important;border-radius:7px!important;overflow:hidden!important;margin-bottom:10px!important}
+.workspace>.panel.air>#list .blockhead{background:linear-gradient(90deg,#382416,#161b1f)!important;color:#f7cba8!important;padding:9px!important}
+.workspace>.panel.air>#list .track.prodplan{border-left:3px solid #e59551!important}
+.workspace>.panel.air>#list .track.prodplan.rm-separator-onair{animation:dualGlow .7s ease-in-out infinite alternate!important;box-shadow:0 0 12px #eb9657aa!important}
+@keyframes dualGlow{from{filter:brightness(.9)}to{filter:brightness(1.5)}}
+@media(max-width:980px){.workspace{grid-template-columns:1fr!important}.workspace>.panel.air{position:static!important}}</style><script id="dual-deck-live-script">(function(){function layout(){const left=document.querySelector('.workspace>.panel.air'),right=document.querySelector('.workspace>.panel:nth-of-type(2)'),list=document.getElementById('list'),aux=right&&right.querySelector('.auxdeck');if(!left||!right||!list||!aux)return;left.appendChild(list);const program=right.querySelector('.programlivehead');if(program)list.before(program);const queue=aux.querySelector('.auxload');if(queue)aux.appendChild(queue);}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',layout);else layout()})();</script></body></html>
