@@ -242,7 +242,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const localFiles=auxFiles,originalDraw=drawAux;
  const suggestionBox=document.createElement('div');suggestionBox.className='aux-suggestions';suggestionBox.setAttribute('role','listbox');form.after(suggestionBox);
  const ytHost=document.createElement('div');ytHost.className='aux-yt-host';ytHost.id='rm-aux-youtube-player';document.body.append(ytHost);
- const productionAudio=new Audio();productionAudio.preload='auto';let activeProduction=false;
+ const productionAudio=new Audio();productionAudio.preload='auto';let activeProduction=false,stopRequested=false;
  const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
  const localSearch=query=>{const words=norm(query).split(/\s+/).filter(Boolean);return rmProductionCatalog.filter(x=>words.every(w=>norm(x.title+' '+x.artist+' '+x.file).includes(w)))};
  const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
@@ -297,9 +297,9 @@ const fmtAux=n=>fmt(Number(n)||0);
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
- function stop(){productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
- function next(){if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
+ function stop(){stopRequested=true;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
  function setSuggestions(items,keepSelection=false){
@@ -339,7 +339,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  for(const action of ['play','pause','stop','next','back','forward','repeat']){
   const btn=deck.querySelector('[data-action="'+action+'"]');if(!btn)continue;
   btn.addEventListener('click',e=>{e.stopImmediatePropagation();e.preventDefault();
-   if(action==='play'){if(current<0&&ytQueue.length)playIndex(0);else if(activeProduction)productionAudio.play().catch(()=>{});else if(ready&&current>=0)player.playVideo();else status('Cargando motor de YouTube…')}
+   if(action==='play'){if(current<0&&ytQueue.length)playIndex(0);else if(stopRequested&&current>=0)playIndex(current);else if(activeProduction)productionAudio.play().catch(()=>{});else if(ready&&current>=0)player.playVideo();else status('Cargando motor de YouTube…')}
    if(action==='pause'){if(activeProduction)productionAudio.pause();else if(ready)player.pauseVideo()}
    if(action==='stop')stop();
    if(action==='next')next();
@@ -353,11 +353,11 @@ const fmtAux=n=>fmt(Number(n)||0);
  seek.addEventListener('change',e=>{if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;if(activeProduction)productionAudio.currentTime=d*Number(seek.value)/1000;else if(ready)player.seekTo(d*Number(seek.value)/1000,true)}dragging=false;e.stopImmediatePropagation()},true);
  seek.addEventListener('pointerup',()=>{if(current>=0){const d=activeProduction?productionAudio.duration||0:ready?player.getDuration()||0:0;if(activeProduction)productionAudio.currentTime=d*Number(seek.value)/1000;else if(ready)player.seekTo(d*Number(seek.value)/1000,true)}dragging=false},true);
  vol.addEventListener('input',()=>{if(activeProduction)productionAudio.volume=Number(vol.value)/100;else if(ready)player.setVolume(Number(vol.value)||0)},true);
- productionAudio.addEventListener('playing',()=>{if(activeProduction)live(true)});productionAudio.addEventListener('pause',()=>{if(activeProduction)live(false)});productionAudio.addEventListener('ended',()=>{if(!activeProduction)return;if(repeat)playIndex(current);else next()});
+ productionAudio.addEventListener('playing',()=>{if(activeProduction)live(true)});productionAudio.addEventListener('pause',()=>{if(activeProduction)live(false)});productionAudio.addEventListener('ended',()=>{if(!activeProduction||stopRequested)return;if(repeat)playIndex(current);else next()});
  function initializeYT(){if(!window.YT?.Player){setTimeout(initializeYT,200);return}
  player=new YT.Player(ytHost,{height:'1',width:'1',playerVars:{playsinline:1,controls:0,origin:location.origin},events:{
   onReady:()=>{ready=true;state.textContent='LISTO';status('YouTube Music listo · buscá o elegí un tema');player.setVolume(Number(vol.value)||85)},
-  onStateChange:e=>{if(activeProduction)return;if(e.data===YT.PlayerState.PLAYING)live(true);else if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.CUED)live(false);if(e.data===YT.PlayerState.ENDED){if(repeat&&current>=0)playIndex(current);else next()}update()},
+  onStateChange:e=>{if(activeProduction)return;if(e.data===YT.PlayerState.PLAYING)live(true);else if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.CUED)live(false);if(e.data===YT.PlayerState.ENDED&&!stopRequested&&!activeProduction){if(repeat&&current>=0)playIndex(current);else next()}update()},
   onError:e=>{live(false);status('Video no reproducible ('+e.data+'). Probá otro resultado.')},
   onAutoplayBlocked:()=>status('El navegador requiere pulsar PLAY para habilitar YouTube.')
  }})}
