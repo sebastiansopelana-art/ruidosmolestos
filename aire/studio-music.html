@@ -745,7 +745,7 @@ async function blockResolve(f){
  if(!response.ok)throw Error('No se pudo buscar la grabación');
  const candidates=(data.results||[]).filter(x=>x.id&&Number(x.durationSeconds||0)<1200&&!/full\\s*album|complete\\s*album/i.test(x.title||''));
  if(!candidates.length)throw Error('No hay grabación reproducible');
- f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;drawBlocks();return f.videoId;
+ f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;refreshBlockDurations();return f.videoId;
 }
 function blockRefreshTime(){
  if(!blockYTActive||!blockYTReady)return;
@@ -754,7 +754,7 @@ function blockRefreshTime(){
  blockDeck.querySelector('.remaining').textContent='-'+fmt(Math.max(0,duration-current));
  blockDeck.querySelector('.screen-countdown strong').textContent=duration?fmt(Math.max(0,duration-current)):'--:--';
  if(duration>0)blockDeck.querySelector('.seek').value=Math.round(current/duration*1000);
-  const item=blockPlaylist()[blockCurrent];if(duration>0&&item&&Math.abs((item.durationSeconds||0)-duration)>1){item.durationSeconds=duration;drawBlocks()}
+  const item=blockPlaylist()[blockCurrent];if(duration>0&&item&&Math.abs((item.durationSeconds||0)-duration)>1){item.durationSeconds=duration;refreshBlockDurations()}
  if(duration>0&&duration-current<=2&&duration-current>0&&!autoSepTriggered&&blockYT.getPlayerState?.()===YT.PlayerState.PLAYING)startAutoMix();
 }
 blockTick=setInterval(blockRefreshTime,350);
@@ -827,6 +827,7 @@ function playBlockTrack(index){
  for(let k=0;k<position;k++)next.click();
  decks[0].querySelector('[data-action=play]').click();
 }
+function refreshBlockDurations(){[...blockItems.querySelectorAll('.entry .rm-duration')].forEach((node,i)=>{const f=blocks[activeBlock][i];if(f)node.textContent=rmDurationText(f.durationSeconds||f.rmDuration)})}
 function drawBlocks(){
  tabs.replaceChildren();
  for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{if(activeBlock!==b){stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1}activeBlock=b;drawBlocks()};tabs.append(btn)}
@@ -836,7 +837,7 @@ function drawBlocks(){
   const row=document.createElement('div');row.className='entry';
   const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
   t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
-  t.addEventListener('dblclick',()=>playBlockTrack(i));
+  row.addEventListener('dblclick',()=>playBlockTrack(i));
   const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.durationSeconds||f.rmDuration);row.append(t,duration);blockItems.append(row);
  }
 }
