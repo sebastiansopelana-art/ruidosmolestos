@@ -766,7 +766,7 @@ function blockYTInit(){
    const next=blockCurrent+1;
    if(blockRepeat)playBlockTrack(blockCurrent);
    else if(next<blockPlaylist().length){if(!autoSepTriggered)startAutoMix();autoSepSongEnded=true;finishAutoMix()}
-   else{blockYTActive=false;setBlockAir(false);playBlockEndSeparator()}
+   else{blockYTActive=false;if(!blockEndStarted)playBlockEndSeparator();else if(blockEndAudio.ended)setBlockAir(false)}
   }
  },
  onError:()=>{blockStatus('La grabación seleccionada no se puede reproducir; probá otra');blockDeck.querySelector('.air').dataset.live='false'}
@@ -775,9 +775,11 @@ function blockYTInit(){
 /* Cierre de cada bloque: Ya volvemos, sin pasar automáticamente al bloque siguiente. */
 const blockEndAudio=new Audio('https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Ya%20Volvemos%20Tanda.mp3');
 blockEndAudio.preload='auto';
-function stopBlockEndSeparator(){blockEndAudio.pause();blockEndAudio.currentTime=0}
+let blockEndStarted=false;
+function stopBlockEndSeparator(){blockEndStarted=false;blockEndAudio.pause();blockEndAudio.currentTime=0}
 function playBlockEndSeparator(){
- stopAutoSep();stopBlockEndSeparator();
+ if(blockEndStarted)return;
+ stopAutoSep();blockEndAudio.pause();blockEndAudio.currentTime=0;blockEndStarted=true;
  blockEndAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
  blockStatus('YA VOLVEMOS · FIN DEL BLOQUE '+(activeBlock+1));
  blockEndAudio.play().catch(()=>{setBlockAir(false);blockStatus('Terminó el bloque '+(activeBlock+1)+' · No se pudo reproducir Ya volvemos')});
@@ -809,7 +811,10 @@ function blockRefreshTime(){
  blockDeck.querySelector('.screen-countdown strong').textContent=duration?fmt(Math.max(0,duration-current)):'--:--';
  if(duration>0)blockDeck.querySelector('.seek').value=Math.round(current/duration*1000);
   const item=blockPlaylist()[blockCurrent];if(duration>0&&item&&Math.abs((item.durationSeconds||0)-duration)>1){item.durationSeconds=duration;refreshBlockDurations()}
- if(duration>0&&duration-current<=2&&duration-current>0&&!autoSepTriggered&&blockYT.getPlayerState?.()===YT.PlayerState.PLAYING)startAutoMix();
+ if(duration>0&&duration-current<=2&&duration-current>0&&blockYT.getPlayerState?.()===YT.PlayerState.PLAYING){
+  if(blockCurrent===blockPlaylist().length-1){if(!blockRepeat&&!blockEndStarted)playBlockEndSeparator()}
+  else if(!autoSepTriggered)startAutoMix();
+ }
 }
 blockTick=setInterval(blockRefreshTime,350);
 blockDeck.querySelector('.buttons').addEventListener('click',e=>{
