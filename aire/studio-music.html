@@ -711,7 +711,7 @@ function blockEnsureYT(){
  if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)}
 }
 blockEnsureYT();
-async function blockResolve(f){
+async async function blockResolve(f){
  if(f.videoId)return f.videoId;
  const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(f.query+' High Quality Audio'));
  const data=await response.json();
