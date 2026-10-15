@@ -693,6 +693,16 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players .rm-aux-fixed .rm-cue-button .rm-duration{color:#174937!important}
 #players .below .rm-block-cue[data-playing=true],
 #players .rm-aux-fixed .rm-cue-button[data-playing=true]{border-color:#3b9372!important}
+
+/* Cabecera compacta para liberar altura útil a los reproductores. */
+.rm-studio-brand{min-height:48px!important;margin-bottom:7px!important;padding:5px 12px!important;gap:10px!important}
+.rm-studio-brand-left{gap:9px!important}
+.rm-studio-logo{width:34px!important;height:34px!important}
+.rm-studio-title{font-size:12px!important;line-height:1.1!important}
+.rm-studio-title strong{font-size:14px!important}
+.rm-studio-title .rm-studio-subtitle{font-size:10px!important;line-height:1.2!important}
+.rm-studio-credit{font-size:10px!important}
+@media(max-width:680px){.rm-studio-brand{min-height:40px!important;padding:4px 8px!important;margin-bottom:5px!important}.rm-studio-logo{width:29px!important;height:29px!important}.rm-studio-title strong{font-size:11px!important}.rm-studio-title .rm-studio-subtitle{font-size:8px!important}.rm-studio-credit{font-size:8px!important}}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
