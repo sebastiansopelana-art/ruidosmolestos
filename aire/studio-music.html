@@ -123,6 +123,14 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .rm-vu-segment.lit.peak{background:#f54a52;box-shadow:0 0 5px #f54a5277}
 @media(max-width:680px){.player .screen{padding-right:60px}.player .rm-vu{right:7px;width:40px}}
 .player .below .aux-youtube-item .aux-doubleplay{cursor:pointer;user-select:none;flex:1}.player .below .aux-youtube-item .aux-doubleplay:hover{color:#9bdfff}.player .below .aux-youtube-item[data-active=true] .aux-doubleplay{color:#a7e6ff;font-weight:800}
+
+/* Señal inequívoca de aire: alterna rojo encendido y apagado, no sólo dos tonos rojos. */
+@keyframes rmAirVisibleFlash{
+  0%,47%{background-color:#f31b34!important;color:#fff!important;border-color:#ff8696!important;box-shadow:0 0 12px #f31b34cc!important;opacity:1}
+  48%,100%{background-color:#182e3c!important;color:#9db1c0!important;border-color:#4d6677!important;box-shadow:none!important;opacity:.38}
+}
+.player .footer>.air[data-live="true"]{animation:rmAirVisibleFlash .7s step-end infinite!important;will-change:background-color,opacity}
+.player .footer>.air[data-live="false"]{animation:none!important;opacity:1}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
