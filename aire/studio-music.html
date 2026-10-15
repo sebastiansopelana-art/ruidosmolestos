@@ -37,7 +37,7 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 /* Alinear FUERA DEL AIRE con la fila de botones de separadores */
 .player .footer{align-items:flex-start!important}.player .footer>.air{box-sizing:border-box;height:25px;min-height:25px;display:inline-flex;align-items:center;justify-content:center;margin:0!important;line-height:1!important}.player .footer>.separator-pad{margin:0!important;align-self:flex-start!important}
 
-/* Identidad de color individual y parpadeo únicamente durante reproducción */
+/* Ocho colores fijos. Al sonar, alternan con amarillo intenso. */
 .separator-pad .sep-cell:nth-child(1) button{background:#256b96;border-color:#63b7e6}
 .separator-pad .sep-cell:nth-child(2) button{background:#2c8064;border-color:#6ccea6}
 .separator-pad .sep-cell:nth-child(3) button{background:#8063ad;border-color:#c0a4ed}
@@ -46,18 +46,19 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player:nth-child(2) .separator-pad .sep-cell:nth-child(2) button{background:#377f86;border-color:#7bd3d6}
 .player:nth-child(2) .separator-pad .sep-cell:nth-child(3) button{background:#8b6149;border-color:#d7a385}
 .player:nth-child(2) .separator-pad .sep-cell:nth-child(4) button{background:#687c3b;border-color:#b5cf76}
-.separator-pad button[data-playing=true]{animation:rmSepBlink .55s steps(1,end) infinite!important;outline:2px solid #fff;outline-offset:-2px}
-@keyframes rmSepBlink{0%,49%{filter:brightness(1.85);box-shadow:0 0 11px #fff9}50%,100%{filter:brightness(.55);box-shadow:none}}
-@media(prefers-reduced-motion:reduce){.separator-pad button[data-playing=true]{animation:none!important;filter:brightness(1.5);outline:2px solid white}}
-
-/* Separadores: color intenso permanente y destello cromático muy visible al sonar */
-.separator-pad .sep-cell button{filter:none!important;opacity:1!important;color:#fff!important;font-weight:900!important;border-width:2px!important;box-shadow:inset 0 1px 0 #ffffff33;transition:none!important}
-.separator-pad .sep-cell button[data-playing=true]{animation:rmColorFlash .5s steps(1,end) infinite!important;outline:2px solid #fff!important;outline-offset:1px!important}
-@keyframes rmColorFlash{
-  0%,49%{background:#faff36!important;color:#111b22!important;border-color:#fff!important;box-shadow:0 0 16px 4px #fff04b!important;filter:none!important}
-  50%,100%{background:#ff3d81!important;color:#fff!important;border-color:#fff!important;box-shadow:0 0 12px 2px #ff3d81!important;filter:none!important}
+.separator-pad .sep-cell button{color:#fff;font-weight:900;border-width:2px;transition:none}
+.separator-pad .sep-cell button[data-playing="true"]{
+ animation:rmSeparatorPulse .55s steps(1,end) infinite!important;
+ outline:2px solid white;outline-offset:1px;
 }
-@media(prefers-reduced-motion:reduce){.separator-pad .sep-cell button[data-playing=true]{animation:none!important;background:#faff36!important;color:#111b22!important;box-shadow:0 0 10px #faff36!important}}
+@keyframes rmSeparatorPulse{
+ 0%,49%{background-color:#faff36;color:#101820;border-color:#fff;box-shadow:0 0 15px 3px #faff36}
+ 50%,100%{background-color:#ff2d88;color:#fff;border-color:#fff;box-shadow:0 0 15px 3px #ff2d88}
+}
+/* Mantener una señal fija muy visible si el sistema reduce las animaciones */
+@media(prefers-reduced-motion:reduce){
+ .separator-pad .sep-cell button[data-playing="true"]{animation:rmSeparatorPulse .9s steps(1,end) infinite!important}
+}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
