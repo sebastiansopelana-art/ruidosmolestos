@@ -152,41 +152,6 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
  animation:rmSeparatorOnOff .65s step-end infinite!important;
  will-change:background-color,opacity
 }
-
-.player .rm-song-facts .rm-intro-countdown{font-size:12px;letter-spacing:.03em;color:#d4f8e0;white-space:nowrap}
-.player .rm-song-facts .rm-intro-countdown[data-imminent="true"]{color:#ffb649}
-.player .rm-song-facts .rm-mark-voice{background:#27546a;border:1px solid #6992a7;border-radius:4px;color:#fff;font-size:10px;font-weight:800;padding:2px 5px;cursor:pointer}
-
-/* YOUTUBE MUSIC INSPIRED — controles idénticos, sin alterar motores ni separadores */
-:root{color-scheme:dark;background:#090909;color:#f8f8f8}
-body{background:linear-gradient(145deg,#080808,#161616 70%,#0b0b0b)!important;color:#f8f8f8}
-.player{background:#151515!important;border:1px solid #343434!important;border-radius:22px!important;box-shadow:0 12px 35px #0008!important;padding:20px!important;gap:17px!important}
-.player .heading h2{font-size:13px!important;font-weight:800!important;letter-spacing:.1em!important;color:#f2f2f2!important}
-.player .heading .state{background:#222!important;border:1px solid #393939!important;color:#ddd!important;border-radius:100px!important;padding:6px 11px!important}
-.player .screen{background:linear-gradient(140deg,#292929,#191919)!important;border:1px solid #363636!important;border-radius:16px!important;height:110px!important;padding:18px!important}
-.player .screen .track{font-size:19px!important;font-weight:800!important;letter-spacing:-.02em!important}
-.player .screen .artist,.player .screen .full-route{color:#b0b0b0!important}
-.player .timeline{grid-template-columns:44px minmax(0,1fr) 44px!important;gap:12px!important}
-.player .timeline .time{color:#bdbdbd!important;font-size:11px!important}
-.player input[type=range]{accent-color:#fff!important;cursor:pointer}
-.player .timeline input[type=range]{height:5px!important}
-.player .buttons{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:6px!important;align-items:center!important}
-.player .buttons button{display:flex!important;align-items:center!important;justify-content:center!important;background:transparent!important;border:0!important;border-radius:50%!important;color:#f4f4f4!important;font-family:system-ui,-apple-system,sans-serif!important;font-size:clamp(19px,2.2vw,27px)!important;font-weight:700!important;height:52px!important;width:100%!important;min-width:0!important;box-shadow:none!important;transition:background .15s,transform .15s!important}
-.player .buttons button:hover{background:#303030!important;transform:scale(1.04)}
-.player .buttons button:active{transform:scale(.94)}
-.player .buttons button[data-action=play]{background:#fff!important;color:#111!important;border-radius:50%!important;width:54px!important;height:54px!important;justify-self:center!important;font-size:27px!important;box-shadow:0 4px 20px #ffffff26!important}
-.player .buttons button[data-action=play]:hover{background:#e5e5e5!important}
-.player .buttons button[data-action=repeat][aria-pressed=true]{color:#ff355d!important;background:#332027!important}
-.player .buttons button[data-action=stop]{color:#ff646c!important}
-.player .volume{grid-template-columns:64px minmax(0,1fr) 35px!important;gap:12px!important;padding:8px 4px!important;color:#b9b9b9!important}
-.player .volume .volvalue{color:#eee!important}
-.player .below{background:#191919!important;border:1px solid #333!important;border-radius:16px!important}
-.player .below .items{background:#111!important;border:1px solid #333!important;border-radius:12px!important}
-.player .below .tabs button,.player .below button,.player .upload,.player .file{background:#292929!important;border:1px solid #444!important;border-radius:10px!important;color:#f4f4f4!important}
-.player .below .tabs button[aria-selected=true]{background:#fff!important;color:#111!important;border-color:#fff!important}
-.player .searchrow input{background:#111!important;border:1px solid #444!important;border-radius:12px!important;color:#fff!important}
-@media(max-width:680px){.player{padding:13px!important;gap:12px!important}.player .buttons{gap:2px!important}.player .buttons button{height:43px!important;font-size:20px!important}.player .buttons button[data-action=play]{height:44px!important;width:44px!important;font-size:23px!important}.player .screen{height:100px!important;padding:13px!important}}
-
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -345,29 +310,16 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
  const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),state=deck.querySelector('.state'),air=deck.querySelector('.air'),vol=deck.querySelector('.vol');
  
- const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <span class="rm-intro-edit" hidden></span></span>';
+ const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <input class="rm-intro-edit" aria-label="Segundos hasta que entra la voz" placeholder="--:--" title="Marcá manualmente el momento de entrada de voz de esta versión"></span>';
  deck.querySelector('.screen-countdown').before(facts);
  const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]'),introField=facts.querySelector('.rm-intro-edit');
- const introCountdown=document.createElement('strong');introCountdown.className='rm-intro-countdown';introCountdown.textContent='VOZ: SIN DATO VERIFICADO';
- facts.append(introCountdown);
- const parseIntro=value=>{const s=String(value||'').trim();if(!/^(?:\\d+:)?\\d+(?:\\.\\d+)?$/.test(s))return null;const parts=s.split(':').map(Number);const seconds=parts.length===2?parts[0]*60+parts[1]:parts[0];return Number.isFinite(seconds)&&seconds>=0?seconds:null};
- const voiceSeconds=()=>parseIntro(introField.value);
- const currentAuxTime=()=>activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;
- function refreshIntroCountdown(){
-  if(current<0){introCountdown.textContent='SIN TEMA';return}
-  const target=voiceSeconds();
-  if(target===null){introCountdown.textContent='VOZ: SIN DATO VERIFICADO';return}
-  const left=Math.max(0,target-currentAuxTime());
-  introCountdown.textContent=left>0?'VOZ EN '+fmt(left):'VOZ ENTRÓ';
-  introCountdown.dataset.imminent=String(left>0&&left<=5);
- }
  let factSeq=0;
  const introKey=id=>'rm-song-intro-'+id;
-
+ introField.addEventListener('change',()=>{if(current<0)return;try{localStorage.setItem(introKey(ytQueue[current].id),introField.value.trim())}catch(e){}});
  async function loadSongFacts(x){
  const seq=++factSeq;
  yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';
- try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}refreshIntroCountdown();
+ try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}
  if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='Audio del estudio';return}
  const title=String(x.title||'').replace(/\([^)]*(official|audio|lyrics|video|remaster)[^)]*\)/ig,'').replace(/\[[^\]]*\]/g,'').trim();
  const artist=String(x.artist||'').replace(/\s*[-–]\s*Topic$/i,'').trim();
@@ -382,7 +334,7 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
 const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
- function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--';refreshIntroCountdown()}catch(e){}}
+ function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
  function render(){
  list.replaceChildren();
  if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
@@ -398,7 +350,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
  function stop(){stopRequested=true;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);refreshIntroCountdown();render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
