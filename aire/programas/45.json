@@ -1,14 +1,14 @@
 {
   "programa": 45,
   "titulo": "Ruidos Molestos 45 · Los que se fueron de Jethro Tull",
-  "estado": "prueba-musical",
+  "estado": "guion-ampliado-musica-pendiente-de-verificacion",
   "artistas": [
     "Jethro Tull",
     "Blodwyn Pig",
     "Wild Turkey",
     "Aviator"
   ],
-  "nota": "Selección de prueba. Los IDs de YouTube se resuelven por búsqueda al cargar; reproducción no verificada.",
+  "nota": "16 temas distribuidos en cuatro bloques. Consultas de búsqueda configuradas; enlaces concretos y reproducción en estudio pendientes de verificación. No considerar listo para emisión.",
   "tracks": [
     {
       "query": "Jethro Tull My Sunday Feeling official audio",
@@ -89,6 +89,28 @@
       "query": "Aviator Time on Our Side official audio",
       "label": "Aviator — Time on Our Side",
       "bloque": 4
+    }
+  ],
+  "bloques": [
+    {
+      "numero": 1,
+      "artista": "Jethro Tull",
+      "cantidadTemas": 4
+    },
+    {
+      "numero": 2,
+      "artista": "Blodwyn Pig",
+      "cantidadTemas": 4
+    },
+    {
+      "numero": 3,
+      "artista": "Wild Turkey",
+      "cantidadTemas": 4
+    },
+    {
+      "numero": 4,
+      "artista": "Aviator",
+      "cantidadTemas": 4
     }
   ]
 }
