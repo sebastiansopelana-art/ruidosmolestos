@@ -672,6 +672,8 @@ async function loadStudioProgram(number=44){
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
   for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,durationSeconds:t.durationSeconds||0}));
   activeBlock=0;drawBlocks();
+   const pending=blocks.flat().filter(t=>t.programTrack);let cursor=0;
+   for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track)}catch(_){}}})();
   programLoad.textContent='PROGRAMA Nº '+number;
   programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
@@ -800,7 +802,8 @@ autoSepAudio.addEventListener('ended',()=>{autoSepFinished=true;finishAutoMix()}
 autoSepAudio.addEventListener('error',()=>{autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index){
- stopAutoSep();
+  window.dispatchEvent(new Event('rm-block-takeover'));
+  stopAutoSep();
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
  if(f.programTrack){
   blockCurrent=index;blockYTActive=true;loadBlockFacts(f);
@@ -991,6 +994,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
+ window.addEventListener('rm-block-takeover',()=>stop());
  function stop(){stopRequested=true;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
  function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
