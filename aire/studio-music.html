@@ -489,8 +489,9 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .rm-studio-title strong{display:block;white-space:nowrap}
 .rm-studio-title .rm-studio-subtitle{display:block;width:100%;font-size:12px;font-weight:900;letter-spacing:.3em;color:#b8d5e8;text-align:justify;text-align-last:justify;line-height:1.45}
 @media(max-width:680px){.rm-studio-title .rm-studio-subtitle{font-size:9px;letter-spacing:.18em}}
+.rm-studio-title strong{position:relative}.rm-studio-title .rm-studio-tm{font-size:8px;font-weight:800;letter-spacing:0;vertical-align:super;margin-left:3px;color:#b8d5e8}@media(max-width:680px){.rm-studio-title .rm-studio-tm{font-size:6px;margin-left:2px}}
 </style></head>
-<body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS</strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
+<body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm">TM</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
 const icons=[['back','⏪','Retroceder 10 segundos'],['play','▶','Reproducir'],['pause','⏸','Pausar'],['stop','■','Detener'],['next','⏭','Siguiente tema'],['repeat','↻','Repetir tema'],['forward','⏩','Adelantar 10 segundos']];
 const fmt=n=>{n=Math.max(0,Math.floor(Number(n)||0));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')};
