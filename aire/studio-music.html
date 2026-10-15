@@ -656,9 +656,40 @@ const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);blockPanel.append(blockUpload);
 const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].querySelector('.footer .file').style.display='none';
-function drawBlocks(){tabs.replaceChildren();for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{activeBlock=b;drawBlocks()};tabs.append(btn)}
-blockItems.replaceChildren();if(!blocks[activeBlock].length){const d=document.createElement('div');d.className='hint';d.textContent='Todavía no hay temas en este bloque.';blockItems.append(d)}
-for(const [i,f] of blocks[activeBlock].entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;t.title='Doble clic para reproducir';t.style.cursor='pointer';t.addEventListener('dblclick',()=>{if(f.programTrack){const auxField=document.querySelector('.below .searchrow input');if(auxField){auxField.value=f.query;auxField.closest('form')?.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}))}return}const dt=new DataTransfer();blocks[activeBlock].filter(file=>file instanceof File).forEach(file=>dt.items.add(file));blockAudio.files=dt.files;blockAudio.dispatchEvent(new Event('change',{bubbles:true}));const next=decks[0].querySelector('[data-action=next]');for(let k=0;k<i;k++)next.click();decks[0].querySelector('[data-action=play]').click()});const btn=document.createElement('button');btn.textContent=f.programTrack?'↗':'▶';btn.title=f.programTrack?'Buscar esta grabación en YouTube (todavía no cargada como audio local)':'Cargar y reproducir bloque desde este tema';btn.onclick=()=>{if(f.programTrack){window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(f.query),'_blank','noopener');return}const dt=new DataTransfer();blocks[activeBlock].filter(file=>file instanceof File).forEach(file=>dt.items.add(file));blockAudio.files=dt.files;blockAudio.dispatchEvent(new Event('change',{bubbles:true}));const next=decks[0].querySelector('[data-action=next]');for(let k=0;k<i;k++)next.click();decks[0].querySelector('[data-action=play]').click()};row.append(t,btn);blockItems.append(row)}}
+function playBlockTrack(index){
+ const selected=blocks[activeBlock],f=selected[index];if(!f)return;
+ if(f.programTrack){
+  const playable=selected.filter(x=>!x.programTrack&&x instanceof File);
+  if(!playable.length){
+   programInfo.textContent='AUDIO NO DISPONIBLE EN REPRODUCTOR 1 · '+f.name+' · cargá los archivos de este bloque';
+   return;
+  }
+  programInfo.textContent='Este tema todavía no tiene un audio vinculado al reproductor 1';
+  return;
+ }
+ const files=selected.filter(x=>x instanceof File);
+ const position=files.indexOf(f);if(position<0)return;
+ const dt=new DataTransfer();files.forEach(file=>dt.items.add(file));
+ blockAudio.files=dt.files;blockAudio.dispatchEvent(new Event('change',{bubbles:true}));
+ const next=decks[0].querySelector('[data-action=next]');
+ for(let k=0;k<position;k++)next.click();
+ decks[0].querySelector('[data-action=play]').click();
+}
+function drawBlocks(){
+ tabs.replaceChildren();
+ for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{activeBlock=b;drawBlocks()};tabs.append(btn)}
+ blockItems.replaceChildren();
+ if(!blocks[activeBlock].length){const d=document.createElement('div');d.className='hint';d.textContent='Todavía no hay temas en este bloque.';blockItems.append(d)}
+ for(const [i,f] of blocks[activeBlock].entries()){
+  const row=document.createElement('div');row.className='entry';
+  const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
+  t.style.cursor='pointer';t.title=f.programTrack?'Audio pendiente de vincular al reproductor 1':'Doble clic para reproducir en reproductor 1';
+  t.addEventListener('dblclick',()=>playBlockTrack(i));
+  const btn=document.createElement('button');btn.textContent='▶';btn.title='Reproducir en reproductor 1';btn.onclick=()=>playBlockTrack(i);
+  row.append(t,btn);blockItems.append(row);
+ }
+}
+
 loadStudioProgram(44);
 blockFile.onchange=()=>{blocks[activeBlock].push(...Array.from(blockFile.files));blockFile.value='';drawBlocks()};drawBlocks();
 const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar en YouTube';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
