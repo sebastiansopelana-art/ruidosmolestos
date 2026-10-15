@@ -1012,8 +1012,23 @@ $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='Arrow
 }
 $('programNumberLive').oninput=()=>{const n=$('programNumberLive').value;$('programNumber').value=n;$('loadProgramLive').textContent='CARGAR '+n};
 $('programNumber').oninput=()=>{const n=$('programNumber').value;$('programNumberLive').value=n;$('loadProgramLive').textContent='CARGAR '+n};
+window.loadProgramNumber=loadProgramNumber;
 $('loadProgramLive').onclick=()=>loadProgramNumber($('programNumberLive').value,$('loadProgramLive'));
 $('loadProgram').onclick=()=>loadProgramNumber($('programNumber').value,$('loadProgram'));window.addResult=i=>{const x=window._results?.[i];if(!x)return;if(list.some(t=>t.id===x.id))return $('status').textContent='Ese tema ya está en la lista.';list.push(x);save();render();$('status').textContent='Tema agregado. '+list.length+' en la playlist.'};$('clearBlocks').onclick=()=>{if(!confirm('¿Borrar los temas de los bloques 1, 2, 3 y 4?'))return;if(ready&&player?.stopVideo)player.stopVideo();if(prodCurrent)prodStop();list=[];idx=-1;gapTriggered=false;render();setProgramLiveState('LISTO');$('programState').textContent='Bloques vacíos · listos para carga manual.'};$('clear').onclick=()=>{if(list.length&&!confirm('¿Vaciar la playlist de YouTube Music?'))return;list=[];idx=-1;save();if(ready)player.stopVideo();render();$('status').textContent='Playlist vaciada.'};render();</script><script>
+/* Botones de carga: enlace independiente para que respondan aunque falle otra inicialización. */
+(function(){
+ function attach(id,input){
+  const btn=document.getElementById(id);if(!btn)return;
+  btn.addEventListener('click',function(){
+   if(typeof window.loadProgramNumber==='function')return;
+   const state=document.getElementById('programState');
+   if(state)state.textContent='Error al iniciar el estudio. Recargá la página para recuperar la lista.';
+  });
+ }
+ attach('loadProgramLive','programNumberLive');
+ attach('loadProgram','programNumber');
+})();
+</script><script>
 (function(){
  const btn=document.getElementById('studioFullscreen');if(!btn)return;
  let attempting=false, exitedByUser=false;
