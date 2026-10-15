@@ -577,6 +577,7 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 @media(max-width:680px){
  .player>.below{height:clamp(430px,calc(100dvh - 370px),1000px)!important;min-height:430px!important}
 }
+.rm-auto-sep{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:10px;font-weight:800;letter-spacing:.03em;color:#c9e5f7}.rm-auto-sep input{accent-color:#58bfe8}.rm-auto-sep select{min-width:0;max-width:200px;background:#0b2233;color:#e9f3fb;border:1px solid #507a96;border-radius:5px;padding:4px;font-size:10px}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -674,7 +675,7 @@ function blockYTInit(){
   if(state===YT.PlayerState.ENDED&&blockYTActive){
    const next=blockCurrent+1;
    if(blockRepeat)playBlockTrack(blockCurrent);
-   else if(next<blockPlaylist().length)playBlockTrack(next);
+   else if(next<blockPlaylist().length)playAutoSeparator(next);
    else{blockYTActive=false;blockDeck.querySelector('.air').dataset.live='false';blockStatus('Terminó el bloque '+(activeBlock+1))}
   }
  },
@@ -709,9 +710,9 @@ blockTick=setInterval(blockRefreshTime,350);
 blockDeck.querySelector('.buttons').addEventListener('click',e=>{
  if(!blockYTActive)return;
  const action=e.target.closest('[data-action]')?.dataset.action;
- if(action==='play')blockYT?.playVideo();
- if(action==='pause')blockYT?.pauseVideo();
- if(action==='stop'){blockYT?.stopVideo();blockYTActive=false;blockDeck.querySelector('.air').dataset.live='false'}
+ if(action==='play'){if(autoSepPending)autoSepAudio.play().catch(()=>{});else blockYT?.playVideo()}
+ if(action==='pause'){blockYT?.pauseVideo();autoSepAudio.pause()}
+ if(action==='stop'){stopAutoSep();blockYT?.stopVideo();blockYTActive=false;blockDeck.querySelector('.air').dataset.live='false'}
  if(action==='repeat')blockRepeat=!blockRepeat;
  if(action==='next'&&blockCurrent+1<blockPlaylist().length)playBlockTrack(blockCurrent+1);
  if(action==='back')blockYT?.seekTo(Math.max(0,(blockYT.getCurrentTime?.()||0)-10),true);
@@ -719,7 +720,33 @@ blockDeck.querySelector('.buttons').addEventListener('click',e=>{
 },true);
 blockDeck.querySelector('.vol').addEventListener('input',e=>{if(blockYTActive)blockYT?.setVolume(Number(e.target.value))});
 blockDeck.querySelector('.seek').addEventListener('input',e=>{if(blockYTActive&&blockYTReady){const d=blockYT.getDuration?.()||0;if(d)blockYT.seekTo(d*Number(e.target.value)/1000,true)}});
+// Continuidad automática opcional: canción → separador precargado → siguiente canción.
+const autoSepControl=document.createElement('label');autoSepControl.className='rm-auto-sep';
+const autoSepCheck=document.createElement('input');autoSepCheck.type='checkbox';
+const autoSepText=document.createElement('span');autoSepText.textContent='SEPARADORES AUTOMÁTICOS';
+const autoSepSelect=document.createElement('select');autoSepSelect.setAttribute('aria-label','Separador automático');
+rmSeparatorLabels.forEach((name,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=(i+1)+' · '+name;autoSepSelect.append(o)});
+autoSepControl.append(autoSepCheck,autoSepText,autoSepSelect);
+blockPanel.insertBefore(autoSepControl,tabs);
+const autoSepAudio=new Audio();autoSepAudio.preload='auto';let autoSepPending=null;
+function stopAutoSep(){autoSepPending=null;autoSepAudio.pause();autoSepAudio.removeAttribute('src');autoSepAudio.load()}
+function playAutoSeparator(nextIndex){
+ if(!autoSepCheck.checked){playBlockTrack(nextIndex);return}
+ const separatorIndex=Number(autoSepSelect.value)||0;
+ const file=rmSeparatorNames[separatorIndex];if(!file){playBlockTrack(nextIndex);return}
+ autoSepPending={block:activeBlock,index:nextIndex};
+ autoSepAudio.src=rmSeparatorBase+encodeURIComponent(file);
+ autoSepAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
+ blockStatus('SEPARADOR AUTOMÁTICO · '+rmSeparatorLabels[separatorIndex]);
+ blockDeck.querySelector('.screen .track').textContent=rmSeparatorLabels[separatorIndex];
+ blockDeck.querySelector('.screen .artist').textContent='SEPARADOR · RUIDOS MOLESTOS';
+ autoSepAudio.play().catch(()=>{const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
+}
+autoSepAudio.addEventListener('ended',()=>{const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
+autoSepAudio.addEventListener('error',()=>{const p=autoSepPending;autoSepPending=null;if(p&&p.block===activeBlock)playBlockTrack(p.index)});
+blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index){
+ stopAutoSep();
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
  if(f.programTrack){
   blockCurrent=index;blockYTActive=true;
