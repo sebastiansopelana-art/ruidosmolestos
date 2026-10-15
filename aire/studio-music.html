@@ -1101,9 +1101,36 @@ async function blockSearchResolve(f){
  if(!candidates.length)throw Error('No hay grabación reproducible');
  f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;rmVideoCache[f.query]={id:f.videoId,durationSeconds:f.durationSeconds};try{localStorage.setItem(rmVideoCacheKey,JSON.stringify(rmVideoCache))}catch(_){}refreshBlockDurations();return f.videoId;
 }
+// Vigilancia antisilencios: detecta avance congelado cerca del final, no silencio acústico de YouTube.
+let rmSilenceLastTrack=-1,rmSilenceLastBlock=-1,rmSilenceLastPosition=-1,rmSilenceLastProgressAt=0;
+function rmSilenceReset(){rmSilenceLastTrack=-1;rmSilenceLastBlock=-1;rmSilenceLastPosition=-1;rmSilenceLastProgressAt=0}
 function blockRefreshTime(){
  if(!blockYTActive||!blockYTReady)return;
  const duration=Number(blockYT.getDuration?.()||0),current=Number(blockYT.getCurrentTime?.()||0);
+ const now=performance.now(),ytState=blockYT.getPlayerState?.();
+ if(rmSilenceLastTrack!==blockCurrent||rmSilenceLastBlock!==activeBlock){
+  rmSilenceLastTrack=blockCurrent;rmSilenceLastBlock=activeBlock;rmSilenceLastPosition=current;rmSilenceLastProgressAt=now;
+ }else if(Math.abs(current-rmSilenceLastPosition)>.12){
+  rmSilenceLastPosition=current;rmSilenceLastProgressAt=now;
+ }
+ // Solo si la reproducción estaba activa, se congeló >1,5 s y faltan <=12 s.
+ // No actuar durante pausas voluntarias, búsqueda manual ni cambios de bloque.
+ if(ytState===YT.PlayerState.PLAYING&&duration>20&&current>5&&duration-current<=12&&
+    !blockSeekDragging&&!blockRepeat&&!autoSepTriggered&&!blockEndStarted&&
+    now-rmSilenceLastProgressAt>=1500){
+  rmSilenceLastProgressAt=now;
+  if(blockCurrent+1<blockPlaylist().length){
+   blockStatus('ANTISILENCIO · reproducción detenida al final · adelantando separador');
+   startAutoMix();
+   if(autoSepTriggered){
+    autoSepSongEnded=true;
+    blockYT.pauseVideo();
+    // No esperar el evento ENDED de YouTube: el audio ya se congeló.
+    finishAutoMix();
+   }
+  }
+ }
+
  blockDeck.querySelector('.elapsed').textContent=fmt(current);
  blockDeck.querySelector('.remaining').textContent='-'+fmt(Math.max(0,duration-current));
  if(!autoSepDisplaySnapshot)blockDeck.querySelector('.screen-countdown strong').textContent=duration?fmt(Math.max(0,duration-current)):'--:--';
@@ -1210,6 +1237,7 @@ autoSepAudio.addEventListener('timeupdate',()=>{if(autoSepSongEnded)finishAutoMi
 autoSepAudio.addEventListener('error',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index){
+  rmSilenceReset();
   stopBlockEndSeparator();
   window.dispatchEvent(new Event('rm-block-takeover'));
   stopAutoSep();
