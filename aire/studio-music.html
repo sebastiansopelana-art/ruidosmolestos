@@ -720,7 +720,7 @@ async function loadStudioProgram(number=44){
   for(const t of blocks.flat()){const cached=rmVideoCache[t.query];if(!t.videoId&&cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){t.videoId=cached.id;t.durationSeconds=t.durationSeconds||cached.durationSeconds||0}}
   activeBlock=0;drawBlocks();
    const pending=blocks.flat().filter(t=>t.programTrack&&!t.videoId);let cursor=0;
-   for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track)}catch(_){}}})();
+   for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track);refreshBlockDurations()}catch(_){}}})();
   programLoad.textContent='PROGRAMA Nº '+number;
   programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
@@ -807,7 +807,7 @@ const rmResolveInFlight=new Map();
 async function blockResolve(f){
  if(f.videoId)return f.videoId;
  const cached=rmVideoCache[f.query];
- if(cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){f.videoId=cached.id;f.durationSeconds=f.durationSeconds||cached.durationSeconds||0;return f.videoId}
+ if(cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){f.videoId=cached.id;f.durationSeconds=f.durationSeconds||cached.durationSeconds||0;refreshBlockDurations();return f.videoId}
  if(rmResolveInFlight.has(f.query))return rmResolveInFlight.get(f.query).then(id=>{f.videoId=id;return id});
  const request=blockSearchResolve(f);
  rmResolveInFlight.set(f.query,request);
@@ -1081,15 +1081,25 @@ const fmtAux=n=>fmt(Number(n)||0);
   const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(x.durationSeconds);row.append(label,duration,remove);(fixedAuxIds.includes(x.id)?auxFixed:list).append(row)
  })
 }
+ const auxDurationKey='rm-aux-duration-cache-v1';
+ let auxDurationCache={};try{auxDurationCache=JSON.parse(localStorage.getItem(auxDurationKey)||'{}')||{}}catch(_){}
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
+ function rememberDuration(x,seconds){if(!Number.isFinite(seconds)||seconds<=0)return;x.durationSeconds=seconds;auxDurationCache[x.id]=seconds;try{localStorage.setItem(auxDurationKey,JSON.stringify(auxDurationCache))}catch(_){}save();render()}
+ function prepareAuxDurations(){
+  const missing=ytQueue.filter(x=>x.source==='production'&&!x.durationSeconds&&x.url);
+  for(const x of missing){const probe=new Audio();probe.preload='metadata';probe.addEventListener('loadedmetadata',()=>{rememberDuration(x,probe.duration);probe.removeAttribute('src');probe.load()},{once:true});probe.addEventListener('error',()=>{probe.removeAttribute('src')},{once:true});probe.src=x.url}
+ }
  const fixedAuxIds=['rm-prod-13','rm-prod-12','rm-prod-9','rm-prod-11'];
 
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\\w-]{11}$/.test(x.id))&&!fixedAuxIds.includes(x.id)).slice(0,146))}catch(e){}
  ytQueue.push(...fixedAuxIds.map(id=>rmProductionCatalog.find(x=>x.id===id)).filter(Boolean).map(x=>({...x})));
- function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.splice(Math.max(0,ytQueue.length-fixedAuxIds.length),0,{id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
+ ytQueue.forEach(x=>{if(!x.durationSeconds&&auxDurationCache[x.id])x.durationSeconds=auxDurationCache[x.id]});
+ prepareAuxDurations();
+ function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.splice(Math.max(0,ytQueue.length-fixedAuxIds.length),0,{id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||auxDurationCache[x.id]||0});save();render();status('Agregado a playlist: '+x.title)}
  window.addEventListener('rm-block-takeover',()=>stop());
  function stop(){stopRequested=true;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
  function playIndex(i){if(i<0||i>=ytQueue.length)return;stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ productionAudio.addEventListener('loadedmetadata',()=>{const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
