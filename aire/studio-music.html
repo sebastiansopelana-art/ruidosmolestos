@@ -100,6 +100,10 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .screen .screen-countdown{display:flex;align-items:baseline;gap:8px;color:#c4d9e8;font-size:10px;font-weight:800;margin-top:auto;letter-spacing:.06em}
 .player .screen .screen-countdown strong{font:900 23px ui-monospace,monospace;color:#f3f9ff;letter-spacing:.02em}
 .player .footer>.air[data-live="true"]{animation:rmOnlyRedBlink .62s steps(1,end) infinite!important}
+
+/* Playlist auxiliar: sólo título y cruz de eliminación; todo el transporte arriba */
+.player .below .aux-youtube-item .aux-remove{flex:0 0 23px;width:23px;height:23px;line-height:1;padding:0;font-size:18px;font-weight:900;background:#6b2332;border-color:#bb6475;color:#fff}
+.player .below .aux-youtube-item .aux-remove:hover{background:#a72b43}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -204,17 +208,17 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
  function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0,t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
- function render(){list.replaceChildren();const all=ytQueue.length?ytQueue:results;
- if(!all.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Buscá música y agregala a la playlist auxiliar.';list.append(empty);return}
- for(const [i,x] of all.entries()){
-  const row=document.createElement('div');row.className='entry aux-youtube-item';row.dataset.active=String(ytQueue.length>0&&i===current);
+ function render(){
+ list.replaceChildren();
+ if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
+ ytQueue.forEach((x,i)=>{
+  const row=document.createElement('div');row.className='entry aux-youtube-item';row.dataset.active=String(i===current);
   const label=document.createElement('span');label.textContent=(i+1)+'. '+x.title+' — '+(x.artist||'');label.title=x.title+' — '+(x.artist||'');
-  const action=document.createElement('button');action.type='button';action.textContent=ytQueue.length?'▶':'＋';action.title=ytQueue.length?'Reproducir tema':'Agregar a la playlist';
-  action.onclick=()=>{if(ytQueue.length)playIndex(i);else add(x)};
-  row.append(label,action);
-  if(ytQueue.length){const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.title='Quitar de la cola';remove.onclick=()=>{if(i===current){stop()}ytQueue.splice(i,1);if(i<current)current--;else if(i===current)current=-1;save();render()};row.append(remove)}
-  list.append(row)
- }}
+  const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.className='aux-remove';remove.title='Eliminar de la playlist';remove.setAttribute('aria-label','Eliminar '+x.title);
+  remove.onclick=()=>{const wasCurrent=i===current;const wasPlaying=playing;if(wasCurrent)stop();ytQueue.splice(i,1);if(i<current)current--;else if(wasCurrent){current=-1;if(wasPlaying&&ytQueue.length)playIndex(Math.min(i,ytQueue.length-1))}save();render()};
+  row.append(label,remove);list.append(row)
+ })
+}
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
  try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
