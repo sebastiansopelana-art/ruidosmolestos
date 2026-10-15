@@ -642,6 +642,11 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players>.player>.below>.items{flex:1 1 auto!important;min-height:0!important}
 /* Evitar selección de texto al hacer doble clic en las canciones. */
 #players .below .items .entry{user-select:none!important;-webkit-user-select:none!important}
+
+/* Sección fija de presentación y narración al pie, justo antes de Agregar a playlist. */
+#players>.player>.below .rm-aux-fixed{flex:0 0 auto;display:flex;flex-direction:column;gap:1px;min-height:0}
+#players>.player>.below .rm-aux-fixed .entry{padding:2px 4px!important;min-height:19px!important}
+#players>.player>.below .rm-aux-fixed .rm-block-divider{margin:2px 0 0!important;padding:2px 4px!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -930,6 +935,7 @@ const search=document.createElement('form');search.className='searchrow';const q
 search.onsubmit=e=>{e.preventDefault();if(q.value.trim())window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q.value.trim()),'_blank','noopener')};
 const auxNote=document.createElement('div');auxNote.className='sub';auxNote.textContent='Búsqueda externa · reproducción local de archivos';auxPanel.append(auxNote);
 const auxItems=document.createElement('div');auxItems.className='items';auxPanel.append(auxItems);
+const auxFixed=document.createElement('div');auxFixed.className='rm-aux-fixed';auxPanel.append(auxFixed);
 const auxUpload=document.createElement('label');auxUpload.className='upload';auxUpload.textContent='＋ AGREGAR A PLAYLIST';const auxFile=document.createElement('input');auxFile.type='file';auxFile.accept='audio/*';auxFile.multiple=true;auxUpload.append(auxFile);auxPanel.append(auxUpload);
 const auxNative=decks[1].querySelector('.footer input[type=file]');decks[1].querySelector('.footer .file').style.display='none';
 function drawAux(){auxItems.replaceChildren();if(!auxFiles.length){const d=document.createElement('div');d.className='hint';d.textContent='Playlist vacía. Agregá archivos de audio.';auxItems.append(d)}for(const [i,f] of auxFiles.entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const b=document.createElement('button');b.textContent='▶';b.onclick=()=>{const dt=new DataTransfer();auxFiles.forEach(file=>dt.items.add(file));auxNative.files=dt.files;auxNative.dispatchEvent(new Event('change',{bubbles:true}));for(let k=0;k<i;k++)decks[1].querySelector('[data-action=next]').click();decks[1].querySelector('[data-action=play]').click()};const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.rmDuration);row.append(t,duration,b);auxItems.append(row)}}
@@ -1064,15 +1070,15 @@ const fmtAux=n=>fmt(Number(n)||0);
  function live(on){playing=!!on;air.dataset.live=String(playing);deck.dataset.playbackState=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
  function update(){if(current<0)return;try{const d=activeProduction?productionAudio.duration||0:ready&&player?player.getDuration()||0:0;if(d>0&&ytQueue[current]&&Math.abs((ytQueue[current].durationSeconds||0)-d)>1){ytQueue[current].durationSeconds=d;save();render()}const t=activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t));deck.querySelector('.screen-countdown strong').textContent=d>0?fmtAux(Math.max(0,d-t)):'--:--'}catch(e){}}
  function render(){
- list.replaceChildren();
+ list.replaceChildren();auxFixed.replaceChildren();
  if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
  ytQueue.forEach((x,i)=>{
-  if(x.id===fixedAuxIds[0]||x.id===fixedAuxIds[2]){const heading=document.createElement('div');heading.className='rm-block-divider';heading.textContent=x.id===fixedAuxIds[0]?'BLOQUE 1':'BLOQUE 2';list.append(heading)}
+  if(x.id===fixedAuxIds[0]||x.id===fixedAuxIds[2]){const heading=document.createElement('div');heading.className='rm-block-divider';heading.textContent=x.id===fixedAuxIds[0]?'PRESENTACIÓN':'NARRACIÓN';auxFixed.append(heading)}
   const row=document.createElement('div');row.className='entry aux-youtube-item';row.dataset.active=String(i===current);
   const label=document.createElement('span');label.textContent=(i+1)+'. '+x.title+' — '+(x.artist||'');label.title=x.title+' — '+(x.artist||'');label.classList.add('aux-doubleplay');label.addEventListener('dblclick',()=>playIndex(i));
   const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.className='aux-remove';remove.title='Eliminar de la playlist';remove.setAttribute('aria-label','Eliminar '+x.title);
   remove.onclick=()=>{const wasCurrent=i===current;const wasPlaying=playing;if(wasCurrent)stop();ytQueue.splice(i,1);if(i<current)current--;else if(wasCurrent){current=-1;if(wasPlaying&&ytQueue.length)playIndex(Math.min(i,ytQueue.length-1))}save();render()};
-  const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(x.durationSeconds);row.append(label,duration,remove);list.append(row)
+  const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(x.durationSeconds);row.append(label,duration,remove);(fixedAuxIds.includes(x.id)?auxFixed:list).append(row)
  })
 }
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
