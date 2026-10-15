@@ -72,6 +72,18 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
   0%,49%{background:#ff1735!important;background-color:#ff1735!important;color:#fff!important;border-color:#ff8997!important;box-shadow:0 0 14px 3px #ff1735aa!important}
   50%,100%{background:#680b19!important;background-color:#680b19!important;color:#fff!important;border-color:#b63749!important;box-shadow:none!important}
 }
+
+/* Buscador Beta 3 adaptado al panel auxiliar aprobado */
+.aux-suggestions{position:relative;flex:0 0 auto;max-height:112px;overflow:auto;border:1px solid #466b83;border-radius:5px;background:#0b2030}
+.aux-suggestions:empty{display:none}
+.aux-suggestions .suggestion{width:100%;display:flex;gap:6px;align-items:center;justify-content:space-between;text-align:left;background:#142e42;border:0;border-bottom:1px solid #34566b;border-radius:0;padding:5px 7px;font-size:10px}
+.aux-suggestions .suggestion span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.aux-suggestions .suggestion[aria-selected=true]{background:#326f8c}
+.aux-suggestions .suggestion small{flex-shrink:0;color:#bde3f8}
+.aux-yt-host{position:absolute;width:1px;height:1px;overflow:hidden;left:-9999px;top:auto}
+.aux-youtube-item{cursor:pointer}
+.aux-youtube-item[data-active=true]{background:#1e526b}
+.aux-youtube-item button{flex-shrink:0}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -157,4 +169,67 @@ for(const [deckIndex,deck] of decks.entries()){
   preload(i);
  }
 }
+
+/* Buscador YouTube Music Beta 3: sugerencias, resultados, cola y motor auxiliar */
+(function(){
+ const deck=decks[1], panel=auxPanel, note=auxNote, list=auxItems, field=q, form=search;
+ const localFiles=auxFiles,originalDraw=drawAux;
+ const suggestionBox=document.createElement('div');suggestionBox.className='aux-suggestions';suggestionBox.setAttribute('role','listbox');form.after(suggestionBox);
+ const ytHost=document.createElement('div');ytHost.className='aux-yt-host';ytHost.id='rm-aux-youtube-player';document.body.append(ytHost);
+ const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
+ const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),state=deck.querySelector('.state'),air=deck.querySelector('.air'),vol=deck.querySelector('.vol');
+ const fmtAux=n=>fmt(Number(n)||0);
+ function status(message){note.textContent=message}
+ function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
+ function update(){if(!ready||!player||current<0)return;try{const d=player.getDuration()||0,t=player.getCurrentTime()||0;if(!dragging)seek.value=d>0?Math.round(t/d*1000):0;elapsed.textContent=fmtAux(t);remaining.textContent='-'+fmtAux(Math.max(0,d-t))}catch(e){}}
+ function render(){list.replaceChildren();const all=ytQueue.length?ytQueue:results;
+ if(!all.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Buscá música y agregala a la playlist auxiliar.';list.append(empty);return}
+ for(const [i,x] of all.entries()){
+  const row=document.createElement('div');row.className='entry aux-youtube-item';row.dataset.active=String(ytQueue.length>0&&i===current);
+  const label=document.createElement('span');label.textContent=(i+1)+'. '+x.title+' — '+(x.artist||'');label.title=x.title+' — '+(x.artist||'');
+  const action=document.createElement('button');action.type='button';action.textContent=ytQueue.length?'▶':'＋';action.title=ytQueue.length?'Reproducir tema':'Agregar a la playlist';
+  action.onclick=()=>{if(ytQueue.length)playIndex(i);else add(x)};
+  row.append(label,action);
+  if(ytQueue.length){const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.title='Quitar de la cola';remove.onclick=()=>{if(i===current){stop()}ytQueue.splice(i,1);if(i<current)current--;else if(i===current)current=-1;save();render()};row.append(remove)}
+  list.append(row)
+ }}
+ function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
+ try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&/^[\w-]{11}$/.test(x.id)).slice(0,150))}catch(e){}
+ function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
+ function stop(){if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';status('Preparando: '+x.title);render();if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}
+ function next(){if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
+ function setSuggestions(items){suggestions=items.slice(0,6);selected=-1;suggestionBox.replaceChildren();suggestions.forEach((x,i)=>{const b=document.createElement('button');b.type='button';b.className='suggestion';b.setAttribute('aria-selected','false');const name=document.createElement('span');name.textContent=x.title+' — '+(x.artist||'');const tip=document.createElement('small');tip.textContent='CARGAR';b.append(name,tip);b.onclick=()=>{add(x);field.value='';setSuggestions([])};suggestionBox.append(b)})}
+ async function lookup(query){const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(query),{cache:'no-store'});const data=await response.json();if(!response.ok)throw Error(data.error||'No se pudo buscar');return (data.results||[]).filter(x=>x.id&&x.title)}
+ field.addEventListener('input',()=>{clearTimeout(searchTimer);const query=field.value.trim();const seq=++searchSeq;if(!query){setSuggestions([]);return}searchTimer=setTimeout(async()=>{try{const found=await lookup(query+' High Quality Audio');if(seq===searchSeq)setSuggestions(found)}catch(e){if(seq===searchSeq)setSuggestions([])}},240)});
+ field.addEventListener('keydown',e=>{if(e.key==='ArrowDown'||e.key==='ArrowUp'){if(!suggestions.length)return;e.preventDefault();selected=(selected+(e.key==='ArrowDown'?1:-1)+suggestions.length)%suggestions.length;[...suggestionBox.children].forEach((b,i)=>b.setAttribute('aria-selected',String(i===selected)))}else if(e.key==='Enter'&&suggestions.length){e.preventDefault();add(suggestions[Math.max(0,selected)]);field.value='';setSuggestions([])}else if(e.key==='Escape'){setSuggestions([])}});
+ form.onsubmit=async e=>{e.preventDefault();const query=field.value.trim();if(!query)return;setSuggestions([]);status('Buscando en YouTube Music…');try{results=await lookup(query+' High Quality Audio');if(!results.length){status('No se encontraron resultados');return}if(!ytQueue.length)render();else{results.forEach(x=>add(x));status('Resultados agregados a la playlist auxiliar: '+results.length)}}catch(error){status('Error de búsqueda: '+error.message)}};
+ // El reproductor 2 controla YouTube, sin cambiar los controles ni el diseño.
+ for(const action of ['play','pause','stop','next','back','forward','repeat']){
+  const btn=deck.querySelector('[data-action="'+action+'"]');if(!btn)continue;
+  btn.addEventListener('click',e=>{e.stopImmediatePropagation();e.preventDefault();
+   if(action==='play'){if(!ready){status('Cargando motor de YouTube…');return}if(current<0&&ytQueue.length)playIndex(0);else if(current>=0)player.playVideo()}
+   if(action==='pause'&&ready)player.pauseVideo();
+   if(action==='stop')stop();
+   if(action==='next')next();
+   if(action==='back'&&ready)player.seekTo(Math.max(0,(player.getCurrentTime()||0)-10),true);
+   if(action==='forward'&&ready)player.seekTo(Math.min(player.getDuration()||0,(player.getCurrentTime()||0)+10),true);
+   if(action==='repeat'){repeat=!repeat;btn.setAttribute('aria-pressed',String(repeat))}
+  },true)
+ }
+ seek.addEventListener('pointerdown',()=>dragging=true,true);
+ seek.addEventListener('input',()=>{dragging=true;if(ready&&current>=0){const d=player.getDuration()||0;elapsed.textContent=fmtAux(d*Number(seek.value)/1000)}},true);
+ seek.addEventListener('change',e=>{if(ready&&current>=0){const d=player.getDuration()||0;player.seekTo(d*Number(seek.value)/1000,true)}dragging=false;e.stopImmediatePropagation()},true);
+ seek.addEventListener('pointerup',()=>{if(ready&&current>=0){const d=player.getDuration()||0;player.seekTo(d*Number(seek.value)/1000,true)}dragging=false},true);
+ vol.addEventListener('input',()=>{if(ready)player.setVolume(Number(vol.value)||0)},true);
+ function initializeYT(){if(!window.YT?.Player){setTimeout(initializeYT,200);return}
+ player=new YT.Player(ytHost,{height:'1',width:'1',playerVars:{playsinline:1,controls:0,origin:location.origin},events:{
+  onReady:()=>{ready=true;state.textContent='LISTO';status('YouTube Music listo · buscá o elegí un tema');player.setVolume(Number(vol.value)||85)},
+  onStateChange:e=>{if(e.data===YT.PlayerState.PLAYING)live(true);else if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.CUED)live(false);if(e.data===YT.PlayerState.ENDED){if(repeat&&current>=0)playIndex(current);else next()}update()},
+  onError:e=>{live(false);status('Video no reproducible ('+e.data+'). Probá otro resultado.')},
+  onAutoplayBlocked:()=>status('El navegador requiere pulsar PLAY para habilitar YouTube.')
+ }})}
+ if(window.YT?.Player)initializeYT();else{const prior=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=()=>{if(typeof prior==='function')prior();initializeYT()};if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const script=document.createElement('script');script.src='https://www.youtube.com/iframe_api';document.head.append(script)}}
+ setInterval(update,300);render();status('Buscador YouTube Music Beta 3 · escribí para ver sugerencias');
+})();
 </script></body></html>
