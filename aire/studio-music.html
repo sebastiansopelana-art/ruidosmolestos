@@ -624,6 +624,15 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 /* EN EL AIRE: mismo rojo degradado y pulso que PLAY activo. */
 @keyframes rmMatchingPlayRed{0%,49%{background:linear-gradient(145deg,#ff5361,#c50022);border-color:#ff6676;color:#fff;box-shadow:0 0 13px #e50036a8;opacity:1}50%,100%{background:linear-gradient(145deg,#ff5361,#c50022);border-color:#ff6676;color:#fff;box-shadow:none;opacity:.25}}
 #players>.player>.heading>.air[data-live="true"]{animation:rmMatchingPlayRed .7s steps(1,end) infinite!important;background:linear-gradient(145deg,#ff5361,#c50022)!important;color:#fff!important;border-color:#ff6676!important}
+/* Colocar separadores encima del volumen: las listas quedan inmediatamente debajo. */
+#players>.player>.buttons{order:3}
+#players>.player>.footer{order:4!important;margin:0!important}
+#players>.player>.volume{order:5!important;margin:0!important}
+#players>.player>.below{order:6!important;margin:0!important}
+#players>.player>.heading{order:0}
+#players>.player>.screen{order:1}
+#players>.player>.timeline{order:2}
+#players>.player{row-gap:2px!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
