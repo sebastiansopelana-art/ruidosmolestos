@@ -977,6 +977,12 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
  .workspace>.panel:nth-of-type(2){grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:12px!important}
  .workspace>.panel.air,.workspace>.panel:nth-of-type(2)>.auxdeck{min-width:0!important;width:100%!important;box-sizing:border-box!important}
 }
+/* Repetición activa: señal inequívoca para operación al aire. */
+@keyframes rm-repeat-active-pulse{0%,100%{box-shadow:0 0 0 2px #b0ffd2,0 0 13px #2df99b, inset 0 0 9px #20db7b66}50%{box-shadow:0 0 0 3px #d8ffea,0 0 23px #40ffae, inset 0 0 13px #22f48b99}}
+#trackRepeat[aria-pressed="true"]{background:#087b46!important;color:#fff!important;border:2px solid #b8ffda!important;font-weight:900!important;transform:scale(1.08)!important;animation:rm-repeat-active-pulse 1.3s ease-in-out infinite!important;text-shadow:0 0 7px #fff8!important}
+#trackRepeat[aria-pressed="false"]{transform:none!important;animation:none!important;opacity:.8!important}
+#list .rm-pat-repeat[aria-pressed="true"],#list .rm-pat-repeat.rm-pat-repeat-on{background:#087b46!important;border:2px solid #b8ffda!important;animation:rm-repeat-active-pulse 1.3s ease-in-out infinite!important}
+@media(prefers-reduced-motion:reduce){#trackRepeat[aria-pressed="true"],#list .rm-pat-repeat[aria-pressed="true"]{animation:none!important}}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
