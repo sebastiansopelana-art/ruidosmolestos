@@ -613,6 +613,8 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 /* Vista unificada de los cuatro bloques en reproductor 1. */
 .rm-block-divider{font-size:10px;font-weight:900;letter-spacing:.1em;color:#b8e6ff;border-bottom:1px solid #507a96;padding:7px 4px 3px;margin:3px 0 2px}
 .player>.below .items .entry{padding-top:4px;padding-bottom:4px}
+/* Intercambiar ubicación visual: auxiliar a la izquierda, programa a la derecha. */
+@media(min-width:681px){#players>.player:first-child{grid-column:2;grid-row:1}#players>.player:nth-child(2){grid-column:1;grid-row:1}}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
