@@ -670,12 +670,12 @@ async function loadStudioProgram(number=44){
   if(!response.ok)throw Error('No se encontró el programa');
   const manifest=await response.json();
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
-  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,durationSeconds:t.durationSeconds||0}));
+  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
   activeBlock=0;drawBlocks();
    const pending=blocks.flat().filter(t=>t.programTrack);let cursor=0;
    for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track)}catch(_){}}})();
   programLoad.textContent='PROGRAMA Nº '+number;
-  programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES';
+  programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
 }
