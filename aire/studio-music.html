@@ -1164,4 +1164,37 @@ $('loadProgram').onclick=()=>loadProgramNumber($('programNumber').value,$('loadP
 .workspace>.panel.air .controls.bigcontrols #stop{background:#b3261e!important;border-color:#ef5350!important;color:#fff!important}
 @media(max-width:1200px){.workspace>.panel.air .controls.bigcontrols{gap:3px!important}.workspace>.panel.air .controls.bigcontrols button{font-size:10px!important;padding:6px 2px!important}.workspace>.panel.air .controls.bigcontrols #trackRepeat{flex-basis:28px!important}}
 @media(max-width:980px){.workspace>.panel.air .controls.bigcontrols button{font-size:clamp(10px,1.8vw,13px)!important}}
-@media(max-width:520px){.workspace>.panel.air .controls.bigcontrols{flex-wrap:wrap!important}.workspace>.panel.air .controls.bigcontrols button{flex:1 1 28%!important;font-size:11px!important}.workspace>.panel.air .controls.bigcontrols #trackRepeat{flex:1 1 28%!important}}</style></body></html>
+@media(max-width:520px){.workspace>.panel.air .controls.bigcontrols{flex-wrap:wrap!important}.workspace>.panel.air .controls.bigcontrols button{flex:1 1 28%!important;font-size:11px!important}.workspace>.panel.air .controls.bigcontrols #trackRepeat{flex:1 1 28%!important}}</style><style id="dual-deck-symmetric-restyle">
+/* RESTYLING SIMÉTRICO — los dos motores y sus funciones permanecen intactos */
+.workspace>.panel.air,.workspace>.panel:nth-of-type(2){gap:10px!important}
+.rm-deck-surface{display:grid;grid-template-rows:70px 48px 44px 42px 36px;gap:8px;padding:12px;border:1px solid #344c5a;border-radius:10px;background:linear-gradient(160deg,#18252d,#0a1116);width:100%;min-width:0;box-sizing:border-box}
+.rm-deck-surface .rm-deck-now{min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px;overflow:hidden}
+.rm-deck-surface .rm-deck-now #now,.rm-deck-surface .rm-deck-now #auxNow{font-size:18px!important;font-weight:800!important;color:#f1f7fa!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rm-deck-surface .rm-deck-now #artist,.rm-deck-surface .rm-deck-now #auxArtist{font-size:12px!important;color:#9eb5c0!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.rm-deck-surface .transport{display:grid!important;grid-template-columns:52px minmax(0,1fr) 60px!important;gap:8px!important;align-items:center!important;width:100%!important;margin:0!important;padding:0!important;min-width:0}
+.rm-deck-surface .transport .seekwrap{min-width:0!important;width:100%!important}
+.rm-deck-surface .transport input[type=range]{width:100%!important;min-width:0!important;accent-color:#56bde7!important}
+.rm-deck-surface .transport .clock{font-size:12px!important;text-align:center!important;font-variant-numeric:tabular-nums}
+.rm-deck-surface .controls.bigcontrols{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;align-items:stretch!important;justify-content:stretch!important;width:100%!important;margin:0!important}
+.rm-deck-surface .controls.bigcontrols button{width:100%!important;min-width:0!important;min-height:38px!important;height:38px!important;padding:4px 2px!important;font-size:clamp(9px,.78vw,12px)!important;font-weight:800!important;white-space:nowrap!important;border-radius:6px!important;line-height:1.1!important;box-sizing:border-box!important}
+.rm-deck-surface .controls.bigcontrols button.rm-extra{display:none!important}
+.rm-deck-surface #play,.rm-deck-surface #auxPlay{background:#168a3a!important;border:1px solid #2dcc62!important;color:#fff!important}
+.rm-deck-surface #pause,.rm-deck-surface #auxPause{background:#c49a00!important;border:1px solid #f0c52b!important;color:#111!important}
+.rm-deck-surface #stop,.rm-deck-surface #auxStop{background:#b3261e!important;border:1px solid #ef5350!important;color:#fff!important}
+.rm-deck-surface .volumeControl{display:grid!important;grid-template-columns:84px minmax(0,1fr)!important;align-items:center!important;gap:10px!important;width:100%!important;min-width:0!important;margin:0!important;padding:0!important}
+.rm-deck-surface .volumeControl>b:first-child{font-size:11px!important;color:#a9c2d0!important;letter-spacing:.07em}
+.rm-deck-surface .volumeControl input{width:100%!important;min-width:0!important;accent-color:#56bde7!important}
+.rm-deck-surface .volumeControl>b:last-child{display:none!important}
+.rm-deck-surface .rm-deck-foot{display:flex;align-items:center;justify-content:flex-end;gap:6px;min-height:36px}
+.rm-deck-surface .rm-deck-foot button{min-height:30px!important;padding:5px 10px!important;border-radius:5px!important;font-size:11px!important}
+.rm-deck-surface .rm-deck-foot .rm-foot-label{margin-right:auto;font-size:10px;color:#8ba9b8;letter-spacing:.08em}
+.workspace>.panel.air>.rm-deck-surface{order:-1!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck>.rm-deck-surface{order:-1!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxsearchwrap{order:0!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxhint{order:1!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxresults{order:2!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .auxload{order:3!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck .curtainbank{order:4!important}
+@media(max-width:980px){.rm-deck-surface .controls.bigcontrols button{font-size:12px!important}}
+@media(max-width:440px){.rm-deck-surface{padding:8px;grid-template-rows:70px 48px 44px 42px 36px}.rm-deck-surface .controls.bigcontrols button{font-size:9px!important}.rm-deck-surface .transport{grid-template-columns:43px minmax(0,1fr) 50px!important;gap:4px!important}}
+</style><script id="dual-deck-symmetric-restyle-script">(function(){function build(){const left=document.querySelector('.workspace>.panel.air'),right=document.querySelector('.workspace>.panel:nth-of-type(2)>.auxdeck');if(!left||!right||document.querySelector('.rm-deck-surface'))return;function surface(root,aux){const shell=document.createElement('div');shell.className='rm-deck-surface';const now=document.createElement('div');now.className='rm-deck-now';const title=root.querySelector(aux?'.auxnow':'#now');const artist=aux?null:root.querySelector('#artist');if(title)now.appendChild(title);if(artist)now.appendChild(artist);shell.appendChild(now);const transport=root.querySelector('.transport'),controls=root.querySelector('.controls.bigcontrols'),volume=root.querySelector('.volumeControl');if(transport)shell.appendChild(transport);if(controls)shell.appendChild(controls);if(volume)shell.appendChild(volume);const foot=document.createElement('div');foot.className='rm-deck-foot';const label=document.createElement('span');label.className='rm-foot-label';label.textContent=aux?'AUXILIAR · COLA CONTINUA':'PROGRAMA · CONTROL DE BLOQUES';foot.appendChild(label);if(!aux&&controls){for(const id of ['next','trackRepeat']){const b=document.getElementById(id);if(b){b.classList.add('rm-extra');b.classList.remove('rm-extra');foot.appendChild(b)}}}shell.appendChild(foot);root.insertBefore(shell,root.firstChild)}surface(left,false);surface(right,true)}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',build);else build()})();</script></body></html>
