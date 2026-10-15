@@ -25,6 +25,9 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .file{background:#244e69;border:1px solid #517d99;border-radius:5px;padding:6px 10px;cursor:pointer;font-size:10px;font-weight:800;white-space:nowrap}
 .file input{display:none}
 @media(max-width:680px){.players{grid-template-columns:1fr}main{padding:8px}.player{padding:9px}.buttons{gap:3px}.buttons button{height:35px}}
+
+/* Secciones gemelas: el CSS de los reproductores permanece intacto */
+.below{margin-top:12px;width:100%;height:330px;min-height:330px;max-height:330px;background:#142a3c;border:1px solid #466b83;border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:9px;min-width:0;overflow:hidden}.below h3{font-size:12px;letter-spacing:.07em;margin:0;flex-shrink:0}.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;flex-shrink:0}.tabs button,.below button{border:1px solid #507a96;background:#23475f;color:#f1f8fc;border-radius:5px;cursor:pointer;padding:7px 5px;font-size:11px}.tabs button[aria-selected=true]{background:#387d9f;border-color:#a4dfff}.items{flex:1;min-height:0;overflow-y:auto;background:#091c2c;border:1px solid #35576c;border-radius:6px;padding:5px}.entry{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 5px;border-bottom:1px solid #29465a;font-size:11px}.entry span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.entry button{flex-shrink:0}.hint{font-size:11px;color:#a3bacb;padding:7px}.searchrow{display:flex;gap:6px;flex-shrink:0}.searchrow input{min-width:0;flex:1;background:#091c2c;border:1px solid #507a96;border-radius:5px;padding:8px;color:#f1f8fc}.upload{display:flex;align-items:center;justify-content:center;flex-shrink:0;background:#244e69;border:1px solid #517d99;border-radius:5px;padding:7px;font-size:11px;cursor:pointer}.upload input{display:none}.below .sub{font-size:10px;color:#a3bacb;flex-shrink:0}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -51,4 +54,26 @@ function buildPlayer(number){
  return root
 }
 document.getElementById('players').append(buildPlayer(1),buildPlayer(2));
+
+const decks=[...document.querySelectorAll('.player')];
+const makePanel=(title)=>{const panel=document.createElement('section');panel.className='below';const h=document.createElement('h3');h.textContent=title;panel.append(h);return panel};
+const blockPanel=makePanel('BLOQUES DEL PROGRAMA'),auxPanel=makePanel('PLAYLIST AUXILIAR');
+decks[0].after(blockPanel);decks[1].after(auxPanel);
+const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
+const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
+const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
+const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);blockPanel.append(blockUpload);
+const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].querySelector('.footer .file').style.display='none';
+function drawBlocks(){tabs.replaceChildren();for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{activeBlock=b;drawBlocks()};tabs.append(btn)}
+blockItems.replaceChildren();if(!blocks[activeBlock].length){const d=document.createElement('div');d.className='hint';d.textContent='Todavía no hay temas en este bloque.';blockItems.append(d)}
+for(const [i,f] of blocks[activeBlock].entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const btn=document.createElement('button');btn.textContent='▶';btn.title='Cargar y reproducir bloque desde este tema';btn.onclick=()=>{const dt=new DataTransfer();blocks[activeBlock].forEach(file=>dt.items.add(file));blockAudio.files=dt.files;blockAudio.dispatchEvent(new Event('change',{bubbles:true}));const next=decks[0].querySelector('[data-action=next]');for(let k=0;k<i;k++)next.click();decks[0].querySelector('[data-action=play]').click()};row.append(t,btn);blockItems.append(row)}}
+blockFile.onchange=()=>{blocks[activeBlock].push(...Array.from(blockFile.files));blockFile.value='';drawBlocks()};drawBlocks();
+const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar en YouTube';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
+search.onsubmit=e=>{e.preventDefault();if(q.value.trim())window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q.value.trim()),'_blank','noopener')};
+const auxNote=document.createElement('div');auxNote.className='sub';auxNote.textContent='Búsqueda externa · reproducción local de archivos';auxPanel.append(auxNote);
+const auxItems=document.createElement('div');auxItems.className='items';auxPanel.append(auxItems);
+const auxUpload=document.createElement('label');auxUpload.className='upload';auxUpload.textContent='＋ AGREGAR A PLAYLIST';const auxFile=document.createElement('input');auxFile.type='file';auxFile.accept='audio/*';auxFile.multiple=true;auxUpload.append(auxFile);auxPanel.append(auxUpload);
+const auxNative=decks[1].querySelector('.footer input[type=file]');decks[1].querySelector('.footer .file').style.display='none';
+function drawAux(){auxItems.replaceChildren();if(!auxFiles.length){const d=document.createElement('div');d.className='hint';d.textContent='Playlist vacía. Agregá archivos de audio.';auxItems.append(d)}for(const [i,f] of auxFiles.entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const b=document.createElement('button');b.textContent='▶';b.onclick=()=>{const dt=new DataTransfer();auxFiles.forEach(file=>dt.items.add(file));auxNative.files=dt.files;auxNative.dispatchEvent(new Event('change',{bubbles:true}));for(let k=0;k<i;k++)decks[1].querySelector('[data-action=next]').click();decks[1].querySelector('[data-action=play]').click()};row.append(t,b);auxItems.append(row)}}
+auxFile.onchange=()=>{auxFiles.push(...Array.from(auxFile.files));auxFile.value='';drawAux()};drawAux();
 </script></body></html>
