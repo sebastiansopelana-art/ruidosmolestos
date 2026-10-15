@@ -292,30 +292,20 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const introKey=id=>'rm-song-intro-'+id;
  introField.addEventListener('change',()=>{if(current<0)return;try{localStorage.setItem(introKey(ytQueue[current].id),introField.value.trim())}catch(e){}});
  async function loadSongFacts(x){
-  const seq=++factSeq;yearNode.textContent='Consultando…';writerNode.textContent='Sin verificar';
-  introField.value=localStorage.getItem(introKey(x.id))||'';
-  if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='No corresponde';introField.placeholder='—';return}
-  introField.placeholder='--:--';
-  try{
-   const query='recording:'+x.title+' AND artist:'+(x.artist||'');
-   const url='https://musicbrainz.org/ws/2/recording/?query='+encodeURIComponent(query)+'&fmt=json&limit=5';
-   const response=await fetch(url,{headers:{'Accept':'application/json'}});
-   if(!response.ok)throw Error('metadata unavailable');
-   const data=await response.json();if(seq!==factSeq)return;
-   const first=(data.recordings||[]).find(y=>y['first-release-date']&&y.score>=85);
-   yearNode.textContent=first?.['first-release-date']?.slice(0,4)||'Sin verificar';
-   if(!first?.id)return;
-   const detail=await fetch('https://musicbrainz.org/ws/2/recording/'+encodeURIComponent(first.id)+'?inc=work-rels&fmt=json',{headers:{'Accept':'application/json'}});
-   if(!detail.ok)return;
-   const full=await detail.json();if(seq!==factSeq)return;
-   const work=(full.relations||[]).find(y=>y.type==='performance'&&y.work)?.work;
-   if(!work?.id)return;
-   const wr=await fetch('https://musicbrainz.org/ws/2/work/'+encodeURIComponent(work.id)+'?inc=artist-rels&fmt=json',{headers:{'Accept':'application/json'}});
-   if(!wr.ok)return;const workData=await wr.json();if(seq!==factSeq)return;
-   const authors=[...new Set((workData.relations||[]).filter(y=>['composer','lyricist','writer'].includes(y.type)).map(y=>y.artist?.name).filter(Boolean))];
-   if(authors.length)writerNode.textContent=authors.join(', ');
-  }catch(e){if(seq===factSeq)yearNode.textContent='Sin verificar'}
- }
+ const seq=++factSeq;
+ yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';
+ try{introField.value=localStorage.getItem(introKey(x.id))||''}catch(e){introField.value=''}
+ if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='Audio del estudio';return}
+ const title=String(x.title||'').replace(/\([^)]*(official|audio|lyrics|video|remaster)[^)]*\)/ig,'').replace(/\[[^\]]*\]/g,'').trim();
+ const artist=String(x.artist||'').replace(/\s*[-–]\s*Topic$/i,'').trim();
+ try{
+  const response=await fetch('/api/song-facts?title='+encodeURIComponent(title)+'&artist='+encodeURIComponent(artist),{cache:'no-store'});
+  if(!response.ok)throw Error('Consulta no disponible');
+  const data=await response.json();if(seq!==factSeq)return;
+  yearNode.textContent=data.year||'Sin dato confirmado';
+  writerNode.textContent=data.writers?.length?data.writers.join(', '):'Sin autores confirmados';
+ }catch(e){if(seq!==factSeq)return;yearNode.textContent='Fuente no disponible';writerNode.textContent='Fuente no disponible'}
+}
 const fmtAux=n=>fmt(Number(n)||0);
  function status(message){note.textContent=message}
  function live(on){playing=!!on;air.dataset.live=String(playing);state.textContent=playing?'REPRODUCIENDO':ready?'LISTO':'CARGANDO'}
