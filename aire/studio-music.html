@@ -1127,17 +1127,36 @@ function stopAutoSep(){
  restoreAutoSepDisplay();
  autoSepPending=null;autoSepTriggered=false;autoSepFinished=false;autoSepSongEnded=false;
  autoSepAudio.pause();autoSepAudio.removeAttribute('src');autoSepAudio.load();
+ autoSepNextReady=false;autoSepNextId=null;autoSepTransitioning=false;
 }
+let autoSepNextReady=false,autoSepNextId=null,autoSepTransitioning=false;
 function finishAutoMix(){
- if(!autoSepPending||!autoSepFinished||!autoSepSongEnded)return;
- const p=autoSepPending;autoSepPending=null;
- if(p.block===activeBlock&&blockYTActive)playBlockTrack(p.index);
+ if(!autoSepPending||!autoSepSongEnded||autoSepTransitioning)return;
+ if(!autoSepFinished){
+  const remaining=autoSepAudio.duration-autoSepAudio.currentTime;
+  if(!Number.isFinite(remaining)||remaining>0.65)return;
+ }
+ const p=autoSepPending;
+ if(p.block!==activeBlock||!blockYTActive)return;
+ if(!autoSepNextReady&&!autoSepFinished)return;
+ autoSepTransitioning=true;
+ autoSepPending=null;
+ // La siguiente canción arranca mientras termina la cola del separador.
+ // El audio del separador se detiene al comenzar la pista siguiente.
+ playBlockTrack(p.index);
 }
 function startAutoMix(){
  if(autoSepTriggered||blockRepeat||!blockYTActive||blockCurrent+1>=blockPlaylist().length)return;
  autoSepTriggered=true;autoSepFinished=false;autoSepSongEnded=false;
+ autoSepNextReady=false;autoSepNextId=null;autoSepTransitioning=false;
  const n=autoSepTurn++%rmSeparatorNames.length;
  autoSepPending={block:activeBlock,index:blockCurrent+1};
+ // Resolver la próxima grabación mientras suena el separador, no después.
+ const upcoming=blockPlaylist()[blockCurrent+1];
+ if(upcoming?.programTrack){
+  blockResolve(upcoming).then(id=>{if(autoSepPending?.index===blockCurrent+1){autoSepNextId=id;autoSepNextReady=true;finishAutoMix()}}).catch(()=>{autoSepNextReady=false});
+ }else{autoSepNextReady=true}
+
  autoSepAudio.src=rmSeparatorBase+encodeURIComponent(rmSeparatorNames[n]);
  autoSepAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
  showAutoSepDisplay(n);
@@ -1145,6 +1164,7 @@ function startAutoMix(){
  autoSepAudio.play().catch(()=>{autoSepFinished=true;finishAutoMix()});
 }
 autoSepAudio.addEventListener('ended',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
+autoSepAudio.addEventListener('timeupdate',()=>{if(autoSepSongEnded)finishAutoMix()});
 autoSepAudio.addEventListener('error',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index){
