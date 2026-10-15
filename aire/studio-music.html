@@ -647,6 +647,9 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players>.player>.below .rm-aux-fixed{flex:0 0 auto;display:flex;flex-direction:column;gap:1px;min-height:0}
 #players>.player>.below .rm-aux-fixed .entry{padding:2px 4px!important;min-height:19px!important}
 #players>.player>.below .rm-aux-fixed .rm-block-divider{margin:2px 0 0!important;padding:2px 4px!important}
+
+/* Quitar los botones de carga manual de ambos paneles sin afectar el motor de audio. */
+#players .below>.upload{display:none!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -729,7 +732,7 @@ async function loadStudioProgram(number=44){
 programLoad.addEventListener('click',()=>loadStudioProgram(44));
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
-const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);blockPanel.append(blockUpload);
+const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);/* Control de carga oculto; se conserva el input para no alterar los manejadores. */
 const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].querySelector('.footer .file').style.display='none';
 // Motor independiente de los cuatro bloques, recuperado del flujo Beta 3 final.
 const blockDeck=decks[0],blockScreen=blockDeck.querySelector('.screen');
@@ -936,7 +939,7 @@ search.onsubmit=e=>{e.preventDefault();if(q.value.trim())window.open('https://ww
 const auxNote=document.createElement('div');auxNote.className='sub';auxNote.textContent='Búsqueda externa · reproducción local de archivos';auxPanel.append(auxNote);
 const auxItems=document.createElement('div');auxItems.className='items';auxPanel.append(auxItems);
 const auxFixed=document.createElement('div');auxFixed.className='rm-aux-fixed';auxPanel.append(auxFixed);
-const auxUpload=document.createElement('label');auxUpload.className='upload';auxUpload.textContent='＋ AGREGAR A PLAYLIST';const auxFile=document.createElement('input');auxFile.type='file';auxFile.accept='audio/*';auxFile.multiple=true;auxUpload.append(auxFile);auxPanel.append(auxUpload);
+const auxUpload=document.createElement('label');auxUpload.className='upload';auxUpload.textContent='＋ AGREGAR A PLAYLIST';const auxFile=document.createElement('input');auxFile.type='file';auxFile.accept='audio/*';auxFile.multiple=true;auxUpload.append(auxFile);/* Control de carga oculto; se conserva el input para no alterar los manejadores. */
 const auxNative=decks[1].querySelector('.footer input[type=file]');decks[1].querySelector('.footer .file').style.display='none';
 function drawAux(){auxItems.replaceChildren();if(!auxFiles.length){const d=document.createElement('div');d.className='hint';d.textContent='Playlist vacía. Agregá archivos de audio.';auxItems.append(d)}for(const [i,f] of auxFiles.entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const b=document.createElement('button');b.textContent='▶';b.onclick=()=>{const dt=new DataTransfer();auxFiles.forEach(file=>dt.items.add(file));auxNative.files=dt.files;auxNative.dispatchEvent(new Event('change',{bubbles:true}));for(let k=0;k<i;k++)decks[1].querySelector('[data-action=next]').click();decks[1].querySelector('[data-action=play]').click()};const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.rmDuration);row.append(t,duration,b);auxItems.append(row)}}
 auxFile.onchange=()=>{const files=Array.from(auxFile.files);auxFiles.push(...files);auxFile.value='';drawAux();files.forEach(f=>rmReadFileDuration(f,drawAux))};drawAux();
