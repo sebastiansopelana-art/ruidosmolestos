@@ -560,6 +560,9 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
  min-width:0;
 }
 @media(max-width:680px){.player .screen .rm-song-facts{column-gap:7px!important;row-gap:2px!important}}
+/* Identidad visual compacta del programa en los bloques. */
+.below .rm-program-info{font-size:10px;letter-spacing:.06em;font-weight:800;color:#a8d7ef;text-align:center;line-height:1.4}
+.below .rm-program-load:disabled{opacity:.65;cursor:wait}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -617,18 +620,32 @@ const blockPanel=makePanel('BLOQUES DEL PROGRAMA'),auxPanel=makePanel('PLAYLIST 
 decks[0].append(blockPanel);decks[1].append(auxPanel);
 const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
 const programRow=document.createElement('div');programRow.className='rm-program-row';
-const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 44';programLoad.title='Seleccionar los audios del programa 44 para cargar en el bloque activo';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 44';programLoad.title='Cargar los cuatro bloques del programa 44 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.append(programRow);
-const programPicker=document.createElement('input');programPicker.type='file';programPicker.accept='audio/*';programPicker.multiple=true;programPicker.hidden=true;blockPanel.append(programPicker);
-programLoad.addEventListener('click',()=>programPicker.click());
-programPicker.addEventListener('change',()=>{const files=Array.from(programPicker.files||[]);if(!files.length)return;blocks[activeBlock].push(...files);drawBlocks();programPicker.value=''});
+const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';blockPanel.append(programInfo);
+async function loadStudioProgram(number=44){
+ programLoad.disabled=true;programInfo.textContent='Cargando programa '+number+'…';
+ try{
+  const response=await fetch('/aire/programas/'+encodeURIComponent(number)+'.json',{cache:'no-store'});
+  if(!response.ok)throw Error('No se encontró el programa');
+  const manifest=await response.json();
+  if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
+  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true}));
+  activeBlock=0;drawBlocks();
+  programLoad.textContent='PROGRAMA Nº '+number;
+  programInfo.textContent='EL GRITO DEL ACERO · 16 TEMAS · 4 BLOQUES';
+ }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
+ finally{programLoad.disabled=false}
+}
+programLoad.addEventListener('click',()=>loadStudioProgram(44));
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);blockPanel.append(blockUpload);
 const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].querySelector('.footer .file').style.display='none';
 function drawBlocks(){tabs.replaceChildren();for(let b=0;b<4;b++){const btn=document.createElement('button');btn.textContent='BLOQUE '+(b+1);btn.setAttribute('aria-selected',String(activeBlock===b));btn.onclick=()=>{activeBlock=b;drawBlocks()};tabs.append(btn)}
 blockItems.replaceChildren();if(!blocks[activeBlock].length){const d=document.createElement('div');d.className='hint';d.textContent='Todavía no hay temas en este bloque.';blockItems.append(d)}
-for(const [i,f] of blocks[activeBlock].entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const btn=document.createElement('button');btn.textContent='▶';btn.title='Cargar y reproducir bloque desde este tema';btn.onclick=()=>{const dt=new DataTransfer();blocks[activeBlock].forEach(file=>dt.items.add(file));blockAudio.files=dt.files;blockAudio.dispatchEvent(new Event('change',{bubbles:true}));const next=decks[0].querySelector('[data-action=next]');for(let k=0;k<i;k++)next.click();decks[0].querySelector('[data-action=play]').click()};row.append(t,btn);blockItems.append(row)}}
+for(const [i,f] of blocks[activeBlock].entries()){const row=document.createElement('div');row.className='entry';const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;const btn=document.createElement('button');btn.textContent=f.programTrack?'↗':'▶';btn.title=f.programTrack?'Buscar esta grabación en YouTube (todavía no cargada como audio local)':'Cargar y reproducir bloque desde este tema';btn.onclick=()=>{if(f.programTrack){window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(f.query),'_blank','noopener');return}const dt=new DataTransfer();blocks[activeBlock].filter(file=>file instanceof File).forEach(file=>dt.items.add(file));blockAudio.files=dt.files;blockAudio.dispatchEvent(new Event('change',{bubbles:true}));const next=decks[0].querySelector('[data-action=next]');for(let k=0;k<i;k++)next.click();decks[0].querySelector('[data-action=play]').click()};row.append(t,btn);blockItems.append(row)}}
+loadStudioProgram(44);
 blockFile.onchange=()=>{blocks[activeBlock].push(...Array.from(blockFile.files));blockFile.value='';drawBlocks()};drawBlocks();
 const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar en YouTube';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
 search.onsubmit=e=>{e.preventDefault();if(q.value.trim())window.open('https://www.youtube.com/results?search_query='+encodeURIComponent(q.value.trim()),'_blank','noopener')};
