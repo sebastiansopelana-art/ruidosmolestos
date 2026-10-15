@@ -521,6 +521,11 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
  color:#c8deed!important;
  font-weight:700!important;
 }
+
+/* Ficha musical compacta y visible en ambos visores. */
+.player .screen .rm-song-facts{display:flex!important;flex-wrap:wrap;gap:2px 12px;font-size:10px;line-height:1.3;max-width:100%;overflow:hidden}
+.player .screen .rm-song-facts>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+.player .screen .rm-song-facts b{font-weight:800}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -530,9 +535,31 @@ function buildPlayer(number){
  const root=document.createElement('section');root.className='player';root.setAttribute('aria-label','Reproductor '+number);
  root.innerHTML='<div class="heading"><h2>REPRODUCTOR '+number+'</h2><span class="air" data-live="false">EN EL AIRE</span></div><div class="screen"><div class="track">Sin tema cargado</div><div class="artist">Seleccioná archivos de audio para reproducir</div><div class="full-route" title="Ruta completa del audio">—</div><div class="screen-countdown">RESTANTE <strong>--:--</strong></div></div><div class="timeline"><span class="time elapsed">00:00</span><input class="seek" type="range" min="0" max="1000" value="0" aria-label="Posición de reproducción"><span class="time remaining">-00:00</span></div><div class="buttons"></div><div class="volume"><span>VOLUMEN</span><input class="vol" type="range" min="0" max="100" value="85" aria-label="Volumen"><span class="volvalue">85%</span></div><div class="footer"><label class="file">＋ CARGAR AUDIO<input type="file" accept="audio/*" multiple></label></div>';
  const $=sel=>root.querySelector(sel),audio=new Audio();audio.preload='metadata';audio.volume=.85;
+ const facts=document.createElement('div');facts.className='rm-song-facts';
+ facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">—</span></span><span><b>ESCRIBIÓ</b> <span data-fact="writers">—</span></span><span><b>GRABÓ</b> <span data-fact="recorded">—</span></span>';
+ root.querySelector('.screen-countdown').before(facts);
+ const factYear=facts.querySelector('[data-fact="year"]'),factWriters=facts.querySelector('[data-fact="writers"]'),factRecorded=facts.querySelector('[data-fact="recorded"]');
+ let factSeq=0;
+ async function showLocalFacts(name){
+  const seq=++factSeq;
+  const clean=String(name||'').replace(/\.[^.]+$/,'').trim();
+  const pieces=clean.split(/\s+[-–]\s+/);
+  const artistName=pieces.length>1?pieces.shift().trim():'';
+  const songTitle=pieces.length?pieces.join(' - ').trim():clean;
+  factYear.textContent='Consultando…';factWriters.textContent='Consultando…';factRecorded.textContent=artistName||'Sin identificar';
+  if(!artistName){factYear.textContent='Sin verificar';factWriters.textContent='Sin verificar';return}
+  try{
+   const response=await fetch('/api/song-facts?title='+encodeURIComponent(songTitle)+'&artist='+encodeURIComponent(artistName),{cache:'no-store'});
+   if(!response.ok)throw Error('Sin datos');
+   const data=await response.json();if(seq!==factSeq)return;
+   factYear.textContent=data.year||'Sin confirmar';
+   factWriters.textContent=data.writers?.length?data.writers.join(', '):'Sin confirmar';
+  }catch(_){if(seq!==factSeq)return;factYear.textContent='Sin verificar';factWriters.textContent='Sin verificar'}
+ }
+
  let tracks=[],idx=-1,repeat=false,urls=[];
  const setState=t=>{root.dataset.playbackState=t};
- function load(i,autoplay){if(i<0||i>=tracks.length)return;idx=i;audio.src=tracks[i].url;$('.track').textContent=tracks[i].name;$('.artist').textContent=tracks[i].name.includes(' - ')?tracks[i].name.split(' - ')[0]:'ARCHIVO LOCAL';$('.full-route').textContent=tracks[i].name;$('.full-route').title=tracks[i].name;$('.seek').value=0;setState('CARGADO');if(autoplay)audio.play().catch(()=>setState('TOCÁ PLAY'))}
+ function load(i,autoplay){if(i<0||i>=tracks.length)return;idx=i;audio.src=tracks[i].url;$('.track').textContent=tracks[i].name;showLocalFacts(tracks[i].name);$('.artist').textContent=tracks[i].name.includes(' - ')?tracks[i].name.split(' - ')[0]:'ARCHIVO LOCAL';$('.full-route').textContent=tracks[i].name;$('.full-route').title=tracks[i].name;$('.seek').value=0;setState('CARGADO');if(autoplay)audio.play().catch(()=>setState('TOCÁ PLAY'))}
  const actions={back:()=>{audio.currentTime=Math.max(0,(audio.currentTime||0)-10)},play:()=>{if(idx<0&&tracks.length)load(0,false);if(idx>=0)audio.play().catch(()=>setState('TOCÁ PLAY'))},pause:()=>audio.pause(),stop:()=>{audio.pause();audio.currentTime=0;setState('DETENIDO')},next:()=>{if(idx+1<tracks.length)load(idx+1,true)},repeat:()=>{repeat=!repeat;root.querySelector('[data-action="repeat"]').setAttribute('aria-pressed',String(repeat))},forward:()=>{if(Number.isFinite(audio.duration))audio.currentTime=Math.min(audio.duration,(audio.currentTime||0)+10)}};
  for(const [id,symbol,title] of icons){const btn=document.createElement('button');btn.type='button';btn.innerHTML='<svg class="rm-transport-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+({"back":"<path d='M11 5 L3 12 L11 19 Z'/><path d='M21 5 L13 12 L21 19 Z'/>","play":"<path d='M7 4 L20 12 L7 20 Z'/>","pause":"<rect x='5' y='4' width='5' height='16' rx='1'/><rect x='14' y='4' width='5' height='16' rx='1'/>","stop":"<rect x='4' y='4' width='16' height='16' rx='1.5'/>","next":"<path d='M3 5 L11 12 L3 19 Z'/><path d='M13 5 L21 12 L13 19 Z'/>","repeat":"<path d='M5 9 V7 Q5 5 8 5 H19 L16 2 M19 5 L16 8'/><path d='M19 15 V17 Q19 19 16 19 H5 L8 16 M5 19 L8 22'/>","forward":"<path d='M3 5 L11 12 L3 19 Z'/><path d='M13 5 L21 12 L13 19 Z'/>"})[id]+'</svg>';btn.title=title;btn.setAttribute('aria-label',title);btn.dataset.action=id;if(id==='repeat')btn.setAttribute('aria-pressed','false');btn.addEventListener('click',actions[id]);$('.buttons').append(btn)}
  $('.file input').addEventListener('change',e=>{audio.pause();urls.forEach(URL.revokeObjectURL);urls=[];tracks=Array.from(e.target.files||[]).map(f=>{const url=URL.createObjectURL(f);urls.push(url);return {url,name:f.name.replace(/\.[^.]+$/,'')}});idx=-1;if(tracks.length)load(0,false)});
@@ -685,14 +712,14 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
  const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),air=deck.querySelector('.heading .air'),vol=deck.querySelector('.vol');
  
- const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span>';
+ const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>ESCRIBIÓ</b> <span data-fact="writers">Sin verificar</span></span><span><b>GRABÓ</b> <span data-fact="recorded">—</span></span>';
  deck.querySelector('.screen-countdown').before(facts);
- const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]');
+ const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]'),recordedNode=facts.querySelector('[data-fact="recorded"]');
  let factSeq=0;
  async function loadSongFacts(x){
  const seq=++factSeq;
- yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';
- if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='Audio del estudio';return}
+ yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';recordedNode.textContent=x.artist||'Sin identificar';
+ if(x.source==='production'){yearNode.textContent='Producción RM';writerNode.textContent='Audio del estudio';recordedNode.textContent='Ruidos Molestos';return}
  const title=String(x.title||'').replace(/\([^)]*(official|audio|lyrics|video|remaster)[^)]*\)/ig,'').replace(/\[[^\]]*\]/g,'').trim();
  const artist=String(x.artist||'').replace(/\s*[-–]\s*Topic$/i,'').trim();
  try{
