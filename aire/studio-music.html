@@ -629,6 +629,13 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players>.player>.footer{order:initial!important}
 #players>.player>.below{order:initial!important;margin-top:-14px!important;position:relative;z-index:1}
 #players>.player{row-gap:2px!important}
+/* Más lugar para los 16 temas, sin desplazar la barra de volumen. */
+#players>.player>.screen{min-height:148px!important;height:148px!important;gap:2px!important}
+#players>.player>.screen .rm-song-facts{padding-top:2px!important;padding-bottom:0!important;row-gap:1px!important}
+#players>.player>.below{height:430px!important;min-height:430px!important;max-height:430px!important;padding:7px 9px!important;gap:3px!important}
+#players>.player>.below .items{padding:2px 4px!important}
+#players>.player>.below .items .entry{padding:3px 4px!important;min-height:20px!important}
+#players>.player>.below .rm-block-divider{padding:3px 4px 2px!important;margin:1px 0!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
