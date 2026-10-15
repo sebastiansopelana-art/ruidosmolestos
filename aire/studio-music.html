@@ -703,6 +703,34 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .rm-studio-title .rm-studio-subtitle{font-size:10px!important;line-height:1.2!important}
 .rm-studio-credit{font-size:10px!important}
 @media(max-width:680px){.rm-studio-brand{min-height:40px!important;padding:4px 8px!important;margin-bottom:5px!important}.rm-studio-logo{width:29px!important;height:29px!important}.rm-studio-title strong{font-size:11px!important}.rm-studio-title .rm-studio-subtitle{font-size:8px!important}.rm-studio-credit{font-size:8px!important}}
+
+/* NORDIC AFTER DARK — refinamiento visual, sin cambios en reproducción. */
+body{background:radial-gradient(ellipse at 12% 0%,#354c51 0%,#192b33 42%,#101d25 100%)!important;color:#edf3ef}
+main{padding:9px!important}
+.rm-studio-brand{background:linear-gradient(110deg,#304b50,#21343e)!important;border-color:#728e8b88!important;box-shadow:0 3px 14px #06101855!important}
+.rm-studio-title strong{color:#f2f2e9!important;letter-spacing:.07em}
+.rm-studio-title .rm-studio-subtitle{color:#c5dcd6!important}
+.player{background:linear-gradient(155deg,#293e48,#20343f)!important;border-color:#6e8d8b77!important;box-shadow:0 8px 28px #07151d66,inset 0 1px #ffffff13!important}
+.player .screen{background:linear-gradient(150deg,#142630,#1d323b)!important;border-color:#587a7c88!important}
+.player .screen .track{color:#f2f6ed!important}
+.player .screen .artist{color:#c5ddd5!important}
+.player .screen .full-route,.player .screen .rm-song-facts{color:#a9c5c4!important}
+.player .screen .rm-song-facts b{color:#c9bce6!important}
+.player .screen .screen-countdown strong{color:#f2e9d9!important}
+.player>.below{background:linear-gradient(165deg,#203540,#1b3039)!important;border-color:#698b8a77!important;box-shadow:inset 0 1px #ffffff0c!important}
+.player .below h3,.rm-block-divider{color:#d5e5de!important;letter-spacing:.12em}
+#players .below .rm-block-cue{background:linear-gradient(135deg,#d6e9db,#a8d0b8)!important;border-color:#c3e2cb!important;color:#1f463b!important;box-shadow:inset 0 1px #fff9,0 2px 5px #07171b55!important}
+#players .rm-aux-fixed .rm-cue-intro{background:linear-gradient(135deg,#e3d9f3,#bfaedc)!important;border-color:#e6dafa!important}
+#players .rm-aux-fixed .rm-cue-narration{background:linear-gradient(135deg,#d7e9f1,#a9ccda)!important;border-color:#c5e6f0!important}
+#players .below .rm-block-cue>span:first-child,#players .below .rm-block-cue .rm-duration{color:#21483b!important}
+#players .rm-aux-fixed .rm-cue-intro .aux-doubleplay,#players .rm-aux-fixed .rm-cue-intro .rm-duration{color:#46365d!important}
+#players .rm-aux-fixed .rm-cue-narration .aux-doubleplay,#players .rm-aux-fixed .rm-cue-narration .rm-duration{color:#244b60!important}
+#players .below .rm-block-cue[data-playing=true],#players .rm-aux-fixed .rm-cue-button[data-playing=true]{outline:2px solid #f8f1d8!important;outline-offset:-2px}
+.player .below .searchrow input{background:#142932!important;color:#edf4ef!important;border-color:#668989!important}
+.player .below .searchrow button{background:linear-gradient(145deg,#e9dcc5,#c9b796)!important;color:#3c382d!important;border-color:#eadcc5!important}
+.player .separator-pad .sep-name{color:#c1d4d0!important}
+.player .vol{accent-color:#b3d5c5!important}
+.player .seek{accent-color:#c9bce6!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
