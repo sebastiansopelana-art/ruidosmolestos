@@ -636,6 +636,10 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players>.player>.below .items{padding:2px 4px!important}
 #players>.player>.below .items .entry{padding:3px 4px!important;min-height:20px!important}
 #players>.player>.below .rm-block-divider{padding:3px 4px 2px!important;margin:1px 0!important}
+/* Extender ambos reproductores hacia abajo, conservando intacta la parte superior. */
+#players>.player{min-height:calc(100dvh - 100px)!important;align-self:stretch!important}
+#players>.player>.below{height:auto!important;max-height:none!important;min-height:430px!important;flex:1 1 auto!important}
+#players>.player>.below>.items{flex:1 1 auto!important;min-height:0!important}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
