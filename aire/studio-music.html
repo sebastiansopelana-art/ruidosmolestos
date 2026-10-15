@@ -911,6 +911,15 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 .auxdeck .curtaincard.live{border-color:#c69b4b!important;background:linear-gradient(180deg,#2b281d,#1a201d)!important;box-shadow:inset 3px 0 #e4b85d!important}
 @container (max-width:440px){.auxdeck .curtaincontrols{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
 
+/* FIX: el auxiliar debe compartir una fila ALTA con la lista para que sticky tenga recorrido.
+   Las reglas anteriores forzaban ambos a fila 1, dejando sin altura útil al seguimiento. */
+@media(min-width:1101px){
+ .workspace>.panel:nth-of-type(2){display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:38px minmax(0,auto) auto!important;align-items:start!important;overflow:visible!important}
+ .workspace>.panel:nth-of-type(2)>.programlivehead{grid-column:1!important;grid-row:1!important}
+ .workspace>.panel:nth-of-type(2)>#list{grid-column:1!important;grid-row:2!important;align-self:stretch!important}
+ .workspace>.panel:nth-of-type(2)>.auxdeck{grid-column:2!important;grid-row:2!important;position:sticky!important;top:12px!important;align-self:start!important;max-height:calc(100dvh - 24px)!important;overflow-y:auto!important;overflow-x:hidden!important}
+ .workspace>.panel:nth-of-type(2)>.tools{grid-column:1/-1!important;grid-row:3!important}
+}
 /* Salida mínima de pantalla completa: no ocupa espacio en la cabecera. */
 #studioFullscreen{position:fixed!important;top:5px!important;right:6px!important;z-index:2147483647!important;width:24px!important;height:24px!important;min-width:24px!important;padding:0!important;margin:0!important;border:1px solid #60717b!important;border-radius:4px!important;background:#121a20dd!important;color:#e5eef4!important;font-size:19px!important;line-height:20px!important;cursor:pointer!important;box-shadow:none!important}
 #studioFullscreen[hidden]{display:none!important}
