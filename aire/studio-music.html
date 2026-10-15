@@ -418,6 +418,25 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
  background:#203344!important;
  color:#cbd8e1!important;
 }
+
+/* Relieve físico suave para todos los botones de transporte y separadores. */
+.player .buttons button,
+.player .separator-pad .sep-cell button{
+ border-width:1px!important;
+ border-style:solid!important;
+ border-top-color:rgba(255,255,255,.95)!important;
+ border-left-color:rgba(255,255,255,.75)!important;
+ border-right-color:rgba(40,64,74,.30)!important;
+ border-bottom-color:rgba(35,53,65,.42)!important;
+ box-shadow:inset 0 2px 1px rgba(255,255,255,.83),inset 0 -2px 3px rgba(32,51,64,.17),0 3px 0 rgba(20,38,50,.34),0 5px 9px rgba(0,0,0,.24)!important;
+ text-shadow:0 1px 0 rgba(255,255,255,.4);
+ transition:transform .09s ease,box-shadow .09s ease!important;
+}
+.player .buttons button:active,
+.player .separator-pad .sep-cell button:active{
+ transform:translateY(2px)!important;
+ box-shadow:inset 0 2px 5px rgba(25,45,58,.28),inset 0 1px 2px rgba(255,255,255,.3),0 1px 0 rgba(20,38,50,.3)!important;
+}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
