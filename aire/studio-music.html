@@ -1076,6 +1076,15 @@ async function loadBlockFacts(f){
   label.textContent=data.label||'Sin confirmar';
  }catch(_){if(seq!==blockFactsSequence)return;year.textContent='Sin verificar';writers.textContent='Sin verificar';label.textContent='Sin verificar'}
 }
+// Interbloqueo: tomar el auxiliar detiene inmediatamente el reproductor de bloques.
+window.addEventListener('rm-aux-takeover',()=>{
+ rmSilenceReset();
+ stopBlockEndSeparator();
+ stopAutoSep();
+ try{blockYT?.stopVideo()}catch(_){}
+ blockYTActive=false;
+ setBlockAir(false);
+});
 function setBlockAir(on){
  blockDeck.querySelector('.heading .air').dataset.live=String(!!on);
  blockDeck.dataset.playbackState=on?'REPRODUCIENDO':'PAUSADO';
@@ -1499,7 +1508,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.splice(Math.max(0,ytQueue.length-fixedAuxIds.length),0,{id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||auxDurationCache[x.id]||0});save();render();status('Agregado a playlist: '+x.title)}
  window.addEventListener('rm-block-takeover',()=>stop());
  function stop(){stopRequested=true;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;window.dispatchEvent(new Event('rm-aux-takeover'));patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  productionAudio.addEventListener('loadedmetadata',()=>{if(ytQueue[current]?.id==='rm-prod-9'){const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(pat&&!patOverlapAudio.src){patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';patOverlapAudio.load()}}const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
