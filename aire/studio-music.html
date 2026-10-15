@@ -664,6 +664,13 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 #players .rm-aux-fixed .rm-cue-button[data-playing=true]{animation:rmCuePlaying .85s ease-in-out infinite!important;border-width:2px!important}
 #players .rm-aux-fixed .rm-cue-button[data-playing=false]{animation:none!important}
 @media(prefers-reduced-motion:reduce){#players .rm-aux-fixed .rm-cue-button[data-playing=true]{animation:none!important;outline:3px solid #fff!important}}
+
+/* Los 16 temas se presentan como botones, con señal luminosa del tema al aire. */
+#players .below .rm-block-cue{border:1px solid #487d9c!important;border-radius:7px!important;background:linear-gradient(110deg,#1c4864,#153449)!important;margin:2px 0!important;padding:6px 8px!important;min-height:34px!important;box-shadow:inset 0 1px #ffffff20,0 2px 5px #0004;cursor:pointer;transition:filter .15s}
+#players .below .rm-block-cue:hover{filter:brightness(1.2)}
+#players .below .rm-block-cue>span:first-child{font-weight:750;color:#f4fbff;user-select:none}
+#players .below .rm-block-cue[data-playing=true]{animation:rmCuePlaying .85s ease-in-out infinite!important;border:2px solid #bdeaff!important}
+@media(prefers-reduced-motion:reduce){#players .below .rm-block-cue[data-playing=true]{animation:none!important;outline:3px solid #fff!important}}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
@@ -775,6 +782,7 @@ async function loadBlockFacts(f){
 function setBlockAir(on){
  blockDeck.querySelector('.heading .air').dataset.live=String(!!on);
  blockDeck.dataset.playbackState=on?'REPRODUCIENDO':'PAUSADO';
+ blockItems.querySelectorAll('.rm-block-cue').forEach(row=>{row.dataset.playing=String(!!on&&Number(row.dataset.block)===activeBlock&&Number(row.dataset.index)===blockCurrent)});
 }
 function blockYTInit(){
  if(blockYT||!window.YT?.Player)return;
@@ -935,7 +943,7 @@ function drawBlocks(){
   const heading=document.createElement('div');heading.className='rm-block-divider';heading.textContent='BLOQUE '+(b+1);blockItems.append(heading);
   if(!blocks[b].length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Sin temas cargados';blockItems.append(empty);continue}
   for(const [i,f] of blocks[b].entries()){
-   const row=document.createElement('div');row.className='entry';row.dataset.block=b;row.dataset.index=i;
+   const row=document.createElement('div');row.className='entry rm-block-cue';row.dataset.block=b;row.dataset.index=i;row.dataset.playing=String(blockYTActive&&blockYTReady&&blockYT?.getPlayerState?.()===YT.PlayerState.PLAYING&&b===activeBlock&&i===blockCurrent);
    const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
    t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
    row.addEventListener('mousedown',e=>{if(e.detail>1)e.preventDefault()});
