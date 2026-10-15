@@ -987,7 +987,7 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
  function parts(){const p=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Argentina/Buenos_Aires',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const x=Object.fromEntries(p.map(v=>[v.type,v.value]));return {day:x.year+'-'+x.month+'-'+x.day,hour:Number(x.hour)}}
- function ok(){const n=parts();return sessionStorage.getItem(K)==='ok'&&sessionStorage.getItem(D)===n.day&&(n.hour<22||Date.now()<Number(sessionStorage.getItem(O)||0))}
+ function ok(){const n=parts();return sessionStorage.getItem(K)==='ok'&&sessionStorage.getItem(D)===n.day}
  function kick(){if(ok())return;sessionStorage.removeItem(K);sessionStorage.removeItem(D);sessionStorage.removeItem(O);location.replace('/aire/')}
  kick();setInterval(kick,15000);document.addEventListener('visibilitychange',kick);window.addEventListener('focus',kick);
 })();
