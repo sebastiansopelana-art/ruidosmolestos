@@ -473,8 +473,18 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 /* Botón de carga de programa: mismo ancho exacto que BLOQUE 4. */
 .below .rm-program-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;flex-shrink:0}
 .below .rm-program-load{grid-column:4;width:100%;min-width:0;padding:7px 2px;font-size:9px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Identidad del estudio: encabezado equilibrado sobre los dos decks. */
+.rm-studio-brand{display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:64px;margin-bottom:12px;padding:9px 16px;border:1px solid #466b83;border-radius:10px;background:linear-gradient(145deg,#18374b,#102738);box-shadow:0 5px 18px #0004}
+.rm-studio-brand-left{display:flex;align-items:center;gap:12px;min-width:0}
+.rm-studio-logo{width:45px;height:45px;object-fit:contain;flex:none;border-radius:8px}
+.rm-studio-title{font-size:14px;font-weight:700;letter-spacing:.075em;line-height:1.45;color:#d8eaf5}
+.rm-studio-title strong{display:block;color:#fff;font-size:17px;font-weight:900;letter-spacing:.09em}
+.rm-studio-credit{flex:none;text-align:right;color:#9fb8ca;font-size:12px;letter-spacing:.03em;white-space:nowrap}
+.rm-studio-credit strong{color:#f0f7fc;font-weight:800}
+@media(max-width:680px){.rm-studio-brand{padding:9px;gap:8px}.rm-studio-logo{width:36px;height:36px}.rm-studio-brand-left{gap:7px}.rm-studio-title{font-size:9px;letter-spacing:0}.rm-studio-title strong{font-size:11px;letter-spacing:0}.rm-studio-credit{font-size:9px;white-space:normal;max-width:100px}}
 </style></head>
-<body><main><div class="players" id="players"></div></main>
+<body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title">REPRODUCTOR DE ESTUDIOS <strong>RUIDOS MOLESTOS</strong></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
 const icons=[['back','⏪','Retroceder 10 segundos'],['play','▶','Reproducir'],['pause','⏸','Pausar'],['stop','■','Detener'],['next','⏭','Siguiente tema'],['repeat','↻','Repetir tema'],['forward','⏩','Adelantar 10 segundos']];
 const fmt=n=>{n=Math.max(0,Math.floor(Number(n)||0));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')};
