@@ -1055,6 +1055,17 @@ const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].que
 // Motor independiente de los cuatro bloques, recuperado del flujo Beta 3 final.
 const blockDeck=decks[0],blockScreen=blockDeck.querySelector('.screen');
 const blockHost=document.createElement('div');blockHost.id='rm-block-youtube';blockHost.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none';blockDeck.append(blockHost);
+// Transiciones suaves entre consolas: bajar el volumen antes de detener, sin bloquear la nueva pista.
+function rmFadeOut(getVolume,setVolume,stop,ms=850){
+ let initial=0;try{initial=Number(getVolume())||0}catch(e){stop();return}
+ if(initial<=0){stop();return}
+ const started=performance.now();
+ const timer=setInterval(()=>{
+  const progress=Math.min(1,(performance.now()-started)/ms);
+  try{setVolume(initial*(1-progress))}catch(e){clearInterval(timer);stop();return}
+  if(progress>=1){clearInterval(timer);stop()}
+ },35);
+}
 let blockYT=null,blockYTReady=false,blockYTActive=false,blockYTLoading=false,blockCurrent=-1,blockRepeat=false,blockTick=null;
 const blockPlaylist=()=>blocks[activeBlock];
 function blockStatus(message){programInfo.textContent=message}
@@ -1081,7 +1092,12 @@ window.addEventListener('rm-aux-takeover',()=>{
  rmSilenceReset();
  stopBlockEndSeparator();
  stopAutoSep();
- try{blockYT?.stopVideo()}catch(_){}
+ if(blockYTReady&&blockYTActive&&blockYT){
+  const outgoing=blockYT;
+  rmFadeOut(()=>outgoing.getVolume(),v=>outgoing.setVolume(Math.round(v)),()=>{
+   try{outgoing.stopVideo();outgoing.setVolume(Number(blockDeck.querySelector('.vol').value)||85)}catch(_){}
+  });
+ }else{try{blockYT?.stopVideo()}catch(_){}}
  blockYTActive=false;
  setBlockAir(false);
 });
@@ -1506,7 +1522,30 @@ const fmtAux=n=>fmt(Number(n)||0);
  ytQueue.forEach(x=>{if(x.id==='rm-prod-12')x.title='Cortina de apertura y cierre Ry Cooder';if(x.id==='rm-prod-9')x.title='Vuelta de la tanda, Ya volvimos';if(x.id==='rm-prod-11')x.title='Cortina narración Pat Metheny';if(!x.durationSeconds&&auxDurationCache[x.id])x.durationSeconds=auxDurationCache[x.id]});
  prepareAuxDurations();
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.splice(Math.max(0,ytQueue.length-fixedAuxIds.length),0,{id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||auxDurationCache[x.id]||0});save();render();status('Agregado a playlist: '+x.title)}
- window.addEventListener('rm-block-takeover',()=>stop());
+ window.addEventListener('rm-block-takeover',()=>{
+  stopRequested=true;
+  const oldProduction=activeProduction;
+  const oldPat=patOverlapActive;
+  const oldYT=player,oldReady=ready;
+  activeProduction=false;patOverlapActive=false;patOverlapStarted=false;
+  live(false);
+  if(oldProduction&&!productionAudio.paused){
+   rmFadeOut(()=>productionAudio.volume,v=>{productionAudio.volume=v},()=>{
+    productionAudio.pause();productionAudio.volume=Number(vol.value)/100;
+   });
+  }else productionAudio.pause();
+  if(oldPat&&!patOverlapAudio.paused){
+   rmFadeOut(()=>patOverlapAudio.volume,v=>{patOverlapAudio.volume=v},()=>{
+    patOverlapAudio.pause();patOverlapAudio.volume=Number(vol.value)/100;
+   });
+  }else patOverlapAudio.pause();
+  if(!oldProduction&&oldReady&&oldYT){
+   rmFadeOut(()=>oldYT.getVolume(),v=>oldYT.setVolume(Math.round(v)),()=>{
+    try{oldYT.stopVideo();oldYT.setVolume(Number(vol.value)||85)}catch(e){}
+   });
+  }
+  elapsed.textContent='00:00';seek.value=0;
+ });
  function stop(){stopRequested=true;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
  function playIndex(i){if(i<0||i>=ytQueue.length)return;window.dispatchEvent(new Event('rm-aux-takeover'));patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  productionAudio.addEventListener('loadedmetadata',()=>{if(ytQueue[current]?.id==='rm-prod-9'){const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(pat&&!patOverlapAudio.src){patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';patOverlapAudio.load()}}const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
