@@ -970,6 +970,13 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
 .workspace>.panel:nth-of-type(2)>.curtainbank .rm-curtain-progress input.rm-curtain-seek{height:14px!important;min-height:14px!important;border:1px solid #4a829d!important;border-radius:20px!important;background:#193443!important;accent-color:#40c9f3!important;touch-action:none!important}
 .workspace>.panel:nth-of-type(2)>.curtainbank .rm-curtain-progress input.rm-curtain-seek::-webkit-slider-thumb{width:19px!important;height:19px!important;border:2px solid #fff!important;background:#8aeaff!important;box-shadow:0 0 9px #4cc7ee88!important}
 .workspace>.panel:nth-of-type(2)>.curtainbank .rm-curtain-progress .clock{font-size:12px!important;font-weight:800!important;font-variant-numeric:tabular-nums!important;color:#d5e9f5!important}
+/* Reproductores 1 y 2: mismo ancho de módulo en escritorio.
+   La columna de bloques ocupa el tercer módulo; no se tocan controles ni audio. */
+@media(min-width:1101px){
+ .workspace{grid-template-columns:minmax(0,1fr) minmax(0,2fr)!important;column-gap:12px!important}
+ .workspace>.panel:nth-of-type(2){grid-template-columns:repeat(2,minmax(0,1fr))!important;column-gap:12px!important}
+ .workspace>.panel.air,.workspace>.panel:nth-of-type(2)>.auxdeck{min-width:0!important;width:100%!important;box-sizing:border-box!important}
+}
 </style></head><body><script>
 (function(){
  const K='rm_pass',D='rm_session_day',O='rm_after22_until';
