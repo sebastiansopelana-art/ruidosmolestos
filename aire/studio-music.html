@@ -156,6 +156,37 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .rm-song-facts .rm-intro-countdown{font-size:12px;letter-spacing:.03em;color:#d4f8e0;white-space:nowrap}
 .player .rm-song-facts .rm-intro-countdown[data-imminent="true"]{color:#ffb649}
 .player .rm-song-facts .rm-mark-voice{background:#27546a;border:1px solid #6992a7;border-radius:4px;color:#fff;font-size:10px;font-weight:800;padding:2px 5px;cursor:pointer}
+
+/* YOUTUBE MUSIC INSPIRED — controles idénticos, sin alterar motores ni separadores */
+:root{color-scheme:dark;background:#090909;color:#f8f8f8}
+body{background:linear-gradient(145deg,#080808,#161616 70%,#0b0b0b)!important;color:#f8f8f8}
+.player{background:#151515!important;border:1px solid #343434!important;border-radius:22px!important;box-shadow:0 12px 35px #0008!important;padding:20px!important;gap:17px!important}
+.player .heading h2{font-size:13px!important;font-weight:800!important;letter-spacing:.1em!important;color:#f2f2f2!important}
+.player .heading .state{background:#222!important;border:1px solid #393939!important;color:#ddd!important;border-radius:100px!important;padding:6px 11px!important}
+.player .screen{background:linear-gradient(140deg,#292929,#191919)!important;border:1px solid #363636!important;border-radius:16px!important;height:110px!important;padding:18px!important}
+.player .screen .track{font-size:19px!important;font-weight:800!important;letter-spacing:-.02em!important}
+.player .screen .artist,.player .screen .full-route{color:#b0b0b0!important}
+.player .timeline{grid-template-columns:44px minmax(0,1fr) 44px!important;gap:12px!important}
+.player .timeline .time{color:#bdbdbd!important;font-size:11px!important}
+.player input[type=range]{accent-color:#fff!important;cursor:pointer}
+.player .timeline input[type=range]{height:5px!important}
+.player .buttons{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:6px!important;align-items:center!important}
+.player .buttons button{display:flex!important;align-items:center!important;justify-content:center!important;background:transparent!important;border:0!important;border-radius:50%!important;color:#f4f4f4!important;font-family:system-ui,-apple-system,sans-serif!important;font-size:clamp(19px,2.2vw,27px)!important;font-weight:700!important;height:52px!important;width:100%!important;min-width:0!important;box-shadow:none!important;transition:background .15s,transform .15s!important}
+.player .buttons button:hover{background:#303030!important;transform:scale(1.04)}
+.player .buttons button:active{transform:scale(.94)}
+.player .buttons button[data-action=play]{background:#fff!important;color:#111!important;border-radius:50%!important;width:54px!important;height:54px!important;justify-self:center!important;font-size:27px!important;box-shadow:0 4px 20px #ffffff26!important}
+.player .buttons button[data-action=play]:hover{background:#e5e5e5!important}
+.player .buttons button[data-action=repeat][aria-pressed=true]{color:#ff355d!important;background:#332027!important}
+.player .buttons button[data-action=stop]{color:#ff646c!important}
+.player .volume{grid-template-columns:64px minmax(0,1fr) 35px!important;gap:12px!important;padding:8px 4px!important;color:#b9b9b9!important}
+.player .volume .volvalue{color:#eee!important}
+.player .below{background:#191919!important;border:1px solid #333!important;border-radius:16px!important}
+.player .below .items{background:#111!important;border:1px solid #333!important;border-radius:12px!important}
+.player .below .tabs button,.player .below button,.player .upload,.player .file{background:#292929!important;border:1px solid #444!important;border-radius:10px!important;color:#f4f4f4!important}
+.player .below .tabs button[aria-selected=true]{background:#fff!important;color:#111!important;border-color:#fff!important}
+.player .searchrow input{background:#111!important;border:1px solid #444!important;border-radius:12px!important;color:#fff!important}
+@media(max-width:680px){.player{padding:13px!important;gap:12px!important}.player .buttons{gap:2px!important}.player .buttons button{height:43px!important;font-size:20px!important}.player .buttons button[data-action=play]{height:44px!important;width:44px!important;font-size:23px!important}.player .screen{height:100px!important;padding:13px!important}}
+
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
