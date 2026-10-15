@@ -469,6 +469,10 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .screen .separator-pad .sep-cell:focus-within::after{
  opacity:1;visibility:visible;transform:translate(-50%,0);
 }
+
+/* Botón de carga de programa: mismo ancho exacto que BLOQUE 4. */
+.below .rm-program-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;flex-shrink:0}
+.below .rm-program-load{grid-column:4;width:100%;min-width:0;padding:7px 2px;font-size:9px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -501,6 +505,12 @@ const makePanel=(title)=>{const panel=document.createElement('section');panel.cl
 const blockPanel=makePanel('BLOQUES DEL PROGRAMA'),auxPanel=makePanel('PLAYLIST AUXILIAR');
 decks[0].append(blockPanel);decks[1].append(auxPanel);
 const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
+const programRow=document.createElement('div');programRow.className='rm-program-row';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 44';programLoad.title='Seleccionar los audios del programa 44 para cargar en el bloque activo';
+programRow.append(programLoad);blockPanel.append(programRow);
+const programPicker=document.createElement('input');programPicker.type='file';programPicker.accept='audio/*';programPicker.multiple=true;programPicker.hidden=true;blockPanel.append(programPicker);
+programLoad.addEventListener('click',()=>programPicker.click());
+programPicker.addEventListener('change',()=>{const files=Array.from(programPicker.files||[]);if(!files.length)return;blocks[activeBlock].push(...files);drawBlocks();programPicker.value=''});
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);blockPanel.append(blockUpload);
