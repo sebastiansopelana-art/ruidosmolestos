@@ -1054,6 +1054,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  list.replaceChildren();
  if(!ytQueue.length){const empty=document.createElement('div');empty.className='hint';empty.textContent='Playlist vacía · buscá y cargá temas arriba.';list.append(empty);return}
  ytQueue.forEach((x,i)=>{
+  if(i===0||i===2){const heading=document.createElement('div');heading.className='rm-block-divider';heading.textContent=i===0?'BLOQUE 1':'BLOQUE 2';list.append(heading)}
   const row=document.createElement('div');row.className='entry aux-youtube-item';row.dataset.active=String(i===current);
   const label=document.createElement('span');label.textContent=(i+1)+'. '+x.title+' — '+(x.artist||'');label.title=x.title+' — '+(x.artist||'');label.classList.add('aux-doubleplay');label.addEventListener('dblclick',()=>playIndex(i));
   const remove=document.createElement('button');remove.type='button';remove.textContent='×';remove.className='aux-remove';remove.title='Eliminar de la playlist';remove.setAttribute('aria-label','Eliminar '+x.title);
@@ -1062,7 +1063,9 @@ const fmtAux=n=>fmt(Number(n)||0);
  })
 }
  function save(){try{localStorage.setItem('rm-aux-youtube-queue',JSON.stringify(ytQueue))}catch(e){}}
- try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\w-]{11}$/.test(x.id))).slice(0,150))}catch(e){}
+ const fixedAuxIds=['rm-prod-13','rm-prod-12','rm-prod-9','rm-prod-11'];
+ ytQueue.push(...fixedAuxIds.map(id=>rmProductionCatalog.find(x=>x.id===id)).filter(Boolean).map(x=>({...x})));
+ try{const saved=JSON.parse(localStorage.getItem('rm-aux-youtube-queue')||'[]');if(Array.isArray(saved))ytQueue.push(...saved.filter(x=>x&&(x.source==='production'&&rmProductionCatalog.some(p=>p.id===x.id)||/^[\\w-]{11}$/.test(x.id))&&!fixedAuxIds.includes(x.id)).slice(0,146))}catch(e){}
  function add(x){if(!x?.id||ytQueue.some(y=>y.id===x.id))return;ytQueue.push({id:x.id,title:x.title,artist:x.artist||'',source:x.source||'youtube',url:x.url||'',durationSeconds:x.durationSeconds||0});save();render();status('Agregado a playlist: '+x.title)}
  window.addEventListener('rm-block-takeover',()=>stop());
  function stop(){stopRequested=true;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
