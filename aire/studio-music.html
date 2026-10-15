@@ -112,6 +112,16 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .player .screen .rm-song-facts b{color:#9cc7df}
 .player .screen .rm-intro-edit{background:#16384b;color:#fff;border:1px solid #587d96;border-radius:3px;width:48px;padding:2px 3px;font-size:10px;font-family:ui-monospace,monospace}
 .player .screen .rm-intro-edit:focus{outline:1px solid #9cdfff}
+
+/* Vúmetros estéreo decorativos a la derecha del visor: sólo activos al sonar */
+.player .screen{position:relative;padding-right:67px}
+.player .rm-vu{position:absolute;right:10px;top:10px;bottom:10px;width:43px;display:flex;gap:5px;align-items:stretch;justify-content:center;border-left:1px solid #35576c;padding-left:8px}
+.player .rm-vu-channel{height:100%;width:13px;display:flex;flex-direction:column-reverse;gap:3px}
+.player .rm-vu-segment{flex:1;min-height:2px;border-radius:2px;background:#223846;opacity:.55}
+.player .rm-vu-segment.lit{opacity:1;background:#3fd887;box-shadow:0 0 4px #3fd88766}
+.player .rm-vu-segment.lit.high{background:#f5bf45;box-shadow:0 0 4px #f5bf4566}
+.player .rm-vu-segment.lit.peak{background:#f54a52;box-shadow:0 0 5px #f54a5277}
+@media(max-width:680px){.player .screen{padding-right:60px}.player .rm-vu{right:7px;width:40px}}
 </style></head>
 <body><main><div class="players" id="players"></div></main>
 <script>
@@ -201,6 +211,31 @@ for(const [deckIndex,deck] of decks.entries()){
 }
 
 const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/02%20Rock%20Eco%20RM%20Seco.mp3","file":"02 Rock Eco RM Seco.mp3"},{"id":"rm-prod-1","title":"Insoportable corto","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/04%20Seco%20Insoportable%20Corto%20Telefonico.mp3","file":"04 Seco Insoportable Corto Telefonico.mp3"},{"id":"rm-prod-2","title":"Insoportable corto 2","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/05%20Seco%20Insoportable%20Corto.mp3","file":"05 Seco Insoportable Corto.mp3"},{"id":"rm-prod-3","title":"Nosotros solo","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/06%20Seco%20Nosotros%20Solo%20te%20Ofrecemos.mp3","file":"06 Seco Nosotros Solo te Ofrecemos.mp3"},{"id":"rm-prod-4","title":"RM insoportable","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/07%20Seco%20RM%20Insoportable%20PdR.mp3","file":"07 Seco RM Insoportable PdR.mp3"},{"id":"rm-prod-5","title":"Sebastián Sopelana","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/08%20Seco%20SS%20Recorrido%20Insopor.mp3","file":"08 Seco SS Recorrido Insopor.mp3"},{"id":"rm-prod-6","title":"Subite RM","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/09%20Seco%20Subite%20RM.mp3","file":"09 Seco Subite RM.mp3"},{"id":"rm-prod-7","title":"Seco, vos y yo","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/10%20Seco%20Vos%20y%20Yo%20sabemos.mp3","file":"10 Seco Vos y Yo sabemos.mp3"},{"id":"rm-prod-8","title":"Ya sabemos telefónico","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/11%20Seco%20Ya%20Sabemos%20Telefonico.mp3","file":"11 Seco Ya Sabemos Telefonico.mp3"},{"id":"rm-prod-9","title":"Ya volvimos","artist":"PRODUCCIÓN RM · Separador de regreso","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Volvimos%20TANDA.mp3","file":"Volvimos TANDA.mp3"},{"id":"rm-prod-10","title":"Ya volvemos","artist":"PRODUCCIÓN RM · Separador de tanda","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Ya%20Volvemos%20Tanda.mp3","file":"Ya Volvemos Tanda.mp3"},{"id":"rm-prod-11","title":"Cortina Pat Metheny","artist":"PRODUCCIÓN RM · Cortina","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/CORTINA%2003%20PAT.mp3","file":"CORTINA 03 PAT.mp3"},{"id":"rm-prod-12","title":"Cortina Ry Cooder","artist":"PRODUCCIÓN RM · Cortina","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/CORTINA%203%20%20%20Ry%20Cooder%20-%20Somebody's%20Callin'%20My%20Name%20-%20Crossroads%20Soundtrack.mp3","file":"CORTINA 3   Ry Cooder - Somebody's Callin' My Name - Crossroads Soundtrack.mp3"},{"id":"rm-prod-13","title":"Presentación Ruidos Molestos","artist":"PRODUCCIÓN RM · Presentación","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Presentacion%20RM%20con%20Tema%20sin%20cortina.mp3","file":"Presentacion RM con Tema sin cortina.mp3"}];
+
+/* Vúmetros ficticios: animación estéreo ligada al estado real de reproducción. */
+(function(){
+ const meters=[...document.querySelectorAll('.player')].map(deck=>{
+  const screen=deck.querySelector('.screen'),meter=document.createElement('div');
+  meter.className='rm-vu';meter.setAttribute('aria-label','Vúmetro estéreo decorativo');
+  const channels=[0,1].map(()=>{
+   const col=document.createElement('div');col.className='rm-vu-channel';
+   const bars=Array.from({length:13},(_,i)=>{const s=document.createElement('span');s.className='rm-vu-segment';col.append(s);return s});
+   meter.append(col);return bars
+  });
+  screen.append(meter);return {deck,channels,levels:[0,0]}
+ });
+ setInterval(()=>{
+  meters.forEach(({deck,channels,levels})=>{
+   const active=deck.querySelector('.air')?.dataset.live==='true';
+   channels.forEach((bars,ch)=>{
+    const target=active?3+Math.random()*10:0;
+    levels[ch]=active?Math.max(0,Math.min(13,levels[ch]*.28+target*.72)):0;
+    const count=Math.round(levels[ch]);
+    bars.forEach((bar,i)=>{bar.className='rm-vu-segment'+(i<count?' lit'+(i>=11?' peak':i>=8?' high':''):'')})
+   })
+  })
+ },115)
+})();
 /* Buscador YouTube Music Beta 3: sugerencias, resultados, cola y motor auxiliar */
 (function(){
  const deck=decks[1], panel=auxPanel, note=auxNote, list=auxItems, field=q, form=search;
