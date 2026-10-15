@@ -314,35 +314,25 @@ const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUC
  const ytQueue=[];let results=[],suggestions=[],selected=-1,searchTimer=null,searchSeq=0,player=null,ready=false,current=-1,playing=false,repeat=false,dragging=false;
  const seek=deck.querySelector('.seek'),elapsed=deck.querySelector('.elapsed'),remaining=deck.querySelector('.remaining'),track=deck.querySelector('.screen .track'),artist=deck.querySelector('.screen .artist'),state=deck.querySelector('.state'),air=deck.querySelector('.air'),vol=deck.querySelector('.vol');
  
- const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <input class="rm-intro-edit" aria-label="Segundos hasta que entra la voz" placeholder="--:--" title="Marcá manualmente el momento de entrada de voz de esta versión"></span>';
+ const facts=document.createElement('div');facts.className='rm-song-facts';facts.innerHTML='<span><b>AÑO</b> <span data-fact="year">Sin verificar</span></span><span><b>AUTORES</b> <span data-fact="writers">Sin verificar</span></span><span><b>INTRO A VOZ</b> <span class="rm-intro-edit" hidden></span></span>';
  deck.querySelector('.screen-countdown').before(facts);
  const yearNode=facts.querySelector('[data-fact="year"]'),writerNode=facts.querySelector('[data-fact="writers"]'),introField=facts.querySelector('.rm-intro-edit');
- const introCountdown=document.createElement('strong');introCountdown.className='rm-intro-countdown';introCountdown.textContent='SIN MARCAR';
- const markIntro=document.createElement('button');markIntro.type='button';markIntro.className='rm-mark-voice';markIntro.textContent='MARCAR VOZ';markIntro.title='Mientras escuchás, presioná justo cuando empieza a cantar para guardar el segundo de entrada de esta versión';
- facts.append(introCountdown,markIntro);
+ const introCountdown=document.createElement('strong');introCountdown.className='rm-intro-countdown';introCountdown.textContent='VOZ: SIN DATO VERIFICADO';
+ facts.append(introCountdown);
  const parseIntro=value=>{const s=String(value||'').trim();if(!/^(?:\\d+:)?\\d+(?:\\.\\d+)?$/.test(s))return null;const parts=s.split(':').map(Number);const seconds=parts.length===2?parts[0]*60+parts[1]:parts[0];return Number.isFinite(seconds)&&seconds>=0?seconds:null};
  const voiceSeconds=()=>parseIntro(introField.value);
  const currentAuxTime=()=>activeProduction?productionAudio.currentTime||0:ready&&player?player.getCurrentTime()||0:0;
  function refreshIntroCountdown(){
   if(current<0){introCountdown.textContent='SIN TEMA';return}
   const target=voiceSeconds();
-  if(target===null){introCountdown.textContent='INTRO SIN MEDIR';return}
+  if(target===null){introCountdown.textContent='VOZ: SIN DATO VERIFICADO';return}
   const left=Math.max(0,target-currentAuxTime());
   introCountdown.textContent=left>0?'VOZ EN '+fmt(left):'VOZ ENTRÓ';
   introCountdown.dataset.imminent=String(left>0&&left<=5);
  }
- markIntro.addEventListener('click',()=>{
-  if(current<0)return;
-  const seconds=currentAuxTime();
-  introField.value=fmt(seconds);
-  try{localStorage.setItem(introKey(ytQueue[current].id),introField.value)}catch(e){}
-  refreshIntroCountdown()
- });
- introField.addEventListener('input',refreshIntroCountdown);
-
  let factSeq=0;
  const introKey=id=>'rm-song-intro-'+id;
- introField.addEventListener('change',()=>{if(current<0)return;try{localStorage.setItem(introKey(ytQueue[current].id),introField.value.trim())}catch(e){}});
+
  async function loadSongFacts(x){
  const seq=++factSeq;
  yearNode.textContent='Consultando…';writerNode.textContent='Consultando…';
