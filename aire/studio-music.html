@@ -586,6 +586,20 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .below>h3 .rm-program-load{display:block;width:100%;height:27px;padding:4px 2px;line-height:1.1;font-size:9px}
 .below .rm-program-info{text-align:left;padding:0;margin:0 0 2px;line-height:1.2}
 .player>.volume{margin-bottom:0!important}
+
+/* Distribución prolija y simétrica de transporte para ambos reproductores. */
+.players>.player{gap:6px!important;min-width:0}
+.players>.player>.heading{margin-bottom:2px}
+.players>.player>.screen{margin-bottom:2px}
+.players>.player>.timeline{width:100%;margin:1px 0 2px;grid-template-columns:43px minmax(0,1fr) 43px;align-items:center}
+.players>.player>.timeline .seek{width:100%;margin:0;min-height:22px}
+.players>.player>.buttons{width:100%;gap:5px;margin:0 0 2px;align-items:center}
+.players>.player>.buttons button{min-width:0;height:37px;padding:2px;display:flex;align-items:center;justify-content:center}
+.players>.player>.volume{display:grid;grid-template-columns:60px minmax(0,1fr) 35px;gap:8px;align-items:center;width:100%;min-height:27px;margin:0!important}
+.players>.player>.volume .vol{margin:0;width:100%}
+.players>.player>.footer{margin:2px 0 4px!important;min-height:29px}
+.players>.player>.below{margin-top:0!important}
+@media(max-width:850px){.players>.player>.buttons{gap:3px}.players>.player>.buttons button{height:35px}.players>.player>.volume{gap:5px}}
 </style></head>
 <body><main><header class="rm-studio-brand"><div class="rm-studio-brand-left"><img src="/icon-192.png" alt="Logo de Ruidos Molestos" class="rm-studio-logo"><div class="rm-studio-title"><strong>RUIDOS MOLESTOS<sup class="rm-studio-tm" aria-label="Marca comercial">™</sup></strong><span class="rm-studio-subtitle">ESTUDIO</span></div></div><div class="rm-studio-credit">Powered by <strong>Sebastián Sopelana</strong></div></header><div class="players" id="players"></div></main>
 <script>
