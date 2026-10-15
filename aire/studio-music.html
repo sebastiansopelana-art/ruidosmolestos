@@ -970,7 +970,7 @@ $('auxSuggest').addEventListener('mousedown',e=>{const load=e.target.closest('[d
 $('auxQ').addEventListener('input',()=>{auxEnterReady=null;clearTimeout(auxSuggestTimer);const q=$('auxQ').value.trim(),nq=auxNorm(q);if(!q){auxRenderSuggest([]);return}const local=prodRecords.filter(x=>auxNorm(x.name+' '+prodTypeLabel(x.type)+' '+x.type).includes(nq)).slice(0,6).map(x=>({id:'prod:'+x.id,prodId:x.id,title:x.name,artist:'PRODUCCIÓN RM · '+prodTypeLabel(x.type),query:x.name,type:x.type,source:'production'}));auxRenderSuggest(local);auxSuggestTimer=setTimeout(async()=>{try{const rr=await fetch('/api/ytmusic-search?q='+encodeURIComponent(q+' High Quality Audio'),{cache:'no-store'}),dd=await rr.json();if($('auxQ').value.trim()!==q)return;const remote=(rr.ok&&dd.results?dd.results:[]).slice(0,6).map(x=>({...x,query:x.title+' '+x.artist,source:x.source||'youtube'}));const seen=new Set();auxRenderSuggest([...local,...remote].filter(x=>{const k=auxNorm(x.title+' '+x.artist);if(seen.has(k))return false;seen.add(k);return true}).slice(0,6))}catch(_){}},120)});
 $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='ArrowUp')&&auxSuggestItems.length){e.preventDefault();auxSuggestMove(e.key==='ArrowDown'?1:-1);return}if(e.key==='Tab'&&auxSuggestItems.length){e.preventDefault();auxChooseSuggest(auxSuggestIndex>=0?auxSuggestIndex:0);return}if(e.key==='Enter'){e.preventDefault();if(auxSuggestItems.length){const pick=auxSuggestIndex>=0?auxSuggestIndex:0,x={...auxSuggestItems[pick]};auxEnterReady=null;auxSuggestIndex=-1;$('auxSuggest').classList.remove('open');$('auxQ').value='';auxQueuePlaying=false;auxQueueCurrent=null;renderAuxQueue();auxPlayResult(x);$('auxQ').focus();return}$('auxSuggest').classList.remove('open');$('auxSearch').click();$('auxQ').value='';$('auxQ').focus()}if(e.key==='Escape'){$('auxSuggest').classList.remove('open');auxSuggestIndex=-1}});async function loadProgramNumber(number,button){
  const n=String(number||'').trim();if(!n)return;
- const buttons=[$('loadProgram'),$('loadProgramLive')].filter(Boolean);buttons.forEach(b=>b.disabled=true);
+ const buttons=[$('loadProgram'),$('loadProgramLive')].filter(Boolean);buttons.forEach(b=>{b.disabled=true;b.textContent='CARGANDO…'});
  if($('programState'))$('programState').textContent='Cargando Programa '+n+'…';
  if($('status'))$('status').textContent='Buscando las 16 canciones del Programa '+n+'…';
  try{
@@ -996,7 +996,11 @@ $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='Arrow
   }));
   const nextList=resolved.filter(x=>x.ok).sort((a,b)=>a.index-b.index).map(x=>x.track);
   const missing=resolved.filter(x=>!x.ok).sort((a,b)=>a.index-b.index).map(x=>x.label);
-  if(!nextList.length)throw Error('No se pudo encontrar ninguna canción del Programa '+n+'.');
+  if(!nextList.length){
+   const previous=Array.isArray(list)?list.filter(t=>t?.id&&Number(t.program)===Number(n)):[];
+   if(previous.length){$('programState').textContent='Búsqueda no disponible · usando lista guardada del Programa '+n;return}
+   throw Error('El servicio de búsqueda no respondió. Probá nuevamente en unos segundos.');
+  }
   try{localStorage.setItem(cacheKey,JSON.stringify(resolved.map(x=>x.ok?x.track:null)))}catch(_){}
   list=nextList;idx=-1;gapTriggered=false;save();render();
   // Precarga el primer tema en el reproductor sin emitirlo: al apretar PLAY ya está bufferizado.
@@ -1008,7 +1012,7 @@ $('auxQ').addEventListener('keydown',e=>{if((e.key==='ArrowDown'||e.key==='Arrow
  }catch(e){
   if($('programState'))$('programState').textContent=e.message;
   if($('status'))$('status').textContent='ERROR · '+e.message;
- }finally{buttons.forEach(b=>b.disabled=false)}
+ }finally{buttons.forEach(b=>b.disabled=false);$('loadProgram').textContent='CARGAR PROGRAMA';$('loadProgramLive').textContent='CARGAR '+$('programNumberLive').value}
 }
 $('programNumberLive').oninput=()=>{const n=$('programNumberLive').value;$('programNumber').value=n;$('loadProgramLive').textContent='CARGAR '+n};
 $('programNumber').oninput=()=>{const n=$('programNumber').value;$('programNumberLive').value=n;$('loadProgramLive').textContent='CARGAR '+n};
