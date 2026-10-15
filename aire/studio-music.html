@@ -1113,6 +1113,7 @@ function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectU
 const programRow=document.createElement('div');programRow.className='rm-program-row';
 const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA Nº 45';programLoad.title='Cargar los cuatro bloques del programa 45 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
+const rmScriptLink=document.createElement('a');rmScriptLink.href='/aire/programas/45.txt';rmScriptLink.target='_blank';rmScriptLink.rel='noopener';rmScriptLink.textContent='LEER HISTORIA 45';rmScriptLink.title='Abrir presentación, cuatro historias y justificaciones musicales del programa 45';rmScriptLink.style.cssText='display:inline-flex;align-items:center;padding:5px 10px;border:1px solid #bba986;border-radius:6px;color:#e4d2ae;font-size:11px;font-weight:700;text-decoration:none;white-space:nowrap';programRow.append(rmScriptLink);
 const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';/* La información de estado ya se muestra en el reproductor; no agregar renglón debajo de bloques. */
 async function loadStudioProgram(number=44){
  programLoad.disabled=true;programInfo.textContent='Cargando programa '+number+'…';
