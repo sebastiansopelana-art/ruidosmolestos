@@ -881,6 +881,19 @@ main{width:100%!important;max-width:none!important;padding-inline:clamp(10px,1.4
  .workspace>.panel:nth-of-type(2)>.auxdeck{position:sticky!important;top:12px!important;align-self:start!important;z-index:8!important;max-height:calc(100vh - 24px)!important;overflow-y:auto!important;transform:none!important}
 }
 
+/* Reproductor 2: seguimiento sticky real junto a los bloques, sin recortar el panel. */
+@media(min-width:901px){
+ .workspace>.panel:nth-of-type(2){overflow:visible!important;align-items:start!important}
+ .workspace>.panel:nth-of-type(2)>.auxdeck{
+   position:sticky!important;top:12px!important;
+   align-self:start!important;z-index:8!important;
+   height:auto!important;max-height:calc(100dvh - 24px)!important;
+   overflow-x:hidden!important;overflow-y:auto!important;
+   overscroll-behavior:contain;scrollbar-width:thin;
+ }
+ .workspace>.panel:nth-of-type(2)>.auxdeck::-webkit-scrollbar{width:6px}
+ .workspace>.panel:nth-of-type(2)>.auxdeck::-webkit-scrollbar-thumb{background:#425b69;border-radius:8px}
+}
 /* Salida mínima de pantalla completa: no ocupa espacio en la cabecera. */
 #studioFullscreen{position:fixed!important;top:5px!important;right:6px!important;z-index:2147483647!important;width:24px!important;height:24px!important;min-width:24px!important;padding:0!important;margin:0!important;border:1px solid #60717b!important;border-radius:4px!important;background:#121a20dd!important;color:#e5eef4!important;font-size:19px!important;line-height:20px!important;cursor:pointer!important;box-shadow:none!important}
 #studioFullscreen[hidden]{display:none!important}
