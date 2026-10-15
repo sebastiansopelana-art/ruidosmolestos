@@ -1286,4 +1286,18 @@ $('loadProgram').onclick=()=>loadProgramNumber($('programNumber').value,$('loadP
 .workspace>.panel .rm-deck .bigcontrols{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;width:100%!important}
 .workspace>.panel .rm-deck .volumeControl{width:100%!important}
 .workspace>.panel .rm-deck .rm-track-title{width:100%!important}
+</style><style id="stage-one-twin-players">/* ETAPA 1: SOLO DOS REPRODUCTORES GEMELOS. Los demás elementos quedan conservados para etapas siguientes. */
+.workspace{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;align-items:start!important}
+.workspace>.panel.air,.workspace>.panel:nth-of-type(2){display:flex!important;flex-direction:column!important;grid-template-columns:none!important;align-items:stretch!important;justify-content:flex-start!important;width:100%!important;min-width:0!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.workspace>.panel.air>.rm-deck,.workspace>.panel:nth-of-type(2)>.rm-deck{display:flex!important;flex-direction:column!important;box-sizing:border-box!important;width:100%!important;min-width:0!important;height:232px!important;min-height:232px!important;max-height:232px!important;padding:10px!important;gap:7px!important;margin:0!important;background:#18232d!important;border:1px solid #405567!important;border-radius:8px!important;box-shadow:none!important}
+.workspace>.panel.air>.rm-deck .rm-track-title,.workspace>.panel:nth-of-type(2)>.rm-deck .rm-track-title{height:37px!important;min-height:37px!important}
+.workspace>.panel .rm-deck .bigcontrols{grid-template-columns:repeat(7,minmax(0,1fr))!important}
+.workspace>.panel .rm-deck .bigcontrols button{background:#253747!important;border:1px solid #4d6476!important;color:#ecf3f8!important;height:32px!important;min-height:32px!important;font-size:17px!important}
+.workspace>.panel .rm-deck .bigcontrols button.primary{background:#253747!important}
+.workspace>.panel.air>:not(.rm-deck):not(.engine),.workspace>.panel:nth-of-type(2)>:not(.rm-deck):not(.auxdeck){display:none!important}
+.workspace>.panel:nth-of-type(2)>.auxdeck{position:absolute!important;left:-99999px!important;top:0!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important;pointer-events:none!important}
+.workspace>.panel.air>.engine{position:absolute!important;left:-99999px!important;top:0!important;width:1px!important;height:1px!important;overflow:hidden!important;opacity:0!important}
+.workspace>.panel .rm-deck .rm-extra{margin-top:auto!important;min-height:23px!important}
+#deckSizeBar{display:none!important}
+@media(max-width:680px){.workspace{grid-template-columns:1fr!important}}
 </style></body></html>
