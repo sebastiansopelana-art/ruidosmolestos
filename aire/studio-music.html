@@ -1272,7 +1272,7 @@ function blockEnsureYT(){
  if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)}
 }
 blockEnsureYT();
-const rmVideoCacheKey='rm-program-video-ids-v4-quality-audit';
+const rmVideoCacheKey='rm-program-video-ids-v5-playback-restored';
 let rmVideoCache={};
 try{rmVideoCache=JSON.parse(localStorage.getItem(rmVideoCacheKey)||'{}')||{}}catch(_){rmVideoCache={}}
 const rmResolveInFlight=new Map();
@@ -1286,51 +1286,17 @@ async function blockResolve(f){
  try{return await request}finally{rmResolveInFlight.delete(f.query)}
 }
 async function blockSearchResolve(f){
- const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(f.query));
+ const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(f.query+' High Quality Audio'));
  const data=await response.json();
- if(!response.ok)throw Error(data.error||'No se pudo buscar la grabación');
- // No elegir el primer resultado: contrastar artista, canción y duración de pista.
- const parts=f.name.split(' — '),artist=(parts[0]||'').toLowerCase(),song=(parts.slice(1).join(' — ')||'').toLowerCase();
- const norm=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
- const artistWords=norm(artist).split(' ').filter(Boolean),songWords=norm(song).split(' ').filter(Boolean);
- const valid=(data.results||[]).filter(x=>{
-  const duration=Number(x.durationSeconds||0),title=norm(x.title),who=norm(x.artist||x.author||x.channel||'');
-  if(!/^[A-Za-z0-9_-]{11}$/.test(x.id||''))return false;
-  if(duration<90||duration>720)return false;
-  if(/full album|complete album|entire album|album completo|full lp|discography|playlist|compilation|reaction|review|interview|tracklist/.test(title))return false;
-  if(!songWords.every(w=>title.split(' ').includes(w)))return false;
-  if(!artistWords.every(w=>(title+' '+who).split(' ').includes(w)))return false;
-  // Solo fuentes identificadas como oficiales por el proveedor o canales Topic del artista.
-  // Un título que diga Official Audio NO constituye prueba de procedencia.
-  const channel=norm(x.channel||x.author||x.artist||'');
-  const officialFlag=x.isOfficial===true||x.official===true||x.isOfficialArtistChannel===true;
-  const artistTopic=channel.endsWith(' topic')&&artistWords.every(w=>channel.split(' ').includes(w));
-  const distributor=Boolean(x.isProvidedToYouTubeByLabel===true||x.isLabelRelease===true);
-  if(!officialFlag&&!artistTopic&&!distributor)return false;
-  return true;
- });
- if(!valid.length){f.rmAudioQualityStatus='no_apto';throw Error('No se encontró grabación oficial verificable; no se selecciona audio alternativo')}
- // Favorecer las pistas cuya duración sea cercana a la edición de estudio cuando esté documentada.
- const expected=Number(f.expectedDurationSeconds||0);
- valid.sort((x,y)=>{
-  const score=z=>{
-   const title=norm(z.title),duration=Number(z.durationSeconds||0);
-   const studio=/(official audio|provided to youtube|topic|remaster|audio)/.test(title)?4:0;
-   const live=/(live|concert|cover|karaoke|tribute)/.test(title)?-8:0;
-   return studio+live+(expected?Math.max(-8,8-Math.abs(duration-expected)/8):0);
-  };
-  return score(y)-score(x);
- });
- const chosen=valid[0];
- // La calidad real del stream no está expuesta por esta búsqueda: nunca inventar bitrate.
- // Preferir fuente de catálogo/estudio y conservar su procedencia para auditoría.
- const source=String(chosen.channel||chosen.author||chosen.artist||'');
- const officialCatalog=Boolean(chosen.isProvidedToYouTubeByLabel===true||chosen.isLabelRelease===true||/\\bTopic$/i.test(source));
- f.rmAudioQuality=officialCatalog?'OFICIAL · CALIDAD SIN MEDIR':'OFICIAL · CALIDAD SIN MEDIR';
- f.rmAudioSource=source;
- f.rmAudioQualityStatus='oficial_verificado';
+ if(!response.ok)throw Error('No se pudo buscar la grabación');
+ // Restablecer reproducción: la API no siempre informa canal, sello o flags de oficialidad.
+ const candidates=(data.results||[]).filter(x=>/^[A-Za-z0-9_-]{11}$/.test(x.id||'')&&Number(x.durationSeconds||0)<1200&&!/full\\s*album|complete\\s*album|entire\\s*album|album\\s*completo/i.test(x.title||''));
+ if(!candidates.length)throw Error('No hay grabación reproducible');
+ const chosen=candidates[0];
  f.videoId=chosen.id;f.durationSeconds=Number(chosen.durationSeconds)||0;
- rmVideoCache[f.query]={id:f.videoId,durationSeconds:f.durationSeconds,qualityStatus:f.rmAudioQualityStatus,source:f.rmAudioSource};
+ f.rmAudioSource=String(chosen.channel||chosen.author||chosen.artist||'');
+ f.rmAudioQualityStatus='pendiente';
+ rmVideoCache[f.query]={id:f.videoId,durationSeconds:f.durationSeconds,qualityStatus:'pendiente',source:f.rmAudioSource};
  try{localStorage.setItem(rmVideoCacheKey,JSON.stringify(rmVideoCache))}catch(_){}
  refreshBlockDurations();return f.videoId;
 }
