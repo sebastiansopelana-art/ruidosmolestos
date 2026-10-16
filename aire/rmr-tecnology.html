@@ -677,7 +677,7 @@ function diagnostic(){
 function refresh(force=false){
  const all=diagnostic(),message=all.join('  ◆  ');
  if(!force&&message===lastMessage)return;
- lastMessage=message;label.textContent=message;box.title=message;
+ lastMessage=message;label.textContent=message.toLocaleUpperCase('es-AR');box.title=message.toLocaleUpperCase('es-AR');
  box.classList.toggle('isError',faults.size>0);
  box.classList.toggle('isOnAir',!ad.paused&&!ad.ended&&!!ad.currentSrc);
  if(motion){motion.onfinish=null;motion.cancel();motion=null}
