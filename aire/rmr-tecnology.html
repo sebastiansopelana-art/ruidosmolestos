@@ -1098,8 +1098,8 @@ setInterval(update,1000);update();
 const title=document.querySelector('.rmrDualTitle'),bar=document.getElementById('rmrAdTopStatus'),auto=document.getElementById('rmrAutoMode'),ads=document.querySelector('.rmrDualDeck>.rmrAdDeck');
 if(!title||!bar||!auto||!ads)return;
 function align(){
- const t=title.getBoundingClientRect(),b=auto.getBoundingClientRect(),force=document.getElementById('rmrForceAd')?.getBoundingClientRect();
- const left=Math.round(b.right-t.left+6),right=Math.round(Math.min(force?.right??t.right,t.right-6)-t.left);
+ const t=title.getBoundingClientRect(),settings=document.getElementById('rmrOpenSettings')?.getBoundingClientRect(),force=document.getElementById('rmrForceAd')?.getBoundingClientRect();
+ const left=Math.round((settings?.right??auto.getBoundingClientRect().right)-t.left+6),right=Math.round(Math.min(force?.right??t.right,t.right-6)-t.left);
  if(right-left>55){title.style.setProperty('--rmr-bar-left',left+'px');title.style.setProperty('--rmr-bar-width',(right-left)+'px');bar.style.visibility='visible'}
  else {bar.style.visibility='hidden'}
 }
