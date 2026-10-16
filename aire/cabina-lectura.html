@@ -39,5 +39,29 @@ $('save').onclick=()=>{const chunks=$('editor').value.split(/^\s*===\s*$/m).map(
 $('restore').onclick=()=>{if(!confirm('¿Reemplazar el guion guardado por el ejemplo?'))return;if(playing)toggle();chapters=example.slice();idx=0;$('editor').value=chapters.join('\n\n===\n\n');draw()};
 document.addEventListener('keydown',e=>{if(['TEXTAREA','INPUT','SELECT'].includes(document.activeElement.tagName))return;if(e.code==='Space'){e.preventDefault();toggle()}else if(e.key==='ArrowDown'){e.preventDefault();$('reader').scrollTop+=90}else if(e.key==='ArrowUp'){e.preventDefault();$('reader').scrollTop-=90}else if(e.key==='ArrowRight'){change(1)}else if(e.key==='ArrowLeft'){change(-1)}else if(e.key==='Escape'&&document.body.classList.contains('fullscreen')){$('full').click()}});
 try{const saved=JSON.parse(localStorage.getItem(storeKey)||'null');if(saved&&Array.isArray(saved.chapters)&&saved.chapters.length){chapters=saved.chapters;idx=Math.max(0,Math.min(chapters.length-1,saved.idx||0));font=saved.font||26;velocity=saved.velocity||32;draw();$('reader').scrollTop=saved.scroll||0}}catch(_){}$('editor').value=chapters.join('\n\n===\n\n');$('songs').innerHTML='<div class="song">01 · Canción del bloque<small>Selección musical pendiente</small></div><div class="song">02 · Canción del bloque<small>Selección musical pendiente</small></div><div class="song">03 · Canción del bloque<small>Selección musical pendiente</small></div><div class="song">04 · Canción del bloque<small>Selección musical pendiente</small></div>';draw();
+// Cargar el libreto real del Programa 45 desde el archivo de Producción.
+// Se conserva el texto original: no se inventan ni reemplazan historias.
+(async()=>{
+ try{
+  const response=await fetch('/aire/programas/45.txt',{cache:'no-store'});
+  if(!response.ok)throw Error('No se encontró el libreto del Programa 45');
+  const original=(await response.text()).replace(/\r\n/g,'\n').trim();
+  const headings=[...original.matchAll(/^CAPÍTULO\s+[1-4]\s*[—–-].*$/gm)];
+  if(headings.length!==4)throw Error('El libreto no contiene cuatro capítulos identificables');
+  const introduction=original.slice(0,headings[0].index).trim();
+  const sections=headings.map((m,i)=>original.slice(m.index,i+1<headings.length?headings[i+1].index:original.length).trim());
+  sections[0]=introduction+'\n\n'+sections[0];
+  if(playing)toggle();
+  chapters=sections;idx=0;elapsed=0;
+  $('elapsed').textContent='00:00';
+  $('program').textContent='45';
+  $('editor').value=chapters.join('\n\n===\n\n');
+  $('songs').innerHTML='<div class="song">BLOQUE 1 · JETHRO TULL<small>Según libreto de lectura 45.txt</small></div><div class="song">BLOQUE 2 · BLODWYN PIG<small>Según libreto de lectura 45.txt</small></div><div class="song">BLOQUE 3 · WILD TURKEY<small>Según libreto de lectura 45.txt</small></div><div class="song">BLOQUE 4 · AVIATOR<small>Según libreto de lectura 45.txt</small></div>';
+  draw();
+  const notice=document.createElement('div');notice.className='pill';notice.style.marginBottom='12px';
+  notice.textContent='PRUEBA CON LIBRETO 45 · Atención: el archivo de lectura incluye Jethro Tull, mientras que la lista musical 45.json incluye The Mick Abrahams Band. Son versiones distintas; no se modificó ninguna.';
+  document.querySelector('.bar').after(notice);
+ }catch(err){const n=document.createElement('div');n.className='pill';n.textContent='No se pudo cargar el Programa 45: '+err.message;document.querySelector('.bar').after(n)}
+})();
 })();
 </script></body></html>
