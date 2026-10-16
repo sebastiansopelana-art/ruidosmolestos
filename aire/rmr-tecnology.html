@@ -729,4 +729,25 @@ ad.addEventListener('playing',()=>{lastAd=Date.now();update()});
 document.getElementById('rmrManualMode')?.addEventListener('click',()=>{manualSince=null;setTimeout(update,0)});
 document.getElementById('rmrAutoMode')?.addEventListener('click',()=>setTimeout(update,0));
 setInterval(update,1000);update();
+})();</script><style id="rmrMarqueeAdEdgeAlignment">
+/* La marquesina termina en el borde izquierdo del panel PUBLICIDAD. */
+.rmrDualTitle{position:relative!important;min-height:42px!important}
+.rmrDualTitle .rmrTitleModes{position:static!important}
+.rmrDualTitle .rmrTitleModes #rmrAdTopStatus{position:absolute!important;left:var(--rmr-marquee-left,260px)!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;width:var(--rmr-marquee-width,280px)!important;max-width:none!important;min-width:90px!important;flex:none!important}
+</style><script id="rmrMarqueeAdEdgeAlignmentScript">(()=>{
+const box=document.getElementById('rmrAdTopStatus'),title=document.querySelector('.rmrDualTitle'),adPanel=document.querySelector('.rmrDualDeck>.rmrAdDeck, .rmrDualDeck>.rmrAdColumn, .rmrDualDeck .rmrAdDeck');
+if(!box||!title)return;
+function align(){
+ const header=title.getBoundingClientRect(),heading=title.querySelector(':scope > span'),headingEnd=heading?.getBoundingClientRect().right||header.left+220;
+ const ad=adPanel||[...document.querySelectorAll('.rmrDualDeck .rmrDeck')].find(el=>el.querySelector('.rmrAdPlayer, #rmrAdAudio, #rmrPlayerBreakName'));
+ if(!ad)return;
+ const target=ad.getBoundingClientRect().left;
+ const left=Math.max(headingEnd-header.left+12,0);
+ const width=Math.max(90,target-header.left-left-4);
+ title.style.setProperty('--rmr-marquee-left',left+'px');
+ title.style.setProperty('--rmr-marquee-width',width+'px');
+}
+window.addEventListener('resize',align);
+if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(align);observer.observe(title);if(adPanel)observer.observe(adPanel)}
+requestAnimationFrame(align);setTimeout(align,300);
 })();</script></body></html>
