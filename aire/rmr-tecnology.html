@@ -1250,7 +1250,7 @@ const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];le
 const set=(id,value)=>{const e=$(id);if(e)e.textContent=value};
 const fmt=n=>Number.isFinite(n)?String(Math.floor(n/60)).padStart(2,'0')+':'+String(Math.floor(n%60)).padStart(2,'0'):'00:00';
 const clean=n=>n.replace(/\.[^.]+$/,'');
-function render(){const area=$('playlist');area.replaceChildren();tracks.forEach((f,i)=>{const row=document.createElement('div');row.className='track'+(i===pos?' active':'');const name=document.createElement('span');name.className='name';name.textContent=(i+1)+'. '+f.name;row.append(name);row.ondblclick=()=>start(i);area.append(row)});set('count',tracks.length+' temas');set('rmrNextSong',tracks[pos+1]?.name||'Sin siguiente tema')}
+function render(){const area=$('playlist');area.replaceChildren();if(!tracks.length){const empty=document.createElement('div');empty.className='rmrProgramEmptyPlaylist';empty.textContent='PLAYLIST VACÍA · ARRASTRÁ CANCIONES AQUÍ PARA ARMAR LA LISTA';area.appendChild(empty)}tracks.forEach((f,i)=>{const row=document.createElement('div');row.className='track'+(i===pos?' active':'');const name=document.createElement('span');name.className='name';name.textContent=(i+1)+'. '+f.name;row.append(name);row.ondblclick=()=>start(i);area.append(row)});set('count',tracks.length+' temas');set('rmrNextSong',tracks[pos+1]?.name||'Sin siguiente tema')}
 function start(i){if(i<0||i>=tracks.length)return;pos=i;audio.pause();if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(tracks[i]);audio.src=objectUrl;set('song',clean(tracks[i].name));set('sub','PROGRAMA 2 · '+(i+1)+' / '+tracks.length);set('rmrMusicPlaybackStatus','REPRODUCIENDO');audio.play().catch(e=>set('sub','Error de audio: '+e.message));render()}
 const add=files=>{for(const f of files)if(f.type.startsWith('audio/')||/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(f.name))tracks.push(f);render()};
 $('play').onclick=()=>{if(!audio.src){start(pos<0?0:pos);return}if(audio.paused)audio.play().catch(e=>set('sub',e.message));else audio.pause()};
@@ -1264,6 +1264,11 @@ const picker=$('musicFiles');if(picker)picker.onchange=e=>{add(e.target.files);e
 const drop=$('rmrMusicDrop');if(drop){drop.onclick=()=>picker?.click();drop.ondragover=e=>e.preventDefault();drop.ondrop=e=>{e.preventDefault();add(e.dataTransfer.files)}}
 for(const id of ['rmrClearList','clear'])if($(id))$(id).onclick=()=>{audio.pause();tracks.length=0;pos=-1;set('song','Sin audio en reproducción');render()};
 for(const id of ['rmrRestoreList','rmrSaveList','rmrShuffle','rmrRepeat','refresh','insertAd','rmrBackupFile','rmrIntroSeconds'])if($(id))$(id).classList.add('rmrProgramHidden');
-old.replaceWith(holder);set('song','Sin audio en reproducción');set('sub','Programa 2 en espera');set('rmrNextSong','Sin siguiente tema');set('elapsed','00:00');set('total','00:00');render();
+const listArea=$('playlist');if(listArea){listArea.ondragover=e=>{e.preventDefault();listArea.classList.add('rmrProgramDragOver')};listArea.ondragleave=()=>listArea.classList.remove('rmrProgramDragOver');listArea.ondrop=e=>{e.preventDefault();listArea.classList.remove('rmrProgramDragOver');add(e.dataTransfer.files)};listArea.onclick=()=>{if(!tracks.length)picker?.click()}};old.replaceWith(holder);set('song','Sin audio en reproducción');set('sub','Programa 2 en espera');set('rmrNextSong','Sin siguiente tema');set('elapsed','00:00');set('total','00:00');render();
 })();
-</script></body></html>
+</script><style id="rmrProgramPlaylistEmptyVisible">
+#rmrProgramMusicClone .rmrInlineMusicPlaylist{display:flex!important;flex-direction:column!important;min-height:300px!important}
+#rmrProgramMusicClone #program2_playlist{display:flex!important;flex-direction:column!important;min-height:210px!important;height:260px!important;overflow-y:auto!important;border:1px solid #466b83!important;background:#091c2c!important;cursor:pointer!important}
+#rmrProgramMusicClone .rmrProgramEmptyPlaylist{display:flex;align-items:center;justify-content:center;text-align:center;flex:1;min-height:190px;padding:18px;color:#9cbccd;font-size:12px;letter-spacing:.4px}
+#rmrProgramMusicClone #program2_playlist.rmrProgramDragOver{outline:2px dashed #8fd5ff!important;outline-offset:-5px;background:#16394d!important}
+</style></body></html>
