@@ -1218,4 +1218,28 @@ header .header-actions #rmrAdTopStatusText{display:block!important;white-space:n
 .rmrDualTitle .rmrTitleModes #rmrOpenSettings{height:48px!important;min-height:48px!important;align-self:stretch!important;box-sizing:border-box!important;flex-shrink:0!important}
 .rmrDualTitle .rmrTitleModes #rmrJinglePads{margin:0 8px!important;align-self:stretch!important;align-items:stretch!important;border-left:2px solid #7b9aac!important;border-right:2px solid #7b9aac!important;padding:0 8px!important;box-sizing:border-box!important;gap:4px!important}
 .rmrDualTitle .rmrTitleModes #rmrJinglePads .rmrJinglePad{height:48px!important;min-height:48px!important;max-height:48px!important;align-self:stretch!important;box-sizing:border-box!important}
-</style></body></html>
+</style><style id="rmrLiveInfoTickerStyle">
+header .header-actions #rmrAdTopStatus.rmrLiveInfoTicker{position:relative!important;cursor:pointer!important}
+#rmrLiveInfoViewport{position:absolute;inset:0;display:flex;align-items:center;overflow:hidden;padding:0 7px}
+#rmrLiveInfoText{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#e6f5fd}
+</style>
+<script id="rmrLiveInfoTickerScript">
+(()=>{
+const bar=document.getElementById('rmrAdTopStatus');if(!bar)return;
+bar.classList.add('rmrLiveInfoTicker');
+const viewport=document.createElement('div');viewport.id='rmrLiveInfoViewport';
+const label=document.createElement('span');label.id='rmrLiveInfoText';viewport.append(label);bar.append(viewport);
+bar.title='Información meteorológica y titulares · clic para abrir noticia';
+let items=[{text:'CLIMA Y NOTICIAS · conectando…',url:''}],index=0;
+const show=()=>{const item=items[index%items.length];label.textContent=item.text;bar.style.cursor=item.url?'pointer':'default';bar.title=item.url?'Abrir noticia completa: '+item.text:item.text};
+bar.addEventListener('click',e=>{const item=items[index%items.length];if(item.url){e.preventDefault();e.stopPropagation();window.open(item.url,'_blank','noopener,noreferrer')}});
+setInterval(()=>{index=(index+1)%items.length;show()},9000);show();
+const getJson=async(url)=>{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),9000);try{const response=await fetch(url,{signal:controller.signal});if(!response.ok)throw Error('HTTP '+response.status);return await response.json()}finally{clearTimeout(timeout)}};
+let weather={text:'CLIMA · esperando ubicación',url:''},headlines=[];
+const render=()=>{items=[weather,...headlines].filter(x=>x?.text);if(!items.length)items=[{text:'INFORMACIÓN · sin conexión',url:''}];index=0;show()};
+const weatherAt=async(lat,lon)=>{try{const w=await getJson('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m,weather_code&timezone=auto');let city='UBICACIÓN ACTUAL';try{const geo=await getJson('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent('San Martín de los Andes')+'&count=1&language=es');void geo}catch(_){}const code=w.current?.weather_code;const condition=code===0?'DESPEJADO':code<=3?'NUBOSIDAD':code<=48?'NIEBLA':code<=67?'LLUVIA':code<=77?'NIEVE':code<=82?'CHAPARRONES':code<=86?'NIEVE':code>=95?'TORMENTA':'VARIABLE';weather={text:'CLIMA · '+city+' · '+Math.round(w.current.temperature_2m)+'°C · '+condition,url:''};render()}catch(e){weather={text:'CLIMA · datos no disponibles',url:''};render()}};
+if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>weatherAt(p.coords.latitude,p.coords.longitude),()=>{weather={text:'CLIMA · activá ubicación para datos locales',url:''};render()},{timeout:9000,maximumAge:600000})}else{weather={text:'CLIMA · ubicación no disponible',url:''};render()}
+const news=async()=>{try{const d=await getJson('https://api.gdeltproject.org/api/v2/doc/doc?query=lang:spanish&mode=artlist&maxrecords=12&format=json&sort=datedesc');headlines=(d.articles||[]).filter(a=>a.title&&/^https:\/\//.test(a.url||'')).slice(0,8).map(a=>({text:'NOTICIAS · '+a.title,url:a.url}));if(!headlines.length)throw Error('Sin titulares');render()}catch(e){headlines=[{text:'NOTICIAS · titulares temporalmente no disponibles',url:''}];render()}};
+news();setInterval(news,15*60*1000);setInterval(()=>{if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>weatherAt(p.coords.latitude,p.coords.longitude),()=>{}, {timeout:8000,maximumAge:900000})},20*60*1000);
+})();
+</script></body></html>
