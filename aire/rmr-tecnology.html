@@ -1152,7 +1152,7 @@ requestAnimationFrame(tick);
   if(!vu||!list)return;
   const vuTop=vu.getBoundingClientRect().top;
   const listBottom=list.getBoundingClientRect().bottom;
-  const height=Math.max(0,Math.round((listBottom-vuTop)*100)/100);
+  const height=Math.max(82,Math.round((listBottom-vuTop)*100)/100);
   vu.style.setProperty('height',height+'px','important');
   vu.style.setProperty('max-height',height+'px','important');
   vu.style.setProperty('bottom','auto','important');
@@ -1220,4 +1220,9 @@ header .header-actions #rmrAdTopStatusText{display:block!important;white-space:n
 .rmrDualTitle .rmrTitleModes #rmrJinglePads .rmrJinglePad{height:48px!important;min-height:48px!important;max-height:48px!important;align-self:stretch!important;box-sizing:border-box!important}
 </style>
 <style id="rmrMarqueeRemovalFinal">#rmrAdTopStatus,#rmrAdTopStatusText{display:none!important;visibility:hidden!important}header .header-actions{display:flex!important}</style>
-</body></html>
+<style id="rmrAdVuFullLengthFix">
+.rmrAdBodySplit>.rmrAdControlsColumn{overflow:visible!important}
+.rmrAdBodySplit>.rmrAdControlsColumn>.rmrAdVuPanel{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-bottom:6px!important;box-sizing:border-box!important}
+.rmrAdBodySplit>.rmrAdControlsColumn>.rmrAdVuPanel>.rmrAdVuBars{display:flex!important;flex:1 1 auto!important;height:auto!important;min-height:0!important;max-height:none!important;align-items:flex-end!important;overflow:hidden!important}
+.rmrAdBodySplit>.rmrAdControlsColumn>.rmrAdVuPanel>.rmrAdVuBars>i{max-height:100%!important}
+</style></body></html>
