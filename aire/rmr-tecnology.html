@@ -1180,15 +1180,14 @@ requestAnimationFrame(tick);
   auto.innerHTML='<span class="rmrModeLight"></span>'+(manualActive?'MANUAL':'AUTOMÁTICO');
  };
  auto.addEventListener('click',e=>{
-  if(auto.classList.contains('isManual')){
-   e.stopImmediatePropagation();
-   auto.classList.remove('isManual');
-   auto.innerHTML='<span class="rmrModeLight"></span>AUTOMÁTICO';
-   auto.click();
-  }else{
-   e.stopImmediatePropagation();
-   manual.click();
+  const manualActive=manual.classList.contains('isActive')||manual.getAttribute('aria-pressed')==='true';
+  if(manualActive){
+   // Let the original automatic-mode handler receive this click.
+   return;
   }
+  // Delegate automatic -> manual to the original hidden manual control.
+  e.stopImmediatePropagation();
+  manual.click();
   setTimeout(sync,0);
  },true);
  const observer=new MutationObserver(sync);
