@@ -563,10 +563,11 @@ content:""!important;position:absolute!important;z-index:-1!important;pointer-ev
 .rmrDualTitle .rmrTitleModes #rmrAdTopStatus.isError,.rmrDualTitle .rmrTitleModes #rmrAdTopStatus.isError.isOnAir{background:#571b21!important;border-color:#ff5454!important;color:#fff0f0!important;box-shadow:0 0 10px #ff454570!important}
 </style><style id="rmrIndependentDropPlayerStyle">
 /* Standalone module below the advertising deck. Never resize the two original players. */
-.rmrDualDeck{grid-template-rows:auto auto!important}
-.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:1 / span 2!important}
-.rmrDualDeck>.rmrRightStack{grid-column:2!important;grid-row:1 / span 2!important;display:flex!important;flex-direction:column!important;gap:12px!important;min-width:0!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck{flex:none!important}
+.rmrDualDeck{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-rows:auto!important;align-items:start!important;gap:10px!important}
+.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:1!important;width:100%!important;max-width:100%!important;min-width:0!important;align-self:start!important}
+.rmrDualDeck>.rmrRightStack{grid-column:2!important;grid-row:1!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:12px!important;width:100%!important;max-width:100%!important;min-width:0!important;align-self:start!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{display:flex!important;flex-direction:column!important;flex:0 0 auto!important;width:100%!important;max-width:100%!important;min-width:0!important;align-self:stretch!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrRightStack>#rmrDropPlayer{display:flex!important;position:relative!important;grid-column:auto!important;grid-row:auto!important;flex:0 0 auto!important;align-self:stretch!important;width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin:0!important;overflow:hidden!important}
 #rmrDropPlayer{box-sizing:border-box;width:100%;min-width:0;min-height:410px;background:#112a3e;border:2px solid #06131c;padding:12px;color:#d7f1ff;display:flex;flex-direction:column;gap:10px;font-family:inherit}
 #rmrDropPlayer .rmrDropHeader{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px;letter-spacing:.6px;border-bottom:1px solid #355e73;padding-bottom:8px}
 #rmrDropPlayer .rmrDropHeader span{font-size:10px;color:#99c5da}
@@ -587,6 +588,15 @@ content:""!important;position:absolute!important;z-index:-1!important;pointer-ev
 #rmrDropPlayer .rmrDropRow.dragging{opacity:.35}
 #rmrDropPlayer .rmrDropRow .rmrDropName{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer}
 #rmrDropPlayer .rmrDropRow button{padding:3px 10px}
+/* Fit the second player inside the black box, without stretching advertising. */
+#rmrDropPlayer{height:var(--rmrAdvertisingDeckHeight,230px)!important;min-height:0!important;max-height:var(--rmrAdvertisingDeckHeight,230px)!important;padding:8px!important;gap:5px!important}
+#rmrDropPlayer .rmrDropHeader{padding-bottom:4px!important}
+#rmrDropPlayer .rmrDropNow{padding:5px 8px!important}
+#rmrDropPlayer .rmrDropControls{gap:4px!important}
+#rmrDropPlayer .rmrDropControls button{padding:5px 7px!important}
+#rmrDropPlayer .rmrDropZone{padding:7px!important}
+#rmrDropPlayer .rmrDropList{flex:1 1 auto!important;min-height:0!important;max-height:none!important;overflow-y:auto!important}
+
 </style><style id="rmrHideAdCornerArtifact">
 /* Remove the obsolete advertising resume control's empty container;
    the button remains available only when browser autoplay needs user intervention. */
@@ -890,4 +900,9 @@ audio.onended=()=>{if(index+1<tracks.length)play(index+1);else stop()};audio.ont
 $('rmrDropProgress').oninput=e=>{if(Number.isFinite(audio.duration)&&audio.duration>0)audio.currentTime=Number(e.target.value)/1000*audio.duration};
 $('rmrDropVolume').oninput=e=>audio.volume=Number(e.target.value)/100;
 try{const request=indexedDB.open('RMR-Independent-DropPlayer',1);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('tracks'))request.result.createObjectStore('tracks',{keyPath:'id'})};request.onsuccess=()=>{db=request.result;const tx=db.transaction('tracks','readonly');const get=tx.objectStore('tracks').getAll();get.onsuccess=()=>{tracks=(get.result||[]).sort((a,b)=>a.order-b.order);render()}};request.onerror=()=>render()}catch(e){render()}
+})();</script><script id="rmrPlaceDropPlayerBelowAdvertising">(()=>{
+const ad=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+const player=document.getElementById('rmrDropPlayer');if(!ad||!player)return;
+function match(){const h=ad.getBoundingClientRect().height;if(h>100&&h<1500)player.style.setProperty('--rmrAdvertisingDeckHeight',Math.round(h)+'px')}
+match();if(typeof ResizeObserver!=='undefined')new ResizeObserver(match).observe(ad);window.addEventListener('resize',match);
 })();</script></body></html>
