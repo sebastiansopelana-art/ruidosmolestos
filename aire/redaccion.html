@@ -1,16 +1,39 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>REDACCIÓN · RUIDOS MOLESTOS</title>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REDACCIÓN · RUIDOS MOLESTOS</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#080d11;color:#e8f0f5;font-family:Arial,Helvetica,sans-serif}
-header{padding:20px 28px;border-bottom:1px solid #2d4655;background:#111d26;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
-h1{margin:0;font-size:24px;letter-spacing:2px}header small{display:block;color:#89b9d3;letter-spacing:2px;margin-top:7px}
-a{color:#c4e6f7;text-decoration:none;border:1px solid #466578;border-radius:5px;padding:10px 15px}
-main{max-width:1000px;margin:70px auto;padding:0 24px}h2{font-size:clamp(32px,6vw,54px);margin:0 0 20px}p{color:#afc2cf;font-size:18px;line-height:1.7}
-.status{display:inline-block;color:#94c9e4;letter-spacing:2px;font-size:12px;border-bottom:1px solid #466578;padding-bottom:12px}
-.panel{margin-top:35px;padding:30px;border:1px solid #314b5c;background:#101b23;border-radius:8px}
-</style></head>
-<body><header><div><h1>RUIDOS MOLESTOS</h1><small>CENTRAL DE PRODUCCIÓN · REDACCIÓN</small></div><a href="/aire/">← VOLVER A PRODUCCIÓN</a></header>
-<main><span class="status">REDACCIÓN · NUEVO COMIENZO</span><h2>REDACCIÓN</h2><div class="panel"><p>ESPACIO NUEVO. SIN LIBRETOS PRECARGADOS, SIN EL EDITOR ANTERIOR Y SIN FUNCIONES HEREDADAS.</p><p>LISTO PARA CONSTRUIR LA NUEVA REDACCIÓN DESDE CERO.</p></div></main>
-<script>if(sessionStorage.getItem('rm_pass')!=='ok')location.replace('/aire/');</script>
-</body></html>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#091119;color:#e5eef4;font-family:Arial,Helvetica,sans-serif}button,select{font:inherit}button{cursor:pointer;color:#e5eef4;background:#1a303e;border:1px solid #405d70;border-radius:6px;padding:9px 13px;font-weight:700}button:hover{background:#284658}button:focus-visible,textarea:focus-visible{outline:2px solid #a3d5ed;outline-offset:2px}.primary{background:#365f75;border-color:#84b6d0}.active{background:#547e94;border-color:#a8d8ef}.shell{height:100dvh;display:flex;flex-direction:column}.bar{flex:none;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:11px 16px;background:#111f2a;border-bottom:1px solid #304a5b}.brand{margin-right:auto;min-width:190px}.brand strong{display:block;letter-spacing:1.6px;font-size:15px}.brand small{color:#a1bfce;letter-spacing:1px;font-size:10px}.group{display:flex;gap:6px;align-items:center}.speed{width:110px;accent-color:#a6d5ed}.stat{font-size:12px;color:#b5cbd7;min-width:45px;text-align:center}.viewer{flex:1;min-height:0;position:relative;overflow:hidden;background:#0d1922}.scroll{height:100%;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;scrollbar-color:#496779 #111f2a;outline:none}.reading{width:100%;padding:25vh clamp(20px,5vw,105px) 55vh;white-space:pre-wrap;overflow-wrap:break-word;font-family:Arial,Helvetica,sans-serif;font-size:38px;line-height:1.65;letter-spacing:.025em;font-weight:600;text-transform:uppercase;color:#e5edf2}.reading:empty:before{content:'PEGÁ TU LIBRETO EN EDITAR TEXTO PARA EMPEZAR.';color:#7894a4}.guide{position:absolute;top:34%;left:0;right:0;height:1px;background:#7da9c066;pointer-events:none}.guide:before{content:'';position:absolute;left:0;top:-9px;width:5px;height:19px;background:#8bbdd7}.editor{height:100%;width:100%;resize:none;background:#101d27;border:0;color:#f0f5f8;padding:35px clamp(20px,5vw,105px);font:24px/1.6 Arial,sans-serif;outline:none;text-transform:uppercase}.footer{flex:none;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 17px;background:#111f2a;border-top:1px solid #304a5b;color:#a4bfce;font-size:12px}.footer span{white-space:nowrap}.hide{display:none!important}@media(max-width:800px){.brand{width:100%}.bar{gap:7px;padding:9px}.bar button{padding:9px}.speed{width:90px}.reading{font-size:31px}.footer{flex-wrap:wrap}}:fullscreen .shell{height:100dvh}
+</style></head><body><div class="shell">
+<header class="bar"><div class="brand"><strong>RUIDOS MOLESTOS · REDACCIÓN</strong><small>TELEPROMPTER · MODO AIRE</small></div>
+<div class="group"><button id="mode" class="primary" title="CAMBIAR ENTRE MANUAL Y AUTOMÁTICO">MODO MANUAL</button><button id="play" title="INICIAR O PAUSAR DESPLAZAMIENTO">▶ INICIAR</button></div>
+<div class="group"><label for="speed">VELOCIDAD</label><input id="speed" class="speed" type="range" min="5" max="100" value="30"><span id="speedValue" class="stat">30</span></div>
+<div class="group"><button id="smaller" title="ACHICAR LETRA">A−</button><button id="bigger" title="AGRANDAR LETRA">A+</button></div>
+<div class="group"><button id="back" title="RETROCEDER UN PÁRRAFO">↶ PÁRRAFO</button><button id="edit">EDITAR TEXTO</button><button id="fullscreen">⛶ PANTALLA COMPLETA</button><a href="/aire/" style="color:#c9e3ef;padding:8px">SALIR</a></div></header>
+<main class="viewer"><div id="scroll" class="scroll" tabindex="0" aria-label="TEXTO DEL TELEPROMPTER"><div id="reading" class="reading"></div></div><div id="guide" class="guide"></div><textarea id="editor" class="editor hide" spellcheck="false" placeholder="PEGÁ AQUÍ EL LIBRETO. EL TEXTO SE MOSTRARÁ EN MAYÚSCULAS."></textarea></main>
+<footer class="footer"><span id="status">MANUAL · LISTO PARA LEER</span><span>ESPACIO: INICIAR / PAUSAR · ↑ ↓: DESPLAZAR · ESC: SALIR DE PANTALLA COMPLETA</span><span id="progress">0%</span></footer>
+</div>
+<script>
+(function(){
+if(sessionStorage.getItem('rm_pass')!=='ok'){location.replace('/aire/');return}
+const $=id=>document.getElementById(id),scroll=$('scroll'),reading=$('reading'),editor=$('editor'),modeBtn=$('mode'),play=$('play'),status=$('status'),speed=$('speed'),speedValue=$('speedValue'),progress=$('progress');
+const KEY='rm_redaccion_nueva_v1',SETTINGS='rm_redaccion_teleprompter_v1';let settings={};try{settings=JSON.parse(localStorage.getItem(SETTINGS)||'{}')}catch(e){}
+let auto=false,running=false,editing=false,fontSize=Number(settings.fontSize)||38,last=0,frame=0,manualUntil=0;
+const sample='';reading.textContent=localStorage.getItem(KEY)||sample;editor.value=reading.textContent;
+fontSize=Math.max(20,Math.min(88,fontSize));reading.style.fontSize=fontSize+'px';speed.value=Math.max(5,Math.min(100,Number(settings.speed)||30));speedValue.textContent=speed.value;
+function saveSettings(){localStorage.setItem(SETTINGS,JSON.stringify({fontSize,speed:Number(speed.value)}))}
+function update(){modeBtn.textContent=auto?'MODO AUTOMÁTICO':'MODO MANUAL';modeBtn.classList.toggle('active',auto);play.textContent=running?'Ⅱ PAUSAR':'▶ INICIAR';play.disabled=!auto||editing;status.textContent=editing?'EDICIÓN · GUARDADO LOCAL':auto?(running?'AUTOMÁTICO · EN MARCHA':'AUTOMÁTICO · EN PAUSA'):'MANUAL · RUEDA, TECLADO O ARRASTRE';progress.textContent=Math.round(100*scroll.scrollTop/Math.max(1,scroll.scrollHeight-scroll.clientHeight))+'%'}
+function stop(){running=false;cancelAnimationFrame(frame);last=0;update()}
+function tick(t){if(!running||!auto||editing)return;if(!last)last=t;const dt=Math.min(80,t-last);last=t;if(t>manualUntil){scroll.scrollTop+=Number(speed.value)*dt/1000;}if(scroll.scrollTop>=scroll.scrollHeight-scroll.clientHeight-1){stop();return}update();frame=requestAnimationFrame(tick)}
+function togglePlay(){if(!auto||editing)return;if(running){stop()}else{running=true;last=0;frame=requestAnimationFrame(tick);update()}}
+modeBtn.onclick=()=>{auto=!auto;stop();update()};play.onclick=togglePlay;
+function manual(){if(running)stop();manualUntil=performance.now()+800;update()}
+scroll.addEventListener('wheel',manual,{passive:true});scroll.addEventListener('touchstart',manual,{passive:true});scroll.addEventListener('pointerdown',manual,{passive:true});scroll.addEventListener('scroll',()=>{progress.textContent=Math.round(100*scroll.scrollTop/Math.max(1,scroll.scrollHeight-scroll.clientHeight))+'%'},{passive:true});
+$('smaller').onclick=()=>{fontSize=Math.max(20,fontSize-2);reading.style.fontSize=fontSize+'px';saveSettings()};$('bigger').onclick=()=>{fontSize=Math.min(88,fontSize+2);reading.style.fontSize=fontSize+'px';saveSettings()};
+speed.oninput=()=>{speedValue.textContent=speed.value;saveSettings()};
+$('back').onclick=()=>{manual();const current=scroll.scrollTop;const nodes=reading.textContent.split(/\n\s*\n/);const estimate=Math.max(130,reading.clientWidth/(fontSize*1.5));const amount=Math.max(fontSize*3,Math.min(600,(nodes.length?nodes[Math.max(0,Math.floor(current/300)-1)]||'':'' ).length/estimate*fontSize*1.65));scroll.scrollTop=Math.max(0,current-amount)};
+$('edit').onclick=()=>{stop();editing=!editing;editor.classList.toggle('hide',!editing);scroll.classList.toggle('hide',editing);$('guide').classList.toggle('hide',editing);$('edit').textContent=editing?'GUARDAR Y LEER':'EDITAR TEXTO';if(editing){editor.value=reading.textContent;editor.focus()}else{reading.textContent=editor.value.toLocaleUpperCase('es-AR');localStorage.setItem(KEY,reading.textContent);scroll.scrollTop=0}update()};
+$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){status.textContent='PANTALLA COMPLETA NO DISPONIBLE EN ESTE NAVEGADOR'}};
+document.addEventListener('keydown',e=>{if(editing||e.target===editor||e.target===speed||e.target.tagName==='BUTTON')return;if(e.code==='Space'){e.preventDefault();if(!auto){auto=true;update()}togglePlay()}else if(e.key==='ArrowDown'||e.key==='ArrowUp'||e.key==='PageDown'||e.key==='PageUp'){manual()}});
+window.addEventListener('beforeunload',()=>{if(editing)localStorage.setItem(KEY,editor.value.toLocaleUpperCase('es-AR'))});
+update();
+})();
+</script></body></html>
