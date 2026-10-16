@@ -1219,4 +1219,17 @@ header .header-actions #rmrAdTopStatusText{display:block!important;white-space:n
 .rmrDualTitle .rmrTitleModes #rmrJinglePads{margin:0 8px!important;align-self:stretch!important;align-items:stretch!important;border-left:2px solid #7b9aac!important;border-right:2px solid #7b9aac!important;padding:0 8px!important;box-sizing:border-box!important;gap:4px!important}
 .rmrDualTitle .rmrTitleModes #rmrJinglePads .rmrJinglePad{height:48px!important;min-height:48px!important;max-height:48px!important;align-self:stretch!important;box-sizing:border-box!important}
 </style>
-<style id="rmrMarqueeRemovalFinal">#rmrAdTopStatus,#rmrAdTopStatusText{display:none!important;visibility:hidden!important}header .header-actions{display:flex!important}</style></body></html>
+<style id="rmrMarqueeRemovalFinal">#rmrAdTopStatus,#rmrAdTopStatusText{display:none!important;visibility:hidden!important}header .header-actions{display:flex!important}</style><style id="rmrProgramPlaylistFullWidth">
+.rmrMusicColumn>#rmrDropPlayer{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important;margin-top:10px!important;flex:0 0 auto!important}
+.rmrMusicColumn>#rmrDropPlayer #rmrDropList{width:100%!important;max-width:none!important;box-sizing:border-box!important;overflow-y:auto!important}
+.rmrMusicColumn>#rmrDropPlayer .rmrDropZone{width:100%!important;box-sizing:border-box!important}
+</style>
+<script id="rmrProgramPlaylistFullWidthScript">
+(()=>{
+const music=document.querySelector('.rmrMusicColumn'),player=document.getElementById('rmrDropPlayer'),automatic=document.getElementById('playlist'),independent=document.getElementById('rmrDropList');
+if(!music||!player||!automatic||!independent)return;
+music.appendChild(player);
+const match=()=>{const h=automatic.getBoundingClientRect().height;if(h>100){independent.style.setProperty('height',Math.round(h)+'px','important');independent.style.setProperty('min-height',Math.round(h)+'px','important');independent.style.setProperty('max-height',Math.round(h)+'px','important')}};
+match();window.addEventListener('resize',match);if(window.ResizeObserver){new ResizeObserver(match).observe(automatic)}
+})();
+</script></body></html>
