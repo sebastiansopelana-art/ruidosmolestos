@@ -1259,11 +1259,11 @@ holder.querySelectorAll('[data-rmr-ads-window]').forEach(el=>el.classList.add('r
 holder.querySelectorAll('.rmrPlayerNextBreak,.side,.rmrIntroPanel').forEach(el=>el.classList.add('rmrProgramHidden'));
 holder.querySelector('.rmrDeckTitle').textContent='REPRODUCTOR DE MÚSICA · PROGRAMA 2';
 holder.querySelector('.rmrInlineMusicPlaylist>.paneltitle').textContent='PLAYLIST INDEPENDIENTE · PROGRAMA 2';
-const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];let pos=-1,objectUrl=null;
+const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];holder._rmrProgramAudio=audio;let pos=-1,objectUrl=null;
 const set=(id,value)=>{const e=$(id);if(e)e.textContent=value};
 const fmt=n=>Number.isFinite(n)?String(Math.floor(n/60)).padStart(2,'0')+':'+String(Math.floor(n%60)).padStart(2,'0'):'00:00';
 const clean=n=>n.replace(/\.[^.]+$/,'');
-function render(){const area=$('playlist');area.replaceChildren();if(!tracks.length){const empty=document.createElement('div');empty.className='rmrProgramEmptyPlaylist';empty.textContent='PLAYLIST VACÍA · ARRASTRÁ CANCIONES AQUÍ PARA ARMAR LA LISTA';area.appendChild(empty)}tracks.forEach((f,i)=>{const row=document.createElement('div');row.className='track'+(i===pos?' active':'');const name=document.createElement('span');name.className='name';name.textContent=(i+1)+'. '+f.name;row.append(name);row.ondblclick=()=>start(i);area.append(row)});set('count',tracks.length+' temas');set('rmrNextSong',tracks[pos+1]?.name||'Sin siguiente tema')}
+function render(){const area=$('playlist');area.replaceChildren();if(!tracks.length){const empty=document.createElement('div');empty.className='rmrProgramEmptyPlaylist';empty.textContent='PLAYLIST VACÍA · ARRASTRÁ CANCIONES AQUÍ PARA ARMAR LA LISTA';area.appendChild(empty)}tracks.forEach((f,i)=>{const row=document.createElement('div');row.className='track'+(i===pos?' active':'');const number=document.createElement('span');number.className='rmrProgramTrackNumber';number.textContent=String(i+1);const type=document.createElement('span');type.className='rmrProgramTrackType';type.textContent='MÚSICA';const name=document.createElement('span');name.className='rmrProgramTrackName';name.textContent=f.name;const state=document.createElement('span');state.className='rmrProgramTrackState';state.textContent=i===pos?'EN REPRODUCCIÓN':'EN COLA';row.append(number,type,name,state);row.ondblclick=()=>start(i);area.append(row)});set('count',tracks.length+' temas');set('rmrNextSong',tracks[pos+1]?.name||'Sin siguiente tema')}
 function start(i){if(i<0||i>=tracks.length)return;pos=i;audio.pause();if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(tracks[i]);audio.src=objectUrl;set('song',clean(tracks[i].name));set('sub','PROGRAMA 2 · '+(i+1)+' / '+tracks.length);set('rmrMusicPlaybackStatus','REPRODUCIENDO');audio.play().catch(e=>set('sub','Error de audio: '+e.message));render()}
 const add=files=>{for(const f of files)if(f.type.startsWith('audio/')||/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(f.name))tracks.push(f);render()};
 $('play').onclick=()=>{if(!audio.src){start(pos<0?0:pos);return}if(audio.paused)audio.play().catch(e=>set('sub',e.message));else audio.pause()};
@@ -1318,4 +1318,21 @@ if(target>220&&target<8000){right.style.setProperty('min-height',target+'px','im
 })}
 match();window.addEventListener('resize',match);
 if(window.ResizeObserver){const obs=new ResizeObserver(match);obs.observe(left);const deck=document.querySelector('#rmrProgramMusicClone>.rmrDeck');if(deck)obs.observe(deck)}
+})();</script><style id="rmrProgramTrackRowsAndVu">
+#rmrProgramMusicClone #program2_playlist{display:block!important}
+#rmrProgramMusicClone #program2_playlist>.track{display:grid!important;grid-template-columns:35px 65px minmax(0,1fr) 95px!important;align-items:center!important;gap:8px!important;width:100%!important;min-width:0!important;padding:8px 10px!important;min-height:43px!important;border-bottom:1px solid #35576c!important;box-sizing:border-box!important;cursor:pointer!important}
+#rmrProgramMusicClone #program2_playlist .rmrProgramTrackName{display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:12px!important}
+#rmrProgramMusicClone #program2_playlist .rmrProgramTrackNumber,#rmrProgramMusicClone #program2_playlist .rmrProgramTrackType,#rmrProgramMusicClone #program2_playlist .rmrProgramTrackState{white-space:nowrap!important;font-size:10px!important}
+#rmrProgramMusicClone #program2_playlist .rmrProgramTrackType,#rmrProgramMusicClone #program2_playlist .rmrProgramTrackState{color:#9cbccd!important}
+#rmrProgramMusicClone .rmrSpectrumColumns{display:grid!important;grid-template-columns:repeat(32,minmax(0,1fr))!important;align-items:end!important;gap:2px!important;min-height:34px!important;width:100%!important;flex:1 1 auto!important}
+#rmrProgramMusicClone .rmrSpectrumColumn{display:block!important;width:100%!important;align-self:end!important;max-height:100%!important;background:linear-gradient(to top,#24c979,#9ddd56 58%,#f1cb4b 79%,#f06750)!important;border-radius:2px 2px 0 0!important}
+</style>
+<script id="rmrProgramAudioSpectrumEngine">(()=>{
+const host=document.getElementById('rmrProgramMusicClone'),bars=host?.querySelector('#program2_rmrSpectrumColumns');
+if(!host||!bars)return;
+const cells=Array.from({length:32},()=>{const el=document.createElement('i');el.className='rmrSpectrumColumn';el.style.height='4%';bars.appendChild(el);return el});
+let ctx,analyser,data,connected=false;
+function attach(audio){if(connected||!audio)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;ctx=new C();const src=ctx.createMediaElementSource(audio);analyser=ctx.createAnalyser();analyser.fftSize=256;data=new Uint8Array(analyser.frequencyBinCount);src.connect(analyser);analyser.connect(ctx.destination);connected=true}catch(e){console.warn('VU programa 2',e)}}
+function tick(){const audio=host._rmrProgramAudio;if(audio&&!audio.paused){attach(audio);if(ctx?.state==='suspended')ctx.resume().catch(()=>{});if(analyser){analyser.getByteFrequencyData(data);cells.forEach((el,i)=>{const k=Math.min(data.length-1,Math.floor(i*data.length/cells.length));el.style.height=Math.max(4,Math.min(100,data[k]/255*125))+'%'})}}else cells.forEach(el=>el.style.height='4%');requestAnimationFrame(tick)}
+requestAnimationFrame(tick);
 })();</script></body></html>
