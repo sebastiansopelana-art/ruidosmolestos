@@ -1284,17 +1284,25 @@ const listArea=$('playlist');if(listArea){listArea.ondragover=e=>{e.preventDefau
 #rmrProgramMusicClone #program2_playlist{display:flex!important;flex-direction:column!important;min-height:210px!important;height:260px!important;overflow-y:auto!important;border:1px solid #466b83!important;background:#091c2c!important;cursor:pointer!important}
 #rmrProgramMusicClone .rmrProgramEmptyPlaylist{display:flex;align-items:center;justify-content:center;text-align:center;flex:1;min-height:190px;padding:18px;color:#9cbccd;font-size:12px;letter-spacing:.4px}
 #rmrProgramMusicClone #program2_playlist.rmrProgramDragOver{outline:2px dashed #8fd5ff!important;outline-offset:-5px;background:#16394d!important}
-</style><script id="rmrAlignPlaylistBottomsLogic">(()=>{
-const left=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist');
-const right=document.getElementById('rmrProgramMusicClone')||document.getElementById('rmrDropPlayer');if(!left||!right)return;
-let busy=false;
-function align(){if(busy)return;busy=true;requestAnimationFrame(()=>{const top=left.getBoundingClientRect().top,bottom=right.getBoundingClientRect().bottom;
-const height=Math.round(bottom-top);if(height>160&&height<5000){left.style.setProperty('height',height+'px','important');left.style.setProperty('max-height',height+'px','important')}
-busy=false})}
-align();window.addEventListener('resize',align);if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(align);observer.observe(right);const ad=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');if(ad)observer.observe(ad);const player=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');if(player)observer.observe(player)}
-})();</script><script id="rmrPlaylistDropEverywhere">(()=>{
+</style><script id="rmrPlaylistDropEverywhere">(()=>{
 const left=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist');
 const mainDrop=document.getElementById('rmrMusicDrop');
 if(left&&mainDrop){const forward=e=>{e.preventDefault();e.stopPropagation();mainDrop.dispatchEvent(new DragEvent('drop',{bubbles:false,cancelable:true,dataTransfer:e.dataTransfer}))};left.addEventListener('dragover',e=>{if(e.dataTransfer?.types?.includes('Files')){e.preventDefault();left.classList.add('rmrProgramDragOver')}});left.addEventListener('dragleave',e=>{if(!left.contains(e.relatedTarget))left.classList.remove('rmrProgramDragOver')});left.addEventListener('drop',e=>{left.classList.remove('rmrProgramDragOver');if(e.dataTransfer?.files?.length)forward(e)},true)}
 const right=document.getElementById('rmrProgramMusicClone');if(right){const area=right.querySelector('#program2_playlist');const picker=right.querySelector('#program2_musicFiles');if(area&&picker){area.addEventListener('click',e=>{if(e.target===area)picker.click()})}}
+})();</script><style id="rmrMatchedPlaylistBottomStyle">
+#rmrProgramMusicClone .rmrInlineMusicPlaylist{height:auto!important;max-height:none!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important}
+#rmrProgramMusicClone #program2_playlist{height:auto!important;max-height:none!important;min-height:210px!important;flex:1 1 auto!important;box-sizing:border-box!important}
+</style>
+<script id="rmrMatchedPlaylistBottomScript">(()=>{
+const left=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist');
+const right=document.querySelector('#rmrProgramMusicClone .rmrInlineMusicPlaylist');
+if(!left||!right)return;
+let scheduled=false;
+function match(){if(scheduled)return;scheduled=true;requestAnimationFrame(()=>{
+scheduled=false;
+const target=Math.round(left.getBoundingClientRect().bottom-right.getBoundingClientRect().top);
+if(target>220&&target<8000){right.style.setProperty('min-height',target+'px','important')}
+})}
+match();window.addEventListener('resize',match);
+if(window.ResizeObserver){const obs=new ResizeObserver(match);obs.observe(left);const deck=document.querySelector('#rmrProgramMusicClone>.rmrDeck');if(deck)obs.observe(deck)}
 })();</script></body></html>
