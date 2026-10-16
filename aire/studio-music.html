@@ -1285,12 +1285,39 @@ async function blockResolve(f){
  try{return await request}finally{rmResolveInFlight.delete(f.query)}
 }
 async function blockSearchResolve(f){
- const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(f.query+' High Quality Audio'));
+ const response=await fetch('/api/ytmusic-search?q='+encodeURIComponent(f.query));
  const data=await response.json();
- if(!response.ok)throw Error('No se pudo buscar la grabación');
- const candidates=(data.results||[]).filter(x=>x.id&&Number(x.durationSeconds||0)<1200&&!/full\\s*album|complete\\s*album/i.test(x.title||''));
- if(!candidates.length)throw Error('No hay grabación reproducible');
- f.videoId=candidates[0].id;f.durationSeconds=Number(candidates[0].durationSeconds)||0;rmVideoCache[f.query]={id:f.videoId,durationSeconds:f.durationSeconds};try{localStorage.setItem(rmVideoCacheKey,JSON.stringify(rmVideoCache))}catch(_){}refreshBlockDurations();return f.videoId;
+ if(!response.ok)throw Error(data.error||'No se pudo buscar la grabación');
+ // No elegir el primer resultado: contrastar artista, canción y duración de pista.
+ const parts=f.name.split(' — '),artist=(parts[0]||'').toLowerCase(),song=(parts.slice(1).join(' — ')||'').toLowerCase();
+ const norm=x=>String(x||'').toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+ const artistWords=norm(artist).split(' ').filter(Boolean),songWords=norm(song).split(' ').filter(Boolean);
+ const valid=(data.results||[]).filter(x=>{
+  const duration=Number(x.durationSeconds||0),title=norm(x.title),who=norm(x.artist||x.author||x.channel||'');
+  if(!/^[A-Za-z0-9_-]{11}$/.test(x.id||''))return false;
+  if(duration<90||duration>720)return false;
+  if(/full album|complete album|entire album|album completo|full lp|discography|playlist|compilation|reaction|review|interview|tracklist/.test(title))return false;
+  if(!songWords.every(w=>title.split(' ').includes(w)))return false;
+  if(!artistWords.every(w=>(title+' '+who).split(' ').includes(w)))return false;
+  return true;
+ });
+ if(!valid.length)throw Error('No hay una pista individual que coincida con artista, título y duración');
+ // Favorecer las pistas cuya duración sea cercana a la edición de estudio cuando esté documentada.
+ const expected=Number(f.expectedDurationSeconds||0);
+ valid.sort((x,y)=>{
+  const score=z=>{
+   const title=norm(z.title),duration=Number(z.durationSeconds||0);
+   const studio=/(official audio|provided to youtube|topic|remaster|audio)/.test(title)?4:0;
+   const live=/(live|concert|cover|karaoke|tribute)/.test(title)?-8:0;
+   return studio+live+(expected?Math.max(-8,8-Math.abs(duration-expected)/8):0);
+  };
+  return score(y)-score(x);
+ });
+ const chosen=valid[0];
+ f.videoId=chosen.id;f.durationSeconds=Number(chosen.durationSeconds)||0;
+ rmVideoCache[f.query]={id:f.videoId,durationSeconds:f.durationSeconds};
+ try{localStorage.setItem(rmVideoCacheKey,JSON.stringify(rmVideoCache))}catch(_){}
+ refreshBlockDurations();return f.videoId;
 }
 // Vigilancia antisilencios: detecta avance congelado cerca del final, no silencio acústico de YouTube.
 let rmSilenceLastTrack=-1,rmSilenceLastBlock=-1,rmSilenceLastPosition=-1,rmSilenceLastProgressAt=0;
