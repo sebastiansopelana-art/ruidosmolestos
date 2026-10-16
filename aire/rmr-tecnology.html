@@ -1225,22 +1225,22 @@ header .header-actions #rmrAdTopStatus.rmrLiveInfoTicker{position:relative!impor
 </style>
 <script id="rmrLiveInfoTickerScript">
 (()=>{
-const bar=document.getElementById('rmrAdTopStatus');if(!bar)return;
-bar.classList.add('rmrLiveInfoTicker');
-const viewport=document.createElement('div');viewport.id='rmrLiveInfoViewport';
-const label=document.createElement('span');label.id='rmrLiveInfoText';viewport.append(label);bar.append(viewport);
-bar.title='Información meteorológica y titulares · clic para abrir noticia';
-let items=[{text:'CLIMA Y NOTICIAS · conectando…',url:''}],index=0;
-const show=()=>{const item=items[index%items.length];label.textContent=item.text;bar.style.cursor=item.url?'pointer':'default';bar.title=item.url?'Abrir noticia completa: '+item.text:item.text};
-bar.addEventListener('click',e=>{const item=items[index%items.length];if(item.url){e.preventDefault();e.stopPropagation();window.open(item.url,'_blank','noopener,noreferrer')}});
-setInterval(()=>{index=(index+1)%items.length;show()},9000);show();
-const getJson=async(url)=>{const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),9000);try{const response=await fetch(url,{signal:controller.signal});if(!response.ok)throw Error('HTTP '+response.status);return await response.json()}finally{clearTimeout(timeout)}};
-let weather={text:'CLIMA · esperando ubicación',url:''},headlines=[];
-const render=()=>{items=[weather,...headlines].filter(x=>x?.text);if(!items.length)items=[{text:'INFORMACIÓN · sin conexión',url:''}];index=0;show()};
-const weatherAt=async(lat,lon)=>{try{const w=await getJson('https://api.open-meteo.com/v1/forecast?latitude='+encodeURIComponent(lat)+'&longitude='+encodeURIComponent(lon)+'&current=temperature_2m,weather_code&timezone=auto');let city='UBICACIÓN ACTUAL';try{const geo=await getJson('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent('San Martín de los Andes')+'&count=1&language=es');void geo}catch(_){}const code=w.current?.weather_code;const condition=code===0?'DESPEJADO':code<=3?'NUBOSIDAD':code<=48?'NIEBLA':code<=67?'LLUVIA':code<=77?'NIEVE':code<=82?'CHAPARRONES':code<=86?'NIEVE':code>=95?'TORMENTA':'VARIABLE';weather={text:'CLIMA · '+city+' · '+Math.round(w.current.temperature_2m)+'°C · '+condition,url:''};render()}catch(e){weather={text:'CLIMA · datos no disponibles',url:''};render()}};
-if(navigator.geolocation){navigator.geolocation.getCurrentPosition(p=>weatherAt(p.coords.latitude,p.coords.longitude),()=>{weather={text:'CLIMA · activá ubicación para datos locales',url:''};render()},{timeout:9000,maximumAge:600000})}else{weather={text:'CLIMA · ubicación no disponible',url:''};render()}
-const news=async()=>{try{const d=await getJson('https://api.gdeltproject.org/api/v2/doc/doc?query=lang:spanish&mode=artlist&maxrecords=12&format=json&sort=datedesc');headlines=(d.articles||[]).filter(a=>a.title&&/^https:\/\//.test(a.url||'')).slice(0,8).map(a=>({text:'NOTICIAS · '+a.title,url:a.url}));if(!headlines.length)throw Error('Sin titulares');render()}catch(e){headlines=[{text:'NOTICIAS · titulares temporalmente no disponibles',url:''}];render()}};
-news();setInterval(news,15*60*1000);setInterval(()=>{if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>weatherAt(p.coords.latitude,p.coords.longitude),()=>{}, {timeout:8000,maximumAge:900000})},20*60*1000);
+const header=document.querySelector('body>header'),clock=document.getElementById('clock');if(!header||!clock)return;
+const bar=document.createElement('div');bar.id='rmrInformationTicker';bar.className='rmrLiveInfoTicker';bar.setAttribute('aria-label','Marquesina de clima y noticias');const label=document.createElement('span');label.id='rmrLiveInfoText';bar.append(label);header.insertBefore(bar,clock);
+let country=(localStorage.getItem('rmrCountryCode')||'AR').toUpperCase(),city=localStorage.getItem('rmrWeatherCity')||'San Martín de los Andes',coords=null;
+let weather={text:'CLIMA · obteniendo datos…',url:''},headlines=[],index=0,items=[];
+const urgent=/terremoto|tsunami|evacuaci[oó]n|alerta roja|emergencia nacional|atentado|explosi[oó]n|masacre|cat[aá]strofe|incendio forestal|inundaci[oó]n grave|estado de emergencia/i;
+const show=()=>{const item=items[index%items.length];if(!item)return;label.textContent=item.text;bar.classList.toggle('rmrBreaking',!!item.url&&urgent.test(item.text));bar.title=item.url?'Abrir noticia: '+item.text:item.text;bar.style.cursor=item.url?'pointer':'default'};
+const render=()=>{items=[weather,...headlines];index=0;show()};
+bar.addEventListener('click',()=>{const item=items[index%items.length];if(item?.url)window.open(item.url,'_blank','noopener,noreferrer')});
+setInterval(()=>{index=(index+1)%items.length;show()},8500);
+async function json(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),9000);try{const res=await fetch(url,{signal:controller.signal});if(!res.ok)throw Error('HTTP '+res.status);return await res.json()}finally{clearTimeout(timer)}}
+const describe=c=>c===0?'DESPEJADO':c<=3?'PARCIALMENTE NUBLADO':c<=48?'NIEBLA':c<=67?'LLUVIA':c<=77?'NIEVE':c<=82?'CHAPARRONES':c<=86?'NIEVE':c>=95?'TORMENTA':'VARIABLE';
+async function loadWeather(){try{let loc=coords;if(!loc){const g=await json('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=es');const p=g.results?.[0];if(!p)throw Error('Localidad no encontrada');loc={latitude:p.latitude,longitude:p.longitude};city=p.name}const w=await json('https://api.open-meteo.com/v1/forecast?latitude='+loc.latitude+'&longitude='+loc.longitude+'&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=auto');const c=w.current;weather={text:'CLIMA · '+city.toUpperCase()+' · '+Math.round(c.temperature_2m)+'°C · '+describe(c.weather_code)+' · HUMEDAD '+c.relative_humidity_2m+'% · VIENTO '+Math.round(c.wind_speed_10m)+' KM/H',url:''}}catch(e){weather={text:'CLIMA · información no disponible',url:''}}render()}
+async function loadNews(){try{const region=country==='AR'?'Argentina':country==='CL'?'Chile':country==='UY'?'Uruguay':country==='ES'?'España':country==='MX'?'México':country==='CO'?'Colombia':country==='PE'?'Perú':country==='BR'?'Brasil':country==='US'?'United States':country;const query=encodeURIComponent('('+region+')');const d=await json('https://api.gdeltproject.org/api/v2/doc/doc?query='+query+'&mode=artlist&maxrecords=20&format=json&sort=datedesc');headlines=(d.articles||[]).filter(a=>a.title&&/^https:\/\//.test(a.url||'')).slice(0,10).map(a=>({text:'NOTICIAS · '+a.title,url:a.url}));if(!headlines.length)throw Error('Sin noticias')}catch(e){headlines=[{text:'NOTICIAS · titulares no disponibles por el momento',url:''}]}render()}
+render();loadWeather();loadNews();setInterval(loadWeather,20*60*1000);setInterval(loadNews,15*60*1000);
+if(!localStorage.getItem('rmrWeatherCity')&&navigator.geolocation){navigator.geolocation.getCurrentPosition(async p=>{coords={latitude:p.coords.latitude,longitude:p.coords.longitude};try{const d=await json('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city)+'&count=1&language=es');void d}catch(e){}loadWeather()},()=>{}, {timeout:6500,maximumAge:600000})}
+window.rmrSetInfoRegion=(code,place)=>{country=String(code||'AR').toUpperCase();city=String(place||city);coords=null;localStorage.setItem('rmrCountryCode',country);localStorage.setItem('rmrWeatherCity',city);loadWeather();loadNews()};
 })();
 </script><style id="rmrTickerFullHeaderAndAlerts">
 header{display:flex!important;align-items:center!important;flex-wrap:nowrap!important;gap:9px!important}
@@ -1260,4 +1260,14 @@ const severe=/\b(terremoto|tsunami|evacuaci[oó]n|alerta roja|emergencia naciona
 const sync=()=>{const isNews=text.textContent.startsWith('NOTICIAS · ');bar.classList.toggle('rmrBreaking',isNews&&severe.test(text.textContent))};
 new MutationObserver(sync).observe(text,{childList:true,characterData:true,subtree:true});sync();
 })();
-</script></body></html>
+</script><style id="rmrSingleHeaderTickerLayout">
+body>header{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;gap:9px!important}
+body>header>.brand{flex:0 0 auto!important;order:0!important}
+body>header>.header-actions{display:contents!important}
+body>header>#rmrInformationTicker{order:1!important;position:relative!important;display:flex!important;align-items:center!important;flex:1 1 0!important;min-width:0!important;width:auto!important;height:34px!important;overflow:hidden!important;border:1px solid #42677d!important;border-radius:5px!important;background:#102431!important;padding:0 12px!important;box-sizing:border-box!important}
+body>header #clock{order:2!important;flex:0 0 auto!important}
+body>header .header-actions>a{order:3!important;flex:0 0 auto!important}
+#rmrInformationTicker #rmrLiveInfoText{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:#eaf7ff!important;font-size:12px!important}
+@keyframes rmrTickerCriticalFlash{0%,49%{background:#a00d20}50%,100%{background:#3b0811}}
+body>header>#rmrInformationTicker.rmrBreaking{animation:rmrTickerCriticalFlash 1s steps(1,end) infinite!important;border-color:#ff4455!important}
+</style></body></html>
