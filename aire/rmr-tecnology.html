@@ -1225,4 +1225,45 @@ header .header-actions #rmrAdTopStatusText{display:block!important;white-space:n
 .rmrAdBodySplit>.rmrAdControlsColumn>.rmrAdVuPanel{overflow:hidden!important;display:flex!important;flex-direction:column!important;padding-bottom:6px!important;box-sizing:border-box!important}
 .rmrAdBodySplit>.rmrAdControlsColumn>.rmrAdVuPanel>.rmrAdVuBars{display:flex!important;flex:1 1 auto!important;height:auto!important;min-height:0!important;max-height:none!important;align-items:flex-end!important;overflow:hidden!important}
 .rmrAdBodySplit>.rmrAdControlsColumn>.rmrAdVuPanel>.rmrAdVuBars>i{max-height:100%!important}
-</style></body></html>
+</style><style id="rmrClonedMusicDeckStyle">
+#rmrProgramMusicClone{display:flex!important;flex-direction:column!important;gap:8px!important;min-width:0!important;width:100%!important}
+#rmrProgramMusicClone .rmrDeck{width:100%!important}
+#rmrProgramMusicClone .rmrInlineMusicPlaylist{width:100%!important}
+#rmrProgramMusicClone .rmrNativeMusicPicker{display:inline-flex!important}
+#rmrProgramMusicClone .rmrNativeMusicPicker[hidden]{display:inline-flex!important}
+#rmrProgramMusicClone .rmrProgramHidden{display:none!important}
+</style>
+<script id="rmrCloneMainMusicPlayer">
+(()=>{
+const old=document.getElementById('rmrDropPlayer'),main=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck'),playlist=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist');
+if(!old||!main||!playlist)return;
+const holder=document.createElement('div');holder.id='rmrProgramMusicClone';
+const deck=main.cloneNode(true),list=playlist.cloneNode(true);holder.append(deck,list);
+holder.querySelectorAll('[id]').forEach(el=>{el.id='program2_'+el.id});
+holder.querySelectorAll('label[for]').forEach(el=>el.setAttribute('for','program2_'+el.getAttribute('for')));
+holder.querySelectorAll('input[type=file]').forEach(el=>{el.value='';el.removeAttribute('hidden')});
+holder.querySelectorAll('[data-rmr-ads-window]').forEach(el=>el.classList.add('rmrProgramHidden'));
+holder.querySelectorAll('.rmrPlayerNextBreak,.side,.rmrIntroPanel').forEach(el=>el.classList.add('rmrProgramHidden'));
+holder.querySelector('.rmrDeckTitle').textContent='REPRODUCTOR DE MÚSICA · PROGRAMA 2';
+holder.querySelector('.rmrInlineMusicPlaylist>.paneltitle').textContent='PLAYLIST INDEPENDIENTE · PROGRAMA 2';
+const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];let pos=-1,objectUrl=null;
+const set=(id,value)=>{const e=$(id);if(e)e.textContent=value};
+const fmt=n=>Number.isFinite(n)?String(Math.floor(n/60)).padStart(2,'0')+':'+String(Math.floor(n%60)).padStart(2,'0'):'00:00';
+const clean=n=>n.replace(/\.[^.]+$/,'');
+function render(){const area=$('playlist');area.replaceChildren();tracks.forEach((f,i)=>{const row=document.createElement('div');row.className='track'+(i===pos?' active':'');const name=document.createElement('span');name.className='name';name.textContent=(i+1)+'. '+f.name;row.append(name);row.ondblclick=()=>start(i);area.append(row)});set('count',tracks.length+' temas');set('rmrNextSong',tracks[pos+1]?.name||'Sin siguiente tema')}
+function start(i){if(i<0||i>=tracks.length)return;pos=i;audio.pause();if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(tracks[i]);audio.src=objectUrl;set('song',clean(tracks[i].name));set('sub','PROGRAMA 2 · '+(i+1)+' / '+tracks.length);set('rmrMusicPlaybackStatus','REPRODUCIENDO');audio.play().catch(e=>set('sub','Error de audio: '+e.message));render()}
+const add=files=>{for(const f of files)if(f.type.startsWith('audio/')||/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(f.name))tracks.push(f);render()};
+$('play').onclick=()=>{if(!audio.src){start(pos<0?0:pos);return}if(audio.paused)audio.play().catch(e=>set('sub',e.message));else audio.pause()};
+$('stop').onclick=()=>{audio.pause();audio.currentTime=0;set('rmrMusicPlaybackStatus','DETENIDO')};
+$('next').onclick=()=>start(pos+1);$('prev').onclick=()=>start(Math.max(0,pos-1));
+audio.onended=()=>{if(pos+1<tracks.length)start(pos+1);else set('rmrMusicPlaybackStatus','FINALIZADO')};
+audio.ontimeupdate=()=>{set('elapsed',fmt(audio.currentTime));set('total',fmt(audio.duration));if($('seek')&&audio.duration)$('seek').value=String(Math.round(audio.currentTime/audio.duration*100))};
+$('seek').oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*Number(e.target.value)/100};
+if($('volume')){$('volume').oninput=e=>audio.volume=Number(e.target.value)/100;audio.volume=Number($('volume').value)/100}
+const picker=$('musicFiles');if(picker)picker.onchange=e=>{add(e.target.files);e.target.value=''};
+const drop=$('rmrMusicDrop');if(drop){drop.onclick=()=>picker?.click();drop.ondragover=e=>e.preventDefault();drop.ondrop=e=>{e.preventDefault();add(e.dataTransfer.files)}}
+for(const id of ['rmrClearList','clear'])if($(id))$(id).onclick=()=>{audio.pause();tracks.length=0;pos=-1;set('song','Sin audio en reproducción');render()};
+for(const id of ['rmrRestoreList','rmrSaveList','rmrShuffle','rmrRepeat','refresh','insertAd','rmrBackupFile','rmrIntroSeconds'])if($(id))$(id).classList.add('rmrProgramHidden');
+old.replaceWith(holder);set('song','Sin audio en reproducción');set('sub','Programa 2 en espera');set('rmrNextSong','Sin siguiente tema');set('elapsed','00:00');set('total','00:00');render();
+})();
+</script></body></html>
