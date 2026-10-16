@@ -1271,7 +1271,7 @@ function blockEnsureYT(){
  if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)}
 }
 blockEnsureYT();
-const rmVideoCacheKey='rm-program-video-ids-v2-validated';
+const rmVideoCacheKey='rm-program-video-ids-v3-official-only';
 let rmVideoCache={};
 try{rmVideoCache=JSON.parse(localStorage.getItem(rmVideoCacheKey)||'{}')||{}}catch(_){rmVideoCache={}}
 const rmResolveInFlight=new Map();
@@ -1299,9 +1299,16 @@ async function blockSearchResolve(f){
   if(/full album|complete album|entire album|album completo|full lp|discography|playlist|compilation|reaction|review|interview|tracklist/.test(title))return false;
   if(!songWords.every(w=>title.split(' ').includes(w)))return false;
   if(!artistWords.every(w=>(title+' '+who).split(' ').includes(w)))return false;
+  // Solo fuentes identificadas como oficiales por el proveedor o canales Topic del artista.
+  // Un título que diga Official Audio NO constituye prueba de procedencia.
+  const channel=norm(x.channel||x.author||x.artist||'');
+  const officialFlag=x.isOfficial===true||x.official===true||x.isOfficialArtistChannel===true;
+  const artistTopic=channel.endsWith(' topic')&&artistWords.every(w=>channel.split(' ').includes(w));
+  const distributor=Boolean(x.isProvidedToYouTubeByLabel===true||x.isLabelRelease===true);
+  if(!officialFlag&&!artistTopic&&!distributor)return false;
   return true;
  });
- if(!valid.length)throw Error('No hay una pista individual que coincida con artista, título y duración');
+ if(!valid.length)throw Error('No se encontró grabación oficial verificable; no se selecciona audio alternativo');
  // Favorecer las pistas cuya duración sea cercana a la edición de estudio cuando esté documentada.
  const expected=Number(f.expectedDurationSeconds||0);
  valid.sort((x,y)=>{
