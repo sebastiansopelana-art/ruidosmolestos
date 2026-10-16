@@ -1286,9 +1286,22 @@ const listArea=$('playlist');if(listArea){listArea.ondragover=e=>{e.preventDefau
 #rmrProgramMusicClone #program2_playlist.rmrProgramDragOver{outline:2px dashed #8fd5ff!important;outline-offset:-5px;background:#16394d!important}
 </style><script id="rmrPlaylistDropEverywhere">(()=>{
 const left=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist');
-const mainDrop=document.getElementById('rmrMusicDrop');
-if(left&&mainDrop){const forward=e=>{e.preventDefault();e.stopPropagation();mainDrop.dispatchEvent(new DragEvent('drop',{bubbles:false,cancelable:true,dataTransfer:e.dataTransfer}))};left.addEventListener('dragover',e=>{if(e.dataTransfer?.types?.includes('Files')){e.preventDefault();left.classList.add('rmrProgramDragOver')}});left.addEventListener('dragleave',e=>{if(!left.contains(e.relatedTarget))left.classList.remove('rmrProgramDragOver')});left.addEventListener('drop',e=>{left.classList.remove('rmrProgramDragOver');if(e.dataTransfer?.files?.length)forward(e)},true)}
-const right=document.getElementById('rmrProgramMusicClone');if(right){const area=right.querySelector('#program2_playlist');const picker=right.querySelector('#program2_musicFiles');if(area&&picker){area.addEventListener('click',e=>{if(e.target===area)picker.click()})}}
+const mainInput=document.getElementById('musicFiles');
+const right=document.querySelector('#rmrProgramMusicClone .rmrInlineMusicPlaylist');
+const rightInput=document.getElementById('program2_musicFiles');
+const valid=f=>f.type.startsWith('audio/')||/\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(f.name);
+async function collect(dt){
+const items=Array.from(dt.items||[]);
+async function walk(entry){if(entry.isFile)return new Promise(resolve=>entry.file(f=>resolve([f]),()=>resolve([])));if(!entry.isDirectory)return [];const reader=entry.createReader(),entries=[];while(true){const batch=await new Promise(resolve=>reader.readEntries(resolve,()=>resolve([])));if(!batch.length)break;entries.push(...batch)}return(await Promise.all(entries.map(walk))).flat()}
+const entries=items.map(x=>x.webkitGetAsEntry?.()).filter(Boolean);
+return(entries.length?(await Promise.all(entries.map(walk))).flat():Array.from(dt.files||[])).filter(valid);
+}
+function attach(area,input){if(!area||!input)return;
+area.addEventListener('dragover',e=>{if(e.dataTransfer?.types?.includes('Files')){e.preventDefault();e.dataTransfer.dropEffect='copy';area.classList.add('rmrProgramDragOver')}},true);
+area.addEventListener('dragleave',e=>{if(!area.contains(e.relatedTarget))area.classList.remove('rmrProgramDragOver')});
+area.addEventListener('drop',async e=>{if(!e.dataTransfer?.types?.includes('Files'))return;e.preventDefault();e.stopImmediatePropagation();area.classList.remove('rmrProgramDragOver');try{const files=await collect(e.dataTransfer);if(!files.length)return;const transfer=new DataTransfer();files.forEach(f=>transfer.items.add(f));input.files=transfer.files;input.dispatchEvent(new Event('change',{bubbles:true}))}catch(err){console.error('Error al agregar archivos a playlist',err)}},true);
+}
+attach(left,mainInput);attach(right,rightInput);
 })();</script><style id="rmrMatchedPlaylistBottomStyle">
 #rmrProgramMusicClone .rmrInlineMusicPlaylist{height:auto!important;max-height:none!important;display:flex!important;flex-direction:column!important;box-sizing:border-box!important}
 #rmrProgramMusicClone #program2_playlist{height:auto!important;max-height:none!important;min-height:210px!important;flex:1 1 auto!important;box-sizing:border-box!important}
