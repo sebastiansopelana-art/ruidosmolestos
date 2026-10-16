@@ -1143,4 +1143,23 @@ let context,analyser,buffer,connected=false;
 function connect(){if(connected)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;context=new C();const source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);source.connect(analyser);analyser.connect(context.destination);connected=true}catch(e){state.textContent='SIN MEDICIÓN'}}
 function tick(){const active=!audio.paused&&!audio.ended&&audio.readyState>=2;state.textContent=active?'EN EMISIÓN':'EN ESPERA';if(active){connect();if(context?.state==='suspended')context.resume().catch(()=>{});}if(active&&analyser){analyser.getByteFrequencyData(buffer);cells.forEach((el,i)=>{const idx=Math.min(buffer.length-1,Math.floor(i*buffer.length/cells.length));el.style.height=Math.max(5,Math.min(100,buffer[idx]/255*110))+'%'})}else cells.forEach(el=>el.style.height='5%');requestAnimationFrame(tick)}
 requestAnimationFrame(tick);
-})();</script></body></html>
+})();</script><script id="rmrAdVuEdgeSynchronizer">
+/* Match the VU's visible bottom to the list's visible bottom, not an assumed CSS height. */
+(function(){
+ const sync=()=>{
+  const vu=document.querySelector('.rmrAdBodySplit .rmrAdVuPanel');
+  const list=document.querySelector('.rmrAdBodySplit .rmrAdListColumn');
+  if(!vu||!list)return;
+  const vuTop=vu.getBoundingClientRect().top;
+  const listBottom=list.getBoundingClientRect().bottom;
+  const height=Math.max(0,Math.round((listBottom-vuTop)*100)/100);
+  vu.style.setProperty('height',height+'px','important');
+  vu.style.setProperty('max-height',height+'px','important');
+  vu.style.setProperty('bottom','auto','important');
+ };
+ const schedule=()=>requestAnimationFrame(sync);
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',schedule,{once:true});else schedule();
+ window.addEventListener('resize',schedule);
+ if(document.fonts?.ready)document.fonts.ready.then(schedule);
+})();
+</script></body></html>
