@@ -623,55 +623,57 @@ $('rmrRestoreList').onclick=()=>file.click();file.onchange=async()=>{const f=fil
 })();</script><script id="rmrAdKnobScript">(()=>{const wait=document.getElementById('rmrAdKnob'),exact=document.getElementById('rmrAdExact');if(!wait||!exact)return;function sync(){const isExact=localStorage.getItem('rmrAdPolicy')==='cut';wait.setAttribute('aria-pressed',String(!isExact));exact.setAttribute('aria-pressed',String(isExact));wait.classList.toggle('isSelected',!isExact);exact.classList.toggle('isSelected',isExact)}wait.addEventListener('click',()=>{localStorage.setItem('rmrAdPolicy','wait');sync()});exact.addEventListener('click',()=>{localStorage.setItem('rmrAdPolicy','cut');sync()});window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync()})();</script><script id="rmrMatchAdDeckHeight">(()=>{const music=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck'),ads=document.querySelector('.rmrDualDeck>.rmrAdDeck');if(!music||!ads)return;function sync(){const h=Math.round(music.getBoundingClientRect().height);if(h>0)ads.style.setProperty('height',h+'px','important')}if(window.ResizeObserver)new ResizeObserver(sync).observe(music);window.addEventListener('resize',sync);requestAnimationFrame(sync)})();</script><script id="rmrWideVuScript">(()=>{const audio=document.getElementById('audio'),host=document.getElementById('rmrSpectrumColumns');if(!audio||!host)return;const count=32,columns=[],smooth=new Float32Array(count);for(let i=0;i<count;i++){const bar=document.createElement('div');bar.className='rmrSpectrumColumn';bar.style.height='2%';host.append(bar);columns.push(bar)}let data=null;function tick(){const analyser=window.rmrVuAnalysers?.[0]||window.rmrSilenceSpectrumAnalyser,ctx=window.rmrVuContext;const active=!!(analyser&&ctx?.state==='running'&&!audio.paused&&!audio.ended);if(active){if(!data||data.length!==analyser.frequencyBinCount)data=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(data);const nyquist=ctx.sampleRate/2,binHz=ctx.sampleRate/analyser.fftSize;for(let i=0;i<count;i++){const lo=40*Math.pow(16000/40,i/count),hi=Math.min(nyquist,40*Math.pow(16000/40,(i+1)/count));const from=Math.max(1,Math.floor(lo/binHz)),to=Math.min(data.length,Math.max(from+1,Math.ceil(hi/binHz)));let peak=0;for(let k=from;k<to;k++)peak=Math.max(peak,data[k]);const level=Math.min(100,peak/255*100);smooth[i]=level>smooth[i]?smooth[i]*.35+level*.65:Math.max(level,smooth[i]-3.2)}}else{for(let i=0;i<count;i++)smooth[i]=Math.max(0,smooth[i]-5)}for(let i=0;i<count;i++)columns[i].style.height=Math.max(2,smooth[i]).toFixed(1)+'%';requestAnimationFrame(tick)}requestAnimationFrame(tick)})();</script><script id="rmrAdFollowActive">(()=>{const list=document.getElementById('rmrAdList');if(!list)return;let lastIndex=-1,lastCount=-1;function follow(){const rows=[...list.querySelectorAll('.rmrAdListRow')],active=rows.findIndex(row=>row.classList.contains('isPlaying'));if(active<0){lastIndex=-1;lastCount=rows.length;return}if(active===lastIndex&&rows.length===lastCount)return;lastIndex=active;lastCount=rows.length;const visible=6;if(rows.length<=visible){list.scrollTo({top:0,behavior:'smooth'});return}const firstVisible=Math.max(0,active-visible+1);const row=rows[firstVisible];if(!row)return;const top=row.getBoundingClientRect().top-list.getBoundingClientRect().top+list.scrollTop;list.scrollTo({top:Math.max(0,top),behavior:'smooth'})}new MutationObserver(()=>requestAnimationFrame(follow)).observe(list,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});follow()})();</script><script id="rmrSilenceDropdownScript">(()=>{const root=document.getElementById('rmrSilenceMonitor'),button=document.getElementById('rmrSilenceToggle'),popup=document.getElementById('rmrSilencePopup');if(!root||!button||!popup)return;function setOpen(open){popup.hidden=!open;button.setAttribute('aria-expanded',String(open))}button.addEventListener('click',()=>setOpen(popup.hidden));root.addEventListener('mouseleave',()=>setOpen(false));root.addEventListener('focusout',e=>{if(!root.contains(e.relatedTarget))setOpen(false)});document.addEventListener('pointerdown',e=>{if(!root.contains(e.target))setOpen(false)});document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false)})})();</script><script id="rmrMusicPlaybackIndicator">(()=>{const audio=document.getElementById('audio'),panel=document.querySelector('.rmrMusicInfoSide .rmrNowPanel'),spectrum=document.querySelector('.rmrMusicControlSide .rmrVerticalSpectrum'),status=document.getElementById('rmrMusicPlaybackStatus'),song=document.getElementById('song');if(!audio||!panel||!spectrum||!status||!song)return;function sync(){const playing=!audio.paused&&!audio.ended&&!!audio.currentSrc;panel.classList.toggle('rmrMusicIsPlaying',playing);spectrum.classList.toggle('rmrMusicIsPlaying',playing);status.textContent=playing?'SONANDO':audio.paused&&audio.currentSrc?'EN PAUSA':'EN ESPERA';if(playing&&(!song.textContent||song.textContent==='Sin audio en reproducción')){song.textContent=decodeURIComponent(audio.currentSrc.split('/').pop().split('?')[0])||'Audio en reproducción'}}['play','playing','pause','ended','emptied','loadedmetadata','error'].forEach(type=>audio.addEventListener(type,sync));new MutationObserver(sync).observe(song,{childList:true,characterData:true,subtree:true});sync()})();</script><script id="rmrTopAdvertisingStatusLogic">(()=>{
 const box=document.getElementById('rmrAdTopStatus'),label=document.getElementById('rmrAdTopStatusText'),ad=document.getElementById('rmrAdAudio'),music=document.getElementById('audio'),status=document.getElementById('status');
 if(!box||!label||!ad)return;
-let latest='',fault='',faultAt=0,position=0,lastMessage='',motion=null;
+const faults=new Map();let motion=null,lastMessage='',latest='',checkTime=0,verification='checking',schedule=[],observed=[],currentAdStarted=0;
 const format=n=>{n=Math.max(0,Math.ceil(n));return String(Math.floor(n/60)).padStart(2,'0')+':'+String(n%60).padStart(2,'0')};
-const report=(code,detail)=>{fault='ERROR '+code+' · '+String(detail||'Error del sistema').slice(0,150);faultAt=Date.now();position=0;show(true)};
-const mode=()=>document.getElementById('rmrManualMode')?.getAttribute('aria-pressed')==='true'?'MANUAL':'AUTOMÁTICO';
-function messages(){
- const live=window.rmrEngine?.getLiveAds?.(),onAir=!ad.paused&&!ad.ended&&!!ad.currentSrc;
- const items=['SISTEMA OPERATIVO · MODO '+mode()];
- if(onAir){
-   const n=Number(live?.index),total=Array.isArray(live?.files)?live.files.length:0;
-   items.push('PUBLICIDAD AL AIRE · AVISO '+(Number.isFinite(n)?n+1:1)+(total?' DE '+total:'')+(Number.isFinite(ad.duration)?' · '+format(ad.duration-ad.currentTime)+' RESTANTES':''));
- }else{
-   const next=document.getElementById('rmrAdUpcoming')?.textContent?.trim()||'';
-   items.push('PUBLICIDAD EN ESPERA'+(next&&!/consultando|salidas programadas|tanda configurada/i.test(next)?' · '+next:''));
- }
- if(music)items.push(!music.paused&&!music.ended?'REPRODUCTOR DE MÚSICA · REPRODUCIENDO':'REPRODUCTOR DE MÚSICA · EN ESPERA');
- if(!navigator.onLine)items.unshift('AVISO · SIN CONEXIÓN A INTERNET');
- if(fault&&Date.now()-faultAt<120000)items.unshift(fault);
- if(latest&&latest!==fault&&!/consola lista/i.test(latest))items.push('SISTEMA · '+latest);
- box.classList.toggle('isOnAir',onAir);
- box.classList.toggle('isError',!!fault&&Date.now()-faultAt<120000);
- return items;
+function report(code,detail,persistent=false){faults.set(code,{detail:String(detail||'Falla del sistema').slice(0,170),time:Date.now(),persistent});refresh(true)}
+function clear(code){if(faults.delete(code))refresh(true)}
+function scheduleDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open('RMR-Publicidad',1);req.onsuccess=()=>{const db=req.result;if(!db.objectStoreNames.contains('data')){db.close();reject(Error('Sin datos de programación'));return}const tx=db.transaction('data','readonly'),q=tx.objectStore('data').get('config');q.onsuccess=()=>{db.close();resolve(q.result)};q.onerror=()=>{db.close();reject(q.error)}};req.onerror=()=>reject(req.error)})}
+async function verifySchedule(){try{
+ const config=await scheduleDb(),events=config?.events||[],breaks=config?.breaks||[],now=new Date(),today=now.getDay(),date=now.toDateString();
+ schedule=events.filter(e=>Array.isArray(e.days)&&e.days.includes(today)&&/^\d{2}:\d{2}$/.test(e.hour||'')&&breaks.some(b=>b.id===e.breakId)).map(e=>{const [h,m]=e.hour.split(':').map(Number);return{at:new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m).getTime(),id:e.id||e.breakId}}).sort((a,b)=>a.at-b.at);
+ verification='ready';checkTime=Date.now();clear('RMR-PUB-03');
+ // No inventar cumplimiento anterior a la apertura: sólo verificar salidas observadas en esta sesión.
+ const since=Number(sessionStorage.getItem('rmrMonitorSince')||0);if(!since||!Number.isFinite(since))sessionStorage.setItem('rmrMonitorSince',String(Date.now()));
+ const start=Number(sessionStorage.getItem('rmrMonitorSince'));
+ const missed=schedule.filter(e=>e.at>=start&&e.at+10*60000<Date.now()&&!observed.some(t=>Math.abs(t-e.at)<=10*60000));
+ if(missed.length)report('RMR-PUB-02',missed.length+' salida(s) programada(s) sin reproducción comprobada en esta sesión',true);else clear('RMR-PUB-02');
+ if(!schedule.length)report('RMR-PUB-04','No hay tandas programadas para hoy',true);else clear('RMR-PUB-04');
+ }catch(err){verification='unknown';report('RMR-PUB-03','No se pudo verificar la agenda: '+(err?.message||'lectura fallida'),true)}}
+function diagnostic(){
+ const active=[...faults.entries()].filter(([_,v])=>v.persistent||Date.now()-v.time<5*60*1000);
+ const offline=!navigator.onLine;
+ if(offline&&!faults.has('RMR-RED-01'))faults.set('RMR-RED-01',{detail:'Sin conexión a Internet',time:Date.now(),persistent:true});
+ if(!offline)faults.delete('RMR-RED-01');
+ const errors=[...faults.entries()].filter(([_,v])=>v.persistent||Date.now()-v.time<5*60*1000);
+ if(errors.length)return errors.map(([code,v])=>'ERROR '+code+' · '+v.detail);
+ if(verification!=='ready')return ['ESTADO SIN VERIFICAR · Comprobando programación publicitaria'];
+ const start=Number(sessionStorage.getItem('rmrMonitorSince')||Date.now());
+ if(schedule.some(e=>e.at<start))return ['SERVICIO SIN FALLAS DETECTADAS · SALIDAS ANTERIORES SIN VERIFICAR'];
+ return ['SERVICIO NORMAL'];
 }
-function show(force=false){
- const all=messages();if(!all.length)return;
- if(force)position=0;
- const txt=all[position%all.length];if(txt===lastMessage&&!force)return;
- lastMessage=txt;label.textContent=txt;box.title=all.join(' | ');
- if(motion){motion.cancel();motion=null}
- const travel=()=>{const width=box.clientWidth||230,tw=label.scrollWidth||txt.length*8;
- const duration=Math.max(6500,Math.round((width+tw)/58*1000));
- if(typeof label.animate==='function'){
-   motion=label.animate([{transform:'translateX('+(-tw)+'px)'},{transform:'translateX('+width+'px)'}],{duration,easing:'linear',fill:'forwards'});
-   motion.onfinish=()=>{motion=null;position++;lastMessage='';show()};
- }else{
-   label.style.transform='translateX('+(-tw)+'px)';
-   setTimeout(()=>{position++;lastMessage='';show()},duration);
- }};
- requestAnimationFrame(travel);
+function refresh(force=false){
+ const all=diagnostic(),message=all.join('  ◆  ');
+ if(!force&&message===lastMessage)return;
+ lastMessage=message;label.textContent=message;box.title=message;
+ box.classList.toggle('isError',faults.size>0);
+ box.classList.toggle('isOnAir',!ad.paused&&!ad.ended&&!!ad.currentSrc);
+ if(motion){motion.onfinish=null;motion.cancel();motion=null}
+ requestAnimationFrame(()=>{const w=box.clientWidth||230,tw=label.scrollWidth||message.length*8;
+ if(typeof label.animate==='function'){motion=label.animate([{transform:'translateX('+(-tw)+'px)'},{transform:'translateX('+w+'px)'}],{duration:Math.max(6500,Math.round((w+tw)/55*1000)),easing:'linear',iterations:Infinity});}
+ else{label.style.transform='translateX(0)'}
+ });
 }
-window.addEventListener('resize',()=>{lastMessage='';show()});
-if(status)new MutationObserver(()=>{latest=(status.textContent||'').trim().slice(0,160)}).observe(status,{childList:true,characterData:true,subtree:true});
-window.addEventListener('error',e=>{if(e.target instanceof HTMLMediaElement)return;report('JS',e.message||'Error de ejecución')});
-window.addEventListener('unhandledrejection',e=>report('PROMESA',e.reason?.message||String(e.reason||'Operación fallida')));
-for(const [el,code] of [[ad,'AUDIO PUBLICIDAD'],[music,'AUDIO MÚSICA']])if(el)el.addEventListener('error',()=>report(code,el.error?.code?'Código '+el.error.code:'No se pudo reproducir'));
-window.addEventListener('offline',()=>{position=0;show(true)});
-window.addEventListener('online',()=>{position=0;show(true)});
-
-setInterval(()=>{const onAir=!ad.paused&&!ad.ended&&!!ad.currentSrc;box.classList.toggle('isOnAir',onAir);if(fault&&Date.now()-faultAt>=120000){fault='';box.classList.remove('isError')}},1000);
-show(true);
+ad.addEventListener('playing',()=>{currentAdStarted=Date.now();observed.push(currentAdStarted);clear('RMR-AUD-01');refresh(true)});
+ad.addEventListener('error',()=>report('RMR-AUD-01','Falla en reproductor de publicidad · código multimedia '+(ad.error?.code||'desconocido')));
+music?.addEventListener('error',()=>report('RMR-AUD-02','Falla en reproductor de música · código multimedia '+(music.error?.code||'desconocido')));
+window.addEventListener('error',e=>{if(e.target instanceof HTMLMediaElement)return;report('RMR-SYS-01',e.message||'Error de ejecución')});
+window.addEventListener('unhandledrejection',e=>report('RMR-SYS-02',e.reason?.message||String(e.reason||'Operación fallida')));
+window.addEventListener('offline',()=>refresh(true));window.addEventListener('online',()=>refresh(true));
+window.addEventListener('resize',()=>refresh(true));
+if(status)new MutationObserver(()=>{const txt=(status.textContent||'').trim();if(txt===latest)return;latest=txt;if(/^(error|fall[aó]|no se pudo|problema)/i.test(txt))report('RMR-SYS-03',txt);}).observe(status,{childList:true,characterData:true,subtree:true});
+window.rmrDiagnostics={report,clear,refresh,getErrors:()=>[...faults.entries()].map(([code,v])=>({code,detail:v.detail}))};
+verifySchedule();setInterval(verifySchedule,60000);setInterval(()=>{const before=[...faults.keys()].join('|');for(const [k,v] of faults)if(!v.persistent&&Date.now()-v.time>=5*60000)faults.delete(k);if(before!==[...faults.keys()].join('|'))refresh(true)},5000);
+refresh(true);
 })();</script><script id="rmrAutoRecoveryGuard">(()=>{
 const checkbox=document.getElementById('rmrAutoRecoveryEnabled'),state=document.getElementById('rmrAutoRecoveryStatus'),ad=document.getElementById('rmrAdAudio');
 if(!checkbox||!state||!ad)return;
