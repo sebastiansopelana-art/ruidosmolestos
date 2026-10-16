@@ -1206,7 +1206,7 @@ header .header-actions #rmrAdTopStatus{position:relative!important;left:auto!imp
 </style><script id="rmrMoveMarqueeAndPads">
 (function(){
  const bar=document.getElementById('rmrAdTopStatus'),clock=document.getElementById('clock'),pads=document.getElementById('rmrJinglePads'),auto=document.getElementById('rmrAutoMode');
- if(bar&&clock)clock.insertAdjacentElement('beforebegin',bar);
+ if(bar){bar.hidden=true;bar.style.setProperty('display','none','important');bar.setAttribute('aria-hidden','true')}
  if(pads&&auto)auto.insertAdjacentElement('afterend',pads);
 })();
 </script><style id="rmrModePadsAlignedFix">
@@ -1219,4 +1219,4 @@ header .header-actions #rmrAdTopStatusText{display:block!important;white-space:n
 .rmrDualTitle .rmrTitleModes #rmrJinglePads{margin:0 8px!important;align-self:stretch!important;align-items:stretch!important;border-left:2px solid #7b9aac!important;border-right:2px solid #7b9aac!important;padding:0 8px!important;box-sizing:border-box!important;gap:4px!important}
 .rmrDualTitle .rmrTitleModes #rmrJinglePads .rmrJinglePad{height:48px!important;min-height:48px!important;max-height:48px!important;align-self:stretch!important;box-sizing:border-box!important}
 </style>
-</body></html>
+<style id="rmrMarqueeRemovalFinal">#rmrAdTopStatus,#rmrAdTopStatusText{display:none!important;visibility:hidden!important}header .header-actions{display:flex!important}</style></body></html>
