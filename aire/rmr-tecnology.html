@@ -551,8 +551,8 @@ content:""!important;position:absolute!important;z-index:-1!important;pointer-ev
 </style><style id="rmrMarqueePreciselyAligned">
 .rmrDualTitle{position:relative!important;min-height:48px!important;flex-wrap:nowrap!important}
 .rmrDualTitle>.rmrTitleModes{position:static!important;display:flex!important;align-items:center!important;flex-wrap:nowrap!important;gap:6px!important;margin-left:auto!important}
-.rmrDualTitle #rmrAdTopStatus{position:absolute!important;left:var(--rmr-bar-left,45%)!important;width:var(--rmr-bar-width,220px)!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;flex:none!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important}
-.rmrDualTitle #rmrAutoMode,.rmrDualTitle #rmrManualMode,.rmrDualTitle #rmrOpenSettings{flex:0 0 auto!important}
+.rmrDualTitle .rmrTitleModes #rmrAdTopStatus{position:absolute!important;left:var(--rmr-bar-left,45%)!important;width:var(--rmr-bar-width,220px)!important;right:auto!important;top:50%!important;transform:translateY(-50%)!important;margin:0!important;flex:0 0 auto!important;min-width:0!important;max-width:none!important;box-sizing:border-box!important;z-index:1!important}
+.rmrDualTitle .rmrTitleModes #rmrAutoMode,.rmrDualTitle .rmrTitleModes #rmrManualMode,.rmrDualTitle .rmrTitleModes #rmrOpenSettings{position:relative!important;z-index:2!important;flex:0 0 auto!important}
 </style><style id="rmrAssetLibraryStyle">
 .rmrAssetPage{padding:18px!important}.rmrAssetDrop{display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;min-height:145px;border:2px dashed #57a5c6;border-radius:12px;background:#102d40;color:#e1f4ff;cursor:pointer;text-align:center;padding:20px}.rmrAssetDrop.over{background:#24607c;border-color:#91e4ff}.rmrAssetDrop span{font-size:12px;color:#b4d3e4}.rmrAssetMessage{margin:12px 0;font-size:12px;color:#b9d8ea}.rmrAssetList{display:flex;flex-direction:column;gap:7px}.rmrAssetRow{display:flex;align-items:center;gap:8px;padding:9px;background:#0c2537;border:1px solid #416c85;border-radius:8px;cursor:grab}.rmrAssetRow.over{border-top:3px solid #7fe0ff}.rmrAssetRow.dragging{opacity:.45}.rmrAssetGrip{font-size:22px;color:#9fe0f6}.rmrAssetName{flex:1;min-width:0;overflow-wrap:anywhere}.rmrAssetRow button{padding:7px 9px;font-size:11px}@media(max-width:650px){.rmrAssetRow{flex-wrap:wrap}.rmrAssetName{flex-basis:75%}}
 </style><style id="rmrInstitutionalSettingsStyle">
@@ -793,7 +793,8 @@ if(!title||!bar||!auto||!ads)return;
 function align(){
  const t=title.getBoundingClientRect(),a=ads.querySelector('.rmrDeckTitle')?.getBoundingClientRect()||ads.getBoundingClientRect(),b=auto.getBoundingClientRect();
  const left=Math.round(a.left-t.left),right=Math.round(b.left-t.left-8);
- if(right-left>55){title.style.setProperty('--rmr-bar-left',left+'px');title.style.setProperty('--rmr-bar-width',(right-left)+'px')}
+ if(right-left>55){title.style.setProperty('--rmr-bar-left',left+'px');title.style.setProperty('--rmr-bar-width',(right-left)+'px');bar.style.visibility='visible'}
+ else {bar.style.visibility='hidden'}
 }
 if(window.ResizeObserver){const ro=new ResizeObserver(align);ro.observe(title);ro.observe(ads);ro.observe(auto)}
 window.addEventListener('resize',align);requestAnimationFrame(align);
