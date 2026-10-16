@@ -2,6 +2,48 @@
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REDACCIÓN · RUIDOS MOLESTOS</title>
 <style>
 *{box-sizing:border-box}html,body{margin:0;height:100%;background:#151c1b;color:#e7e4d9;font-family:Arial,Helvetica,sans-serif}button,select{font:inherit}button{cursor:pointer;color:#e7e4d9;background:#293330;border:1px solid #66766a;border-radius:6px;padding:9px 13px;font-weight:700}button:hover{background:#3b4b41}button:focus-visible,textarea:focus-visible{outline:2px solid #d9b48a;outline-offset:2px}.primary{background:#526b58;border-color:#a9c6b1}.active{background:#637e6b;border-color:#d9b48a}.shell{height:100dvh;display:flex;flex-direction:column}.bar{flex:none;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:11px 16px;background:#293330;border-bottom:1px solid #66766a}.brand{margin-right:auto;min-width:190px}.brand strong{display:block;letter-spacing:1.6px;font-size:15px}.brand small{color:#d9b48a;letter-spacing:1px;font-size:10px}.group{display:flex;gap:6px;align-items:center}.speed{width:110px;accent-color:#d9b48a}.stat{font-size:12px;color:#c5cec1;min-width:45px;text-align:center}.viewer{flex:1;min-height:0;position:relative;overflow:hidden;background:#151e1b}.scroll{height:100%;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;scrollbar-color:#496779 #293330;outline:none}.reading{width:100%;padding:25vh clamp(20px,5vw,105px) 55vh;white-space:pre-wrap;overflow-wrap:break-word;font-family:Arial,Helvetica,sans-serif;font-size:38px;line-height:1.65;letter-spacing:.025em;font-weight:600;text-transform:uppercase;color:#f0eee6}.reading:empty:before{content:'PEGÁ TU LIBRETO EN EDITAR TEXTO PARA EMPEZAR.';color:#a9c6b1}.guide{position:absolute;top:34%;left:0;right:0;height:1px;background:#d9b48a66;pointer-events:none}.guide:before{content:'';position:absolute;left:0;top:-9px;width:5px;height:19px;background:#d9b48a}.editor{height:100%;width:100%;resize:none;background:#1b2522;border:0;color:#f0eee6;padding:35px clamp(20px,5vw,105px);font:24px/1.6 Arial,sans-serif;outline:none;text-transform:uppercase}.footer{flex:none;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 17px;background:#293330;border-top:1px solid #66766a;color:#c5cec1;font-size:12px}.footer span{white-space:nowrap}.hide{display:none!important}@media(max-width:800px){.brand{width:100%}.bar{gap:7px;padding:9px}.bar button{padding:9px}.speed{width:90px}.reading{font-size:31px}.footer{flex-wrap:wrap}}:fullscreen .shell{height:100dvh}
+
+/* ADAPTACIÓN MULTIRRESOLUCIÓN · CONSERVA CONTROLES Y MODO AIRE */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.shell{width:100%;min-width:0;height:100dvh;max-height:100dvh}
+.bar{width:100%;min-width:0;display:flex;flex-wrap:wrap;align-content:center;gap:clamp(5px,.8vw,10px);padding:clamp(6px,1vw,12px)}
+.bar .brand{flex:1 1 220px;min-width:0;margin-right:0}
+.bar .group{min-width:0;flex-wrap:wrap}
+.bar button{white-space:normal;line-height:1.2}
+.bar label{font-size:12px}
+.viewer{min-height:0;min-width:0;width:100%;flex:1 1 auto}
+.scroll{width:100%;height:100%}
+.reading{width:100%;max-width:none;padding:clamp(65px,24vh,260px) clamp(14px,4vw,90px) 55vh;line-height:1.55}
+.editor{width:100%;padding:clamp(14px,3vw,38px);font-size:clamp(17px,2vw,24px)}
+.footer{min-width:0;gap:8px;flex-wrap:wrap;padding:6px clamp(8px,1vw,17px)}
+.footer span{white-space:normal}
+@media(max-width:1050px){
+ .bar .brand{flex-basis:100%}
+ .bar .group{flex:0 1 auto}
+ .bar button{font-size:clamp(11px,1.3vw,14px);padding:7px 9px}
+ .bar .speed{width:clamp(70px,10vw,110px)}
+}
+@media(max-width:600px){
+ .bar{gap:5px;padding:6px}
+ .bar .brand{flex-basis:100%}
+ .bar .brand strong{font-size:13px}
+ .bar .brand small{font-size:9px}
+ .bar .group{gap:4px}
+ .bar button{padding:6px;font-size:11px}
+ .bar label{font-size:10px}
+ .bar .speed{width:65px}
+ .reading{padding-left:16px;padding-right:16px;line-height:1.5;letter-spacing:.01em}
+ .footer{font-size:10px}
+}
+@media(max-height:550px){
+ .bar{padding:4px 8px;gap:4px}
+ .bar .brand strong{font-size:12px}
+ .bar .brand small{display:none}
+ .bar button{padding:5px 7px}
+ .reading{padding-top:18vh}
+ .footer{padding:4px 8px}
+}
+
 </style></head><body><div class="shell">
 <header class="bar"><div class="brand"><strong>RUIDOS MOLESTOS · REDACCIÓN</strong><small>TELEPROMPTER · MODO AIRE</small></div>
 <div class="group"><label for="programNumber">PROGRAMA</label><input id="programNumber" type="number" min="1" max="999" value="45" style="width:68px;background:#151e1b;color:#f0eee6;border:1px solid #66766a;border-radius:5px;padding:9px;font-weight:bold"><button id="loadProgram" class="primary">RECUPERAR PROGRAMA</button></div><div class="group"><button id="mode" class="primary" title="CAMBIAR ENTRE MANUAL Y AUTOMÁTICO">MODO MANUAL</button><button id="play" title="INICIAR O PAUSAR DESPLAZAMIENTO">▶ INICIAR</button></div>
