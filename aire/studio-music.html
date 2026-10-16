@@ -1271,7 +1271,7 @@ function blockEnsureYT(){
  if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){const s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';document.head.append(s)}
 }
 blockEnsureYT();
-const rmVideoCacheKey='rm-program-video-ids-v1';
+const rmVideoCacheKey='rm-program-video-ids-v2-validated';
 let rmVideoCache={};
 try{rmVideoCache=JSON.parse(localStorage.getItem(rmVideoCacheKey)||'{}')||{}}catch(_){rmVideoCache={}}
 const rmResolveInFlight=new Map();
