@@ -39,6 +39,7 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
 #hub .hubcard:before{content:"";position:absolute;inset:7px;border:1px solid #c9d6d519;pointer-events:none}
 #hub .hubcard:after{content:"01 / ARCHIVO";position:absolute;top:28px;left:30px;padding:7px 10px;background:#09151bd9;color:#d7e8e9;font-size:10px;letter-spacing:2px;border:1px solid #d6e3e633;pointer-events:none}
 #hub .hubcard.studio:after{content:"02 / CONTROL"}
+#hub #openRmr:after{content:"03 / TECNOLOGÍA"}
 #hub .hubcard:hover,#hub .hubcard:focus-visible{transform:translateY(-5px);border-color:#c2d8dd!important;box-shadow:0 28px 65px #000c,0 0 0 1px #9fc5d43d}
 #hub .hubcard img.hubicon,#hub .hubiconwrap{height:255px}
 #hub .hubcard img.hubicon{border-radius:2px;filter:saturate(.7) contrast(1.09);border:1px solid #b9cdd14a}
@@ -66,6 +67,7 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
    <button id="openRedaccion" class="hubcard"><img class="hubicon" src="/aire/icons/redaccion.svg" alt=""><strong>REDACCIÓN</strong><span>Libretos, historias y lectura al aire</span><small>ABRIR REDACCIÓN →</small></button>
    
    <button id="openStudio" class="hubcard studio"><div class="hubiconwrap"><img class="hubicon" src="/aire/icons/estudio.svg" alt=""><span class="creator">CREADO POR SEBASTIÁN SOPELANA</span></div><strong>ESTUDIO</strong><span>Reproductores, bloques, separadores y producción</span><small>ABRIR RUIDOS MOLESTOS ESTUDIO →</small></button>
+   <button id="openRmr" class="hubcard studio"><div class="hubiconwrap"><img class="hubicon" src="/aire/icons/estudio.svg" alt=""><span class="creator">LABORATORIO DE SOFTWARE RADIAL</span></div><strong>RMR TECNOLOGY</strong><span>Studio 2.0 · Maqueta interactiva, publicidad y música 24 horas</span><small>PROBAR MAQUETA →</small></button>
   </div>
   <div class="instanceNote">MULTIINSTANCIA · Cada computadora o pestaña trabaja de forma independiente.</div>
   <div class="after22"><button id="after22Btn" type="button">SESIÓN SIN CIERRE AUTOMÁTICO</button><span id="after22State">Cierre automático: 22:00</span></div>
@@ -82,6 +84,7 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
  pass.addEventListener('keydown',e=>{if(e.key==='Enter')enter()});
  if(sessionStorage.getItem(KEY)==='ok')show();
  document.getElementById('openRedaccion').onclick=()=>location.assign('/aire/redaccion.html');
+ document.getElementById('openRmr').onclick=()=>location.assign('/aire/rmr-tecnology.html');
  document.getElementById('openStudio').onclick=()=>location.assign('/aire/studio-music.html?instance='+Date.now());
  document.getElementById('hubExit').onclick=()=>{sessionStorage.removeItem(KEY);location.reload()};
  const btn=document.getElementById('after22Btn'),state=document.getElementById('after22State');
