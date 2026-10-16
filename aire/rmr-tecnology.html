@@ -1209,4 +1209,13 @@ header .header-actions #rmrAdTopStatus{position:relative!important;left:auto!imp
  if(bar&&clock)clock.insertAdjacentElement('beforebegin',bar);
  if(pads&&auto)auto.insertAdjacentElement('afterend',pads);
 })();
-</script></body></html>
+</script><style id="rmrModePadsAlignedFix">
+/* Keep marquee compact next to the clock. */
+header .header-actions #rmrAdTopStatus{display:flex!important;align-items:center!important;overflow:hidden!important;white-space:nowrap!important;width:240px!important;min-width:0!important;max-width:240px!important;flex:0 1 240px!important;height:28px!important;box-sizing:border-box!important}
+header .header-actions #rmrAdTopStatusText{display:block!important;white-space:nowrap!important;min-width:max-content!important}
+.rmrDualTitle .rmrTitleModes{display:flex!important;align-items:stretch!important;gap:0!important}
+.rmrDualTitle .rmrTitleModes #rmrAutoMode,
+.rmrDualTitle .rmrTitleModes #rmrOpenSettings{height:48px!important;min-height:48px!important;align-self:stretch!important;box-sizing:border-box!important;flex-shrink:0!important}
+.rmrDualTitle .rmrTitleModes #rmrJinglePads{margin:0 8px!important;align-self:stretch!important;align-items:stretch!important;border-left:2px solid #7b9aac!important;border-right:2px solid #7b9aac!important;padding:0 8px!important;box-sizing:border-box!important;gap:4px!important}
+.rmrDualTitle .rmrTitleModes #rmrJinglePads .rmrJinglePad{height:48px!important;min-height:48px!important;max-height:48px!important;align-self:stretch!important;box-sizing:border-box!important}
+</style></body></html>
