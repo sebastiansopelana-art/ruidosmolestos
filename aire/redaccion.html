@@ -18,8 +18,8 @@ const $=id=>document.getElementById(id),scroll=$('scroll'),reading=$('reading'),
 const KEY='rm_redaccion_nueva_v1',SETTINGS='rm_redaccion_teleprompter_v1';let settings={};try{settings=JSON.parse(localStorage.getItem(SETTINGS)||'{}')}catch(e){}
 let auto=false,running=false,editing=false,fontSize=Number(settings.fontSize)||38,last=0,frame=0,manualUntil=0;
 const sample='';reading.textContent=localStorage.getItem(KEY)||sample;editor.value=reading.textContent;
-async function loadProgram(){
- const n=Number($('programNumber').value);
+async function loadProgram(n=Number($('programNumber').value)){
+ $('programNumber').value=String(n);
  if(!Number.isInteger(n)||n<1||n>999){status.textContent='NÚMERO DE PROGRAMA INVÁLIDO';return}
  stop();const button=$('loadProgram');button.disabled=true;status.textContent='RECUPERANDO PROGRAMA '+n+'…';
  try{
@@ -51,5 +51,16 @@ $('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await docume
 document.addEventListener('keydown',e=>{if(editing||e.target===editor||e.target===speed||e.target.tagName==='BUTTON')return;if(e.code==='Space'){e.preventDefault();if(!auto){auto=true;update()}togglePlay()}else if(e.key==='ArrowDown'||e.key==='ArrowUp'||e.key==='PageDown'||e.key==='PageUp'){manual()}});
 window.addEventListener('beforeunload',()=>{if(editing)localStorage.setItem(KEY,editor.value.toLocaleUpperCase('es-AR'))});
 update();
+(async function loadLatest(){
+ status.textContent='BUSCANDO ÚLTIMO PROGRAMA PUBLICADO…';
+ try{
+  const response=await fetch('/aire/programas/ultimo.json',{cache:'no-store'});
+  if(!response.ok)throw Error('NO SE PUDO CONSULTAR EL ÚLTIMO PROGRAMA');
+  const manifest=await response.json();
+  const number=Number(manifest.numero);
+  if(!Number.isInteger(number)||number<1||number>999)throw Error('NÚMERO DE PROGRAMA NO VÁLIDO');
+  await loadProgram(number);
+ }catch(e){status.textContent=e.message+' · USÁ RECUPERAR PROGRAMA'}
+})();
 })();
 </script></body></html>
