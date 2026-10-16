@@ -1099,7 +1099,7 @@ const title=document.querySelector('.rmrDualTitle'),bar=document.getElementById(
 if(!title||!bar||!auto||!ads)return;
 function align(){
  const t=title.getBoundingClientRect(),a=auto.getBoundingClientRect(),manual=document.getElementById('rmrManualMode')?.getBoundingClientRect(),settings=document.getElementById('rmrOpenSettings')?.getBoundingClientRect(),force=document.getElementById('rmrForceAd')?.getBoundingClientRect();
- const gap=Math.max(0,Math.round((settings?.left??a.right+6)-(manual?.right??a.right))),right=Math.round(Math.min(force?.right??t.right,t.right-6)-t.left),left=Math.round(a.left-t.left-gap);
+ const gap=Math.max(5,Math.round((settings?.left??a.right+6)-(manual?.right??a.right))),left=Math.round((force?.left??t.left)-t.left),right=Math.round(a.left-t.left-gap);
  if(right-left>55){title.style.setProperty('--rmr-bar-left',left+'px');title.style.setProperty('--rmr-bar-width',(right-left)+'px');bar.style.visibility='visible'}
  else {bar.style.visibility='hidden'}
 }
