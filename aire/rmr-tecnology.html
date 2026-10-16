@@ -747,7 +747,7 @@ function diagnostic(){
  if(offline&&!faults.has('RMR-RED-01'))faults.set('RMR-RED-01',{detail:'Sin conexión a Internet',time:Date.now(),persistent:true});
  if(!offline)faults.delete('RMR-RED-01');
  const errors=[...faults.entries()].filter(([_,v])=>v.persistent||Date.now()-v.time<5*60*1000);
- if(errors.length)return errors.map(([code,v])=>'ERROR '+code+' · '+v.detail);
+ if(errors.length){const visible=errors.filter(([code])=>code!=='RMR-PUB-02');if(visible.length)return visible.map(([code,v])=>'ERROR '+code+' · '+v.detail)}
  if(verification!=='ready'||!fullCheckCompleted)return ['ESTADO SIN VERIFICAR · COMPROBANDO FUNCIONAMIENTO GENERAL'];
  const start=Number(sessionStorage.getItem('rmrMonitorSince')||Date.now());
  if(schedule.some(e=>e.at<start))return ['SERVICIO SIN FALLAS DETECTADAS · SALIDAS ANTERIORES SIN VERIFICAR'];
