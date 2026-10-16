@@ -25,6 +25,46 @@
 #explorerFiles{max-height:260px;overflow:auto}
 @media(max-width:1200px){.workspace{grid-template-columns:200px minmax(270px,1fr) minmax(270px,1fr)!important}.rightstack{grid-column:1/4;grid-row:3;display:grid!important;grid-template-columns:1fr 1fr}#explorerPanel{order:0}}
 @media(max-width:850px){.workspace{display:flex!important;flex-direction:column}.leftstack,.rightstack,.decks>.deck,.center>.widepanel,#autoQueuePanel,#programQueuePanel{width:100%;grid-column:auto;grid-row:auto}.decks{display:contents}.center{display:contents}.leftstack{order:1}.decks>.deck:first-child{order:2}.decks>.deck:nth-child(2){order:4}#autoQueuePanel{order:3}#programQueuePanel{order:5}.rightstack{order:6;display:flex!important}.center>.widepanel{order:7}}
+
+/* RMR visual lab 03: classic broadcast-control density, original RMR identity */
+:root{color-scheme:light;color:#172c3a;background:#dce4e9;font-family:Arial,Helvetica,sans-serif}
+body{background:#dce4e9;color:#203746}
+header{height:67px;background:linear-gradient(180deg,#102c42,#1b415a);border-bottom:3px solid #74b8d9;color:#f3f8fb;box-shadow:0 2px 7px #223b4c44}
+.logo strong{font-size:18px;letter-spacing:1.3px}.logo small{color:#a5c7dc}.mark{background:#f1f5f7;color:#173b53;border:0;box-shadow:inset 0 0 0 2px #91c1d9}
+.clock{background:#071e2d;border:1px solid #4b819e;border-radius:5px;padding:7px 11px;color:#e8f8ff;font-size:26px}
+.pill{background:#294e64;border-color:#5a8aa5;color:#e2f3fa}.back{color:#e6f3fc}
+.workspace{gap:7px!important;padding:8px!important;grid-template-columns:minmax(185px,.78fr) minmax(285px,1.18fr) minmax(285px,1.18fr) minmax(225px,.96fr)!important;max-width:none}
+.leftstack,.rightstack,.center{gap:7px}
+.panel{background:#edf2f5;border:1px solid #9bafbb;border-radius:4px;box-shadow:0 1px 3px #223a4c22;color:#203746}
+.paneltitle{background:linear-gradient(180deg,#d5e2e9,#c1d2dc);border-bottom:1px solid #a0b7c6;color:#234a63;font-size:11px;padding:9px 10px;letter-spacing:.7px}
+.muted,.compact{color:#587083}.hint{color:#617889}
+.pad{padding:9px}.deck{padding:10px}.deckhead{color:#1b3e55;font-size:11px}
+.screen{height:110px;background:linear-gradient(180deg,#0d2434,#142f42);border:1px solid #5c8398;border-radius:4px;color:#fff;margin:8px 0;box-shadow:inset 0 1px 8px #0005}
+.song{font-size:17px;color:#f1fbff}.subsong{color:#b2c9d7}.times{color:#415e70;font-size:12px}
+.progress,.vol input{accent-color:#2479a6}
+.controls{gap:5px}.controls button{height:39px;background:linear-gradient(#fff,#d6e0e7);color:#234154;border:1px solid #9db0bd;border-radius:4px;box-shadow:0 1px 1px #0002}
+.controls button:hover{background:#c7e5f6}.onair{color:#526c7d;border-color:#b0c3cf;background:#dfe8ed}.onair.active{background:#cc2940;color:#fff;border-color:#a51f35}
+.vol{color:#506e7f}
+.queue{background:#fff;border:1px solid #b5c6d0;border-radius:3px}
+.qrow{border-bottom:1px solid #dbe4e9;color:#284255;padding:9px 8px}
+.qrow:nth-child(even){background:#f2f6f8}.qrow:hover{background:#d5e9f4}.qrow.selected{background:#c2e1f2}.qrow b{color:#1b709e}.qrow small{color:#607c8d}
+.outline,.librow button,.hot-slot .slothead button{background:linear-gradient(#fff,#d9e5eb);color:#21445a;border:1px solid #a6bdcb;border-radius:4px;font-weight:800}
+.outline:hover,.librow button:hover{background:#cbe9f8}
+.search,.event input{background:#fff;color:#203746;border:1px solid #a3b9c7;border-radius:4px}
+.search:focus{border-color:#227baa}
+.librow{border-bottom:1px solid #d4e1e8;color:#2a4558}
+.event{background:#f9fbfc;border:1px solid #bdced8;color:#284354;border-radius:4px}.event p{color:#617c8c}
+.switches label{background:#fff;border-color:#b5c7d2;color:#284255}
+.folder{color:#23475c;border-bottom:1px solid #cbd9e1}.folder.active{background:#c7e2f2}.folder small{color:#617e90}
+.hot-slot{background:#f8fbfd;border-color:#b7cbd6;border-radius:4px}.hot-slot .slotitems{color:#557184}.hot-slot .slotitems div{border-top-color:#d6e3eb}
+.statusbar{background:#18374b;border:0;color:#d5e8f2;border-radius:3px;margin:0 8px 8px}
+#demoSteps .qrow{font-size:12px}
+#demoSteps .qrow.selected{background:#bee6f6;border-left:4px solid #177eb0;font-weight:900}
+#demoState{font-weight:800;color:#236f96}
+#automationPanel{border-top:3px solid #477d9a}#hotPanel{border-top:3px solid #698da0}
+.decks>.deck:first-child{border-top:3px solid #2987b1}.decks>.deck:nth-child(2){border-top:3px solid #648da6}
+#explorerPanel{border-top:3px solid #477d9a}
+@media(max-width:850px){.workspace{display:flex!important;flex-direction:column}.panel{width:100%}header{height:auto;padding:12px}.headright{flex-wrap:wrap}.clock{font-size:21px}}
 </style></head><body><header><div class="logo"><div class="mark">RMR</div><div><strong>RMR TECNOLOGY</strong><small>RADIO AUTOMATION · STUDIO 2.0</small></div></div><div class="headright"><span class="pill">LABORATORIO · SIN EMISIÓN REAL</span><span id="clock" class="clock">00:00:00</span><a class="back" href="/aire/">← PRODUCCIÓN</a></div></header><main class="workspace">
 <aside class="leftstack"><section class="panel"><div class="paneltitle">DISPARADORES <span class="muted">01–08</span></div><div class="pad"><div class="hotgrid" id="hotgrid"></div><p class="hint">Cargá separadores o cortinas y disparalos desde acá.</p><button class="outline full" id="loadHot">+ CARGAR AUDIOS</button><input type="file" id="hotFiles" accept="audio/*" multiple hidden></div></section><section class="panel"><div class="paneltitle">ESTADO GENERAL</div><div class="pad"><div class="smalltitle" id="general">LISTO PARA OPERAR</div><div class="compact">Prueba local con archivos de tu computadora. No transmite a ninguna radio.</div></div></section></aside>
 <div class="center"><section class="decks"><div class="panel deck"><div class="deckhead">REPRODUCTOR 01 <span id="air1" class="onair">EN ESPERA</span></div><div class="screen"><div class="song" id="song1">Sin canción cargada</div><div class="subsong" id="meta1">Biblioteca musical · reproductor independiente</div></div><input class="progress" id="seek1" type="range" min="0" max="100" value="0"><div class="times"><span id="elapsed1">00:00</span><span id="remaining1">-00:00</span></div><div class="controls"><button id="prev1" title="Anterior">⏮</button><button id="play1" title="Reproducir o pausar">▶</button><button id="stop1" title="Detener">■</button><button id="next1" title="Siguiente">⏭</button></div><div class="vol">VOLUMEN <input id="vol1" type="range" min="0" max="100" value="85"><span id="voltxt1">85</span></div><audio id="audio1"></audio></div>
