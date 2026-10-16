@@ -1125,10 +1125,32 @@ async function loadStudioProgram(number=44){
   for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
   for(const t of blocks.flat()){const cached=rmVideoCache[t.query];if(!t.videoId&&cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){t.videoId=cached.id;t.durationSeconds=t.durationSeconds||cached.durationSeconds||0}}
   activeBlock=0;drawBlocks();
-   const pending=blocks.flat().filter(t=>t.programTrack&&!t.videoId);let cursor=0;
-   for(let worker=0;worker<3;worker++)(async()=>{while(cursor<pending.length){const track=pending[cursor++];try{await blockResolve(track);refreshBlockDurations()}catch(_){}}})();
+   // Precarga inteligente: resolver identificadores en segundo plano, sin abrir reproductores adicionales.
+   // No descargar audio ni interferir con el reproductor activo o la playlist auxiliar.
+   const preparedTracks=blocks.flat();
+   const loadToken=window.rmProgramPrepareToken=(window.rmProgramPrepareToken||0)+1;
+   const updatePreparation=()=>{
+    if(window.rmProgramPrepareToken!==loadToken)return;
+    const ready=preparedTracks.filter(t=>t.videoId).length;
+    const failed=preparedTracks.filter(t=>t.rmPrepareFailed).length;
+    programInfo.textContent=(manifest.titulo||'PROGRAMA '+number).toUpperCase()+
+      ' · 16 TEMAS · 4 BLOQUES · '+ready+'/16 PREPARADOS'+
+      (failed?' · '+failed+' SIN RESOLVER':'');
+   };
+   const pending=preparedTracks.filter(t=>t.programTrack&&!t.videoId);
+   let cursor=0;
+   updatePreparation();
+   for(let worker=0;worker<Math.min(3,pending.length);worker++){
+    (async()=>{
+     while(cursor<pending.length&&window.rmProgramPrepareToken===loadToken){
+      const track=pending[cursor++];
+      try{await blockResolve(track)}
+      catch(_){track.rmPrepareFailed=true}
+      updatePreparation();
+     }
+    })();
+   }
   programLoad.textContent='CARGAR PROGRAMA';
-  programInfo.textContent=(manifest.titulo||'PROGRAMA '+number).toUpperCase()+' · 16 TEMAS · 4 BLOQUES · '+blocks.flat().filter(t=>t.videoId).length+'/16 ENLACES PREPARADOS';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
 }
