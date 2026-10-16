@@ -564,9 +564,9 @@ content:""!important;position:absolute!important;z-index:-1!important;pointer-ev
 .rmrDualTitle .rmrTitleModes #rmrAdTopStatus.isError.isOnAir{background:#4d1016!important;border:1px solid #ff4343!important;color:#ffb8b8!important;box-shadow:0 0 10px #e7333380!important}
 </style><style id="rmrOverdueCompactStyle">
 .rmrDualDeck>.rmrAdDeck .rmrAdControlsColumn{position:relative!important}
-.rmrDualDeck>.rmrAdDeck .rmrOverduePanel{display:flex;flex-direction:column;flex:1 1 0;min-height:0;overflow:hidden;margin-top:8px;border:1px solid #46687c;border-radius:7px;background:#081c2a}
+.rmrDualDeck>.rmrAdDeck .rmrOverduePanel{display:flex;flex-direction:column;flex:1 1 0;min-height:90px;max-height:100%;overflow:hidden;margin-top:8px;border:1px solid #46687c;border-radius:7px;background:#081c2a}
 .rmrOverdueTitle{display:flex;justify-content:space-between;padding:7px 9px;font-size:10px;font-weight:800;color:#bce8fa;border-bottom:1px solid #37566c}
-.rmrOverdueList{overflow-y:auto;flex:1;min-height:0;padding:3px}
+.rmrOverdueList{overflow-y:scroll;overscroll-behavior:contain;flex:1 1 auto;min-height:0;max-height:100%;padding:3px;scrollbar-width:thin;scrollbar-color:#5f9bb9 #0a2535}
 .rmrOverdueRow{display:grid;grid-template-columns:minmax(0,1fr) 27px;align-items:center;gap:5px;border-bottom:1px solid #28445a;padding:4px 3px;font-size:10px}
 .rmrOverdueRow button{border:0;background:transparent;text-align:left;color:#e0f2ff;padding:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rmrOverdueRow button:focus-visible{outline:1px solid #78d6f5}
@@ -858,7 +858,7 @@ window.addEventListener('resize',align);requestAnimationFrame(align);
 })();</script><script id="rmrOverdueRecoveryLogic">(()=>{
 const panel=document.getElementById('rmrOverduePanel'),list=document.getElementById('rmrOverdueList'),count=document.getElementById('rmrOverdueCount');if(!panel||!list)return;
 const key='rmrOverdueCompletedV1',auditKey='rmrAdvertisingAuditV1';
-const today=()=>new Date().toISOString().slice(0,10);
+const today=()=>new Date().toLocaleDateString('en-CA');
 function saved(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}}
 function render(){
  const engine=window.rmrEngine;if(!engine)return;
@@ -866,9 +866,9 @@ function render(){
  const audit=saved(auditKey);
  const events=(engine.getEvents?.()||[]).filter(e=>Array.isArray(e.days)&&e.days.map(Number).includes(day)&&/^\d{1,2}:\d{2}$/.test(e.hour||''));
  const breaks=engine.getBreaks?.()||[];const missed=events.map(e=>{const [h,m]=e.hour.split(':').map(Number),due=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m).getTime();return{e,due,b:breaks.find(b=>String(b.id)===String(e.breakId)),key:date+'|'+e.id}}).filter(x=>x.b&&x.due+10*60000<now.getTime()&&!done.has(x.key)&&!audit.some(a=>String(a.breakId)===String(x.e.breakId)&&Math.abs(a.at-x.due)<=10*60000)).sort((a,b)=>a.due-b.due);
- count.textContent=String(missed.length);list.replaceChildren();
+ count.textContent=String(missed.length);const previousScroll=list.scrollTop;list.replaceChildren();
  if(!missed.length){const el=document.createElement('div');el.className='rmrOverdueEmpty';el.textContent='SIN TANDAS ATRASADAS DETECTADAS';list.append(el);return}
- missed.forEach((x,i)=>{const row=document.createElement('div');row.className='rmrOverdueRow',name=document.createElement('button'),check=document.createElement('input');name.type='button';name.title='DOBLE CLIC PARA REPRODUCIR';name.textContent=(i+1)+' · '+x.e.hour+' · '+x.b.name;check.type='checkbox';check.title='MARCAR PARA RECUPERAR EN PUBLICIDAD';const play=()=>{const msg=engine.launchOverdue?.(x.e.id);if(msg){const status=document.getElementById('status');if(status)status.textContent=msg}};name.addEventListener('dblclick',play);check.addEventListener('change',()=>{if(!check.checked)return;const msg=engine.launchOverdue?.(x.e.id);if(msg?.startsWith('HAY UNA TANDA')){check.checked=false;const status=document.getElementById('status');if(status)status.textContent=msg}else{check.disabled=true;name.disabled=true}});row.append(name,check);list.append(row)})
+ missed.forEach((x,i)=>{const row=document.createElement('div');row.className='rmrOverdueRow',name=document.createElement('button'),check=document.createElement('input');name.type='button';name.title='DOBLE CLIC PARA REPRODUCIR';name.textContent=(i+1)+' · '+x.e.hour+' · '+x.b.name;check.type='checkbox';check.title='MARCAR PARA RECUPERAR EN PUBLICIDAD';const play=()=>{const msg=engine.launchOverdue?.(x.e.id);if(msg){const status=document.getElementById('status');if(status)status.textContent=msg}};name.addEventListener('dblclick',play);check.addEventListener('change',()=>{if(!check.checked)return;const msg=engine.launchOverdue?.(x.e.id);if(msg?.startsWith('HAY UNA TANDA')){check.checked=false;const status=document.getElementById('status');if(status)status.textContent=msg}else{check.disabled=true;name.disabled=true}});row.append(name,check);list.append(row)});list.scrollTop=previousScroll
 }
 window.addEventListener('rmr-overdue-changed',render);window.addEventListener('focus',render);setInterval(render,30000);setTimeout(render,1200);
 })();</script><script id="rmrSecondaryIndependentEngine">(()=>{
