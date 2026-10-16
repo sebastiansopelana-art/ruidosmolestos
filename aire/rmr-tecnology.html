@@ -1345,4 +1345,8 @@ function create(host,group){if(!host||!group)return null;let armed=false;const b
 window.rmrStopAfterMain=create(document.getElementById('audio'),document.querySelector('.rmrMusicColumn .rmrVuControlGrid'));
 const independent=document.getElementById('rmrProgramMusicClone');
 if(independent)independent._rmrStopAfter=create(independent,independent.querySelector('.rmrVuControlGrid'));
-})();</script></body></html>
+})();</script><style id="rmrCompactFiveTransportButtons">
+.rmrDualDeck .rmrVuControlGrid{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:center!important;gap:3px!important;width:100%!important;min-width:0!important}
+.rmrDualDeck .rmrVuControlGrid>button{flex:1 1 0!important;width:0!important;min-width:0!important;max-width:none!important;padding:5px 2px!important;font-size:12px!important;line-height:1.15!important;white-space:nowrap!important;box-sizing:border-box!important}
+.rmrDualDeck .rmrVuControlGrid>.rmrStopAfterButton{flex:1 1 0!important;min-width:0!important;padding:5px 2px!important;font-size:11px!important}
+</style></body></html>
