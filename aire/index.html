@@ -52,6 +52,17 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
 @media(max-width:650px){#hub{padding:18px}#hub .hubwrap{padding:12px 0}#hub .hubbrand{gap:13px;margin-bottom:20px}#hub .hubbrand img{width:56px;height:56px}#hub .hubbrand b{font-size:24px}#hub .hubbrand span{font-size:9px;letter-spacing:2px}#hub .hubgrid{gap:17px}#hub .hubcard{height:405px;min-height:405px;grid-template-rows:210px 58px 65px 1fr}#hub .hubcard img.hubicon,#hub .hubiconwrap{height:210px}#hub .hubcard strong{font-size:28px}}
 @media(prefers-reduced-motion:reduce){#hub .hubcard{transition:none}}
 
+
+#hub .hubgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#hub .hubcard{height:310px;min-height:310px;grid-template-rows:140px 48px 54px 1fr;padding:12px!important}
+#hub .hubcard img.hubicon,#hub .hubiconwrap{height:140px}
+#hub .hubcard strong{font-size:clamp(16px,2vw,23px);letter-spacing:.5px;margin:9px 0 0}
+#hub .hubcard span{font-size:12px!important;line-height:1.3}
+#hub .hubcard small{font-size:9px;letter-spacing:.4px}
+#hub #openRmr{background:linear-gradient(155deg,#183343,#0c1720)!important}
+#hub #openRmr .rmr-chip{display:flex;align-items:center;justify-content:center;height:140px;border:1px solid #8ac1d477;background:radial-gradient(circle,#275369,#0b1821)}
+#hub #openRmr .rmr-chip svg{width:65px;height:65px}
+@media(max-width:650px){#hub .hubgrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}#hub .hubcard{height:235px;min-height:235px;grid-template-rows:85px 42px 62px 1fr;padding:5px!important}#hub .hubcard img.hubicon,#hub .hubiconwrap,#hub #openRmr .rmr-chip{height:85px}#hub #openRmr .rmr-chip svg{width:40px;height:40px}#hub .hubcard strong{font-size:clamp(10px,3vw,15px);letter-spacing:0;margin:5px 0 0;overflow-wrap:anywhere}#hub .hubcard span{font-size:9px!important;line-height:1.2}#hub .hubcard small{font-size:8px;letter-spacing:0;overflow-wrap:anywhere}#hub .hubcard:after{font-size:6px;top:12px;left:10px;padding:3px}#hub .hubiconwrap .creator{font-size:6px!important;letter-spacing:0}}
 </style>
 </head>
 <body>
@@ -67,7 +78,7 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
    <button id="openRedaccion" class="hubcard"><img class="hubicon" src="/aire/icons/redaccion.svg" alt=""><strong>REDACCIÓN</strong><span>Libretos, historias y lectura al aire</span><small>ABRIR REDACCIÓN →</small></button>
    
    <button id="openStudio" class="hubcard studio"><div class="hubiconwrap"><img class="hubicon" src="/aire/icons/estudio.svg" alt=""><span class="creator">CREADO POR SEBASTIÁN SOPELANA</span></div><strong>ESTUDIO</strong><span>Reproductores, bloques, separadores y producción</span><small>ABRIR RUIDOS MOLESTOS ESTUDIO →</small></button>
-   <button id="openRmr" class="hubcard studio"><div class="hubiconwrap"><img class="hubicon" src="/aire/icons/estudio.svg" alt=""><span class="creator">LABORATORIO DE SOFTWARE RADIAL</span></div><strong>RMR TECNOLOGY</strong><span>Studio 2.0 · Maqueta interactiva, publicidad y música 24 horas</span><small>PROBAR MAQUETA →</small></button>
+   <button id="openRmr" class="hubcard"><div class="hubiconwrap"><div class="rmr-chip" aria-hidden="true"><svg viewBox="0 0 64 64" fill="none" stroke="#9ed5ed" stroke-width="2.5"><rect x="16" y="16" width="32" height="32" rx="4"/><rect x="25" y="25" width="14" height="14" rx="2"/><path d="M22 8v8m10-8v8m10-8v8M22 48v8m10-8v8m10-8v8M8 22h8M8 32h8M8 42h8M48 22h8M48 32h8M48 42h8"/></svg></div><span class="creator">LABORATORIO DE SOFTWARE RADIAL</span></div><strong>RMR TECNOLOGY</strong><span>Studio 2.0 · Maqueta interactiva, publicidad y música 24 horas</span><small>PROBAR MAQUETA →</small></button>
   </div>
   <div class="instanceNote">MULTIINSTANCIA · Cada computadora o pestaña trabaja de forma independiente.</div>
   <div class="after22"><button id="after22Btn" type="button">SESIÓN SIN CIERRE AUTOMÁTICO</button><span id="after22State">Cierre automático: 22:00</span></div>
