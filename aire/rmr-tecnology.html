@@ -225,4 +225,41 @@ const auto=document.getElementById('autoQueuePanel'),prog=document.getElementByI
 if(auto)auto.querySelector('.paneltitle').firstChild.textContent='LISTA DE EMISIÓN AUTOMÁTICA ';
 if(prog)prog.querySelector('.paneltitle').firstChild.textContent='LISTA DE PROGRAMA EN VIVO ';
 })();
-</script></body></html>
+</script>
+<style id="rmr-studio-identity">
+/* Ruidos Molestos Studio look, desktop radio-automation workbench layout */
+:root{color-scheme:dark!important;background:#07121d!important;color:#e9f3fb!important;font-family:system-ui,-apple-system,Arial,sans-serif!important}
+body{background:linear-gradient(160deg,#08131e,#0d2334)!important;color:#e9f3fb!important}
+header{background:#081725!important;border-bottom:1px solid #466b83!important;color:#e9f3fb!important}
+#rmrMenubar{background:#112b3e!important;border-bottom:1px solid #3c647d!important;color:#b8d8e9!important}
+#rmrMenubar span{border-right:1px solid #36566d!important}
+#rmrToolstrip{background:#0b2030!important;border-bottom:1px solid #36566d!important}
+#rmrToolstrip .tag{background:#18394f!important;color:#b5d7e9!important;border:1px solid #466b83!important;border-radius:5px!important}
+.panel{background:#142a3c!important;border:1px solid #466b83!important;border-radius:9px!important;box-shadow:0 4px 15px #0003!important;color:#e9f3fb!important}
+.paneltitle{background:#19374d!important;border-bottom:1px solid #466b83!important;color:#d7efff!important;font-size:11px!important;letter-spacing:1px!important}
+.deck{background:#142a3c!important}.deckhead{color:#cce7f5!important}
+.screen{background:#091c2c!important;border:1px solid #35576c!important;color:#f2f9ff!important;border-radius:6px!important}
+.song{color:#f2f9ff!important}.subsong{color:#a3bacb!important}
+.times,.vol{color:#b9d0e0!important}
+.controls button,.outline,.librow button,.hot-slot button{background:#23475f!important;color:#f1f8fc!important;border:1px solid #507a96!important;border-radius:6px!important;box-shadow:none!important}
+.controls button:hover,.outline:hover,.librow button:hover{background:#316887!important}
+.queue,.library{background:#091c2c!important;border:1px solid #35576c!important;border-radius:6px!important}
+.qrow{background:#0c2536!important;color:#e5f3fa!important;border-bottom:1px solid #29465a!important}
+.qrow:nth-child(even){background:#102c40!important}.qrow:hover{background:#1e4c66!important}.qrow.selected{background:#245a77!important;color:#fff!important}
+.qrow b{color:#80d6ff!important}.qrow small,.muted,.compact,.hint{color:#a3bacb!important}
+.search,.event input{background:#091c2c!important;color:#f1f8fc!important;border:1px solid #507a96!important}
+.event,.hot-slot{background:#10283a!important;border:1px solid #35576c!important;color:#e3f2fa!important}
+.event p,.hot-slot .slotitems,.folder small{color:#a3bacb!important}
+.switches label{background:#10283a!important;border-color:#35576c!important;color:#d5e9f4!important}
+.folder,.librow{color:#d7ecf8!important;border-bottom:1px solid #35576c!important}.folder.active{background:#285b77!important}
+.statusbar{background:#091c2c!important;color:#c8e2f0!important;border:1px solid #35576c!important}
+#demoState{color:#82d6ff!important}
+#demoSteps .qrow.selected{background:#225c7b!important;border-left:4px solid #67c7f4!important}
+#automationPanel,#hotPanel,#explorerPanel,.decks>.deck{border-top:2px solid #5cb4e2!important}
+@media(min-width:1100px){
+.workspace{grid-template-columns:minmax(190px,18%) minmax(0,29%) minmax(0,29%) minmax(220px,24%)!important}
+#autoQueuePanel,#programQueuePanel{display:flex;flex-direction:column}
+#autoQueuePanel>.pad,#programQueuePanel>.pad{flex:1;min-height:0}
+#autoQueuePanel .queue,#programQueuePanel .queue{overflow:auto!important}
+}
+</style></body></html>
