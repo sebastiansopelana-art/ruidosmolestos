@@ -178,4 +178,51 @@ $('demoStop').onclick=()=>{if(running)finish();else $('demoState').textContent='
 const lab=[...document.querySelectorAll('.workspace>section.panel')].find(x=>x.textContent.includes('PRUEBA REAL · AUTOMATIZACIÓN DE AUDIO'));
 if(lab){lab.id='demoLab';lab.classList.add('collapsed');lab.querySelector('.paneltitle').title='Abrir o cerrar prueba de automatización';lab.querySelector('.paneltitle').onclick=()=>lab.classList.toggle('collapsed')}
 })();
+</script>
+<style id="rmr-reference-layout">
+/* Layout reference: traditional desktop radio automation workbench, not a color swap */
+@media(min-width:1100px){
+body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
+header{flex:0 0 56px!important;height:56px!important}
+#rmrMenubar{flex:0 0 31px;display:flex;align-items:center;gap:0;background:#c4d3dc;border-bottom:1px solid #8ca7b8;color:#25485d;font:700 12px Arial,sans-serif}
+#rmrMenubar span{padding:7px 17px;border-right:1px solid #9eb6c3}
+#rmrToolstrip{flex:0 0 42px;display:flex;align-items:center;gap:8px;padding:5px 10px;background:#e6eef2;border-bottom:1px solid #a1b6c3}
+#rmrToolstrip .tag{padding:5px 10px;background:#fff;border:1px solid #a9bdc9;border-radius:2px;color:#315368;font:700 11px Arial}
+.workspace{flex:1;min-height:0;overflow:hidden;display:grid!important;grid-template-columns:18% 29% 29% 24%!important;grid-template-rows:minmax(0,1fr)!important;padding:5px!important;gap:5px!important}
+.leftstack{grid-column:1!important;grid-row:1!important;display:flex!important;flex-direction:column;min-height:0;overflow:auto}
+.center,.decks{display:contents!important}
+.decks>.deck:first-child{grid-column:2!important;grid-row:1!important;height:32%!important;align-self:start!important;overflow:auto}
+.decks>.deck:nth-child(2){grid-column:3!important;grid-row:1!important;height:32%!important;align-self:start!important;overflow:auto}
+#autoQueuePanel{grid-column:2!important;grid-row:1!important;align-self:end!important;height:67%!important;min-height:0!important;z-index:1}
+#programQueuePanel{grid-column:3!important;grid-row:1!important;align-self:end!important;height:67%!important;min-height:0!important;z-index:1}
+#autoQueuePanel .pad,#programQueuePanel .pad{height:calc(100% - 35px);display:flex;flex-direction:column}
+#autoQueuePanel .queue,#programQueuePanel .queue{flex:1;min-height:0;max-height:none!important;overflow:auto}
+.rightstack{grid-column:4!important;grid-row:1!important;display:flex!important;flex-direction:column;min-height:0;overflow:auto}
+#explorerPanel{flex:1;min-height:0}
+#explorerPanel .pad{min-height:0;overflow:auto}
+#demoLab{position:fixed!important;right:8px;bottom:24px;width:390px;max-height:60vh;z-index:20}
+#automationPanel{order:-2}#hotPanel{order:-1}
+.panel{border-radius:1px!important;box-shadow:none!important}
+.paneltitle{font-weight:800!important;text-transform:uppercase}
+.screen{height:72px!important;margin:5px 0!important}.song{font-size:14px!important}
+.deck{padding:8px!important}.controls button{height:29px!important}
+.statusbar{flex:0 0 22px}
+}
+@media(max-width:1099px){#rmrMenubar,#rmrToolstrip{display:none}}
+</style>
+<script>
+(()=>{
+const header=document.querySelector('header');
+if(!document.getElementById('rmrMenubar')){
+const menu=document.createElement('nav');menu.id='rmrMenubar';menu.innerHTML='<span>ARCHIVO</span><span>EDICIÓN</span><span>REPRODUCCIÓN</span><span>EVENTOS</span><span>HERRAMIENTAS</span><span>AYUDA</span>';
+const tools=document.createElement('div');tools.id='rmrToolstrip';tools.innerHTML='<span class="tag">RMR · MESA DE AUTOMATIZACIÓN</span><span class="tag">AUTO / LISTA MUSICAL</span><span class="tag">PROGRAMA / OPERADOR</span><span class="tag">PUBLICIDAD / EVENTOS</span><span class="tag">EXPLORADOR</span>';
+header.after(menu,tools);
+}
+const d1=document.querySelector('.decks>.deck:first-child'),d2=document.querySelector('.decks>.deck:nth-child(2)');
+if(d1)d1.querySelector('.deckhead').firstChild.textContent='AUTOMÁTICO · CANAL 01 ';
+if(d2)d2.querySelector('.deckhead').firstChild.textContent='PROGRAMA · CANAL 02 ';
+const auto=document.getElementById('autoQueuePanel'),prog=document.getElementById('programQueuePanel');
+if(auto)auto.querySelector('.paneltitle').firstChild.textContent='LISTA DE EMISIÓN AUTOMÁTICA ';
+if(prog)prog.querySelector('.paneltitle').firstChild.textContent='LISTA DE PROGRAMA EN VIVO ';
+})();
 </script></body></html>
