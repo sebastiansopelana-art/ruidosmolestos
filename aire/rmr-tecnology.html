@@ -1,315 +1,36 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RMR TECNOLOGY · Consola</title><style>
-:root{font-family:system-ui,-apple-system,Arial,sans-serif;color:#e9f3fb;background:#08131e;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:linear-gradient(155deg,#08131e,#0d2334);min-height:100vh}button,input,select{font:inherit}button{cursor:pointer}header{height:72px;display:flex;align-items:center;justify-content:space-between;padding:10px 22px;border-bottom:1px solid #385c75;background:#081725;gap:16px}.logo{display:flex;align-items:center;gap:12px}.mark{height:40px;width:40px;border:1px solid #79afcb;border-radius:10px;display:grid;place-items:center;background:#14374d;color:#b5e4fc;font-weight:1000;font-size:14px}.logo strong{font-size:19px;letter-spacing:1.6px}.logo small{display:block;font-size:10px;letter-spacing:1.5px;color:#92b4c8;margin-top:3px}.headright{display:flex;align-items:center;gap:18px}.clock{font:700 25px ui-monospace,monospace;letter-spacing:1px}.back{font-size:11px;color:#b7d9ec;text-decoration:none}.pill{font-size:10px;padding:6px 9px;border:1px solid #426d85;border-radius:5px;color:#a6c6d8}.workspace{display:grid;grid-template-columns:200px minmax(430px,1fr) 275px;gap:12px;padding:12px;max-width:1850px;margin:auto}.panel{background:#142a3c;border:1px solid #466b83;border-radius:9px;min-width:0;box-shadow:0 8px 24px #0003;overflow:hidden}.paneltitle{padding:12px;border-bottom:1px solid #38576c;display:flex;align-items:center;justify-content:space-between;gap:6px;font-size:11px;font-weight:900;letter-spacing:1px}.muted{color:#8caec2;font-size:11px}.pad{padding:11px}.hotgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.hot{height:66px;background:#e8e9eb;color:#26313b;border:1px solid #d4d9df;border-radius:7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11px;font-weight:900;overflow:hidden}.hot small{font-size:9px;color:#51606a;max-width:100%;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.hot.active{background:#c62843;color:white;box-shadow:0 0 15px #ff2b4b88}.hot.active small{color:#fff}.hint{font-size:11px;color:#9cb8ca;line-height:1.5}.outline{background:#203e53;color:#eaf5fb;border:1px solid #557b94;border-radius:6px;padding:8px 10px;font-size:11px;font-weight:800}.outline:hover{background:#2a536c}.full{width:100%}.leftstack,.rightstack{display:flex;flex-direction:column;gap:12px;min-width:0}.center{display:flex;flex-direction:column;gap:12px;min-width:0}.decks{display:grid;grid-template-columns:1fr 1fr;gap:12px}.deck{padding:12px;min-width:0}.deckhead{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:900;letter-spacing:1px}.onair{font-size:10px;color:#8ba9bb;border:1px solid #3f6277;padding:4px 7px;border-radius:4px}.onair.active{background:#e41b35;color:#fff;border-color:#ff6d7d;animation:blink .8s step-end infinite}@keyframes blink{50%{opacity:.4}}.screen{height:124px;background:#091c2c;border:1px solid #35576c;border-radius:7px;padding:14px;margin:10px 0;display:flex;flex-direction:column;justify-content:center;gap:8px}.song{font-size:18px;font-weight:900;line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}.subsong{color:#9db9cb;font-size:11px}.progress{width:100%;accent-color:#72c7ef}.times{display:flex;justify-content:space-between;font:11px ui-monospace,monospace;color:#a8c9dd}.controls{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}.controls button{height:40px;background:#e8e9eb;color:#1c2831;border:1px solid #c5ccd3;border-radius:6px;font-size:16px;font-weight:900}.controls button:hover{background:white}.vol{display:flex;align-items:center;gap:9px;font-size:10px;margin-top:10px;color:#9fb9c9}.vol input{flex:1;min-width:0;accent-color:#72c7ef}.queue{max-height:265px;overflow:auto;background:#091c2c;border:1px solid #35576c;border-radius:6px}.qrow{display:grid;grid-template-columns:25px minmax(0,1fr) 58px;align-items:center;gap:8px;padding:10px 9px;border-bottom:1px solid #29465a;font-size:11px;cursor:pointer}.qrow:hover{background:#1c425a}.qrow.selected{background:#285b77}.qrow b{color:#80b8d7}.qrow span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.qrow small{text-align:right;color:#8aa7ba}.toolbar{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:10px}.search{width:100%;padding:10px;background:#091c2c;color:white;border:1px solid #476b83;border-radius:6px;outline:none;font-size:12px}.search:focus{border-color:#93d9fa}.library{max-height:480px;overflow:auto}.librow{display:flex;align-items:center;gap:8px;border-bottom:1px solid #2d4a5c;padding:9px 0;font-size:11px}.librow span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.librow button{background:#e8e9eb;color:#1c2831;border:0;border-radius:4px;font-size:10px;font-weight:800;padding:5px 7px}.event{padding:10px;border:1px solid #385b70;background:#0a1e2d;border-radius:6px;margin-bottom:8px}.event strong{font-size:12px}.event p{font-size:10px;color:#a4bdcc;margin:5px 0 0}.event input{background:#081a28;color:white;border:1px solid #53758a;border-radius:5px;padding:6px;font-size:12px;width:100%;margin-top:8px}.switches{display:flex;gap:7px;margin:9px 0}.switches label{flex:1;padding:8px;background:#091c2c;border:1px solid #385b70;border-radius:5px;font-size:10px;cursor:pointer}.switches input{accent-color:#71c9ed}.statusbar{margin:0 12px 12px;padding:9px 12px;border:1px solid #2e546b;border-radius:6px;background:#091c2c;font-size:11px;color:#a6cadf;display:flex;justify-content:space-between;gap:8px}.widepanel .pad{padding:12px}.schedule{display:grid;grid-template-columns:1fr 1fr;gap:10px}.smalltitle{font-size:11px;font-weight:900;letter-spacing:.07em;margin-bottom:8px}.compact{font-size:11px;color:#a5bfce}.hidden{display:none}@media(max-width:1120px){.workspace{grid-template-columns:165px minmax(350px,1fr)}.rightstack{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr}}@media(max-width:750px){header{height:auto;flex-wrap:wrap}.workspace{display:flex;flex-direction:column}.decks{grid-template-columns:1fr}.leftstack{order:2}.rightstack{display:flex;order:3}.center{order:1}.hotgrid{grid-template-columns:repeat(4,1fr)}.clock{font-size:20px}}
-
-/* RMR V2: automatización/hotkeys | música automática | programas | explorer */
-.workspace{display:grid!important;grid-template-columns:minmax(185px,.8fr) minmax(290px,1.2fr) minmax(290px,1.2fr) minmax(220px,.95fr)!important;align-items:start}
-.center{display:contents}.decks{display:contents}.decks>.deck{min-width:0}
-.leftstack{grid-column:1;grid-row:1;display:flex!important;flex-direction:column}
-.decks>.deck:first-child{grid-column:2;grid-row:1}
-.decks>.deck:nth-child(2){grid-column:3;grid-row:1}
-.rightstack{grid-column:4;grid-row:1;display:flex!important;flex-direction:column}
-.center>.widepanel{grid-column:2/4}
-#automationPanel{order:-2}#hotPanel{order:-1}
-#autoQueuePanel{grid-column:2;grid-row:2}#programQueuePanel{grid-column:3;grid-row:2}
-#autoQueuePanel .queue,#programQueuePanel .queue{max-height:240px}
-#explorerPanel{order:-2}
-#programImport{margin-top:10px;width:100%}
-.folder{padding:8px;border-bottom:1px solid #35576c;cursor:pointer;color:#c6e4f4;font-size:12px}
-.folder.active{background:#285b77}.folder small{display:block;color:#8caec2;margin-top:3px}
-.hot-slot{border:1px solid #35576c;background:#091c2c;border-radius:6px;margin-top:7px;padding:7px}
-.hot-slot .slothead{display:flex;align-items:center;justify-content:space-between;gap:5px;font-size:10px;font-weight:800}
-.hot-slot .slothead button{padding:4px 7px;background:#e8e9eb;color:#26313b;border:0;border-radius:4px;font-size:10px}
-.hot-slot .slotitems{font-size:10px;color:#afc7d5;margin-top:5px;max-height:75px;overflow:auto}
-.hot-slot .slotitems div{padding:3px 0;border-top:1px solid #284355;cursor:pointer}
-#hotgrid{display:none}
-#explorerFiles{max-height:260px;overflow:auto}
-@media(max-width:1200px){.workspace{grid-template-columns:200px minmax(270px,1fr) minmax(270px,1fr)!important}.rightstack{grid-column:1/4;grid-row:3;display:grid!important;grid-template-columns:1fr 1fr}#explorerPanel{order:0}}
-@media(max-width:850px){.workspace{display:flex!important;flex-direction:column}.leftstack,.rightstack,.decks>.deck,.center>.widepanel,#autoQueuePanel,#programQueuePanel{width:100%;grid-column:auto;grid-row:auto}.decks{display:contents}.center{display:contents}.leftstack{order:1}.decks>.deck:first-child{order:2}.decks>.deck:nth-child(2){order:4}#autoQueuePanel{order:3}#programQueuePanel{order:5}.rightstack{order:6;display:flex!important}.center>.widepanel{order:7}}
-
-/* RMR visual lab 03: classic broadcast-control density, original RMR identity */
-:root{color-scheme:light;color:#172c3a;background:#dce4e9;font-family:Arial,Helvetica,sans-serif}
-body{background:#dce4e9;color:#203746}
-header{height:67px;background:linear-gradient(180deg,#102c42,#1b415a);border-bottom:3px solid #74b8d9;color:#f3f8fb;box-shadow:0 2px 7px #223b4c44}
-.logo strong{font-size:18px;letter-spacing:1.3px}.logo small{color:#a5c7dc}.mark{background:#f1f5f7;color:#173b53;border:0;box-shadow:inset 0 0 0 2px #91c1d9}
-.clock{background:#071e2d;border:1px solid #4b819e;border-radius:5px;padding:7px 11px;color:#e8f8ff;font-size:26px}
-.pill{background:#294e64;border-color:#5a8aa5;color:#e2f3fa}.back{color:#e6f3fc}
-.workspace{gap:7px!important;padding:8px!important;grid-template-columns:minmax(185px,.78fr) minmax(285px,1.18fr) minmax(285px,1.18fr) minmax(225px,.96fr)!important;max-width:none}
-.leftstack,.rightstack,.center{gap:7px}
-.panel{background:#edf2f5;border:1px solid #9bafbb;border-radius:4px;box-shadow:0 1px 3px #223a4c22;color:#203746}
-.paneltitle{background:linear-gradient(180deg,#d5e2e9,#c1d2dc);border-bottom:1px solid #a0b7c6;color:#234a63;font-size:11px;padding:9px 10px;letter-spacing:.7px}
-.muted,.compact{color:#587083}.hint{color:#617889}
-.pad{padding:9px}.deck{padding:10px}.deckhead{color:#1b3e55;font-size:11px}
-.screen{height:110px;background:linear-gradient(180deg,#0d2434,#142f42);border:1px solid #5c8398;border-radius:4px;color:#fff;margin:8px 0;box-shadow:inset 0 1px 8px #0005}
-.song{font-size:17px;color:#f1fbff}.subsong{color:#b2c9d7}.times{color:#415e70;font-size:12px}
-.progress,.vol input{accent-color:#2479a6}
-.controls{gap:5px}.controls button{height:39px;background:linear-gradient(#fff,#d6e0e7);color:#234154;border:1px solid #9db0bd;border-radius:4px;box-shadow:0 1px 1px #0002}
-.controls button:hover{background:#c7e5f6}.onair{color:#526c7d;border-color:#b0c3cf;background:#dfe8ed}.onair.active{background:#cc2940;color:#fff;border-color:#a51f35}
-.vol{color:#506e7f}
-.queue{background:#fff;border:1px solid #b5c6d0;border-radius:3px}
-.qrow{border-bottom:1px solid #dbe4e9;color:#284255;padding:9px 8px}
-.qrow:nth-child(even){background:#f2f6f8}.qrow:hover{background:#d5e9f4}.qrow.selected{background:#c2e1f2}.qrow b{color:#1b709e}.qrow small{color:#607c8d}
-.outline,.librow button,.hot-slot .slothead button{background:linear-gradient(#fff,#d9e5eb);color:#21445a;border:1px solid #a6bdcb;border-radius:4px;font-weight:800}
-.outline:hover,.librow button:hover{background:#cbe9f8}
-.search,.event input{background:#fff;color:#203746;border:1px solid #a3b9c7;border-radius:4px}
-.search:focus{border-color:#227baa}
-.librow{border-bottom:1px solid #d4e1e8;color:#2a4558}
-.event{background:#f9fbfc;border:1px solid #bdced8;color:#284354;border-radius:4px}.event p{color:#617c8c}
-.switches label{background:#fff;border-color:#b5c7d2;color:#284255}
-.folder{color:#23475c;border-bottom:1px solid #cbd9e1}.folder.active{background:#c7e2f2}.folder small{color:#617e90}
-.hot-slot{background:#f8fbfd;border-color:#b7cbd6;border-radius:4px}.hot-slot .slotitems{color:#557184}.hot-slot .slotitems div{border-top-color:#d6e3eb}
-.statusbar{background:#18374b;border:0;color:#d5e8f2;border-radius:3px;margin:0 8px 8px}
-#demoSteps .qrow{font-size:12px}
-#demoSteps .qrow.selected{background:#bee6f6;border-left:4px solid #177eb0;font-weight:900}
-#demoState{font-weight:800;color:#236f96}
-#automationPanel{border-top:3px solid #477d9a}#hotPanel{border-top:3px solid #698da0}
-.decks>.deck:first-child{border-top:3px solid #2987b1}.decks>.deck:nth-child(2){border-top:3px solid #648da6}
-#explorerPanel{border-top:3px solid #477d9a}
-@media(max-width:850px){.workspace{display:flex!important;flex-direction:column}.panel{width:100%}header{height:auto;padding:12px}.headright{flex-wrap:wrap}.clock{font-size:21px}}
-
-/* Maqueta de distribución de escritorio inspirada en la referencia Zara: cuatro zonas simultáneas */
-@media(min-width:1201px){
-body{height:100vh;display:flex;flex-direction:column;overflow:hidden}
-header{flex:0 0 62px}
-.workspace{flex:1;min-height:0;overflow:hidden;display:grid!important;grid-template-columns:minmax(195px,16%) minmax(275px,29%) minmax(275px,29%) minmax(230px,26%)!important;grid-template-rows:minmax(0,1fr)!important;align-items:stretch!important;gap:5px!important;padding:6px!important}
-.leftstack{grid-column:1!important;grid-row:1!important;min-height:0;overflow:auto;display:flex!important;flex-direction:column;gap:5px}
-.center{display:contents!important}
-.decks{display:contents!important}
-.decks>.deck:first-child{grid-column:2!important;grid-row:1!important}
-.decks>.deck:nth-child(2){grid-column:3!important;grid-row:1!important}
-.decks>.deck{min-height:0;overflow:auto}
-.rightstack{grid-column:4!important;grid-row:1!important;min-height:0;overflow:auto;display:flex!important;flex-direction:column;gap:5px}
-#autoQueuePanel{grid-column:2!important;grid-row:1!important;align-self:end!important;margin-bottom:0!important;height:39%;z-index:2;overflow:hidden}
-#programQueuePanel{grid-column:3!important;grid-row:1!important;align-self:end!important;margin-bottom:0!important;height:39%;z-index:2;overflow:hidden}
-.decks>.deck{height:60%;align-self:start}
-#autoQueuePanel .queue,#programQueuePanel .queue{max-height:calc(100% - 65px);height:calc(100% - 65px);overflow:auto}
-#autoQueuePanel .pad,#programQueuePanel .pad{height:calc(100% - 38px)}
-#explorerPanel{flex:1;min-height:320px;display:flex;flex-direction:column}
-#explorerPanel .pad{flex:1;min-height:0;display:flex;flex-direction:column}
-#explorerFiles{flex:1;max-height:none;overflow:auto}
-#automationPanel{flex:0 0 auto}
-#hotPanel{flex:1;min-height:250px;overflow:auto}
-#hotSlots{display:grid;grid-template-columns:1fr;gap:4px}
-.hot-slot{margin-top:0}
-#demoLab{position:fixed;bottom:28px;right:12px;width:390px;max-width:calc(100vw - 24px);max-height:55vh;overflow:auto;z-index:15;box-shadow:0 8px 28px #0005}
-#demoLab.collapsed{width:auto;max-height:none}
-#demoLab.collapsed .pad{display:none}
-.statusbar{flex:0 0 auto;margin:0 6px 5px}
-}
-#demoLab .paneltitle{cursor:pointer}
-#demoLab .paneltitle:after{content:"▾";margin-left:8px}
-#demoLab.collapsed .paneltitle:after{content:"▴"}
-</style></head><body><header><div class="logo"><div class="mark">RMR</div><div><strong>RMR TECNOLOGY</strong><small>RADIO AUTOMATION · STUDIO 2.0</small></div></div><div class="headright"><span class="pill">LABORATORIO · SIN EMISIÓN REAL</span><span id="clock" class="clock">00:00:00</span><a class="back" href="/aire/">← PRODUCCIÓN</a></div></header><main class="workspace">
-<aside class="leftstack"><section class="panel"><div class="paneltitle">DISPARADORES <span class="muted">01–08</span></div><div class="pad"><div class="hotgrid" id="hotgrid"></div><p class="hint">Cargá separadores o cortinas y disparalos desde acá.</p><button class="outline full" id="loadHot">+ CARGAR AUDIOS</button><input type="file" id="hotFiles" accept="audio/*" multiple hidden></div></section><section class="panel"><div class="paneltitle">ESTADO GENERAL</div><div class="pad"><div class="smalltitle" id="general">LISTO PARA OPERAR</div><div class="compact">Prueba local con archivos de tu computadora. No transmite a ninguna radio.</div></div></section></aside>
-<div class="center"><section class="decks"><div class="panel deck"><div class="deckhead">REPRODUCTOR 01 <span id="air1" class="onair">EN ESPERA</span></div><div class="screen"><div class="song" id="song1">Sin canción cargada</div><div class="subsong" id="meta1">Biblioteca musical · reproductor independiente</div></div><input class="progress" id="seek1" type="range" min="0" max="100" value="0"><div class="times"><span id="elapsed1">00:00</span><span id="remaining1">-00:00</span></div><div class="controls"><button id="prev1" title="Anterior">⏮</button><button id="play1" title="Reproducir o pausar">▶</button><button id="stop1" title="Detener">■</button><button id="next1" title="Siguiente">⏭</button></div><div class="vol">VOLUMEN <input id="vol1" type="range" min="0" max="100" value="85"><span id="voltxt1">85</span></div><audio id="audio1"></audio></div>
-<div class="panel deck"><div class="deckhead">REPRODUCTOR 02 <span id="air2" class="onair">EN ESPERA</span></div><div class="screen"><div class="song" id="song2">Sin canción cargada</div><div class="subsong" id="meta2">Biblioteca musical · reproductor independiente</div></div><input class="progress" id="seek2" type="range" min="0" max="100" value="0"><div class="times"><span id="elapsed2">00:00</span><span id="remaining2">-00:00</span></div><div class="controls"><button id="prev2" title="Anterior">⏮</button><button id="play2" title="Reproducir o pausar">▶</button><button id="stop2" title="Detener">■</button><button id="next2" title="Siguiente">⏭</button></div><div class="vol">VOLUMEN <input id="vol2" type="range" min="0" max="100" value="85"><span id="voltxt2">85</span></div><audio id="audio2"></audio></div></section>
-<section class="panel widepanel"><div class="paneltitle">COLA DE REPRODUCCIÓN <span class="muted" id="queueCount">0 TEMAS</span></div><div class="pad"><div class="toolbar"><button class="outline" id="addLibrary">+ AGREGAR MÚSICA</button><button class="outline" id="clearQueue">LIMPIAR COLA</button><span class="muted">Doble clic: reproducir en reproductor 01</span></div><div class="queue" id="queue"><div class="hint" style="padding:15px">Agregá música desde la biblioteca de la derecha.</div></div></div></section>
-<section class="panel widepanel"><div class="paneltitle">AUTOMATIZACIÓN <span class="muted">PRUEBA DE TANDAS</span></div><div class="pad schedule"><div><div class="smalltitle">TANDA PROGRAMADA</div><div class="event"><strong>Publicidad</strong><p>Elegí el horario y cargá avisos desde tu computadora.</p><input type="time" id="adTime" value="18:30"><div class="toolbar" style="margin-top:9px"><button class="outline" id="addAds">+ AVISOS</button><button class="outline" id="runAds">▶ PROBAR TANDA</button></div><div id="adNames" class="compact">Sin avisos cargados</div></div></div><div><div class="smalltitle">CRITERIO DE INTERRUPCIÓN</div><div class="switches"><label><input type="radio" name="policy" value="cut" checked> Cortar tema</label><label><input type="radio" name="policy" value="wait"> Esperar final</label></div><p class="hint">La tanda programada se activa sólo mientras esta pestaña esté abierta. El audio se prueba localmente.</p><button class="outline" id="toggleSchedule">ACTIVAR HORARIO</button><div class="compact" id="scheduleStatus" style="margin-top:8px">Horario desactivado</div></div></div></section></div>
-<aside class="rightstack"><section class="panel"><div class="paneltitle">BIBLIOTECA MUSICAL <span class="muted" id="libCount">0</span></div><div class="pad"><input class="search" id="search" placeholder="Buscar artista o canción…"><div class="toolbar" style="margin-top:10px"><button class="outline full" id="import">+ IMPORTAR MÚSICA</button></div><div class="library" id="library"><p class="hint">Importá archivos MP3, WAV, M4A o FLAC de tu computadora.</p></div></div></section><section class="panel"><div class="paneltitle">CENTRO DE OPERACIONES</div><div class="pad"><div class="event"><strong>◉ Consola independiente</strong><p>Diseño original de RMR TECNOLOGY inspirado en la lógica de automatización radial.</p></div><div class="event"><strong>◉ Dos reproductores</strong><p>Control manual separado y cola musical compartida.</p></div><div class="event"><strong>◉ Próximos módulos</strong><p>Biblioteca permanente, roles, grilla semanal y salida real de emisión.</p></div></div></section></aside></main><div class="statusbar"><span id="status">RMR TECNOLOGY · Consola de prueba lista</span><span>DISEÑO Y PRODUCCIÓN · SEBASTIÁN SOPELANA</span></div><input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="adFiles" accept="audio/*" multiple hidden><audio id="hotAudio"></audio><audio id="adAudio"></audio><script>
-const $=id=>document.getElementById(id),library=[],queue=[],ads=[],hots=[],decks={1:{index:-1},2:{index:-1}};let scheduleEnabled=false,lastSchedule='',adRunning=false,adPending=false,adIndex=0,resumeDeck=null;const status=s=>{$('status').textContent=s;$('general').textContent=s.slice(0,38).toUpperCase()};const fmt=t=>{if(!Number.isFinite(t))return '00:00';return String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0')};const clean=n=>n.replace(/\.[^.]+$/,'');function addFiles(files,target){for(const f of files){if(f.type.startsWith('audio/')||/\.(mp3|wav|m4a|flac|ogg|aac)$/i.test(f.name))target.push({name:clean(f.name),url:URL.createObjectURL(f)})}}
-function renderLibrary(){const box=$('library'),filter=$('search').value.toLowerCase();box.replaceChildren();library.filter(f=>f.name.toLowerCase().includes(filter)).forEach(f=>{const row=document.createElement('div');row.className='librow';const name=document.createElement('span');name.textContent='♫ '+f.name;const add=document.createElement('button');add.textContent='+ COLA';add.onclick=()=>{queue.push(f);renderQueue();status('Tema agregado a la cola: '+f.name)};row.append(name,add);box.append(row)});$('libCount').textContent=library.length;if(!box.children.length)box.textContent=library.length?'No hay coincidencias':'Todavía no hay música cargada'}
-function renderQueue(){const box=$('queue');box.replaceChildren();queue.forEach((f,i)=>{const row=document.createElement('div');row.className='qrow';const num=document.createElement('b');num.textContent=String(i+1).padStart(2,'0');const name=document.createElement('span');name.textContent=f.name;const time=document.createElement('small');time.textContent='♫ AUDIO';row.append(num,name,time);row.ondblclick=()=>playIndex(1,i);box.append(row)});if(!queue.length){const msg=document.createElement('div');msg.className='hint';msg.style.padding='15px';msg.textContent='Agregá música desde la biblioteca de la derecha.';box.append(msg)}$('queueCount').textContent=queue.length+' TEMAS'}
-function playIndex(n,i){if(!queue.length)return status('Primero agregá canciones a la cola');const d=decks[n];d.index=(i+queue.length)%queue.length;const f=queue[d.index],a=$('audio'+n);a.src=f.url;$('song'+n).textContent=f.name;$('meta'+n).textContent='PISTA '+(d.index+1)+' DE '+queue.length;a.play().then(()=>status('Reproductor '+n+': '+f.name)).catch(()=>status('Tocá PLAY para habilitar audio'));renderAir(n)}
-function renderAir(n){const a=$('audio'+n),air=$('air'+n);air.classList.toggle('active',!a.paused&&!a.ended);air.textContent=!a.paused&&!a.ended?'EN EL AIRE':'EN ESPERA';$('play'+n).textContent=a.paused?'▶':'Ⅱ'}
-function advance(n,dir=1){if(!queue.length)return status('La cola está vacía');playIndex(n,(decks[n].index<0?0:decks[n].index+dir))}
-for(const n of [1,2]){const a=$('audio'+n);a.volume=.85;$('play'+n).onclick=()=>{if(!a.src)advance(n,0);else if(a.paused)a.play().catch(()=>{});else a.pause()};$('stop'+n).onclick=()=>{a.pause();a.currentTime=0;renderAir(n)};$('next'+n).onclick=()=>advance(n);$('prev'+n).onclick=()=>advance(n,-1);$('vol'+n).oninput=e=>{a.volume=e.target.value/100;$('voltxt'+n).textContent=e.target.value};$('seek'+n).oninput=e=>{if(Number.isFinite(a.duration))a.currentTime=a.duration*e.target.value/100};a.ontimeupdate=()=>{$('elapsed'+n).textContent=fmt(a.currentTime);$('remaining'+n).textContent='-'+fmt(a.duration-a.currentTime);$('seek'+n).value=a.duration?a.currentTime/a.duration*100:0};a.onplay=a.onpause=()=>renderAir(n);a.onended=()=>{if(n===1&&adPending){adPending=false;startAds();return}advance(n)}}
-$('import').onclick=$('addLibrary').onclick=()=>$('musicFiles').click();$('musicFiles').onchange=e=>{addFiles(e.target.files,library);renderLibrary();status(library.length+' canciones en biblioteca')};$('search').oninput=renderLibrary;$('clearQueue').onclick=()=>{queue.length=0;renderQueue();status('Cola vaciada')};
-$('loadHot').onclick=()=>$('hotFiles').click();$('hotFiles').onchange=e=>{addFiles(e.target.files,hots);renderHot();status('Disparadores cargados')};const hotAudio=$('hotAudio');function renderHot(){const box=$('hotgrid');box.replaceChildren();for(let i=0;i<8;i++){const btn=document.createElement('button');btn.className='hot';const num=document.createElement('span');num.textContent=String(i+1).padStart(2,'0');const name=document.createElement('small');name.textContent=hots[i]?.name||'VACÍO';btn.append(num,name);btn.onclick=()=>{if(!hots[i])return status('Cargá un audio para el disparador '+(i+1));hotAudio.src=hots[i].url;hotAudio.play().catch(()=>{});document.querySelectorAll('.hot').forEach(b=>b.classList.remove('active'));btn.classList.add('active');status('Disparador '+(i+1)+': '+hots[i].name)};box.append(btn)}}hotAudio.onended=()=>document.querySelectorAll('.hot').forEach(b=>b.classList.remove('active'));renderHot();
-$('addAds').onclick=()=>$('adFiles').click();$('adFiles').onchange=e=>{addFiles(e.target.files,ads);$('adNames').textContent=ads.map(f=>f.name).join(' · ')||'Sin avisos';status(ads.length+' avisos cargados')};const adAudio=$('adAudio');function startAds(){if(!ads.length)return status('Cargá avisos para probar la tanda');adRunning=true;adIndex=0;const a=$('audio1');resumeDeck={wasPlaying:!a.paused,index:decks[1].index,time:a.currentTime};a.pause();playAd()}function playAd(){if(adIndex>=ads.length){adRunning=false;adAudio.removeAttribute('src');if(resumeDeck?.wasPlaying&&decks[1].index>=0){const a=$('audio1');a.currentTime=resumeDeck.time;a.play().catch(()=>{})}status('Tanda terminada · vuelve la música');return}adAudio.src=ads[adIndex].url;adAudio.play().catch(()=>status('Tocá PROBAR TANDA para habilitar el audio'));status('PUBLICIDAD: '+ads[adIndex].name)}adAudio.onended=()=>{adIndex++;playAd()};$('runAds').onclick=()=>{if(adRunning)return;const a=$('audio1');if(document.querySelector('input[name=policy]:checked').value==='wait'&&!a.paused){adPending=true;status('Tanda en espera: termina primero la canción')}else startAds()};$('toggleSchedule').onclick=()=>{scheduleEnabled=!scheduleEnabled;$('scheduleStatus').textContent=scheduleEnabled?'Tanda activa a las '+$('adTime').value:'Horario desactivado';$('toggleSchedule').textContent=scheduleEnabled?'DESACTIVAR HORARIO':'ACTIVAR HORARIO'};setInterval(()=>{const d=new Date();$('clock').textContent=d.toLocaleTimeString('es-AR',{hour12:false});const hm=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');const key=d.toDateString()+hm;if(scheduleEnabled&&hm===$('adTime').value&&key!==lastSchedule){lastSchedule=key;$('runAds').click()}},1000);renderLibrary();renderQueue();
-
-/* RMR: separar flujos y persistir los audios y listas en IndexedDB del navegador. */
-(()=>{
-const $=id=>document.getElementById(id);
-const left=document.querySelector('.leftstack'),center=document.querySelector('.center'),right=document.querySelector('.rightstack');
-const automation=document.querySelector('.center>.widepanel:last-child');automation.id='automationPanel';left.prepend(automation);
-const hot=document.querySelector('.leftstack>.panel:first-child');hot.id='hotPanel';
-const autoQueue=document.querySelector('.center>.widepanel:first-child');autoQueue.id='autoQueuePanel';
-autoQueue.querySelector('.paneltitle').firstChild.textContent='COLA · MÚSICA AUTOMÁTICA ';
-const programPanel=document.createElement('section');programPanel.className='panel widepanel';programPanel.id='programQueuePanel';
-programPanel.innerHTML='<div class="paneltitle">COLA · PROGRAMAS <span class="muted" id="programCount">0 TEMAS</span></div><div class="pad"><div class="toolbar"><button class="outline" id="programImport">+ IMPORTAR ARCHIVOS DEL PROGRAMA</button><input id="programFiles" type="file" accept="audio/*" multiple hidden></div><div id="programQueue" class="queue"></div><p class="hint">Arrastrá archivos de tu PC acá o agregalos desde Audio Explorer. Doble clic para reproducir.</p></div>';
-center.insertBefore(programPanel,autoQueue.nextSibling);
-const explorer=document.createElement('section');explorer.className='panel';explorer.id='explorerPanel';
-explorer.innerHTML='<div class="paneltitle">AUDIO EXPLORER <span class="muted">RAÍZ LOCAL</span></div><div class="pad"><div id="folders"></div><div class="smalltitle" style="margin-top:12px">ARCHIVOS <span id="folderLabel"></span></div><div id="explorerFiles"></div><p class="hint">Biblioteca guardada en este navegador. Para compartir entre computadoras hará falta un servidor.</p></div>';
-right.prepend(explorer);
-document.querySelector('.decks>.deck:first-child .deckhead').firstChild.textContent='MÚSICA AUTOMÁTICA ';
-document.querySelector('.decks>.deck:nth-child(2) .deckhead').firstChild.textContent='REPRODUCTOR · PROGRAMAS ';
-const program=[],hotLists=Array.from({length:8},()=>[]);let activeFolder='Música',database=null;
-const openDb=()=>new Promise((resolve,reject)=>{const req=indexedDB.open('RMR-Studio2',2);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains('state'))db.createObjectStore('state');if(!db.objectStoreNames.contains('files'))db.createObjectStore('files',{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});
-const tx=(store,mode='readonly')=>database.transaction(store,mode).objectStore(store);
-const put=(store,key,value)=>new Promise((resolve,reject)=>{const req=store==='state'?tx(store,'readwrite').put(value,key):tx(store,'readwrite').put(value);req.onsuccess=resolve;req.onerror=()=>reject(req.error)});
-const get=(store,key)=>new Promise((resolve,reject)=>{const req=tx(store).get(key);req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});
-const all=store=>new Promise((resolve,reject)=>{const req=tx(store).getAll();req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>RMR TECNOLOGY · Publicidad</title><style>
+:root{font-family:system-ui,-apple-system,Arial,sans-serif;color-scheme:dark;background:#07121d;color:#e9f3fb}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(145deg,#08131e,#102a3c)}button,input,select{font:inherit}button{cursor:pointer}header{display:flex;justify-content:space-between;align-items:center;padding:17px 24px;background:#081725;border-bottom:1px solid #385c75;gap:16px}h1{font-size:19px;letter-spacing:1px;margin:0}header small{font-size:11px;color:#9cbbcd;letter-spacing:1px}header a{color:#b7d9ec;text-decoration:none;font-size:12px}.tag{border:1px solid #426d85;border-radius:5px;padding:7px 10px;color:#9dd5f2;font-size:11px}main{max-width:1450px;margin:auto;padding:18px}.intro{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:16px}.intro h2{margin:0;font-size:23px}.intro p{margin:6px 0 0;color:#9bb8cb;font-size:13px}.layout{display:grid;grid-template-columns:1fr 1.1fr 1.15fr;gap:12px}.panel{background:#142a3c;border:1px solid #466b83;border-radius:10px;overflow:hidden;min-width:0}.panel h3{font-size:12px;letter-spacing:1px;background:#19374d;padding:13px 15px;margin:0;border-bottom:1px solid #466b83}.content{padding:15px;display:flex;flex-direction:column;gap:13px}.label{font-size:11px;font-weight:750;color:#a9cfe3;letter-spacing:.4px}input,select{background:#091c2c;color:#e9f3fb;border:1px solid #507a96;border-radius:5px;padding:10px;width:100%;min-width:0}input[type=checkbox]{width:auto;accent-color:#58bfe8}button{background:#23475f;color:#f1f8fc;border:1px solid #507a96;border-radius:6px;padding:10px;font-size:12px;font-weight:750}button:hover{background:#316887}button.primary{background:#27759a;border-color:#62b6df}.row{display:flex;gap:8px;align-items:center}.row>*{min-width:0}.row>button{flex:1}.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.days label{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;background:#0c2333;padding:8px 2px;border-radius:5px}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field{display:flex;flex-direction:column;gap:6px}.list{background:#091c2c;border:1px solid #35576c;border-radius:6px;min-height:140px;max-height:400px;overflow:auto}.item{display:flex;align-items:center;gap:8px;padding:10px;border-bottom:1px solid #29465a;font-size:12px}.item span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}.item small{color:#93b7ca}.item button{padding:5px 8px;flex:none}.empty{color:#8caec1;font-size:12px;padding:16px}.notice{font-size:12px;color:#a3bacb;line-height:1.55}.status{margin-top:14px;padding:12px 15px;border:1px solid #35576c;background:#091c2c;border-radius:6px;color:#a7d3e9;font-size:12px}.mini{font-size:11px;color:#92b3c6}.preview{border:1px solid #35576c;background:#091c2c;padding:11px;border-radius:6px}.preview strong{font-size:12px}.preview audio{width:100%;margin-top:8px}.badge{font-size:10px;color:#85d4f6}@media(max-width:950px){.layout{grid-template-columns:1fr 1fr}.layout>.panel:last-child{grid-column:1/-1}}@media(max-width:650px){header{padding:12px;flex-wrap:wrap}.layout{grid-template-columns:1fr}.layout>.panel:last-child{grid-column:auto}main{padding:10px}}
+</style></head><body>
+<header><div><h1>RMR TECNOLOGY</h1><small>RUIDOS MOLESTOS · ESTUDIO PUBLICITARIO</small></div><span class="tag">LABORATORIO · SIN EMISIÓN AL AIRE</span><a href="/aire/">← VOLVER AL ESTUDIO</a></header>
+<main><div class="intro"><div><h2>Central de publicidad</h2><p>Gestión de avisos, armado de tandas y programación horaria.</p></div><span class="badge">VERSIÓN INICIAL</span></div>
+<div class="layout">
+<section class="panel"><h3>01 · ARCHIVO DE AVISOS</h3><div class="content"><button class="primary" id="importBtn">+ INCORPORAR AVISOS</button><input type="file" id="files" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac" multiple hidden><div class="mini">Los audios se guardan localmente en este navegador.</div><div class="list" id="audioList"></div><div class="preview"><strong>PREESCUCHA</strong><div id="now" class="mini">Elegí un aviso para escucharlo.</div><audio id="preview" controls preload="none"></audio></div></div></section>
+<section class="panel"><h3>02 · ARMADO DE TANDAS</h3><div class="content"><div class="field"><label class="label" for="breakName">NOMBRE DE LA TANDA</label><input id="breakName" placeholder="Ej.: Tanda comercial 18:30"></div><div class="field"><span class="label">AVISOS DISPONIBLES</span><div id="available" class="list"></div></div><div class="field"><span class="label">ORDEN DE REPRODUCCIÓN</span><div id="selected" class="list"></div></div><button class="primary" id="saveBreak">GUARDAR TANDA</button><div class="field"><span class="label">TANDAS GUARDADAS</span><div id="breaks" class="list"></div></div></div></section>
+<section class="panel"><h3>03 · PROGRAMACIÓN PUBLICITARIA</h3><div class="content"><div class="field"><label class="label" for="breakSelect">TANDA</label><select id="breakSelect"></select></div><div class="two"><div class="field"><label class="label" for="hour">HORARIO</label><input type="time" id="hour" value="18:30"></div><div class="field"><label class="label" for="mode">ENTRADA</label><select id="mode"><option value="wait">Al finalizar tema</option><option value="cut">Inmediata</option></select></div></div><div class="field"><span class="label">DÍAS DE LA SEMANA</span><div class="days" id="days"></div></div><button class="primary" id="addEvent">+ AGREGAR HORARIO</button><div class="field"><span class="label">AGENDA</span><div id="events" class="list"></div></div><div class="row"><button id="test">▶ PROBAR TANDA</button><button id="stop">■ DETENER</button></div><div class="notice">La prueba reproduce la tanda seleccionada en este navegador. Los horarios se guardan, pero la emisión automática aún no está habilitada: primero vamos a probar el motor y las prioridades.</div></div></section>
+</div><div class="status" id="status">RMR Publicidad lista. Empezá cargando los avisos.</div></main>
+<script>
+(()=>{'use strict';const $=id=>document.getElementById(id);let db=null,records=[],breaks=[],events=[],draft=[],playing=false,seq=[],seqIndex=0,objectUrls=new Map();
+const say=t=>$('status').textContent=t;
+const open=()=>new Promise((resolve,reject)=>{const r=indexedDB.open('RMR-Publicidad',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('audio',{keyPath:'id'});d.createObjectStore('data')};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
+const request=(store,method,...args)=>new Promise((resolve,reject)=>{const tx=db.transaction(store,method==='get'||method==='getAll'?'readonly':'readwrite');const q=tx.objectStore(store)[method](...args);q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)});
+const save=()=>request('data','put',{breaks,events},'config');
 const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
-const save=()=>{if(!database)return;put('state','config',{queue:queue.map(x=>x.id),program:program.map(x=>x.id),ads:ads.map(x=>x.id),hotLists:hotLists.map(a=>a.map(x=>x.id)),adTime:$('adTime').value,policy:document.querySelector('input[name=policy]:checked').value,scheduleEnabled}).catch(console.error)};
-async function ingest(files,category){if(!database)return status('Esperá a que termine de abrirse el guardado local');let imported=[];for(const f of files){if(!f.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(f.name))continue;const rec={id:id(),name:f.name.replace(/\.[^.]+$/,''),category,blob:f};await put('files',null,rec);const item={id:rec.id,name:rec.name,url:URL.createObjectURL(f),category};imported.push(item);if(category==='Música')library.push(item);if(category==='Programas')program.push(item);if(category==='Publicidad')ads.push(item)}if(category==='Música')renderLibrary();if(category==='Programas')renderProgram();if(category==='Publicidad')$('adNames').textContent=ads.map(x=>x.name).join(' · ');renderExplorer();save();status(imported.length+' audios guardados en '+category);return imported}
-function renderProgram(){const box=$('programQueue');box.replaceChildren();program.forEach((f,i)=>{const row=document.createElement('div');row.className='qrow';row.innerHTML='<b>'+(i+1)+'</b><span></span><small>♫</small>';row.querySelector('span').textContent=f.name;row.ondblclick=()=>playProgram(i);box.append(row)});$('programCount').textContent=program.length+' TEMAS';if(!program.length)box.innerHTML='<p class="hint">Arrastrá canciones del programa acá.</p>'}
-function playProgram(i){if(!program.length)return status('Cargá temas para el programa');const d=decks[2],a=$('audio2');d.index=(i+program.length)%program.length;const f=program[d.index];a.src=f.url;$('song2').textContent=f.name;$('meta2').textContent='PROGRAMA · '+(d.index+1)+' / '+program.length;a.play().catch(()=>{});renderAir(2)}
-$('next2').onclick=()=>playProgram(decks[2].index+1);$('prev2').onclick=()=>playProgram(decks[2].index-1);$('play2').onclick=()=>{const a=$('audio2');if(!a.src)playProgram(0);else if(a.paused)a.play().catch(()=>{});else a.pause()};$('audio2').onended=()=>playProgram(decks[2].index+1);
-$('programImport').onclick=()=>$('programFiles').click();$('programFiles').onchange=e=>ingest(e.target.files,'Programas');
-for(const target of [programPanel,document.querySelector('.decks>.deck:nth-child(2)')]){target.ondragover=e=>e.preventDefault();target.ondrop=e=>{e.preventDefault();if(e.dataTransfer.files.length)ingest(e.dataTransfer.files,'Programas')}}
-function renderExplorer(){const folderBox=$('folders');folderBox.replaceChildren();for(const cat of ['Música','Separadores','Programas','Publicidad']){const el=document.createElement('div');el.className='folder'+(activeFolder===cat?' active':'');const count=cat==='Música'?library.length:cat==='Programas'?program.length:cat==='Publicidad'?ads.length:hotLists.flat().length;el.innerHTML='▸ '+cat+' <small>'+count+' audios</small>';el.onclick=()=>{activeFolder=cat;renderExplorer()};folderBox.append(el)}$('folderLabel').textContent='· '+activeFolder;const files=$('explorerFiles');files.replaceChildren();const arr=activeFolder==='Música'?library:activeFolder==='Programas'?program:activeFolder==='Publicidad'?ads:hotLists.flat();arr.forEach(f=>{const row=document.createElement('div');row.className='librow';const title=document.createElement('span');title.textContent=f.name;const add=document.createElement('button');add.textContent=activeFolder==='Música'?'+ AUTO':'+ PROG';add.onclick=()=>{if(activeFolder==='Música'){queue.push(f);renderQueue()}else{program.push(f);renderProgram()}save()};row.append(title,add);files.append(row)})}
-function renderSlots(){const box=document.createElement('div');box.id='hotSlots';for(let i=0;i<8;i++){const slot=document.createElement('div');slot.className='hot-slot';const head=document.createElement('div');head.className='slothead';const name=document.createElement('span');name.textContent='DISPARADOR '+String(i+1).padStart(2,'0');const add=document.createElement('button');add.textContent='+ LISTA';const inp=document.createElement('input');inp.type='file';inp.accept='audio/*';inp.multiple=true;inp.hidden=true;add.onclick=()=>inp.click();inp.onchange=async e=>{const items=await ingest(e.target.files,'Separadores');if(items){hotLists[i].push(...items);draw();save()}};head.append(name,add,inp);const list=document.createElement('div');list.className='slotitems';const draw=()=>{list.replaceChildren();hotLists[i].forEach((f,j)=>{const item=document.createElement('div');item.textContent=(j+1)+'. '+f.name;item.onclick=()=>{const a=$('hotAudio');a.src=f.url;a.play().catch(()=>{});status('Disparador '+(i+1)+': '+f.name)};list.append(item)});if(!hotLists[i].length)list.textContent='Lista vacía'};draw();slot.append(head,list);box.append(slot)}$('hotPanel').querySelector('.pad').append(box);$('hotPanel').querySelector('.hint').textContent='Cada disparador tiene su propia lista. Tocá un tema para reproducirlo.';$('loadHot').style.display='none'}
-const originalRenderQueue=renderQueue;renderQueue=function(){originalRenderQueue();save()};
-$('musicFiles').onchange=e=>ingest(e.target.files,'Música');$('adFiles').onchange=e=>ingest(e.target.files,'Publicidad');$('hotFiles').onchange=e=>ingest(e.target.files,'Separadores');
-$('adTime').onchange=save;document.querySelectorAll('input[name=policy]').forEach(e=>e.onchange=save);
-const oldToggle=$('toggleSchedule').onclick;$('toggleSchedule').onclick=()=>{oldToggle();save()};
-$('clearQueue').onclick=()=>{queue.length=0;renderQueue();status('Cola vaciada')};
-renderSlots();renderProgram();renderExplorer();
-openDb().then(async db=>{database=db;const records=await all('files');const byId=new Map();for(const f of records){const item={id:f.id,name:f.name,category:f.category,url:URL.createObjectURL(f.blob)};byId.set(f.id,item);if(f.category==='Música')library.push(item)}const state=await get('state','config');if(state){queue.push(...(state.queue||[]).map(x=>byId.get(x)).filter(Boolean));program.push(...(state.program||[]).map(x=>byId.get(x)).filter(Boolean));ads.push(...(state.ads||[]).map(x=>byId.get(x)).filter(Boolean));(state.hotLists||[]).forEach((ids,i)=>{if(hotLists[i])hotLists[i].push(...ids.map(x=>byId.get(x)).filter(Boolean))});if(state.adTime)$('adTime').value=state.adTime;if(state.policy){const radio=document.querySelector('input[name=policy][value="'+state.policy+'"]');if(radio)radio.checked=true}if(state.scheduleEnabled){scheduleEnabled=true;$('toggleSchedule').textContent='DESACTIVAR HORARIO';$('scheduleStatus').textContent='Tanda activa a las '+$('adTime').value}}renderLibrary();originalRenderQueue();renderProgram();renderExplorer();$('hotSlots').remove();renderSlots();$('adNames').textContent=ads.map(x=>x.name).join(' · ')||'Sin avisos';status('Configuración y archivos locales recuperados')}).catch(e=>status('No se pudo abrir el guardado local: '+e.message));
-})();
-</script>
-<script>
-/* Laboratorio de flujo real: audios WAV generados localmente para probar transiciones. */
-(()=>{
-const $=id=>document.getElementById(id);
-const section=document.createElement('section');section.className='panel';section.style.cssText='grid-column:1/-1;order:20';
-section.innerHTML='<div class="paneltitle">PRUEBA REAL · AUTOMATIZACIÓN DE AUDIO <span class="muted">SIN SALIDA AL AIRE</span></div><div class="pad"><p class="hint">Un circuito completo con audios de demostración: música → separador → música → tanda de dos avisos → regreso a música. No necesitás importar archivos para probarlo.</p><div class="toolbar"><button class="outline" id="demoStart">▶ INICIAR PRUEBA COMPLETA</button><button class="outline" id="demoStop">■ DETENER PRUEBA</button><span class="muted" id="demoState">LISTO</span></div><div id="demoSteps" class="queue" style="max-height:none"><div class="qrow">1 · Música automática</div><div class="qrow">2 · Separador</div><div class="qrow">3 · Siguiente canción</div><div class="qrow">4 · Tanda: aviso 1 + aviso 2</div><div class="qrow">5 · Regreso a música</div></div></div>';
-document.querySelector('.workspace').append(section);
-function tone(freq,seconds){const rate=22050,count=Math.floor(rate*seconds),buf=new ArrayBuffer(44+count*2),v=new DataView(buf);const str=(p,t)=>{for(let i=0;i<t.length;i++)v.setUint8(p+i,t.charCodeAt(i))};str(0,'RIFF');v.setUint32(4,36+count*2,true);str(8,'WAVE');str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,rate,true);v.setUint32(28,rate*2,true);v.setUint16(32,2,true);v.setUint16(34,16,true);str(36,'data');v.setUint32(40,count*2,true);for(let i=0;i<count;i++){const t=i/rate,env=Math.min(1,i/(rate*.06),(count-i)/(rate*.08));v.setInt16(44+i*2,Math.sin(2*Math.PI*freq*t)*Math.max(0,env)*6500,true)}return URL.createObjectURL(new Blob([buf],{type:'audio/wav'}))}
-const steps=[['MÚSICA AUTOMÁTICA · Tema 01',220,3],['SEPARADOR · Identificación de emisora',540,1.4],['MÚSICA AUTOMÁTICA · Tema 02',294,3],['TANDA · Aviso 01',410,1.5],['TANDA · Aviso 02',490,1.5],['REGRESO A MÚSICA · Tema 03',330,3]];
-let running=false,index=0,urls=[],oldEnded=null,oldSrc='',oldTime=0,oldPaused=true;const a=$('audio1');
-function show(){document.querySelectorAll('#demoSteps .qrow').forEach((el,i)=>{el.classList.toggle('selected',running&&i===(index<3?index:index<5?3:4))});$('demoState').textContent=running?'ETAPA '+(index+1)+' / '+steps.length:'LISTO'}
-function finish(){if(!running)return;running=false;a.pause();a.onended=oldEnded;a.removeAttribute('src');a.load();$('song1').textContent='Prueba terminada';$('meta1').textContent='Circuito completo verificado visualmente';$('demoState').textContent='PRUEBA FINALIZADA';document.querySelectorAll('#demoSteps .qrow').forEach(el=>el.classList.remove('selected'));urls.forEach(u=>URL.revokeObjectURL(u));urls=[];if(oldSrc){a.src=oldSrc;if(Number.isFinite(oldTime))a.currentTime=oldTime}renderAir(1)}
-function next(){if(!running)return;if(index>=steps.length){finish();return}const step=steps[index];$('song1').textContent=step[0];$('meta1').textContent='DEMOSTRACIÓN · '+(index+1)+' DE '+steps.length;a.src=urls[index];a.play().catch(()=>{$('demoState').textContent='TOCÁ PLAY PARA CONTINUAR'});show()}
-$('demoStart').onclick=()=>{if(running)return;oldEnded=a.onended;oldSrc=a.getAttribute('src')||'';oldTime=a.currentTime||0;oldPaused=a.paused;a.pause();urls=steps.map(x=>tone(x[1],x[2]));running=true;index=0;a.onended=()=>{index++;next()};next()};
-$('demoStop').onclick=()=>{if(running)finish();else $('demoState').textContent='SIN PRUEBA ACTIVA'};
-})();
-</script><script>
-(()=>{
-const lab=[...document.querySelectorAll('.workspace>section.panel')].find(x=>x.textContent.includes('PRUEBA REAL · AUTOMATIZACIÓN DE AUDIO'));
-if(lab){lab.id='demoLab';lab.classList.add('collapsed');lab.querySelector('.paneltitle').title='Abrir o cerrar prueba de automatización';lab.querySelector('.paneltitle').onclick=()=>lab.classList.toggle('collapsed')}
-})();
-</script>
-<style id="rmr-reference-layout">
-/* Layout reference: traditional desktop radio automation workbench, not a color swap */
-@media(min-width:1100px){
-body{height:100vh;overflow:hidden;display:flex;flex-direction:column}
-header{flex:0 0 56px!important;height:56px!important}
-#rmrMenubar{flex:0 0 31px;display:flex;align-items:center;gap:0;background:#c4d3dc;border-bottom:1px solid #8ca7b8;color:#25485d;font:700 12px Arial,sans-serif}
-#rmrMenubar span{padding:7px 17px;border-right:1px solid #9eb6c3}
-#rmrToolstrip{flex:0 0 42px;display:flex;align-items:center;gap:8px;padding:5px 10px;background:#e6eef2;border-bottom:1px solid #a1b6c3}
-#rmrToolstrip .tag{padding:5px 10px;background:#fff;border:1px solid #a9bdc9;border-radius:2px;color:#315368;font:700 11px Arial}
-.workspace{flex:1;min-height:0;overflow:hidden;display:grid!important;grid-template-columns:18% 29% 29% 24%!important;grid-template-rows:minmax(0,1fr)!important;padding:5px!important;gap:5px!important}
-.leftstack{grid-column:1!important;grid-row:1!important;display:flex!important;flex-direction:column;min-height:0;overflow:auto}
-.center,.decks{display:contents!important}
-.decks>.deck:first-child{grid-column:2!important;grid-row:1!important;height:32%!important;align-self:start!important;overflow:auto}
-.decks>.deck:nth-child(2){grid-column:3!important;grid-row:1!important;height:32%!important;align-self:start!important;overflow:auto}
-#autoQueuePanel{grid-column:2!important;grid-row:1!important;align-self:end!important;height:67%!important;min-height:0!important;z-index:1}
-#programQueuePanel{grid-column:3!important;grid-row:1!important;align-self:end!important;height:67%!important;min-height:0!important;z-index:1}
-#autoQueuePanel .pad,#programQueuePanel .pad{height:calc(100% - 35px);display:flex;flex-direction:column}
-#autoQueuePanel .queue,#programQueuePanel .queue{flex:1;min-height:0;max-height:none!important;overflow:auto}
-.rightstack{grid-column:4!important;grid-row:1!important;display:flex!important;flex-direction:column;min-height:0;overflow:auto}
-#explorerPanel{flex:1;min-height:0}
-#explorerPanel .pad{min-height:0;overflow:auto}
-#demoLab{position:fixed!important;right:8px;bottom:24px;width:390px;max-height:60vh;z-index:20}
-#automationPanel{order:-2}#hotPanel{order:-1}
-.panel{border-radius:1px!important;box-shadow:none!important}
-.paneltitle{font-weight:800!important;text-transform:uppercase}
-.screen{height:72px!important;margin:5px 0!important}.song{font-size:14px!important}
-.deck{padding:8px!important}.controls button{height:29px!important}
-.statusbar{flex:0 0 22px}
-}
-@media(max-width:1099px){#rmrMenubar,#rmrToolstrip{display:none}}
-</style>
-<script>
-(()=>{
-const header=document.querySelector('header');
-if(!document.getElementById('rmrMenubar')){
-const menu=document.createElement('nav');menu.id='rmrMenubar';menu.innerHTML='<span>ARCHIVO</span><span>EDICIÓN</span><span>REPRODUCCIÓN</span><span>EVENTOS</span><span>HERRAMIENTAS</span><span>AYUDA</span>';
-const tools=document.createElement('div');tools.id='rmrToolstrip';tools.innerHTML='<span class="tag">RMR · MESA DE AUTOMATIZACIÓN</span><span class="tag">AUTO / LISTA MUSICAL</span><span class="tag">PROGRAMA / OPERADOR</span><span class="tag">PUBLICIDAD / EVENTOS</span><span class="tag">EXPLORADOR</span>';
-header.after(menu,tools);
-}
-const d1=document.querySelector('.decks>.deck:first-child'),d2=document.querySelector('.decks>.deck:nth-child(2)');
-if(d1)d1.querySelector('.deckhead').firstChild.textContent='AUTOMÁTICO · CANAL 01 ';
-if(d2)d2.querySelector('.deckhead').firstChild.textContent='PROGRAMA · CANAL 02 ';
-const auto=document.getElementById('autoQueuePanel'),prog=document.getElementById('programQueuePanel');
-if(auto)auto.querySelector('.paneltitle').firstChild.textContent='LISTA DE EMISIÓN AUTOMÁTICA ';
-if(prog)prog.querySelector('.paneltitle').firstChild.textContent='LISTA DE PROGRAMA EN VIVO ';
-})();
-</script>
-<style id="rmr-studio-identity">
-/* Ruidos Molestos Studio look, desktop radio-automation workbench layout */
-:root{color-scheme:dark!important;background:#07121d!important;color:#e9f3fb!important;font-family:system-ui,-apple-system,Arial,sans-serif!important}
-body{background:linear-gradient(160deg,#08131e,#0d2334)!important;color:#e9f3fb!important}
-header{background:#081725!important;border-bottom:1px solid #466b83!important;color:#e9f3fb!important}
-#rmrMenubar{background:#112b3e!important;border-bottom:1px solid #3c647d!important;color:#b8d8e9!important}
-#rmrMenubar span{border-right:1px solid #36566d!important}
-#rmrToolstrip{background:#0b2030!important;border-bottom:1px solid #36566d!important}
-#rmrToolstrip .tag{background:#18394f!important;color:#b5d7e9!important;border:1px solid #466b83!important;border-radius:5px!important}
-.panel{background:#142a3c!important;border:1px solid #466b83!important;border-radius:9px!important;box-shadow:0 4px 15px #0003!important;color:#e9f3fb!important}
-.paneltitle{background:#19374d!important;border-bottom:1px solid #466b83!important;color:#d7efff!important;font-size:11px!important;letter-spacing:1px!important}
-.deck{background:#142a3c!important}.deckhead{color:#cce7f5!important}
-.screen{background:#091c2c!important;border:1px solid #35576c!important;color:#f2f9ff!important;border-radius:6px!important}
-.song{color:#f2f9ff!important}.subsong{color:#a3bacb!important}
-.times,.vol{color:#b9d0e0!important}
-.controls button,.outline,.librow button,.hot-slot button{background:#23475f!important;color:#f1f8fc!important;border:1px solid #507a96!important;border-radius:6px!important;box-shadow:none!important}
-.controls button:hover,.outline:hover,.librow button:hover{background:#316887!important}
-.queue,.library{background:#091c2c!important;border:1px solid #35576c!important;border-radius:6px!important}
-.qrow{background:#0c2536!important;color:#e5f3fa!important;border-bottom:1px solid #29465a!important}
-.qrow:nth-child(even){background:#102c40!important}.qrow:hover{background:#1e4c66!important}.qrow.selected{background:#245a77!important;color:#fff!important}
-.qrow b{color:#80d6ff!important}.qrow small,.muted,.compact,.hint{color:#a3bacb!important}
-.search,.event input{background:#091c2c!important;color:#f1f8fc!important;border:1px solid #507a96!important}
-.event,.hot-slot{background:#10283a!important;border:1px solid #35576c!important;color:#e3f2fa!important}
-.event p,.hot-slot .slotitems,.folder small{color:#a3bacb!important}
-.switches label{background:#10283a!important;border-color:#35576c!important;color:#d5e9f4!important}
-.folder,.librow{color:#d7ecf8!important;border-bottom:1px solid #35576c!important}.folder.active{background:#285b77!important}
-.statusbar{background:#091c2c!important;color:#c8e2f0!important;border:1px solid #35576c!important}
-#demoState{color:#82d6ff!important}
-#demoSteps .qrow.selected{background:#225c7b!important;border-left:4px solid #67c7f4!important}
-#automationPanel,#hotPanel,#explorerPanel,.decks>.deck{border-top:2px solid #5cb4e2!important}
-@media(min-width:1100px){
-.workspace{grid-template-columns:minmax(190px,18%) minmax(0,29%) minmax(0,29%) minmax(220px,24%)!important}
-#autoQueuePanel,#programQueuePanel{display:flex;flex-direction:column}
-#autoQueuePanel>.pad,#programQueuePanel>.pad{flex:1;min-height:0}
-#autoQueuePanel .queue,#programQueuePanel .queue{overflow:auto!important}
-}
-</style>
-<style>
-#rmrAdsPlanner{display:flex;flex-direction:column;gap:8px;font-size:11px}
-#rmrAdsPlanner input,#rmrAdsPlanner select{background:#091c2c;color:#e9f3fb;border:1px solid #507a96;border-radius:5px;padding:6px;min-width:0;width:100%}
-#rmrAdsPlanner label{display:flex;flex-direction:column;gap:4px;color:#b8d8e9}
-#rmrAdsPlanner .rmrTwo{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-#rmrAdsPlanner .rmrDays{display:flex;flex-wrap:wrap;gap:3px}
-#rmrAdsPlanner .rmrDays label{display:flex;align-items:center;flex-direction:row;gap:2px;padding:4px;border:1px solid #35576c;border-radius:4px;color:#e9f3fb}
-#rmrAdsPlanner .rmrDays input{width:auto}
-#rmrAdsPlanner .rmrEvents{max-height:165px;overflow:auto;background:#091c2c;border:1px solid #35576c;border-radius:5px}
-#rmrAdsPlanner .rmrEvent{padding:7px;border-bottom:1px solid #29465a;display:flex;align-items:center;justify-content:space-between;gap:5px}
-#rmrAdsPlanner .rmrEvent button{padding:4px 7px}
-#rmrAdsPlanner .rmrNotice{color:#91cce9;line-height:1.5}
-</style>
-<script>
-(()=>{
-const panel=document.getElementById('automationPanel');if(!panel)return;
-const existing=panel.querySelector('.pad');if(existing)existing.style.display='none';
-const p=document.createElement('div');p.id='rmrAdsPlanner';p.className='pad';
-p.innerHTML=`
-<div class="smalltitle">PAUTA PUBLICITARIA RMR · LABORATORIO</div>
-<div class="rmrNotice">Prepará los avisos con “Cargar audios”, creá pases y probalos sin transmitir.</div>
-<button class="outline full" id="rmrAdImport">+ CARGAR AUDIOS DE PUBLICIDAD</button>
-<div id="rmrAdLoaded" class="compact">Sin avisos cargados</div>
-<div class="rmrTwo"><label>Horario<input id="rmrAdHour" type="time" value="18:30"></label><label>Entrada<select id="rmrAdMode"><option value="wait">Al terminar la canción</option><option value="cut">Inmediata</option></select></label></div>
-<div class="rmrTwo"><label>Prioridad<select id="rmrAdPriority"><option value="high">Alta</option><option value="low">Normal</option></select></label><label>Espera máxima (min)<input id="rmrAdMaxWait" type="number" min="1" max="120" value="5"></label></div>
-<div class="smalltitle">DÍAS DE EMISIÓN</div>
-<div class="rmrDays" id="rmrAdDays"></div>
-<button class="outline full" id="rmrAdAdd">+ PROGRAMAR TANDA</button>
-<div class="smalltitle">AGENDA DE TANDAS</div><div class="rmrEvents" id="rmrAdEvents"></div>
-<div class="rmrTwo"><button class="outline" id="rmrAdEnable">▶ ACTIVAR AGENDA</button><button class="outline" id="rmrAdTest">▶ PROBAR TANDA</button></div>
-<div id="rmrAdStatus" class="rmrNotice">Agenda desactivada. Los pases se guardan en este navegador.</div>
-`;
-panel.append(p);panel.querySelector('.paneltitle').firstChild.textContent='PUBLICIDAD · PAUTA RMR ';
-const byId=id=>document.getElementById(id);
-const days=['D','L','M','X','J','V','S'];days.forEach((d,i)=>{const l=document.createElement('label');l.innerHTML='<input type="checkbox" value="'+i+'" checked>'+d;byId('rmrAdDays').append(l)});
-const key='rmr-publicidad-agenda-v1';let events=[],enabled=false,lastTick='',pending=null;
-try{const saved=JSON.parse(localStorage.getItem(key)||'{}');events=Array.isArray(saved.events)?saved.events:[];enabled=!!saved.enabled}catch(e){}
-const persist=()=>{try{localStorage.setItem(key,JSON.stringify({events,enabled}))}catch(e){}};
-const say=t=>byId('rmrAdStatus').textContent=t;
-const draw=()=>{const target=byId('rmrAdEvents');target.replaceChildren();events.slice().sort((a,b)=>a.hour.localeCompare(b.hour)).forEach(e=>{const row=document.createElement('div');row.className='rmrEvent';const info=document.createElement('span');info.textContent=e.hour+' · '+(e.mode==='cut'?'Inmediata':'Diferida')+' · '+(e.days||[]).map(i=>days[i]).join('');const remove=document.createElement('button');remove.className='outline';remove.textContent='✕';remove.title='Eliminar pase';remove.onclick=()=>{events=events.filter(x=>x.id!==e.id);persist();draw()};row.append(info,remove);target.append(row)});if(!events.length)target.textContent='Sin tandas programadas';byId('rmrAdEnable').textContent=enabled?'■ DESACTIVAR AGENDA':'▶ ACTIVAR AGENDA'};
-const refresh=()=>{try{byId('rmrAdLoaded').textContent=ads.length?ads.map(x=>x.name).join(' · '):'Sin avisos cargados'}catch(e){}};setInterval(refresh,1500);refresh();
-byId('rmrAdImport').onclick=()=>byId('addAds').click();
-byId('rmrAdAdd').onclick=()=>{const hour=byId('rmrAdHour').value;const selected=[...byId('rmrAdDays').querySelectorAll('input:checked')].map(x=>+x.value);if(!hour||!selected.length){say('Elegí una hora y al menos un día');return}events.push({id:Date.now()+'-'+Math.random(),hour,days:selected,mode:byId('rmrAdMode').value,priority:byId('rmrAdPriority').value,maxWait:+byId('rmrAdMaxWait').value||5});persist();draw();say('Tanda agregada a la agenda')};
-byId('rmrAdEnable').onclick=()=>{enabled=!enabled;persist();draw();say(enabled?'Agenda activa mientras esta pestaña permanezca abierta':'Agenda desactivada')};
-function run(e){if(!ads.length){say('Pase omitido: no hay avisos cargados');return}const policy=document.querySelector('input[name=policy][value="'+e.mode+'"]');if(policy)policy.checked=true;byId('runAds').click();say('Tanda '+e.hour+' enviada al reproductor de publicidad')};
-byId('rmrAdTest').onclick=()=>run({hour:'PRUEBA',mode:byId('rmrAdMode').value});
-setInterval(()=>{if(!enabled)return;const now=new Date(),stamp=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes();if(stamp===lastTick)return;lastTick=stamp;const hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const matching=events.filter(e=>e.hour===hm&&e.days.includes(now.getDay()));if(!matching.length)return;matching.sort((a,b)=>(a.priority==='high'?-1:1)-(b.priority==='high'?-1:1));run(matching[0]);if(matching.length>1)say('Se ejecutó una tanda; otros pases del mismo minuto requieren revisión manual')},1000);
-draw();
+const row=(label,sub,actions)=>{const el=document.createElement('div');el.className='item';const name=document.createElement('span');name.textContent=label;el.append(name);if(sub){const s=document.createElement('small');s.textContent=sub;el.append(s)}actions.forEach(([text,cb])=>{const b=document.createElement('button');b.textContent=text;b.onclick=cb;el.append(b)});return el};
+const fill=(target,items,empty)=>{target.replaceChildren();if(!items.length){const e=document.createElement('div');e.className='empty';e.textContent=empty;target.append(e)}else items.forEach(x=>target.append(x))};
+function url(f){if(!objectUrls.has(f.id))objectUrls.set(f.id,URL.createObjectURL(f.blob));return objectUrls.get(f.id)}
+function render(){fill($('audioList'),records.map(f=>row(f.name,'',[['▶',()=>{stop();$('preview').src=url(f);$('now').textContent=f.name;$('preview').play().catch(()=>say('Tocá reproducir para iniciar la preescucha'))}],['✕',async()=>{if(!confirm('¿Eliminar este aviso?'))return;await request('audio','delete',f.id);records=records.filter(x=>x.id!==f.id);breaks=breaks.map(b=>({...b,ids:b.ids.filter(x=>x!==f.id)}));draft=draft.filter(x=>x!==f.id);await save();render()}]])),'Todavía no hay avisos.');
+fill($('available'),records.map(f=>row(f.name,'',[['+ TANDA',()=>{draft.push(f.id);render()}]])),'Importá audios para empezar.');
+fill($('selected'),draft.map((key,i)=>{const f=records.find(x=>x.id===key);return row((i+1)+'. '+(f?.name||'Audio no disponible'),'',[['↑',()=>{if(i){[draft[i-1],draft[i]]=[draft[i],draft[i-1]];render()}}],['↓',()=>{if(i<draft.length-1){[draft[i+1],draft[i]]=[draft[i],draft[i+1]];render()}}],['✕',()=>{draft.splice(i,1);render()}]])}),'Elegí avisos para armar una tanda.');
+fill($('breaks'),breaks.map(b=>row(b.name,b.ids.length+' avisos',[['EDITAR',()=>{$('breakName').value=b.name;draft=[...b.ids];$('breakName').dataset.edit=b.id;render()}],['✕',async()=>{breaks=breaks.filter(x=>x.id!==b.id);events=events.filter(x=>x.breakId!==b.id);await save();render()}]])),'Todavía no hay tandas.');
+const select=$('breakSelect'),current=select.value;select.replaceChildren();breaks.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent=b.name;select.append(o)});if(breaks.some(b=>b.id===current))select.value=current;
+fill($('events'),events.slice().sort((a,b)=>a.hour.localeCompare(b.hour)).map(e=>{const b=breaks.find(x=>x.id===e.breakId);return row(e.hour+' · '+(b?.name||'Sin tanda'),e.days.map(x=>['D','L','M','X','J','V','S'][x]).join('')+' · '+(e.mode==='wait'?'Diferida':'Inmediata'),[['✕',async()=>{events=events.filter(x=>x.id!==e.id);await save();render()}]])}),'No hay horarios programados.')}
+function stop(){playing=false;seq=[];$('preview').pause();$('preview').onended=null;say('Reproducción detenida')}
+function next(){if(!playing)return;if(seqIndex>=seq.length){playing=false;$('preview').onended=null;say('Prueba finalizada: tanda completa');return}const f=records.find(x=>x.id===seq[seqIndex++]);if(!f){next();return}$('now').textContent=f.name+' · '+seqIndex+'/'+seq.length;$('preview').src=url(f);$('preview').onended=next;$('preview').play().catch(()=>say('El navegador requiere que pulses reproducir'))}
+$('importBtn').onclick=()=>$('files').click();$('files').onchange=async e=>{if(!db)return;let n=0;for(const f of e.target.files){if(!f.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(f.name))continue;const item={id:id(),name:f.name,blob:f};await request('audio','put',item);records.push(item);n++}e.target.value='';render();say(n+' avisos incorporados y guardados en este navegador')};
+$('saveBreak').onclick=async()=>{const name=$('breakName').value.trim();if(!name||!draft.length){say('Ingresá un nombre y agregá al menos un aviso');return}const edit=$('breakName').dataset.edit;const found=breaks.find(x=>x.id===edit);if(found){found.name=name;found.ids=[...draft]}else breaks.push({id:id(),name,ids:[...draft]});delete $('breakName').dataset.edit;$('breakName').value='';draft=[];await save();render();say('Tanda guardada')};
+const names=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];names.forEach((name,i)=>{const l=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.value=i;c.checked=true;l.append(c,document.createTextNode(name));$('days').append(l)});
+$('addEvent').onclick=async()=>{const breakId=$('breakSelect').value,days=[...$('days').querySelectorAll('input:checked')].map(x=>+x.value);if(!breakId||!days.length||!$('hour').value){say('Elegí una tanda, un horario y al menos un día');return}events.push({id:id(),breakId,hour:$('hour').value,days,mode:$('mode').value});await save();render();say('Horario agregado a la agenda (sin emisión automática)')};
+$('test').onclick=()=>{const b=breaks.find(x=>x.id===$('breakSelect').value);if(!b||!b.ids.length){say('Elegí una tanda que contenga avisos');return}stop();seq=[...b.ids];seqIndex=0;playing=true;next()};$('stop').onclick=stop;
+open().then(async d=>{db=d;records=await request('audio','getAll');const config=await request('data','get','config');breaks=config?.breaks||[];events=config?.events||[];render();say('Central publicitaria lista · '+records.length+' avisos · '+breaks.length+' tandas guardadas')}).catch(e=>say('Error al abrir almacenamiento local: '+e.message));
 })();
 </script></body></html>
