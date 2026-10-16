@@ -262,4 +262,54 @@ header{background:#081725!important;border-bottom:1px solid #466b83!important;co
 #autoQueuePanel>.pad,#programQueuePanel>.pad{flex:1;min-height:0}
 #autoQueuePanel .queue,#programQueuePanel .queue{overflow:auto!important}
 }
-</style></body></html>
+</style>
+<style>
+#rmrAdsPlanner{display:flex;flex-direction:column;gap:8px;font-size:11px}
+#rmrAdsPlanner input,#rmrAdsPlanner select{background:#091c2c;color:#e9f3fb;border:1px solid #507a96;border-radius:5px;padding:6px;min-width:0;width:100%}
+#rmrAdsPlanner label{display:flex;flex-direction:column;gap:4px;color:#b8d8e9}
+#rmrAdsPlanner .rmrTwo{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#rmrAdsPlanner .rmrDays{display:flex;flex-wrap:wrap;gap:3px}
+#rmrAdsPlanner .rmrDays label{display:flex;align-items:center;flex-direction:row;gap:2px;padding:4px;border:1px solid #35576c;border-radius:4px;color:#e9f3fb}
+#rmrAdsPlanner .rmrDays input{width:auto}
+#rmrAdsPlanner .rmrEvents{max-height:165px;overflow:auto;background:#091c2c;border:1px solid #35576c;border-radius:5px}
+#rmrAdsPlanner .rmrEvent{padding:7px;border-bottom:1px solid #29465a;display:flex;align-items:center;justify-content:space-between;gap:5px}
+#rmrAdsPlanner .rmrEvent button{padding:4px 7px}
+#rmrAdsPlanner .rmrNotice{color:#91cce9;line-height:1.5}
+</style>
+<script>
+(()=>{
+const panel=document.getElementById('automationPanel');if(!panel)return;
+const existing=panel.querySelector('.pad');if(existing)existing.style.display='none';
+const p=document.createElement('div');p.id='rmrAdsPlanner';p.className='pad';
+p.innerHTML=`
+<div class="smalltitle">PAUTA PUBLICITARIA RMR · LABORATORIO</div>
+<div class="rmrNotice">Prepará los avisos con “Cargar audios”, creá pases y probalos sin transmitir.</div>
+<button class="outline full" id="rmrAdImport">+ CARGAR AUDIOS DE PUBLICIDAD</button>
+<div id="rmrAdLoaded" class="compact">Sin avisos cargados</div>
+<div class="rmrTwo"><label>Horario<input id="rmrAdHour" type="time" value="18:30"></label><label>Entrada<select id="rmrAdMode"><option value="wait">Al terminar la canción</option><option value="cut">Inmediata</option></select></label></div>
+<div class="rmrTwo"><label>Prioridad<select id="rmrAdPriority"><option value="high">Alta</option><option value="low">Normal</option></select></label><label>Espera máxima (min)<input id="rmrAdMaxWait" type="number" min="1" max="120" value="5"></label></div>
+<div class="smalltitle">DÍAS DE EMISIÓN</div>
+<div class="rmrDays" id="rmrAdDays"></div>
+<button class="outline full" id="rmrAdAdd">+ PROGRAMAR TANDA</button>
+<div class="smalltitle">AGENDA DE TANDAS</div><div class="rmrEvents" id="rmrAdEvents"></div>
+<div class="rmrTwo"><button class="outline" id="rmrAdEnable">▶ ACTIVAR AGENDA</button><button class="outline" id="rmrAdTest">▶ PROBAR TANDA</button></div>
+<div id="rmrAdStatus" class="rmrNotice">Agenda desactivada. Los pases se guardan en este navegador.</div>
+`;
+panel.append(p);panel.querySelector('.paneltitle').firstChild.textContent='PUBLICIDAD · PAUTA RMR ';
+const byId=id=>document.getElementById(id);
+const days=['D','L','M','X','J','V','S'];days.forEach((d,i)=>{const l=document.createElement('label');l.innerHTML='<input type="checkbox" value="'+i+'" checked>'+d;byId('rmrAdDays').append(l)});
+const key='rmr-publicidad-agenda-v1';let events=[],enabled=false,lastTick='',pending=null;
+try{const saved=JSON.parse(localStorage.getItem(key)||'{}');events=Array.isArray(saved.events)?saved.events:[];enabled=!!saved.enabled}catch(e){}
+const persist=()=>{try{localStorage.setItem(key,JSON.stringify({events,enabled}))}catch(e){}};
+const say=t=>byId('rmrAdStatus').textContent=t;
+const draw=()=>{const target=byId('rmrAdEvents');target.replaceChildren();events.slice().sort((a,b)=>a.hour.localeCompare(b.hour)).forEach(e=>{const row=document.createElement('div');row.className='rmrEvent';const info=document.createElement('span');info.textContent=e.hour+' · '+(e.mode==='cut'?'Inmediata':'Diferida')+' · '+(e.days||[]).map(i=>days[i]).join('');const remove=document.createElement('button');remove.className='outline';remove.textContent='✕';remove.title='Eliminar pase';remove.onclick=()=>{events=events.filter(x=>x.id!==e.id);persist();draw()};row.append(info,remove);target.append(row)});if(!events.length)target.textContent='Sin tandas programadas';byId('rmrAdEnable').textContent=enabled?'■ DESACTIVAR AGENDA':'▶ ACTIVAR AGENDA'};
+const refresh=()=>{try{byId('rmrAdLoaded').textContent=ads.length?ads.map(x=>x.name).join(' · '):'Sin avisos cargados'}catch(e){}};setInterval(refresh,1500);refresh();
+byId('rmrAdImport').onclick=()=>byId('addAds').click();
+byId('rmrAdAdd').onclick=()=>{const hour=byId('rmrAdHour').value;const selected=[...byId('rmrAdDays').querySelectorAll('input:checked')].map(x=>+x.value);if(!hour||!selected.length){say('Elegí una hora y al menos un día');return}events.push({id:Date.now()+'-'+Math.random(),hour,days:selected,mode:byId('rmrAdMode').value,priority:byId('rmrAdPriority').value,maxWait:+byId('rmrAdMaxWait').value||5});persist();draw();say('Tanda agregada a la agenda')};
+byId('rmrAdEnable').onclick=()=>{enabled=!enabled;persist();draw();say(enabled?'Agenda activa mientras esta pestaña permanezca abierta':'Agenda desactivada')};
+function run(e){if(!ads.length){say('Pase omitido: no hay avisos cargados');return}const policy=document.querySelector('input[name=policy][value="'+e.mode+'"]');if(policy)policy.checked=true;byId('runAds').click();say('Tanda '+e.hour+' enviada al reproductor de publicidad')};
+byId('rmrAdTest').onclick=()=>run({hour:'PRUEBA',mode:byId('rmrAdMode').value});
+setInterval(()=>{if(!enabled)return;const now=new Date(),stamp=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate()+' '+now.getHours()+':'+now.getMinutes();if(stamp===lastTick)return;lastTick=stamp;const hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');const matching=events.filter(e=>e.hour===hm&&e.days.includes(now.getDay()));if(!matching.length)return;matching.sort((a,b)=>(a.priority==='high'?-1:1)-(b.priority==='high'?-1:1));run(matching[0]);if(matching.length>1)say('Se ejecutó una tanda; otros pases del mismo minuto requieren revisión manual')},1000);
+draw();
+})();
+</script></body></html>
