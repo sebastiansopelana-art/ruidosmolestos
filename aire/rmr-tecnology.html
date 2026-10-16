@@ -792,7 +792,7 @@ const title=document.querySelector('.rmrDualTitle'),bar=document.getElementById(
 if(!title||!bar||!auto||!ads)return;
 function align(){
  const t=title.getBoundingClientRect(),a=ads.querySelector('.rmrDeckTitle')?.getBoundingClientRect()||ads.getBoundingClientRect(),b=auto.getBoundingClientRect();
- const left=Math.round(a.left-t.left),right=Math.round(b.left-t.left-8);
+ const left=Math.round(a.left-t.left-5),right=Math.round(b.left-t.left-8);
  if(right-left>55){title.style.setProperty('--rmr-bar-left',left+'px');title.style.setProperty('--rmr-bar-width',(right-left)+'px');bar.style.visibility='visible'}
  else {bar.style.visibility='hidden'}
 }
