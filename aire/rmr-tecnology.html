@@ -1256,7 +1256,7 @@ header #rmrAdTopStatus.rmrBreaking #rmrLiveInfoText{color:white!important}
 @media(max-width:760px){header>.brand strong{font-size:13px}header>.brand small{display:none}header .header-actions>a{display:none!important}header #clock{font-size:14px!important}}
 </style><script id="rmrBreakingNewsEnhancement">
 (()=>{const bar=document.getElementById('rmrAdTopStatus');if(!bar)return;const text=document.getElementById('rmrLiveInfoText');if(!text)return;
-const severe=/\\b(terremoto|tsunami|evacuaci[oó]n|alerta roja|emergencia nacional|atentado|explosi[oó]n|masacre|cat[aá]strofe|incendio forestal|inundaci[oó]n grave|estado de emergencia)\\b/i;
+const severe=/\b(terremoto|tsunami|evacuaci[oó]n|alerta roja|emergencia nacional|atentado|explosi[oó]n|masacre|cat[aá]strofe|incendio forestal|inundaci[oó]n grave|estado de emergencia)\b/i;
 const sync=()=>{const isNews=text.textContent.startsWith('NOTICIAS · ');bar.classList.toggle('rmrBreaking',isNews&&severe.test(text.textContent))};
 new MutationObserver(sync).observe(text,{childList:true,characterData:true,subtree:true});sync();
 })();
