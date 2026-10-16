@@ -1,0 +1,59 @@
+RUIDOS MOLESTOS — PROGRAMA 45
+PRUEBA DE CRONOMETRAJE — REFERENCIAS DISCOGRÁFICAS, NO AUDIOS VERIFICADOS
+Fecha: 2026-10-16
+
+BLOQUE 1 — BLODWYN PIG
+Dear Jill 05:19
+It's Only Love 03:23
+The Modern Alchemist 05:38
+See My Way 05:00
+Subtotal 19:20
+
+BLOQUE 2 — MICK ABRAHAMS / THE MICK ABRAHAMS BAND
+Greyhound Bus 04:52
+Why Do You Do Me This Way 03:32
+Seasons 15:02
+You'll Never Get It From Me 03:36
+Subtotal 27:02
+
+BLOQUE 3 — WILD TURKEY
+Battle Hymn 04:36
+Butterfly 04:55
+Twelve Streets of Cobbled Black 03:08
+Dulwich Fox 03:44
+Subtotal 16:23
+
+BLOQUE 4 — AVIATOR
+Your Loving Is My Home 03:30
+Keep Your Heart Right 06:21
+Evil Eye 03:20
+Way of the World 04:53
+Subtotal 18:04
+
+TOTAL MÚSICA: 80:49
+PUBLICIDAD: 25:00
+RESTANTE PARA TEXTO, SEPARADORES Y TRANSICIONES: 14:11
+
+LIBRETO ACTUAL: aproximadamente 6.000 palabras.
+A 100 palabras/minuto: alrededor de 60 minutos de lectura, más posibles pausas.
+TOTAL APROXIMADO ACTUAL: 165:49 (2h45m49s) sin separadores ni transiciones.
+EXCESO: 45:49 o más.
+Si se reservan 2:00 para separadores/transiciones, quedan 12:11 de lectura (~1.219 palabras a 100 ppm).
+Recomendación: recortar texto a 1.150–1.250 palabras para esta selección musical, o sustituir especialmente 'Seasons' (15:02) y revisar otros temas largos si se desea más narración.
+
+ADVERTENCIAS:
+- Duraciones consultadas en listados discográficos, NO corresponden a archivos de audio o videos verificados del reproductor.
+- Las ediciones pueden variar segundos o minutos.
+- El manifiesto 45.json no registra duration, videoId ni URLs validadas.
+- El capítulo 1 narra Jethro Tull pero el bloque musical 1 contiene Blodwyn Pig: resolver criterio editorial.
+- Jack Lancaster participa del debut de Aviator (1979), pero no de Turbulence (1980), según información discográfica.
+- No alterar la programación activa sin autorización.
+
+REFERENCIAS:
+https://open.spotify.com/playlist/5psmavnnjN2fSrd5Ap92Tr
+https://en.wikipedia.org/wiki/Ahead_Rings_Out
+https://www.onamrecords.com/artists/mick-abrahams/discography/united-states/a-m-records/sp-4312/mick-abrahams
+https://www.allmusic.com/album/at-last-mw0000274140
+https://getsongbpm.com/album/battle-hymn/wmEWz
+https://en.wikipedia.org/wiki/Aviator_%28Aviator_album%29
+https://en.wikipedia.org/wiki/Turbulence_%28Aviator_album%29
