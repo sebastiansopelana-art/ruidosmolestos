@@ -730,7 +730,7 @@ function diagnostic(){
  if(verification!=='ready')return ['ESTADO SIN VERIFICAR · Comprobando programación publicitaria'];
  const start=Number(sessionStorage.getItem('rmrMonitorSince')||Date.now());
  if(schedule.some(e=>e.at<start))return ['SERVICIO SIN FALLAS DETECTADAS · SALIDAS ANTERIORES SIN VERIFICAR'];
- return ['SERVICIO NORMAL'];
+ return ['TODOS LOS SISTEMAS FUNCIONANDO CORRECTAMENTE'];
 }
 function refresh(force=false){
  const all=diagnostic(),message=all.join('  ◆  ');
