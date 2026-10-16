@@ -143,6 +143,56 @@ button:disabled{opacity:.45;cursor:not-allowed;filter:none}
 .rmrShell>.rmrRail>.rmrRailActions{margin-top:0!important}
 }
 @media(max-width:1100px){.rmrShell>.rmrRail{padding-top:8px!important}}
+
+/* RMR design system · vidrio satinado, no plástico brillante */
+:root{--rmr-control-stroke:rgba(198,224,237,.27);--rmr-control-shadow:0 8px 18px rgba(0,9,20,.24),inset 0 1px 0 rgba(255,255,255,.17)}
+button:not([hidden]),.header-actions a,.rmrRailActionButtons>a,.rmrNativeMusicPicker{
+  border-radius:12px!important;
+  border:1px solid var(--rmr-control-stroke);
+  font-family:inherit;
+  font-weight:700;
+  letter-spacing:.025em;
+  text-shadow:none!important;
+  background-image:linear-gradient(155deg,rgba(255,255,255,.12) 0%,rgba(255,255,255,.035) 42%,rgba(0,0,0,.09) 100%);
+  box-shadow:var(--rmr-control-shadow);
+  backdrop-filter:blur(12px) saturate(120%);
+  -webkit-backdrop-filter:blur(12px) saturate(120%);
+  transition:transform .16s ease,border-color .18s ease,box-shadow .18s ease,filter .18s ease!important;
+}
+button:not([hidden]):hover,.header-actions a:hover,.rmrRailActionButtons>a:hover,.rmrNativeMusicPicker:hover{
+  filter:brightness(1.09);
+  border-color:rgba(218,238,249,.57);
+  box-shadow:0 10px 24px rgba(0,8,20,.32),inset 0 1px 0 rgba(255,255,255,.24);
+  transform:translateY(-1px);
+}
+button:not([hidden]):active,.header-actions a:active,.rmrRailActionButtons>a:active{
+  transform:translateY(1px) scale(.99);
+  box-shadow:0 2px 5px rgba(0,8,20,.25),inset 0 2px 5px rgba(0,0,0,.16);
+}
+.rmrRailActionButtons{gap:11px!important}
+.rmrRailActionButtons>#rmrFullscreenToggle,.rmrRailActionButtons>a{
+  position:relative;min-height:49px!important;
+  border-radius:14px!important;
+  padding:12px 14px!important;
+  font-size:11px!important;
+  font-weight:750!important;
+  letter-spacing:.065em!important;
+  color:#eef7fb!important;
+  background-color:#244257!important;
+  background-image:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.015) 52%,rgba(0,0,0,.11))!important;
+  border:1px solid rgba(183,216,232,.32)!important;
+  box-shadow:0 9px 20px rgba(0,9,20,.29),inset 0 1px 0 rgba(255,255,255,.22),inset 0 -1px 0 rgba(0,0,0,.12)!important;
+}
+.rmrRailActionButtons>a{background-color:#304c52!important}
+.rmrRailActionButtons>#rmrFullscreenToggle:hover,.rmrRailActionButtons>a:hover{
+  transform:translateY(-1px)!important;
+  box-shadow:0 12px 24px rgba(0,9,20,.35),inset 0 1px 0 rgba(255,255,255,.3)!important;
+}
+.rmrRailActionButtons>#rmrFullscreenToggle:active,.rmrRailActionButtons>a:active{transform:translateY(1px)!important}
+.rmrJinglePad:not(.playing){border-radius:13px!important;box-shadow:0 7px 15px rgba(0,8,20,.28),inset 0 1px 0 rgba(255,255,255,.4)!important}
+.rmrJinglePad:not(.playing):hover{transform:translateY(-2px);filter:brightness(1.07)}
+.rmrJinglePad:not(.playing):active{transform:translateY(1px)}
+@media(prefers-reduced-motion:reduce){button,.rmrJinglePad,.rmrRailActionButtons>a{transition:none!important}}
 </style></head><body><header><div class="brand"><strong>RMR TECNOLOGY</strong><small>RUIDOS MOLESTOS · AUTOMATIZACIÓN RADIAL</small></div><div class="header-actions"><span id="clock" class="clock">00:00:00</span><button type="button" id="rmrFullscreenToggle" title="Alternar pantalla completa" aria-pressed="false">⛶ PANTALLA COMPLETA</button><a href="/aire/rmr-publicidad.html" data-rmr-ads-window="true">⚙ CONFIGURAR PUBLICIDAD</a><a href="/aire/">ESTUDIO ORIGINAL ↗</a></div></header>
 <section class="rmrJingleStrip"><div class="rmrJingleStripHead"><strong>JINGLES · PISADORES · SEPARADORES</strong><span>Clic o teclas 1–9 / 0=10 para emitir · Shift+número para cargar</span></div><div class="rmrJinglePads" id="rmrJinglePads"></div><input type="file" id="rmrJingleFile" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac,.aac" hidden><audio id="rmrJingleAudio" preload="metadata"></audio></section>
 <main><section class="panel"><div class="paneltitle rmrDualTitle"><span>REPRODUCTORES · MÚSICA Y PUBLICIDAD</span><div class="rmrTitleModes"><div class="rmrSilenceMonitor" id="rmrSilenceMonitor"><div class="rmrSilenceTitle">DETECTOR DE SILENCIO</div><div class="rmrSilenceHead" style="display:none"><b>DETECTOR DE SILENCIO</b><strong id="rmrSilenceState">EN ESPERA</strong></div><div class="rmrSilenceMeter"><div id="rmrSilenceBar"></div></div><div class="rmrSilenceControls"><label aria-label="Sensibilidad del detector de silencio"><input id="rmrSilenceThreshold" type="range" min="-65" max="-25" value="-48" step="1"><output id="rmrSilenceThresholdValue">−48 dBFS</output></label><label style="display:none">ALERTA TRAS <select id="rmrSilenceDelay"><option value="2">2 segundos</option><option value="3" selected>3 segundos</option><option value="5">5 segundos</option><option value="10">10 segundos</option></select></label></div><small id="rmrSilenceDetail" style="display:none">Vigilancia activa · ante silencio sostenido reproduce el siguiente evento</small></div><button type="button" id="rmrAutoMode" class="rmrModeSwitch isActive" aria-pressed="true" title="Activar programación automática"><span class="rmrModeLight"></span>AUTOMÁTICO</button><button type="button" id="rmrManualMode" class="rmrModeSwitch isManual" aria-pressed="false" title="Activar control manual"><span class="rmrModeLight"></span>MANUAL</button><span id="rmrAdModeInfo" class="rmrModeDescription" aria-live="polite">Las tandas se programan solas y esperan al final del audio.</span></div></div><div class="rmrDualDeck"><div class="rmrDeck"><div class="rmrDeckTitle">REPRODUCTOR 01 · MÚSICA</div><div class="rmrPlayerLayout"><div class="player"><div><div class="screen"><div class="rmrNowNext"><div class="rmrNowPanel"><span class="rmrNowLabel">EN REPRODUCCIÓN</span><strong id="song">Sin audio en reproducción</strong><small id="sub">Automático en espera</small></div><div class="rmrNextPanel"><span class="rmrNowLabel">PRÓXIMA CANCIÓN</span><strong id="rmrNextSong">Sin siguiente tema</strong><small id="rmrNextBand">En espera</small></div></div><label class="rmrPlayerVolume">VOLUMEN<input id="volume" type="range" min="0" max="100" value="85"></label></div><div class="rmrSongInfo"><b>INFORMACIÓN DEL TEMA</b><small id="rmrInfoLookupStatus" style="display:block;font-size:9px;color:#9dd5f3;margin-top:2px">Esperando canción</small><div class="rmrSongInfoGrid"><span>INTÉRPRETE</span><strong id="rmrInfoArtist">Sin datos</strong><span>AUTOR / COMPOSITOR</span><strong id="rmrInfoComposer">Sin datos</strong><span>DISCOGRÁFICA</span><strong id="rmrInfoLabel">Sin datos</strong><span>AÑO</span><strong id="rmrInfoYear">Sin datos</strong><span>PRÓXIMO ARTISTA</span><strong id="rmrInfoNextArtist">Sin siguiente tema</strong></div><div class="rmrIntroPanel"><span>INTRO · ENTRADA DE VOZ</span><strong id="rmrIntroClock">--:--</strong><label class="rmrIntroEdit">SEGUNDOS <input id="rmrIntroSeconds" type="number" min="0" max="900" step="1" placeholder="Ej. 18" aria-label="Segundos hasta la entrada de voz"></label><small id="rmrIntroHint">Marcá la entrada de voz de este tema</small></div></div></div><div class="timeline"><span id="elapsed">00:00</span><input id="seek" type="range" min="0" max="100" value="0"><span id="total">00:00</span></div><div class="controls"><button id="prev" title="Anterior">⏮</button><button class="primary" id="play" title="Reproducir / pausar">▶</button><button id="stop" title="Detener">■</button><button id="next" title="Siguiente">⏭</button><button id="rmrShuffle" type="button" aria-pressed="false">🔀 SHUFFLE</button><button id="rmrRepeat" type="button" aria-pressed="false">🔁 REPEAT</button></div></div></div><div class="side"><div class="mini" style="display:none"><b>ESTADO DEL AUTOMÁTICO</b><span id="mode">EN ESPERA</span></div><div class="mini" style="display:none"><b>PRÓXIMO AUDIO</b><span id="upcoming">Sin elementos</span></div><div class="mini" id="rmrPlayerNextBreak" style="display:none"><b>PRÓXIMA TANDA</b><strong id="rmrPlayerBreakName">Consultando agenda…</strong><span id="rmrPlayerBreakTime"></span><div id="rmrPlayerBreakAds" style="margin-top:7px;font-size:11px;color:#c2dce9"></div><div id="rmrAdsOnAir" class="rmrAdsOnAir"><b id="rmrAdsOnAirTitle">AVISOS DE LA TANDA · EN ESPERA</b><div id="rmrAdsOnAirRows">Los avisos aparecerán aquí cuando se cargue una tanda.</div></div><a href="/aire/rmr-publicidad.html" data-rmr-ads-window="true" style="display:inline-block;margin-top:8px;color:#8fd5ff;font-size:11px">⚙ CONFIGURAR TANDAS Y HORARIOS</a><span id="schedule" style="display:none"></span></div></div></div><div class="rmrDeck rmrAdDeck"><div class="rmrDeckTitle">PUBLICIDAD</div><div class="rmrAdCurrent" id="rmrAdCurrent" hidden aria-hidden="true"></div><div class="rmrAdProgress"><span id="rmrAdElapsed">00:00</span><input id="rmrAdSeek" type="range" min="0" max="100" value="0" disabled><span id="rmrAdTotal">00:00</span></div><div class="rmrAdState" id="rmrAdState">Sin tanda activa</div><div class="rmrAdMode rmrAdModeInline"><span>SALIDA PROGRAMADA</span><div class="rmrAdPolicyChoices"><button id="rmrAdPolicyWait" type="button" aria-pressed="false">FIN DEL TEMA</button><button id="rmrAdPolicyCut" type="button" aria-pressed="false">HORA EXACTA</button></div><button id="rmrAdPolicy" type="button" hidden aria-hidden="true" tabindex="-1">FIN TEMA</button></div><div class="rmrAdState" id="rmrAdUpcoming">Consultando horarios…</div><div class="rmrAdListTitle">AVISOS DE LA TANDA · LISTA COMPLETA</div><div id="rmrAdList" class="rmrAdList" role="list" aria-label="Avisos publicitarios programados"><div class="rmrAdListEmpty">Cargando avisos…</div></div><div class="rmrAdButtons"><button id="rmrAdResume" type="button" hidden>▶ PUBLICIDAD</button><button id="rmrAdStop" type="button">■ DETENER TANDA</button></div><audio id="rmrAdAudio" preload="metadata"></audio></div></div></div><audio id="audio" preload="metadata"></audio></section>
