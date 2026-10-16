@@ -1453,27 +1453,23 @@ function showAutoSepDisplay(n){
  tick();autoSepDisplayTimer=setInterval(tick,200);
 }
 
-function stopAutoSep(){
+function stopAutoSep(preserveTail=false){
  restoreAutoSepDisplay();
  autoSepPending=null;autoSepTriggered=false;autoSepFinished=false;autoSepSongEnded=false;
- autoSepAudio.pause();autoSepAudio.removeAttribute('src');autoSepAudio.load();
+ if(!preserveTail){autoSepAudio.pause();autoSepAudio.removeAttribute('src');autoSepAudio.load();}
  autoSepNextReady=false;autoSepNextId=null;autoSepTransitioning=false;
 }
 let autoSepNextReady=false,autoSepNextId=null,autoSepTransitioning=false;
 function finishAutoMix(){
  if(!autoSepPending||!autoSepSongEnded||autoSepTransitioning)return;
- if(!autoSepFinished){
-  const remaining=autoSepAudio.duration-autoSepAudio.currentTime;
-  if(!Number.isFinite(remaining)||remaining>0.65)return;
- }
+ // Iniciar el siguiente tema sin esperar al final del separador: ambos se superponen.
  const p=autoSepPending;
  if(p.block!==activeBlock||!blockYTActive)return;
  if(!autoSepNextReady&&!autoSepFinished)return;
  autoSepTransitioning=true;
  autoSepPending=null;
- // La siguiente canción arranca mientras termina la cola del separador.
- // El audio del separador se detiene al comenzar la pista siguiente.
- playBlockTrack(p.index);
+ // Conservar el separador sonando en un canal independiente hasta su final natural.
+ playBlockTrack(p.index,true);
 }
 function startAutoMix(){
  if(autoSepTriggered||blockRepeat||!blockYTActive||blockCurrent+1>=blockPlaylist().length)return;
@@ -1497,11 +1493,11 @@ autoSepAudio.addEventListener('ended',()=>{restoreAutoSepDisplay();autoSepFinish
 autoSepAudio.addEventListener('timeupdate',()=>{if(autoSepSongEnded)finishAutoMix()});
 autoSepAudio.addEventListener('error',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
-function playBlockTrack(index){
+function playBlockTrack(index,preserveSeparatorTail=false){
   rmSilenceReset();
   stopBlockEndSeparator();
   window.dispatchEvent(new Event('rm-block-takeover'));
-  stopAutoSep();
+  stopAutoSep(preserveSeparatorTail);
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
  if(f.programTrack){
   blockCurrent=index;blockYTActive=true;loadBlockFacts(f);
