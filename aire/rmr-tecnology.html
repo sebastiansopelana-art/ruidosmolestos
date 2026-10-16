@@ -1162,4 +1162,37 @@ requestAnimationFrame(tick);
  window.addEventListener('resize',schedule);
  if(document.fonts?.ready)document.fonts.ready.then(schedule);
 })();
+</script><style id="rmrUnifiedModeToggleStyle">
+.rmrDualTitle #rmrManualMode{display:none!important}
+.rmrDualTitle #rmrAutoMode{min-width:132px!important;justify-content:center!important}
+.rmrDualTitle #rmrAutoMode.isManual{background:#4a1b23!important;border-color:#f06b77!important;color:#ffe2e4!important;animation:rmrRedGlow 1.15s ease-in-out infinite!important;opacity:1!important}
+.rmrDualTitle #rmrAutoMode.isManual .rmrModeLight{background:#ff495e!important;animation:rmrRedLight 1.15s ease-in-out infinite!important}
+</style><script id="rmrUnifiedModeToggleScript">
+(function(){
+ const auto=document.getElementById('rmrAutoMode'),manual=document.getElementById('rmrManualMode');
+ if(!auto||!manual)return;
+ const sync=()=>{
+  const manualActive=manual.classList.contains('isActive')||manual.getAttribute('aria-pressed')==='true';
+  auto.classList.toggle('isManual',manualActive);
+  auto.classList.toggle('isActive',!manualActive);
+  auto.setAttribute('aria-pressed',String(!manualActive));
+  auto.setAttribute('title',manualActive?'Modo manual activo · cambiar a automático':'Modo automático activo · cambiar a manual');
+  auto.innerHTML='<span class="rmrModeLight"></span>'+(manualActive?'MANUAL':'AUTOMÁTICO');
+ };
+ auto.addEventListener('click',e=>{
+  if(auto.classList.contains('isManual')){
+   e.stopImmediatePropagation();
+   auto.classList.remove('isManual');
+   auto.innerHTML='<span class="rmrModeLight"></span>AUTOMÁTICO';
+   auto.click();
+  }else{
+   e.stopImmediatePropagation();
+   manual.click();
+  }
+  setTimeout(sync,0);
+ },true);
+ const observer=new MutationObserver(sync);
+ observer.observe(manual,{attributes:true,attributeFilter:['class','aria-pressed']});
+ sync();
+})();
 </script></body></html>
