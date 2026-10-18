@@ -2021,4 +2021,18 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  document.addEventListener('click',e=>{if(editing&&!e.target.closest('#mhLayoutEditBar')){e.preventDefault();e.stopImmediatePropagation()}},true);
  document.addEventListener('keydown',e=>{if(!editing||!selected||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();const id=elements.get(selected),p=saved[id]||{x:0,y:0},step=e.shiftKey?10:1;p.x=(p.x||0)+(e.key==='ArrowLeft'?-step:e.key==='ArrowRight'?step:0);p.y=(p.y||0)+(e.key==='ArrowUp'?-step:e.key==='ArrowDown'?step:0);selected.style.translate=p.x+'px '+p.y+'px';saved[id]=p;localStorage.setItem(key,JSON.stringify(saved))});
 })();
-</script><style id="mhRemoveTopHeader">body>main{margin-top:0!important;padding-top:0!important}body>.rmrJingleStrip{margin-top:0!important}header{display:none!important}</style></body></html>
+</script><style id="mhRemoveTopHeader">body>main{margin-top:0!important;padding-top:0!important}body>.rmrJingleStrip{margin-top:0!important}header{display:none!important}</style><style id="mhClockBrandPanelStyle">
+.rmrMusicInfoSide .mhClockBrandPanel{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 12px;margin-top:7px;background:#071724;border:1px solid #466b83;border-radius:7px;min-height:75px}
+.mhClockBrandPanel .mhClockBrandTime{font:800 clamp(20px,2.2vw,35px)/1.1 ui-monospace,monospace;color:#a8def7;letter-spacing:1px;white-space:nowrap}
+.mhClockBrandPanel img{width:112px;max-width:42%;max-height:65px;object-fit:contain}
+</style><script id="mhClockBrandPanelScript">
+(function(){
+ const target=document.querySelector('.rmrMusicInfoSide .rmrNowPanel');if(!target||document.getElementById('mhClockBrandPanel'))return;
+ const panel=document.createElement('div');panel.id='mhClockBrandPanel';panel.className='mhClockBrandPanel';
+ const clock=document.getElementById('clock');
+ if(clock){clock.className='mhClockBrandTime';clock.style.display='';panel.appendChild(clock)}
+ else{const t=document.createElement('strong');t.className='mhClockBrandTime';panel.appendChild(t);setInterval(()=>{t.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false})},1000)}
+ const img=document.createElement('img');img.src='./megahertz-brand.svg';img.alt='MEGAHERTZ · RMR TECHNOLOGY';panel.appendChild(img);
+ target.insertAdjacentElement('afterend',panel);
+})();
+</script></body></html>
