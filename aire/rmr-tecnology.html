@@ -1755,4 +1755,51 @@ document.body.appendChild(btn);
  width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;
  padding:0!important;margin:0!important;
 }
-</style></body></html>
+</style><style id="mhCompact12NowNext">
+/* Módulo 12: liberar el espacio vacío y agrupar SONANDO / POR SONAR. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicSplit{
+ display:block!important;height:auto!important;min-height:0!important;
+ grid-template-columns:none!important;grid-template-rows:none!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicControlSide{
+ display:none!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicInfoSide{
+ width:100%!important;min-height:0!important;height:auto!important;
+ display:flex!important;flex-direction:column!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicInfoSide .rmrNowPanel{
+ flex:0 0 auto!important;min-height:0!important;padding:7px 9px!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicInfoSide .rmrNextPanel{
+ flex:0 0 auto!important;min-height:0!important;padding:6px 9px!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicInfoSide #song{
+ font-size:15px!important;line-height:1.25!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicInfoSide .rmrNowLabel{
+ font-size:9px!important;line-height:1.3!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicInfoSide #rmrNextSong{
+ font-size:12px!important;line-height:1.25!important;
+}
+</style><script id="mhCompact12NowNextScript">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
+ const info=deck?.querySelector('.rmrMusicInfoSide');
+ const screen=deck?.querySelector('.screen');
+ if(!info||!screen)return;
+ // Ambos estados siguen usando los mismos nodos e IDs de actualización en vivo.
+ const box=document.createElement('div');
+ box.className='mhCombinedNowNext';
+ box.style.cssText='width:100%;min-width:0;border:1px solid #416779;border-radius:6px;overflow:hidden;background:#071c2a';
+ const now=info.querySelector('.rmrNowPanel');
+ const next=info.querySelector('.rmrNextPanel');
+ if(now&&next){
+  box.append(now,next);
+  screen.insertBefore(box,screen.firstChild);
+ }
+ const label=next?.querySelector('.rmrNowLabel');
+ if(label)label.textContent='POR SONAR';
+})();
+</script></body></html>
