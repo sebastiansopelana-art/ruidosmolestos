@@ -1925,4 +1925,57 @@ document.body.appendChild(btn);
  // Mover el panel al comienzo de la columna sin modificar controles ni sus eventos.
  right.insertBefore(panel,ad);
 })();
+</script><style id="mhLayoutDragEditorStyles">
+#mhLayoutEditBar{position:fixed;right:14px;bottom:15px;z-index:2147482000;display:flex;gap:6px;background:#0b1b29;border:1px solid #668397;border-radius:7px;padding:7px;box-shadow:0 4px 15px #000a}
+#mhLayoutEditBar button{background:#294d64;color:#fff;border:1px solid #6b91a6;border-radius:5px;padding:7px 10px;font-weight:800;font-size:11px;cursor:pointer}
+#mhLayoutEditBar button.active{background:#a7352e;border-color:#f47c69}
+body.mhLayoutEditing .mhDraggableSection{outline:2px dashed #d5a765!important;outline-offset:2px!important}
+.mhDragHandle{display:none;position:absolute;top:0;left:0;right:0;height:25px;z-index:1000;background:#a7352e;color:#fff;font-size:11px;font-weight:800;align-items:center;justify-content:center;cursor:grab;touch-action:none;user-select:none;border-radius:5px 5px 0 0}
+body.mhLayoutEditing .mhDragHandle{display:flex}
+body.mhLayoutEditing .mhDragHandle:active{cursor:grabbing}
+body.mhLayoutEditing .mhDraggableSection{padding-top:27px!important;position:relative;z-index:20}
+body.mhLayoutEditing .mhDraggableSection.mhDragging{z-index:9999!important}
+</style><script id="mhLayoutDragEditorScript">
+(function(){
+ const specs=[
+ ['music','.rmrDualDeck>.rmrMusicColumn>.rmrDeck','REPRODUCTOR 04'],
+ ['musiclist','.rmrDualDeck>.rmrMusicColumn #playlist','LISTA MÚSICA'],
+ ['ads','.rmrDualDeck>.rmrRightStack>.rmrAdDeck','REPRODUCTOR 06'],
+ ['adslist','.rmrDualDeck>.rmrRightStack .rmrAdListColumn','LISTA PUBLICIDAD'],
+ ['jingles','.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel','PISADORES'],
+ ['program','.rmrDualDeck>.rmrRightStack #rmrDropPlayer','REPRODUCTOR PROGRAMAS'],
+ ['programlist','.rmrDualDeck>.rmrRightStack #rmrDropList','LISTA PROGRAMAS']
+ ];
+ const key='mh-layout-positions-v1';
+ let positions={};try{positions=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
+ const entries=[];
+ for(const [id,selector,label] of specs){
+  const el=document.querySelector(selector);if(!el)continue;
+  el.classList.add('mhDraggableSection');
+  if(getComputedStyle(el).position==='static')el.style.position='relative';
+  const handle=document.createElement('div');handle.className='mhDragHandle';handle.textContent='⠿ MOVER · '+label;
+  el.insertBefore(handle,el.firstChild);
+  const pos=positions[id]||{x:0,y:0};
+  el.style.translate=pos.x+'px '+pos.y+'px';
+  entries.push({id,el,handle});
+ }
+ const bar=document.createElement('div');bar.id='mhLayoutEditBar';
+ const toggle=document.createElement('button');toggle.type='button';toggle.textContent='↔ ORGANIZAR PANTALLA';
+ const reset=document.createElement('button');reset.type='button';reset.textContent='RESTABLECER';reset.title='Volver a la ubicación original de todos los paneles';
+ bar.append(toggle,reset);document.body.append(bar);
+ let editing=false;
+ toggle.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);toggle.classList.toggle('active',editing);toggle.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';};
+ reset.onclick=()=>{if(!confirm('¿Restablecer las posiciones originales de reproductores y listas?'))return;positions={};localStorage.removeItem(key);for(const {el} of entries)el.style.translate='0px 0px';};
+ for(const {id,el,handle} of entries){
+  handle.addEventListener('pointerdown',e=>{
+   if(!editing||e.button!==0)return;
+   e.preventDefault();e.stopPropagation();
+   const initial=positions[id]||{x:0,y:0},startX=e.clientX,startY=e.clientY;
+   el.classList.add('mhDragging');handle.setPointerCapture(e.pointerId);
+   const move=ev=>{const x=Math.round(initial.x+ev.clientX-startX),y=Math.round(initial.y+ev.clientY-startY);el.style.translate=x+'px '+y+'px';positions[id]={x,y};};
+   const end=()=>{el.classList.remove('mhDragging');try{localStorage.setItem(key,JSON.stringify(positions))}catch(e){}handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',end);handle.removeEventListener('pointercancel',end);};
+   handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',end);handle.addEventListener('pointercancel',end);
+  });
+ }
+})();
 </script></body></html>
