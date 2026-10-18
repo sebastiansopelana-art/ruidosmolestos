@@ -2312,4 +2312,60 @@ for(const p of ['height','min-height','max-height'])list.style.setProperty(p,h+'
 }
 align();window.addEventListener('load',align,{once:true});
 })();
+</script><style id="mhJingleBackupControlsStyle">
+.mhJingleBankPanel .mhJingleBackupActions{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:7px 0}
+.mhJingleBankPanel .mhJingleBackupActions button{border:1px solid #64849a;background:#25495d;color:#f0f8ff;border-radius:5px;padding:6px 9px;font:700 10px/1.2 system-ui,sans-serif;cursor:pointer}
+.mhJingleBankPanel .mhJingleBackupActions button:disabled{opacity:.5;cursor:wait}
+.mhJingleBankPanel .mhJingleBackupStatus{font-size:10px;color:#a9c9d8}
+</style><script id="mhJingleBackupControlsScript">
+(function(){
+const panel=document.querySelector('.mhJingleBankPanel');
+if(!panel||panel.querySelector('.mhJingleBackupActions'))return;
+const actions=document.createElement('div');actions.className='mhJingleBackupActions';
+const save=document.createElement('button');save.type='button';save.textContent='GUARDAR ARCHIVO';save.title='Descargar un respaldo de las 10 solapas con sus audios';
+const load=document.createElement('button');load.type='button';load.textContent='CARGAR ARCHIVO';load.title='Restaurar un respaldo de pisadores';
+const status=document.createElement('span');status.className='mhJingleBackupStatus';status.setAttribute('role','status');
+const picker=document.createElement('input');picker.type='file';picker.accept='.json,application/json';picker.hidden=true;
+actions.append(save,load,status,picker);
+const tabs=panel.querySelector('.mhBankTabs');if(tabs)tabs.after(actions);else panel.append(actions);
+const dbOpen=()=>new Promise((resolve,reject)=>{const r=indexedDB.open('RMR-Jingles-Pads',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('pads'))r.result.createObjectStore('pads',{keyPath:'index'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
+const all=db=>new Promise((resolve,reject)=>{const t=db.transaction('pads','readonly'),r=t.objectStore('pads').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
+const write=(db,items)=>new Promise((resolve,reject)=>{const t=db.transaction('pads','readwrite'),store=t.objectStore('pads');store.clear();for(const item of items)store.put(item);t.oncomplete=resolve;t.onerror=()=>reject(t.error);t.onabort=()=>reject(t.error)});
+const bytesToBase64=async blob=>{const buf=new Uint8Array(await blob.arrayBuffer());let binary='';for(let i=0;i<buf.length;i+=16384)binary+=String.fromCharCode(...buf.subarray(i,i+16384));return btoa(binary)};
+const base64ToBlob=(b64,type)=>{const binary=atob(b64),parts=[];for(let i=0;i<binary.length;i+=16384){const part=binary.slice(i,i+16384),bytes=new Uint8Array(part.length);for(let j=0;j<part.length;j++)bytes[j]=part.charCodeAt(j);parts.push(bytes)}return new Blob(parts,{type:type||'audio/mpeg'})};
+function busy(flag,message){save.disabled=load.disabled=flag;status.textContent=message||''}
+save.onclick=async()=>{
+let db;busy(true,'Preparando respaldo…');
+try{
+db=await dbOpen();const items=await all(db),records=[];
+for(const item of items){if(!item.blob)continue;records.push({index:item.index,name:item.name,duration:item.duration,type:item.blob.type,data:await bytesToBase64(item.blob)})}
+const json=JSON.stringify({format:'RMR-JINGLES-PADS',version:1,bankCount:10,padsPerBank:8,exportedAt:new Date().toISOString(),pads:records});
+const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));
+const link=document.createElement('a');link.href=url;link.download='RMR-PISADORES-'+new Date().toISOString().slice(0,10)+'.json';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+busy(false,records.length+' pisadores guardados en el archivo');
+}catch(e){busy(false,'Error al guardar: '+e.message)}finally{db?.close()}
+};
+load.onclick=()=>picker.click();
+picker.onchange=async()=>{
+const file=picker.files?.[0];picker.value='';if(!file)return;
+let db;busy(true,'Leyendo archivo…');
+try{
+const data=JSON.parse(await file.text());
+if(data.format!=='RMR-JINGLES-PADS'||data.version!==1||data.bankCount!==10||data.padsPerBank!==8||!Array.isArray(data.pads)||data.pads.length>80)throw Error('El archivo no es un respaldo válido de RMR');
+const indices=new Set(),items=[];
+for(const entry of data.pads){
+if(!Number.isInteger(entry.index)||entry.index<0||entry.index>=80||indices.has(entry.index)||typeof entry.data!=='string'||typeof entry.name!=='string'||entry.data.length>150000000)throw Error('Archivo de pisadores inválido');
+indices.add(entry.index);
+const blob=base64ToBlob(entry.data,entry.type);
+items.push({index:entry.index,name:entry.name,blob,duration:Number.isFinite(entry.duration)?entry.duration:null});
+}
+busy(false,'');
+if(!confirm('¿Restaurar '+items.length+' pisadores? Esto reemplazará los pisadores actualmente guardados en este navegador.'))return;
+busy(true,'Restaurando pisadores…');
+db=await dbOpen();await write(db,items);
+busy(false,items.length+' pisadores restaurados. Actualizando…');
+location.reload();
+}catch(e){busy(false,'No se pudo cargar: '+e.message)}finally{db?.close()}
+};
+})();
 </script></body></html>
