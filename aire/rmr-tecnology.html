@@ -2264,4 +2264,23 @@ overflow:hidden!important;overflow-wrap:normal!important;word-break:normal!impor
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode{grid-row:5!important;grid-column:1!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrOpenSettings{grid-row:6!important;grid-column:1!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){align-self:stretch!important;justify-self:stretch!important;position:relative!important;top:auto!important;left:auto!important;transform:none!important;translate:none!important;margin:0!important;width:100%!important;min-width:0!important;max-width:100%!important;height:35px!important;min-height:35px!important;max-height:35px!important;box-sizing:border-box!important;padding:2px 3px!important;border-radius:6px!important;font-size:10px!important;line-height:1.1!important}
+</style><style id="mhAdSixButtonNoGridHoles">
+/* Los botones son hijos de subgrupos: normalizar también los subgrupos a display:contents. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;grid-template-rows:none!important;height:auto!important;min-height:0!important;max-height:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdButtonPair,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.mhAdModeSettings{display:contents!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
+display:flex!important;position:static!important;grid-row:auto!important;grid-column:auto!important;order:0!important;
+flex:0 0 35px!important;align-self:stretch!important;box-sizing:border-box!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+height:35px!important;min-height:35px!important;max-height:35px!important;
+margin:0!important;padding:2px 3px!important;transform:none!important;translate:none!important
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrForceAd{order:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdStop{order:2!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact{order:3!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdKnob{order:4!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode{order:5!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrOpenSettings{order:6!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrManualMode{display:none!important}
 </style></body></html>
