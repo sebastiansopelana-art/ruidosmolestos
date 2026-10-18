@@ -1404,4 +1404,35 @@ for(const [num,name,selector] of parts){
 const btn=document.createElement('button');btn.id='mhNumbersToggle';btn.type='button';btn.textContent='MOSTRAR NÚMEROS';btn.addEventListener('click',()=>{const on=document.body.classList.toggle('mhShowNumbers');btn.textContent=on?'OCULTAR NÚMEROS':'MOSTRAR NÚMEROS'});document.body.appendChild(btn);
 attach();new MutationObserver(attach).observe(document.body,{childList:true,subtree:true});
 })();
+</script><style id="mhCompactDeckTrialStyle">
+/* Prueba reversible exclusivamente para reproductores 04 y 06. */
+body.mhCompactDeckTrial .rmrMusicColumn > .rmrDeck,
+body.mhCompactDeckTrial .rmrRightStack > .rmrAdDeck{
+ max-height:var(--mh-half-deck-height,300px)!important;
+ overflow-y:auto!important;
+ overflow-x:hidden!important;
+ scrollbar-width:thin;
+ scrollbar-color:#d13a32 #1b1b1d;
+}
+#mhCompactDeckTrialButton{position:fixed;right:12px;bottom:49px;z-index:99998;background:#a52823;color:white;border:1px solid #fa6659;padding:7px 11px;font-size:11px}
+</style><script id="mhCompactDeckTrialScript">
+(function(){
+const button=document.createElement('button');
+button.type='button';button.id='mhCompactDeckTrialButton';button.textContent='PROBAR 04 + 06 AL 50 %';
+button.title='Vista compacta reversible de los reproductores 04 y 06. Conserva todos los controles mediante desplazamiento interno.';
+function targets(){return [document.querySelector('.rmrMusicColumn > .rmrDeck'),document.querySelector('.rmrRightStack > .rmrAdDeck')]}
+button.addEventListener('click',()=>{
+ const active=document.body.classList.contains('mhCompactDeckTrial');
+ if(active){document.body.classList.remove('mhCompactDeckTrial');button.textContent='PROBAR 04 + 06 AL 50 %';return}
+ const [music,ads]=targets();
+ if(!music||!ads){alert('No se encontraron los dos reproductores para esta prueba.');return}
+ const m=Math.max(180,Math.round(music.getBoundingClientRect().height/2));
+ const a=Math.max(180,Math.round(ads.getBoundingClientRect().height/2));
+ music.style.setProperty('--mh-half-deck-height',m+'px');
+ ads.style.setProperty('--mh-half-deck-height',a+'px');
+ document.body.classList.add('mhCompactDeckTrial');
+ button.textContent='RESTAURAR 04 + 06';
+});
+document.body.appendChild(button);
+})();
 </script></body></html>
