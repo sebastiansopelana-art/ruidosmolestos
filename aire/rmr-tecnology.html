@@ -2373,16 +2373,7 @@ location.reload();
 #mhOrangeClockSlot .mhBroadcastBars{height:24%!important;max-height:23px!important;margin-bottom:3px;box-shadow:0 2px 0 #b22b2840}
 #mhOrangeClockSlot .mhBroadcastRight{background:repeating-linear-gradient(145deg,transparent 0 5px,#ffffff04 6px 7px),linear-gradient(#111519,#050607)!important;border-radius:4px}
 </style>
-<script id="mhStudioWordmarkV2Script">
-(function(){
-const brand=document.querySelector('#mhOrangeClockSlot .mhBroadcastBrand');if(!brand||brand.querySelector('.mhBroadcastWordmark'))return;
-const strong=brand.querySelector('strong');if(!strong)return;
-const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-svg.setAttribute('viewBox','0 0 880 130');svg.setAttribute('class','mhBroadcastWordmark');svg.setAttribute('role','img');svg.setAttribute('aria-label','MEGAHERTZ');
-svg.innerHTML='<defs><linearGradient id="mhMetalTextV2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f8fa"/><stop offset=".18" stop-color="#a9afb7"/><stop offset=".35" stop-color="#3c444e"/><stop offset=".49" stop-color="#f2f5f8"/><stop offset=".60" stop-color="#c0c8cd"/><stop offset=".78" stop-color="#50565d"/><stop offset="1" stop-color="#d9dee1"/></linearGradient><linearGradient id="mhEdgeV2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset=".5" stop-color="#24272a"/><stop offset="1" stop-color="#ff302a"/></linearGradient><filter id="mhTextGlowV2" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="5"/></filter></defs><text x="440" y="102" text-anchor="middle" textLength="850" lengthAdjust="spacingAndGlyphs" font-family="Impact,Arial Black,sans-serif" font-size="111" font-weight="900" fill="#fa211b" opacity=".65" filter="url(#mhTextGlowV2)">MEGAHERTZ</text><text x="440" y="106" text-anchor="middle" textLength="850" lengthAdjust="spacingAndGlyphs" font-family="Impact,Arial Black,sans-serif" font-size="111" font-weight="900" fill="#0a090a" stroke="#0a090a" stroke-width="9">MEGAHERTZ</text><text x="440" y="100" text-anchor="middle" textLength="850" lengthAdjust="spacingAndGlyphs" font-family="Impact,Arial Black,sans-serif" font-size="111" font-weight="900" fill="url(#mhMetalTextV2)" stroke="url(#mhEdgeV2)" stroke-width="2.3" paint-order="stroke">MEGAHERTZ</text><path d="M20 116 H860" stroke="#ff4135" stroke-width="2" opacity=".85"/>';
-strong.replaceWith(svg);
-})();
-</script><style id="mhLogoHierarchyFinal">
+<style id="mhLogoHierarchyFinal">
 /* Vúmetro arriba, marca dominante al centro, firma debajo. */
 #mhOrangeClockSlot .mhBroadcastBrand{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;padding:4px 3px!important;box-sizing:border-box!important}
 #mhOrangeClockSlot .mhBroadcastBars{order:0!important;flex:0 0 22%!important;height:22%!important;max-height:20px!important;width:95%!important;margin:0 0 2px!important;align-self:center!important;overflow:hidden!important}
@@ -2406,27 +2397,7 @@ strong.replaceWith(svg);
 #mhOrangeClockSlot .mhBroadcastRight label{font-size:clamp(7px,.7vw,11px)!important;letter-spacing:0!important}
 #mhOrangeClockSlot .mhBroadcastTime{font-size:clamp(9px,1vw,18px)!important;letter-spacing:-.6px!important}
 #mhOrangeClockSlot .mhBroadcastAir{font-size:clamp(11px,1.4vw,24px)!important}
-</style><script id="mhAnalogOfficialScript">
-(function(){
-const slot=document.getElementById('mhOrangeClockSlot');if(!slot||slot.dataset.analogOfficial)return;slot.dataset.analogOfficial='1';
-const brand=slot.querySelector('.mhBroadcastBrand');if(!brand)return;
-const gauge=(name)=>'<div class="mhAnalogGauge" aria-label="Vúmetro '+name+'"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M9 76 Q50 -4 91 76" fill="none" stroke="#433b2a" stroke-width="1.7"/><path d="M15 70 Q50 8 85 70" fill="none" stroke="#b53427" stroke-width="2.5" stroke-dasharray="13 90"/><g fill="#3b3225" font-size="9"><text x="8" y="77">-20</text><text x="34" y="27">-5</text><text x="67" y="36">0</text><text x="83" y="76">+3</text><text x="43" y="68" font-size="16">VU</text><text x="39" y="97" font-size="9">'+name+'</text></g><g class="mhNeedle"><path d="M50 91 L50 16" stroke="#b31916" stroke-width="2"/><circle cx="50" cy="91" r="4" fill="#282828" stroke="#a18e71"/></g></svg></div>';
-const gauges=document.createElement('div');gauges.className='mhAnalogGauges';gauges.innerHTML=gauge('LEFT')+gauge('RIGHT');brand.prepend(gauges);
-const title=document.createElement('div');title.className='mhAnalogTitle';title.textContent='MEGAHERTZ';gauges.after(title);
-const needles=[...gauges.querySelectorAll('.mhNeedle')],audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);
-const states=[0,0],samples=[new Float32Array(1024),new Float32Array(1024)];let last=0;
-function draw(now){requestAnimationFrame(draw);if(now-last<45)return;last=now;
-const active=audios.some(a=>!a.paused&&!a.ended&&a.readyState>1);
-const analysers=window.rmrVuAnalysers;for(let ch=0;ch<2;ch++){
-let target=0;
-if(active&&analysers?.[ch]&&window.rmrVuContext?.state==='running'){
-const an=analysers[ch],buf=samples[ch];an.getFloatTimeDomainData(buf);let sum=0;for(let i=0;i<buf.length;i++)sum+=buf[i]*buf[i];const rms=Math.sqrt(sum/buf.length);target=Math.min(.92,Math.max(0,(20*Math.log10(Math.max(rms,.00001))+40)/38));
-}else if(active){target=.24+.12*Math.sin(now/390+ch*.9)+.07*Math.sin(now/165+ch)}
-states[ch]+=(target-states[ch])*(target>states[ch]?.27:.09);needles[ch].style.transform='rotate('+(-48+states[ch]*96)+'deg)';
-}}
-requestAnimationFrame(draw);
-})();
-</script><style id="mhPhotoOfficialStyles">
+</style><style id="mhPhotoOfficialStyles">
 #mhOrangeClockSlot.mhPhotoInstalled{position:relative!important;display:block!important;min-height:0!important;padding:0!important;border:0!important;border-radius:5px!important;overflow:hidden!important;background:#070708!important}
 #mhOrangeClockSlot.mhPhotoInstalled>.mhBroadcastBrand,#mhOrangeClockSlot.mhPhotoInstalled>.mhBroadcastRight{display:none!important}
 #mhOrangeClockSlot .mhPhotoFace{position:absolute;inset:0;background-color:#080808;background-position:center;background-repeat:no-repeat;background-size:100% 100%}
