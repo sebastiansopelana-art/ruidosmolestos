@@ -2343,4 +2343,16 @@ font:800 10px/1.2 system-ui,sans-serif!important;white-space:normal!important;
  const settings=document.getElementById('rmrOpenSettings');
  if(settings){settings.style.setProperty('height','52px','important');settings.style.setProperty('min-height','52px','important');settings.style.setProperty('max-height','52px','important');settings.style.setProperty('flex','0 0 52px','important')}
 })();
+</script><style id="mhClearQueueBottomAlignment">
+/* Igualar el borde inferior de BORRAR COLA con el de la lista contigua. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{
+height:52px!important;min-height:52px!important;max-height:52px!important;flex:0 0 52px!important;
+display:flex!important;align-items:center!important;justify-content:center!important;
+}
+</style><script id="mhClearQueueBottomAlignmentScript">
+(function(){
+ const b=document.getElementById('rmrClearOverdueQueue');
+ if(!b)return;
+ for(const [p,v] of Object.entries({height:'52px','min-height':'52px','max-height':'52px',flex:'0 0 52px'}))b.style.setProperty(p,v,'important');
+})();
 </script></body></html>
