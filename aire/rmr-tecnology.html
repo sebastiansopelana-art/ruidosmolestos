@@ -1288,6 +1288,8 @@ holder.querySelectorAll('[data-rmr-ads-window]').forEach(el=>el.classList.add('r
 holder.querySelectorAll('.rmrPlayerNextBreak,.side,.rmrIntroPanel').forEach(el=>el.classList.add('rmrProgramHidden'));
 holder.querySelector('.rmrDeckTitle').textContent='REPRODUCTOR DE MÚSICA · PROGRAMA 2';
 holder.querySelector('.rmrInlineMusicPlaylist>.paneltitle').textContent='PLAYLIST INDEPENDIENTE · PROGRAMA 2';
+// Ocultar únicamente el rótulo AGREGAR MÚSICA de la playlist del Reproductor 2; conservar el input para arrastrar/cargar archivos.
+const program2AddMusic=holder.querySelector('#program2_addMusic');if(program2AddMusic)program2AddMusic.style.setProperty('display','none','important');
 const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];holder._rmrProgramAudio=audio;let pos=-1,objectUrl=null;
 const set=(id,value)=>{const e=$(id);if(e)e.textContent=value};
 const fmt=n=>Number.isFinite(n)?String(Math.floor(n/60)).padStart(2,'0')+':'+String(Math.floor(n%60)).padStart(2,'0'):'00:00';
