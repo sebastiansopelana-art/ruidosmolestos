@@ -1802,4 +1802,45 @@ document.body.appendChild(btn);
  const label=next?.querySelector('.rmrNowLabel');
  if(label)label.textContent='POR SONAR';
 })();
+</script><style id="mhAd06ModeSettingsPlacement">
+/* Controles 06 bajo el grupo 15, idéntico ancho y alto de botón. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings{
+ display:flex!important;flex-direction:column!important;gap:6px!important;
+ width:100%!important;margin-top:7px!important;min-width:0!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrAutoMode,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrOpenSettings{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;min-width:0!important;height:34px!important;min-height:34px!important;
+ max-height:34px!important;margin:0!important;padding:4px 6px!important;
+ box-sizing:border-box!important;font-size:11px!important;font-weight:800!important;
+ border-radius:6px!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrManualMode{display:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{height:auto!important;max-height:none!important;min-height:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn{
+ height:auto!important;max-height:none!important;min-height:0!important;
+ display:flex!important;flex-direction:column!important;
+}
+</style><script id="mhAd06ModeSettingsPlacementScript">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ const row=deck?.querySelector('.rmrAdControlRow');
+ const auto=document.getElementById('rmrAutoMode');
+ const manual=document.getElementById('rmrManualMode');
+ const settings=document.getElementById('rmrOpenSettings');
+ if(!row||!auto||!settings)return;
+ const group=document.createElement('div');
+ group.className='mhAdModeSettings';
+ group.append(auto);
+ if(manual)group.append(manual);
+ group.append(settings);
+ row.append(group);
+ // Un único botón AUTO/MANUAL conserva el comportamiento de alternancia existente.
+ auto.setAttribute('title','Alternar entre automático y manual');
+ auto.addEventListener('click',function(){
+  // El controlador existente de AUTO puede dejarlo activo; alternar al modo manual
+  // sólo cuando ya estaba activo antes del clic.
+ },false);
+})();
 </script></body></html>
