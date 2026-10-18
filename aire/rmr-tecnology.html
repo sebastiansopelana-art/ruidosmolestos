@@ -2355,4 +2355,30 @@ display:flex!important;align-items:center!important;justify-content:center!impor
  if(!b)return;
  for(const [p,v] of Object.entries({height:'52px','min-height':'52px','max-height':'52px',flex:'0 0 52px'}))b.style.setProperty(p,v,'important');
 })();
+</script><style id="mhClearQueueFullListHeight">
+/* BORRAR COLA ocupa la altura completa de la lista de tandas. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{
+height:var(--mh-ad-queue-list-height,280px)!important;
+min-height:var(--mh-ad-queue-list-height,280px)!important;
+max-height:var(--mh-ad-queue-list-height,280px)!important;
+flex:0 0 var(--mh-ad-queue-list-height,280px)!important;
+align-items:center!important;justify-content:center!important;
+}
+</style><script id="mhClearQueueFullListHeightScript">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ if(!deck)return;
+ const button=document.getElementById('rmrClearOverdueQueue');
+ const list=deck.querySelector('.rmrAdListColumn');
+ if(!button||!list)return;
+ let previous=0;
+ function sync(){
+  const h=Math.max(150,Math.round(list.getBoundingClientRect().height));
+  if(h===previous)return;previous=h;
+  button.style.setProperty('--mh-ad-queue-list-height',h+'px');
+ }
+ sync();
+ if(window.ResizeObserver)new ResizeObserver(sync).observe(list);
+ window.addEventListener('resize',sync);
+})();
 </script></body></html>
