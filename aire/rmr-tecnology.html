@@ -2193,12 +2193,12 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;display:flex!important;flex:0 0 32px!important;align-items:center!important;justify-content:center!important;align-self:stretch!important;order:0!important;grid-row:auto!important;grid-column:auto!important;width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;padding:2px 3px!important;box-sizing:border-box!important;font:800 10px/1.1 system-ui,sans-serif!important;text-align:center!important}
 </style><script id="mhAd06HardResetVerification">
 (function(){
-const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings','rmrClearOverdueQueue'];
+const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
 function fix(){
  const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
  if(!row)return false;
  const buttons=ids.map(id=>document.getElementById(id));
- if(buttons.slice(0,6).some(b=>!b))return false;
+ if(buttons.slice(1).some(b=>!b))return false;
  const column=row.closest('.rmrAdControlsColumn');
  const vu=row.querySelector('.rmrAdVuPanel');
  if(vu&&column)column.appendChild(vu);
@@ -2320,15 +2320,7 @@ overflow-y:auto!important;overflow-x:hidden!important;
 </script><style id="mhClearQueueSevenVisibleFix">
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{height:auto!important;min-height:260px!important;max-height:none!important;display:flex!important;flex-direction:column!important;gap:6px!important;overflow:visible!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>#rmrClearOverdueQueue{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;order:7!important;flex:0 0 32px!important;align-self:stretch!important;width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;grid-row:auto!important}
-</style><script id="mhClearQueueSevenVisibleFixScript">
-(function(){
-const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
-const btn=document.getElementById('rmrClearOverdueQueue');
-if(!row||!btn)return;
-row.appendChild(btn);
-btn.style.setProperty('order','7','important');
-})();
-</script><style id="mhSettingsButtonTaller">
+</style><style id="mhSettingsButtonTaller">
 /* Volver a la distribución anterior y dar más altura sólo a CONFIGURACIÓN. */
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{height:auto!important;min-height:280px!important;max-height:none!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{
@@ -2337,77 +2329,34 @@ padding:6px 4px!important;align-items:center!important;justify-content:center!im
 font:800 10px/1.2 system-ui,sans-serif!important;white-space:normal!important;
 }
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{min-height:280px!important}
-</style><script id="mhSettingsButtonTallerScript">
-(function(){
- const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');if(!row)return;
- const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings','rmrClearOverdueQueue'];
- ids.forEach((id,i)=>{const b=document.getElementById(id);if(b){row.appendChild(b);b.style.setProperty('order',String(i+1),'important')}});
- const settings=document.getElementById('rmrOpenSettings');
- if(settings){settings.style.setProperty('height','52px','important');settings.style.setProperty('min-height','52px','important');settings.style.setProperty('max-height','52px','important');settings.style.setProperty('flex','0 0 52px','important')}
-})();
-</script><style id="mhClearQueueBottomAlignment">
-/* Igualar el borde inferior de BORRAR COLA con el de la lista contigua. */
+</style><style id="mhAd06QueueFirstCompactFinal">
+/* Controles 06 compactos: BORRAR COLA arriba, CONFIGURACIÓN abajo. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{
+display:flex!important;flex-direction:column!important;gap:6px!important;
+height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{
-height:52px!important;min-height:52px!important;max-height:52px!important;flex:0 0 52px!important;
-display:flex!important;align-items:center!important;justify-content:center!important;
+order:0!important;display:flex!important;visibility:visible!important;opacity:1!important;
+height:54px!important;min-height:54px!important;max-height:54px!important;flex:0 0 54px!important;
+width:100%!important;align-self:stretch!important;align-items:center!important;justify-content:center!important;
 }
-</style><script id="mhClearQueueBottomAlignmentScript">
-(function(){
- const b=document.getElementById('rmrClearOverdueQueue');
- if(!b)return;
- for(const [p,v] of Object.entries({height:'52px','min-height':'52px','max-height':'52px',flex:'0 0 52px'}))b.style.setProperty(p,v,'important');
-})();
-</script><style id="mhClearQueueFullListHeight">
-/* BORRAR COLA ocupa la altura completa de la lista de tandas. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{
-height:var(--mh-ad-queue-list-height,280px)!important;
-min-height:var(--mh-ad-queue-list-height,280px)!important;
-max-height:var(--mh-ad-queue-list-height,280px)!important;
-flex:0 0 var(--mh-ad-queue-list-height,280px)!important;
-align-items:center!important;justify-content:center!important;
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{
+order:6!important;height:52px!important;min-height:52px!important;max-height:52px!important;flex:0 0 52px!important;
 }
-</style><script id="mhClearQueueFullListHeightScript">
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrForceAd{order:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdStop{order:2!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdExact{order:3!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdKnob{order:4!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode{order:5!important}
+</style><script id="mhAd06QueueFirstCompactFinalScript">
 (function(){
- const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
- if(!deck)return;
- const button=document.getElementById('rmrClearOverdueQueue');
- const list=deck.querySelector('.rmrAdListColumn');
- if(!button||!list)return;
- let previous=0;
- function sync(){
-  const h=Math.max(150,Math.round(list.getBoundingClientRect().height));
-  if(h===previous)return;previous=h;
-  button.style.setProperty('--mh-ad-queue-list-height',h+'px');
- }
- sync();
- if(window.ResizeObserver)new ResizeObserver(sync).observe(list);
- window.addEventListener('resize',sync);
-})();
-</script><style id="mhAdQueueUnrestrictedHeight">
-/* Se levanta el límite general de 32px exclusivamente para BORRAR COLA. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>#rmrClearOverdueQueue{
-height:var(--mh-ad-queue-list-height,280px)!important;
-min-height:var(--mh-ad-queue-list-height,280px)!important;
-max-height:var(--mh-ad-queue-list-height,280px)!important;
-flex-grow:0!important;flex-shrink:0!important;flex-basis:var(--mh-ad-queue-list-height,280px)!important;
-align-self:stretch!important;
-}
-</style><script id="mhAdQueueUnrestrictedHeightScript">
-(function(){
- const button=document.getElementById('rmrClearOverdueQueue');
- const list=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn');
- if(!button||!list)return;
- function match(){
-  const h=Math.max(150,Math.round(list.getBoundingClientRect().height));
-  button.style.setProperty('--mh-ad-queue-list-height',h+'px');
-  button.style.setProperty('height',h+'px','important');
-  button.style.setProperty('min-height',h+'px','important');
-  button.style.setProperty('max-height',h+'px','important');
-  button.style.setProperty('flex','0 0 '+h+'px','important');
- }
- match();
- if(window.ResizeObserver)new ResizeObserver(match).observe(list);
- window.addEventListener('load',match,{once:true});
- window.addEventListener('resize',match);
+const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+if(!row)return;
+const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ids.forEach((id,i)=>{const b=document.getElementById(id);if(!b)return;row.appendChild(b);b.style.setProperty('order',String(i),'important');
+const h=id==='rmrClearOverdueQueue'?54:id==='rmrOpenSettings'?52:32;
+for(const prop of ['height','min-height','max-height'])b.style.setProperty(prop,h+'px','important');
+b.style.setProperty('flex','0 0 '+h+'px','important');
+});
 })();
 </script></body></html>
