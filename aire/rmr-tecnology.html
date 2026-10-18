@@ -1978,4 +1978,57 @@ body.mhLayoutEditing .mhDraggableSection.mhDragging{z-index:9999!important}
   });
  }
 })();
+</script><style id="mhUniversalMoveStyle">
+body.mhLayoutEditing .mhUniversalTarget{cursor:move}
+body.mhLayoutEditing .mhUniversalTarget.mhUniversalMoving{outline:2px solid #f3bd65!important;outline-offset:1px!important;z-index:214748100!important}
+body.mhLayoutEditing .mhUniversalResizable{resize:both!important;overflow:auto!important;min-width:45px;min-height:28px}
+#mhLayoutEditHint{position:fixed;right:14px;bottom:65px;z-index:2147482000;background:#0b1b29;color:#e9f3fb;border:1px solid #668397;border-radius:6px;padding:7px 10px;font:11px system-ui;display:none;max-width:320px}
+body.mhLayoutEditing #mhLayoutEditHint{display:block}
+</style><script id="mhUniversalMoveScript">
+(function(){
+ const key='mh-layout-universal-v1', stored=(()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}})();
+ const positions=stored&&typeof stored==='object'?stored:{};
+ const hint=document.createElement('div');hint.id='mhLayoutEditHint';hint.textContent='Arrastrá cualquier elemento manteniendo ALT. Para cambiar tamaños, usá la esquina inferior derecha de los paneles. Guardá al terminar.';document.body.appendChild(hint);
+ const excluded='html,body,script,style,meta,link,head,#mhLayoutEditBar,#mhLayoutEditHint,.mhDragHandle,option';
+ const candidates=Array.from(document.querySelectorAll('body *')).filter(el=>{
+  if(el.matches(excluded)||el.closest('#mhLayoutEditBar,#mhLayoutEditHint,.mhDragHandle,svg'))return false;
+  if(el.children.length===0&&!el.matches('button,input,select,textarea,a,img,canvas,video,audio'))return false;
+  const r=el.getBoundingClientRect(),css=getComputedStyle(el);
+  return r.width>=22&&r.height>=14&&css.display!=='none'&&css.visibility!=='hidden'&&css.position!=='fixed';
+ });
+ const entries=[];
+ for(let i=0;i<candidates.length;i++){
+  const el=candidates[i],id=el.id?'id:'+el.id:'node:'+i;
+  el.classList.add('mhUniversalTarget');
+  const p=positions[id];
+  if(p){el.style.translate=(Number(p.x)||0)+'px '+(Number(p.y)||0)+'px';if(p.w&&p.h){el.style.width=p.w+'px';el.style.height=p.h+'px';}}
+  if(el.matches('.panel,.rmrDeck,.rmrAdDeck,.mhJingleBankPanel,.playlist,.rmrAdListColumn,.rmrRightStack,.rmrMusicColumn,.rmrDropList,.rmrDropPlayer'))el.classList.add('mhUniversalResizable');
+  entries.push({el,id});
+ }
+ const byElement=new Map(entries.map(v=>[v.el,v]));
+ let active=null;
+ const save=()=>{try{localStorage.setItem(key,JSON.stringify(positions))}catch(e){}};
+ document.addEventListener('pointerdown',e=>{
+  if(!document.body.classList.contains('mhLayoutEditing')||!e.altKey||e.button!==0)return;
+  const el=e.target.closest('.mhUniversalTarget'),entry=byElement.get(el);
+  if(!entry)return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+  const p=positions[entry.id]||{x:0,y:0};
+  active={...entry,pointer:e.pointerId,startX:e.clientX,startY:e.clientY,x:Number(p.x)||0,y:Number(p.y)||0};
+  el.classList.add('mhUniversalMoving');
+ },true);
+ document.addEventListener('pointermove',e=>{
+  if(!active||active.pointer!==e.pointerId)return;
+  e.preventDefault();const x=Math.round(active.x+e.clientX-active.startX),y=Math.round(active.y+e.clientY-active.startY);
+  active.el.style.translate=x+'px '+y+'px';
+  positions[active.id]={...positions[active.id],x,y};
+ },true);
+ const end=e=>{if(!active||active.pointer!==e.pointerId)return;active.el.classList.remove('mhUniversalMoving');active=null;save()};
+ document.addEventListener('pointerup',end,true);document.addEventListener('pointercancel',end,true);
+ document.addEventListener('click',e=>{if(document.body.classList.contains('mhLayoutEditing')&&e.altKey){e.preventDefault();e.stopImmediatePropagation()}},true);
+ const reset=document.querySelector('#mhLayoutEditBar button:nth-child(2)');
+ if(reset)reset.addEventListener('click',()=>{if(!localStorage.getItem(key))return;localStorage.removeItem(key);for(const {el} of entries){el.style.translate='';el.style.width='';el.style.height=''};for(const k of Object.keys(positions))delete positions[k]},true);
+ const observer=new ResizeObserver(items=>{if(!document.body.classList.contains('mhLayoutEditing'))return;for(const item of items){const entry=byElement.get(item.target);if(!entry||!item.target.style.width)continue;positions[entry.id]={...positions[entry.id],w:Math.round(item.contentRect.width),h:Math.round(item.contentRect.height)}}save()});
+ for(const {el} of entries)if(el.classList.contains('mhUniversalResizable'))observer.observe(el);
+})();
 </script></body></html>
