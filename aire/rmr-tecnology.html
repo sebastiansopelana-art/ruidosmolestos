@@ -2105,43 +2105,6 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrVuControlGrid>button{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrSpectrumVu{min-width:0!important;max-width:100%!important}
 @media(max-width:760px){.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{grid-template-columns:minmax(95px,37%) minmax(0,1fr)!important;gap:5px!important}}
-</style><style id="mhAd06ActualFitCorrection">
-/* La captura mostraba columnas superpuestas: recuperar flujo normal y lista legible. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{display:grid!important;grid-template-columns:minmax(0,30%) minmax(0,70%)!important;gap:0!important;width:100%!important;min-width:0!important;align-items:start!important;box-sizing:border-box!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn{position:relative!important;inset:auto!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:3px!important;width:100%!important;min-width:0!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important;padding:0 5px 0 0!important;box-sizing:border-box!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{position:static!important;inset:auto!important;transform:none!important;display:flex!important;flex-direction:column!important;gap:3px!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;margin:0!important;padding:0!important;overflow:visible!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdButtonPair{position:static!important;display:flex!important;flex-direction:column!important;gap:3px!important;min-width:0!important;width:100%!important;margin:0!important;padding:0!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdButtonPair>button,.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button{width:100%!important;min-width:0!important;height:25px!important;min-height:25px!important;max-height:25px!important;padding:2px 2px!important;font-size:9px!important;letter-spacing:0!important;line-height:1!important;overflow:hidden!important;text-overflow:clip!important;white-space:normal!important;box-sizing:border-box!important;border-radius:4px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings{position:static!important;display:flex!important;flex-direction:column!important;gap:3px!important;width:100%!important;margin:3px 0 0!important;min-width:0!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{position:relative!important;inset:auto!important;transform:none!important;display:flex!important;flex-direction:column!important;width:100%!important;min-width:0!important;max-width:100%!important;height:250px!important;min-height:250px!important;max-height:250px!important;margin:0!important;padding:0!important;overflow:hidden!important;box-sizing:border-box!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListTitle{display:block!important;flex:0 0 auto!important;min-width:0!important;font-size:9px!important;text-align:left!important;line-height:1.15!important;padding:3px!important;white-space:normal!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdList{position:relative!important;inset:auto!important;transform:none!important;display:block!important;flex:1 1 auto!important;width:100%!important;min-width:0!important;max-width:100%!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdVuPanel{max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
-</style><style id="mhAd06OverlapDefinitive">
-/* Evita que posiciones arrastradas previamente superpongan la lista y los controles internos. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{display:grid!important;grid-template-columns:minmax(0,29fr) minmax(0,71fr)!important;column-gap:6px!important;align-items:start!important;overflow:hidden!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{
-position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;float:none!important;grid-column:auto!important;grid-row:1!important;justify-self:stretch!important;align-self:start!important;min-width:0!important;width:100%!important;max-width:100%!important;margin:0!important;box-sizing:border-box!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{grid-column:1!important;padding-right:0!important;overflow:hidden!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{grid-column:2!important;z-index:1!important;height:250px!important;overflow:hidden!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdControlRow,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .mhAdModeSettings{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair>button,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .mhAdModeSettings>button{font-size:8.5px!important;letter-spacing:-.1px!important;height:24px!important;min-height:24px!important;max-height:24px!important;max-width:100%!important;padding:2px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdListColumn #rmrAdList{position:relative!important;transform:none!important;translate:none!important;min-width:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
-</style><style id="mhAd06ButtonTextFit">
-/* Texto de los seis controles: centrado, legible y dentro de cada botón. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdButtonPair>button,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button{
- display:flex!important;align-items:center!important;justify-content:center!important;
- min-width:0!important;max-width:100%!important;box-sizing:border-box!important;
- text-align:center!important;white-space:normal!important;overflow-wrap:normal!important;
- word-break:normal!important;hyphens:none!important;line-height:1.08!important;
- padding:2px 3px!important;letter-spacing:0!important;overflow:hidden!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button .rmrModeLight{flex:0 0 auto!important;margin-right:3px!important}
 </style><style id="mhPermanentCompactDecks">
 /* Única versión oficial: reproductores 04 y 06 compactos, sin selector de versión extendida. */
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck,.rmrDualDeck>.rmrRightStack>.rmrAdDeck{width:50%!important;max-width:50%!important;min-width:0!important;box-sizing:border-box!important}
@@ -2153,191 +2116,34 @@ position:relative!important;top:auto!important;left:auto!important;right:auto!im
 #mhCompactDeckTrialButton,#mhHalfWidthDecksButton{display:none!important}
 </style><script id="mhPermanentCompactDecksScript">
 (function(){document.body.classList.remove('mhCompactDeckTrial');document.body.classList.add('mhHalfWidthDecks');document.getElementById('mhCompactDeckTrialButton')?.remove();document.getElementById('mhHalfWidthDecksButton')?.remove()})();
-</script><style id="mhAd06FinalButtonLegibility">
-/* Botones compactos legibles: misma letra, dos renglones cuando haga falta. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair>button,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button{
-display:flex!important;align-items:center!important;justify-content:center!important;
-width:100%!important;min-width:0!important;max-width:100%!important;
-height:36px!important;min-height:36px!important;max-height:36px!important;
-padding:3px 5px!important;box-sizing:border-box!important;
-font:800 10px/1.13 system-ui,sans-serif!important;letter-spacing:0!important;
-white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;
-overflow:visible!important;text-align:center!important;text-overflow:clip!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode .rmrModeLight,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrManualMode .rmrModeLight{display:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode{gap:0!important}
+</script><style id="mhAd06SingleLayoutSource">
+/* Diseño definitivo: una sola fuente de distribución para publicidad. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{display:grid!important;grid-template-columns:minmax(0,44fr) minmax(0,56fr)!important;gap:6px!important;align-items:start!important;width:100%!important;overflow:visible!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{grid-column:1!important;position:relative!important;display:block!important;inset:auto!important;transform:none!important;translate:none!important;width:100%!important;min-width:0!important;max-width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;padding:0!important;margin:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{grid-column:2!important;position:relative!important;inset:auto!important;transform:none!important;translate:none!important;min-width:0!important;width:100%!important;max-width:100%!important;height:250px!important;overflow:hidden!important;margin:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{position:static!important;inset:auto!important;transform:none!important;translate:none!important;display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:repeat(6,32px)!important;gap:6px!important;align-content:start!important;justify-items:stretch!important;width:100%!important;height:222px!important;min-height:222px!important;max-height:222px!important;margin:0!important;padding:0!important;overflow:visible!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdButtonPair,.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.mhAdModeSettings{display:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button:is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){display:flex!important;visibility:visible!important;opacity:1!important;position:static!important;inset:auto!important;transform:none!important;translate:none!important;float:none!important;grid-column:1!important;align-self:stretch!important;justify-self:stretch!important;order:initial!important;flex:none!important;width:100%!important;min-width:0!important;max-width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;padding:2px 3px!important;box-sizing:border-box!important;border-radius:6px!important;align-items:center!important;justify-content:center!important;text-align:center!important;white-space:normal!important;word-break:normal!important;overflow:hidden!important;font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrForceAd{grid-row:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdStop{grid-row:2!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdExact{grid-row:3!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdKnob{grid-row:4!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode{grid-row:5!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{grid-row:6!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrManualMode{display:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode .rmrModeLight{display:none!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeAutomatic{animation:mhModeGreenFlash .9s ease-in-out infinite!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeManual{animation:mhModeRedFlash .9s ease-in-out infinite!important}
-</style><style id="mhAdThreeButtonsStyle">
-/* Publicidad: tres botones operativos, sin perder los identificadores del motor. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit #rmrAdKnob{display:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit{display:block!important;grid-template-rows:none!important;height:auto!important;min-height:0!important;max-height:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdActionPair{display:flex!important;flex-direction:column!important;grid-template-rows:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrForceAd,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdStop,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact{
-display:flex!important;align-items:center!important;justify-content:center!important;
-height:34px!important;min-height:34px!important;max-height:34px!important;
-width:100%!important;max-width:100%!important;min-width:0!important;
-padding:3px!important;font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important;
-text-align:center!important;white-space:normal!important;overflow:hidden!important;box-sizing:border-box!important
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="true"]{background:#196b8c!important;border-color:#70d5ff!important;color:#fff!important;box-shadow:0 0 8px #43b6ed88!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="false"]{background:#304457!important;border-color:#7892a4!important;color:#fff!important;box-shadow:none!important}
-</style><script id="mhAdThreeButtonsScript">
+</style><script id="mhAd06SingleLayoutScript">
 (function(){
- const force=document.getElementById('rmrForceAd'),stop=document.getElementById('rmrAdStop'),exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
- if(!force||!stop||!exact||!wait)return;
- force.textContent='FORZAR';stop.textContent='DETENER';
- function sync(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';exact.textContent=cut?'EXACTO':'ESPERAR';exact.setAttribute('aria-pressed',String(cut));exact.classList.toggle('isSelected',cut);wait.setAttribute('aria-pressed',String(!cut));wait.classList.toggle('isSelected',!cut);exact.title=cut?'EXACTO: cortar la canción a la hora de la tanda · clic para ESPERAR':'ESPERAR: aguardar el final del tema · clic para EXACTO'}
- exact.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();const next=localStorage.getItem('rmrAdPolicy')==='cut'?'wait':'cut';localStorage.setItem('rmrAdPolicy',next);sync();window.dispatchEvent(new Event('rmr-ad-policy-changed'))},true);
- window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync();
+const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+if(!row)return;
+const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+const buttons=ids.map(id=>document.getElementById(id));
+if(buttons.some(el=>!el))return;
+buttons.forEach(el=>{row.appendChild(el);el.style.removeProperty('height');el.style.removeProperty('min-height');el.style.removeProperty('max-height');el.style.removeProperty('margin');el.style.removeProperty('translate');el.style.removeProperty('transform');});
+const exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
+function policy(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';exact.textContent='EXACTO';wait.textContent='ESPERAR';exact.setAttribute('aria-pressed',String(cut));wait.setAttribute('aria-pressed',String(!cut));exact.classList.toggle('isSelected',cut);wait.classList.toggle('isSelected',!cut)}
+exact.addEventListener('click',()=>queueMicrotask(policy));wait.addEventListener('click',()=>queueMicrotask(policy));policy();
 })();
-</script><style id="mhAd06RestoreMissingControl">
-/* Restaurar EXACTO y ESPERAR como controles separados; conservar los otros cuatro. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit #rmrAdKnob{display:flex!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit{display:flex!important;flex-direction:column!important;gap:4px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{grid-template-columns:minmax(0,45fr) minmax(0,55fr)!important;gap:5px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{grid-column:2!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdKnob,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrOpenSettings,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrAutoMode{
-display:flex!important;align-items:center!important;justify-content:center!important;
-width:100%!important;min-width:0!important;max-width:100%!important;
-height:36px!important;min-height:36px!important;max-height:36px!important;
-padding:3px 2px!important;box-sizing:border-box!important;
-font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important;
-text-align:center!important;white-space:normal!important;overflow:hidden!important;
-overflow-wrap:normal!important;word-break:normal!important
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrOpenSettings{font-size:10px!important;letter-spacing:-.2px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdKnob[aria-pressed="true"],
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="true"]{background:#196b8c!important;border-color:#70d5ff!important;color:white!important}
-</style><script id="mhAd06RestoreMissingControlScript">
-(function(){
- const exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
- if(!exact||!wait)return;
- function sync(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';exact.textContent='EXACTO';wait.textContent='ESPERAR';exact.setAttribute('aria-pressed',String(cut));wait.setAttribute('aria-pressed',String(!cut));exact.classList.toggle('isSelected',cut);wait.classList.toggle('isSelected',!cut)}
- // El manejador previo del botón EXACTO alternaba: reemplazarlo con selección explícita.
- exact.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('rmrAdPolicy','cut');sync()},true);
- wait.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('rmrAdPolicy','wait');sync()},true);
- window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync();
-})();
-</script><style id="mhAd06PerfectButtonAlignment">
-/* Seis controles exactamente iguales: ancho, alto, margen, radio y tipografía. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{display:flex!important;flex-direction:column!important;align-items:stretch!important;padding:0!important;margin:0!important;gap:0!important;min-width:0!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:5px!important;margin:0!important;padding:0!important;width:100%!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdActionPair,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdPolicySplit,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings{
-display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;
-gap:5px!important;width:100%!important;min-width:0!important;max-width:100%!important;
-height:auto!important;min-height:0!important;max-height:none!important;
-margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
-position:relative!important;inset:auto!important;transform:none!important;translate:none!important;
-display:flex!important;flex:0 0 35px!important;align-items:center!important;justify-content:center!important;
-width:100%!important;min-width:0!important;max-width:100%!important;
-height:35px!important;min-height:35px!important;max-height:35px!important;
-margin:0!important;padding:2px 4px!important;box-sizing:border-box!important;
-border-radius:6px!important;font:800 10px/1.1 system-ui,sans-serif!important;
-letter-spacing:0!important;text-align:center!important;white-space:normal!important;
-overflow:hidden!important;overflow-wrap:normal!important;word-break:normal!important
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrManualMode{display:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode .rmrModeLight{display:none!important}
-</style><style id="mhSixButtonsExactGrid">
-/* Un único grid controla las seis posiciones, sin espacios entre subgrupos. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:repeat(6,35px)!important;row-gap:5px!important;column-gap:0!important;align-content:start!important;align-items:stretch!important;justify-items:stretch!important;width:100%!important;height:auto!important;margin:0!important;padding:0!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdActionPair,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdPolicySplit,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.mhAdModeSettings{display:contents!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrForceAd{grid-row:1!important;grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdStop{grid-row:2!important;grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact{grid-row:3!important;grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdKnob{grid-row:4!important;grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode{grid-row:5!important;grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrOpenSettings{grid-row:6!important;grid-column:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){align-self:stretch!important;justify-self:stretch!important;position:relative!important;top:auto!important;left:auto!important;transform:none!important;translate:none!important;margin:0!important;width:100%!important;min-width:0!important;max-width:100%!important;height:35px!important;min-height:35px!important;max-height:35px!important;box-sizing:border-box!important;padding:2px 3px!important;border-radius:6px!important;font-size:10px!important;line-height:1.1!important}
-</style><style id="mhAdSixButtonNoGridHoles">
-/* Los botones son hijos de subgrupos: normalizar también los subgrupos a display:contents. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;grid-template-rows:none!important;height:auto!important;min-height:0!important;max-height:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdButtonPair,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.mhAdModeSettings{display:contents!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
-display:flex!important;position:static!important;grid-row:auto!important;grid-column:auto!important;order:0!important;
-flex:0 0 35px!important;align-self:stretch!important;box-sizing:border-box!important;
-width:100%!important;min-width:0!important;max-width:100%!important;
-height:35px!important;min-height:35px!important;max-height:35px!important;
-margin:0!important;padding:2px 3px!important;transform:none!important;translate:none!important
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrForceAd{order:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdStop{order:2!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact{order:3!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdKnob{order:4!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode{order:5!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrOpenSettings{order:6!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrManualMode{display:none!important}
-</style><style id="mhSixButtonsStructuralFix">
-/* Los botones ahora son hijos DIRECTOS de una sola columna; no hay subgrupos que generen huecos. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;grid-template-rows:none!important;min-height:0!important;height:auto!important;max-height:none!important;overflow:visible!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button{display:flex!important;position:static!important;inset:auto!important;transform:none!important;translate:none!important;order:0!important;flex:0 0 35px!important;width:100%!important;min-width:0!important;max-width:100%!important;height:35px!important;min-height:35px!important;max-height:35px!important;margin:0!important;padding:2px 4px!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;font:800 10px/1.1 system-ui,sans-serif!important;text-align:center!important;border-radius:6px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrForceAd{order:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdStop{order:2!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdExact{order:3!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdKnob{order:4!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode{order:5!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{order:6!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrManualMode{display:none!important}
-</style><script id="mhSixButtonsStructuralFixScript">
-(function(){
- const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
- if(!row)return;
- const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
- const buttons=ids.map(id=>document.getElementById(id));
- if(buttons.some(b=>!b))return;
- // Mover los nodos originales preserva listeners, IDs y funciones existentes.
- buttons.forEach(button=>row.appendChild(button));
-})();
-</script><style id="mhAdSixButtonsVisibilityRepair">
-/* Los seis controles deben entrar dentro del alto real de la lista (250px). */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{align-items:start!important;overflow:visible!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{display:block!important;height:auto!important;min-height:220px!important;max-height:none!important;overflow:visible!important;position:relative!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;gap:5px!important;min-height:0!important;max-height:none!important;height:auto!important;overflow:visible!important;position:static!important;padding:0!important;margin:0!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button:is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){display:flex!important;visibility:visible!important;opacity:1!important;flex:0 0 32px!important;height:32px!important;min-height:32px!important;max-height:32px!important;width:100%!important;min-width:0!important;max-width:100%!important;position:static!important;margin:0!important;padding:2px!important;font:800 10px/1.08 system-ui,sans-serif!important;align-items:center!important;justify-content:center!important;text-align:center!important;overflow:hidden!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode.mhModeAutomatic{animation:mhModeGreenFlash .9s ease-in-out infinite!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode.mhModeManual{animation:mhModeRedFlash .9s ease-in-out infinite!important}
-</style><script id="mhAdSixButtonsVisibilityRepairScript">
-(function(){
- const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
- if(!row)return;
- const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
- function repair(){
-  const nodes=ids.map(id=>document.getElementById(id));if(nodes.some(n=>!n))return;
-  nodes.forEach((node,i)=>{if(node.parentElement!==row)row.appendChild(node);node.style.setProperty('order',String(i+1),'important');node.style.removeProperty('display')});
- }
- repair();
-})();
-</script><style id="mhAdSixUniformSpacingFinal">
-/* Una sola escala de medidas: 6 botones, idéntica separación de borde a borde. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{
-display:flex!important;flex-direction:column!important;align-items:stretch!important;
-justify-content:flex-start!important;gap:6px!important;row-gap:6px!important;
-padding:0!important;margin:0!important;width:100%!important;height:auto!important;
-min-height:0!important;max-height:none!important;overflow:visible!important
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button:is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
-display:flex!important;flex:0 0 32px!important;align-self:stretch!important;
-height:32px!important;min-height:32px!important;max-height:32px!important;
-width:100%!important;min-width:0!important;max-width:100%!important;
-margin:0!important;padding:2px 4px!important;position:static!important;
-transform:none!important;translate:none!important;box-sizing:border-box!important;
-align-items:center!important;justify-content:center!important;text-align:center!important;
-font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important;border-radius:6px!important
-}
-</style></body></html>
+</script></body></html>
