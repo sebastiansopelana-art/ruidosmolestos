@@ -34,6 +34,12 @@ jobs:
           node-version: '22'
       - name: Instalar dependencias
         run: npm install --no-audit --no-fund
+      - name: Incluir consola radial en el paquete
+        shell: bash
+        run: |
+          mkdir -p aire
+          cp ../aire/rmr-tecnology.html aire/rmr-tecnology.html
+          test -s aire/rmr-tecnology.html
       - name: Crear instalador preliminar
         run: npm run ${{ matrix.script }} -- ${{ matrix.arch }} --publish never
         env:
