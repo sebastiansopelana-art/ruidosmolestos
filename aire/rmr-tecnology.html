@@ -1935,7 +1935,7 @@ body.mhLayoutEditing .mhDragHandle{display:flex}
 body.mhLayoutEditing .mhDragHandle:active{cursor:grabbing}
 body.mhLayoutEditing .mhDraggableSection{padding-top:27px!important;position:relative;z-index:20}
 body.mhLayoutEditing .mhDraggableSection.mhDragging{z-index:9999!important}
-</style><script id="mhLayoutDragEditorScript">
+</style><script type="text/plain" id="mhLayoutDragEditorScript">
 (function(){
  const specs=[
  ['music','.rmrDualDeck>.rmrMusicColumn>.rmrDeck','REPRODUCTOR 04'],
@@ -1991,7 +1991,7 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  // Old transforms could move the entire advertising column off screen.
  for(const k of legacy){try{localStorage.removeItem(k)}catch(e){}}
  document.querySelectorAll('.mhDraggableSection').forEach(el=>{el.style.translate='';el.classList.remove('mhDraggableSection','mhDragging');el.querySelector(':scope > .mhDragHandle')?.remove()});
- const oldStyle=document.getElementById('mhLayoutDragEditorStyles');if(oldStyle)oldStyle.disabled=true;
+ const oldStyle=document.getElementById('mhLayoutDragEditorStyles');if(oldStyle)oldStyle.remove();
  const oldBar=document.getElementById('mhLayoutEditBar');if(oldBar)oldBar.remove();
  document.body.classList.remove('mhLayoutEditing');
  let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
