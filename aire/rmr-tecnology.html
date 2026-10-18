@@ -1671,4 +1671,61 @@ document.body.appendChild(btn);
  if(!top||!actions)return;
  top.append(actions);
 })();
+</script><style id="mhExactVuTwinsAndAdFooterCleanup">
+/* 04 y 06: idéntica caja, idéntica geometría y colores, sin leyendas. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck>.mhSignalTop>.mhSignalMeter,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck>.mhSignalTop>.mhSignalMeter{
+ display:flex!important;align-items:stretch!important;justify-content:stretch!important;
+ height:78px!important;min-height:78px!important;max-height:78px!important;
+ padding:9px 10px!important;box-sizing:border-box!important;
+ background:linear-gradient(155deg,#11181d,#07131a)!important;
+ border:1px solid #546b75!important;border-radius:7px!important;
+ box-shadow:inset 0 1px 5px #000a!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop .rmrWideVu,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhSignalTop .rmrAdVuPanel{
+ display:flex!important;align-items:stretch!important;justify-content:center!important;
+ width:100%!important;height:100%!important;min-height:0!important;max-height:none!important;
+ padding:0!important;margin:0!important;border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop .rmrSpectrumColumns,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhSignalTop .rmrAdVuBars{
+ display:grid!important;grid-template-columns:repeat(32,minmax(0,1fr))!important;
+ align-items:end!important;gap:2px!important;width:100%!important;
+ height:100%!important;min-height:0!important;max-height:none!important;
+ padding:0!important;margin:0!important;overflow:hidden!important;
+}
+.rmrDualDeck .mhSignalTop .rmrSpectrumColumns>.rmrSpectrumColumn,
+.rmrDualDeck .mhSignalTop .rmrAdVuBars>i{
+ display:block!important;align-self:end!important;width:100%!important;min-width:0!important;
+ max-width:none!important;max-height:100%!important;flex:none!important;
+ background:linear-gradient(to top,#22c879,#75dc82 55%,#e4c84b 80%,#f05242 100%)!important;
+ border-radius:1px 1px 0 0!important;
+}
+.rmrDualDeck .mhSignalTop .rmrSpectrumLegend,
+.rmrDualDeck .mhSignalTop .rmrAdVuTitle{display:none!important}
+/* El rótulo que se superpone bajo el progreso pertenece al encabezado de la lista. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListTitle{
+ display:none!important;
+}
+</style><script id="mhExactVuTwinsAndAdFooterCleanupScript">
+(function(){
+ const bars=document.getElementById('rmrAdVuBars');
+ if(!bars)return;
+ // El motor original sigue actualizando sus 24 bandas; 8 adicionales reflejan
+ // bandas vecinas y completan la misma matriz visual de 32 que Música.
+ const base=[...bars.querySelectorAll('i')];
+ if(base.length!==24||bars.dataset.mhExpanded==='1')return;
+ bars.dataset.mhExpanded='1';
+ const extra=Array.from({length:8},()=>{const bar=document.createElement('i');bar.style.height='5%';bars.appendChild(bar);return bar});
+ function update(){
+  for(let i=0;i<extra.length;i++){
+   const source=base[Math.min(23,Math.round((i+.5)*23/8))];
+   extra[i].style.height=source.style.height||'5%';
+  }
+  requestAnimationFrame(update);
+ }
+ update();
+})();
 </script></body></html>
