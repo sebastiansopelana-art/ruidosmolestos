@@ -2166,4 +2166,43 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
  buttons[3].addEventListener('click',()=>queueMicrotask(policy));
  policy();
 })();
+</script><style id="mhAd06HardResetAlignment">
+/* Forzar flujo vertical real, independientemente de reglas anteriores. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{display:flex!important;flex-flow:column nowrap!important;justify-content:flex-start!important;align-items:stretch!important;align-content:flex-start!important;gap:6px!important;row-gap:6px!important;grid-template-rows:none!important;grid-template-columns:none!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;height:222px!important;min-height:222px!important;max-height:222px!important;margin:0!important;padding:0!important;overflow:visible!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;display:flex!important;flex:0 0 32px!important;align-items:center!important;justify-content:center!important;align-self:stretch!important;order:0!important;grid-row:auto!important;grid-column:auto!important;width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;padding:2px 3px!important;box-sizing:border-box!important;font:800 10px/1.1 system-ui,sans-serif!important;text-align:center!important}
+</style><script id="mhAd06HardResetVerification">
+(function(){
+const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+function fix(){
+ const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+ if(!row)return false;
+ const buttons=ids.map(id=>document.getElementById(id));
+ if(buttons.some(b=>!b))return false;
+ const column=row.closest('.rmrAdControlsColumn');
+ const vu=row.querySelector('.rmrAdVuPanel');
+ if(vu&&column)column.appendChild(vu);
+ buttons.forEach(b=>row.appendChild(b));
+ [...row.children].forEach(el=>{if(!buttons.includes(el))el.remove()});
+ // Los botones quedan como únicos seis hijos, sin huecos ni contenedores auxiliares.
+ row.style.setProperty('display','flex','important');
+ row.style.setProperty('flex-direction','column','important');
+ row.style.setProperty('gap','6px','important');
+ row.style.setProperty('justify-content','flex-start','important');
+ buttons.forEach((b,i)=>{
+  b.style.setProperty('position','relative','important');
+  b.style.setProperty('top','auto','important');
+  b.style.setProperty('left','auto','important');
+  b.style.setProperty('transform','none','important');
+  b.style.setProperty('margin','0','important');
+  b.style.setProperty('height','32px','important');
+  b.style.setProperty('min-height','32px','important');
+  b.style.setProperty('max-height','32px','important');
+  b.style.setProperty('flex','0 0 32px','important');
+  b.style.setProperty('order',String(i),'important');
+ });
+ return row.children.length===6&&buttons.every(b=>b.parentElement===row);
+}
+if(!fix())document.addEventListener('DOMContentLoaded',fix,{once:true});
+window.addEventListener('load',fix,{once:true});
+})();
 </script></body></html>
