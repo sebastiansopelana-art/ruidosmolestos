@@ -2283,4 +2283,25 @@ margin:0!important;padding:2px 3px!important;transform:none!important;translate:
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode{order:5!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrOpenSettings{order:6!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrManualMode{display:none!important}
-</style></body></html>
+</style><style id="mhSixButtonsStructuralFix">
+/* Los botones ahora son hijos DIRECTOS de una sola columna; no hay subgrupos que generen huecos. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;grid-template-rows:none!important;min-height:0!important;height:auto!important;max-height:none!important;overflow:visible!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button{display:flex!important;position:static!important;inset:auto!important;transform:none!important;translate:none!important;order:0!important;flex:0 0 35px!important;width:100%!important;min-width:0!important;max-width:100%!important;height:35px!important;min-height:35px!important;max-height:35px!important;margin:0!important;padding:2px 4px!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;font:800 10px/1.1 system-ui,sans-serif!important;text-align:center!important;border-radius:6px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrForceAd{order:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdStop{order:2!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdExact{order:3!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdKnob{order:4!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode{order:5!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{order:6!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrManualMode{display:none!important}
+</style><script id="mhSixButtonsStructuralFixScript">
+(function(){
+ const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+ if(!row)return;
+ const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ const buttons=ids.map(id=>document.getElementById(id));
+ if(buttons.some(b=>!b))return;
+ // Mover los nodos originales preserva listeners, IDs y funciones existentes.
+ buttons.forEach(button=>row.appendChild(button));
+})();
+</script></body></html>
