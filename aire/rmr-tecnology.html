@@ -1925,7 +1925,7 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  document.addEventListener('pointerdown',e=>{if(!editing||e.button!==0||e.target.closest('#mhLayoutEditBar,#mhLayoutV2Help'))return;let el=e.target.closest('[data-mh-editable]');if(!el||!eligible(el))return;
  // ALT selects the parent instead of the nested control, for complete freedom.
  if(e.altKey&&el.parentElement?.dataset.mhEditable)el=el.parentElement;
- const id=elements.get(el);if(!id)return;e.preventDefault();e.stopImmediatePropagation();selected=el;
+ const id=elements.get(el);if(!id)return;e.preventDefault();e.stopImmediatePropagation();selected=el;document.dispatchEvent(new CustomEvent('mh-layout-selected',{detail:{element:el,id}}));
  const p=saved[id]||{x:0,y:0};const rect=el.getBoundingClientRect();
  drag={el,id,x:e.clientX,y:e.clientY,ox:p.x||0,oy:p.y||0,w:rect.width,h:rect.height,resize:sizing||e.shiftKey};
  el.classList.add('mhDragging');
@@ -2212,4 +2212,31 @@ window.addEventListener('load',fix,{once:true});
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck #mhOrangeClockSlot .mhBroadcastRight{height:100%!important;min-height:0!important;min-width:0!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;gap:4px!important;padding:3px!important;text-align:center!important}
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck #mhOrangeClockSlot .mhBroadcastTime,.rmrDualDeck>.rmrMusicColumn>.rmrDeck #mhOrangeClockSlot .mhBroadcastAir{box-sizing:border-box!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important;text-align:center!important}
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck #mhOrangeClockSlot .mhBroadcastAir{width:90%!important}
-</style></body></html>
+</style><style id="mhLayoutPrecisionPanelStyle">
+#mhPrecisionPanel{position:fixed;z-index:2147483641;right:16px;bottom:72px;width:330px;max-width:calc(100vw - 24px);max-height:70vh;overflow:auto;background:#0b1b27;color:#e9f6ff;border:1px solid #6096b1;border-radius:10px;box-shadow:0 12px 36px #000b;padding:12px;font:12px system-ui;display:none}
+#mhPrecisionPanel.open{display:block}
+#mhPrecisionPanel .mhPrecisionFields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
+#mhPrecisionPanel label{display:flex;flex-direction:column;gap:4px;font-weight:700;color:#b7d5e6}
+#mhPrecisionPanel input{width:100%;min-width:0;box-sizing:border-box;background:#09141c;color:white;border:1px solid #668ba0;border-radius:5px;padding:7px;font:13px system-ui}
+#mhPrecisionPanel button{background:#234b62;border:1px solid #6697b2;color:white;border-radius:5px;padding:7px;cursor:pointer}
+#mhPrecisionPanel .mhPrecisionActions{display:flex;gap:6px;flex-wrap:wrap}
+#mhPrecisionPanel #mhPrecisionName{overflow-wrap:anywhere;font-size:11px;color:#83c6e7;max-height:45px;overflow:auto}
+#mhPrecisionPanel .mhPrecisionNote{font-size:11px;color:#b4c6d1;line-height:1.4;margin-top:8px}
+</style><script id="mhLayoutPrecisionPanelScript">
+(function(){
+const toolbar=document.getElementById('mhLayoutEditBar');if(!toolbar)return;
+const trigger=document.createElement('button');trigger.type='button';trigger.textContent='⚙ AJUSTE FINO';trigger.title='Editar posición, altura y ancho en píxeles';toolbar.insertBefore(trigger,toolbar.querySelector('button:last-child'));
+const panel=document.createElement('section');panel.id='mhPrecisionPanel';panel.innerHTML='<strong>AJUSTE FINO DE ELEMENTOS</strong><div id="mhPrecisionName">Activá ORGANIZAR PANTALLA y seleccioná un elemento.</div><div class="mhPrecisionFields"><label>Horizontal X (px)<input data-prop="x" type="number" step="1"></label><label>Vertical Y (px)<input data-prop="y" type="number" step="1"></label><label>Ancho (px)<input data-prop="w" type="number" min="20" step="1"></label><label>Alto (px)<input data-prop="h" type="number" min="20" step="1"></label></div><div class="mhPrecisionActions"><button type="button" id="mhPrecisionReset">Reiniciar elemento</button><button type="button" id="mhPrecisionSave">Guardar ajustes</button><button type="button" id="mhPrecisionClose">Cerrar</button></div><div class="mhPrecisionNote">Seleccioná cualquier parte de la consola. ALT + clic selecciona su contenedor. Los cambios se guardan en este navegador. Para fijarlos como diseño aprobado, usá ★ FIJAR DISEÑO ACTUAL.</div>';
+document.body.append(panel);
+const key='mh-layout-v2';let chosen=null;
+const inputs=Object.fromEntries([...panel.querySelectorAll('input[data-prop]')].map(el=>[el.dataset.prop,el]));
+function load(){if(!chosen)return;let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}const p=saved[chosen.id]||{};const rect=chosen.el.getBoundingClientRect();inputs.x.value=p.x??0;inputs.y.value=p.y??0;inputs.w.value=p.w??Math.round(rect.width);inputs.h.value=p.h??Math.round(rect.height);panel.querySelector('#mhPrecisionName').textContent=chosen.id}
+function apply(){if(!chosen||!chosen.el.isConnected)return;let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}const p={x:Number(inputs.x.value)||0,y:Number(inputs.y.value)||0,w:Math.max(20,Number(inputs.w.value)||20),h:Math.max(20,Number(inputs.h.value)||20)};chosen.el.style.setProperty('translate',p.x+'px '+p.y+'px','important');chosen.el.style.setProperty('width',p.w+'px','important');chosen.el.style.setProperty('height',p.h+'px','important');saved[chosen.id]=p;localStorage.setItem(key,JSON.stringify(saved))}
+trigger.addEventListener('click',()=>{panel.classList.toggle('open');trigger.classList.toggle('active',panel.classList.contains('open'));if(panel.classList.contains('open'))load()});
+document.addEventListener('mh-layout-selected',e=>{chosen=e.detail;if(panel.classList.contains('open'))load()});
+Object.values(inputs).forEach(el=>el.addEventListener('change',apply));
+panel.querySelector('#mhPrecisionSave').addEventListener('click',apply);
+panel.querySelector('#mhPrecisionReset').addEventListener('click',()=>{if(!chosen)return;let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}delete saved[chosen.id];localStorage.setItem(key,JSON.stringify(saved));for(const prop of ['translate','width','height'])chosen.el.style.removeProperty(prop);load()});
+panel.querySelector('#mhPrecisionClose').addEventListener('click',()=>panel.classList.remove('open'));
+})();
+</script></body></html>
