@@ -2215,10 +2215,12 @@ function fix(){
   b.style.setProperty('left','auto','important');
   b.style.setProperty('transform','none','important');
   b.style.setProperty('margin','0','important');
-  b.style.setProperty('height','32px','important');
-  b.style.setProperty('min-height','32px','important');
-  b.style.setProperty('max-height','32px','important');
-  b.style.setProperty('flex','0 0 32px','important');
+  if(b.id!=='rmrClearOverdueQueue'&&b.id!=='rmrOpenSettings'){
+   b.style.setProperty('height','32px','important');
+   b.style.setProperty('min-height','32px','important');
+   b.style.setProperty('max-height','32px','important');
+   b.style.setProperty('flex','0 0 32px','important');
+  }
   b.style.setProperty('order',String(i),'important');
  });
  return row.children.length>=6&&buttons.filter(Boolean).every(b=>b.parentElement===row);
@@ -2380,5 +2382,32 @@ align-items:center!important;justify-content:center!important;
  sync();
  if(window.ResizeObserver)new ResizeObserver(sync).observe(list);
  window.addEventListener('resize',sync);
+})();
+</script><style id="mhAdQueueUnrestrictedHeight">
+/* Se levanta el límite general de 32px exclusivamente para BORRAR COLA. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>#rmrClearOverdueQueue{
+height:var(--mh-ad-queue-list-height,280px)!important;
+min-height:var(--mh-ad-queue-list-height,280px)!important;
+max-height:var(--mh-ad-queue-list-height,280px)!important;
+flex-grow:0!important;flex-shrink:0!important;flex-basis:var(--mh-ad-queue-list-height,280px)!important;
+align-self:stretch!important;
+}
+</style><script id="mhAdQueueUnrestrictedHeightScript">
+(function(){
+ const button=document.getElementById('rmrClearOverdueQueue');
+ const list=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn');
+ if(!button||!list)return;
+ function match(){
+  const h=Math.max(150,Math.round(list.getBoundingClientRect().height));
+  button.style.setProperty('--mh-ad-queue-list-height',h+'px');
+  button.style.setProperty('height',h+'px','important');
+  button.style.setProperty('min-height',h+'px','important');
+  button.style.setProperty('max-height',h+'px','important');
+  button.style.setProperty('flex','0 0 '+h+'px','important');
+ }
+ match();
+ if(window.ResizeObserver)new ResizeObserver(match).observe(list);
+ window.addEventListener('load',match,{once:true});
+ window.addEventListener('resize',match);
 })();
 </script></body></html>
