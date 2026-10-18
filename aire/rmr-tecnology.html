@@ -2098,4 +2098,75 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
 function fit(){const available=el.clientWidth-4;if(available<=0)return;let size=Math.min(24,Math.max(9,available/8));el.style.fontSize=size+'px';while(el.scrollWidth>el.clientWidth&&size>8){size-=.5;el.style.fontSize=size+'px'}}
 if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit();window.addEventListener('resize',fit);
 })();
+</script><style id="mhReliableModeAndStartupStyle">
+/* Estado del modo: verde automático / rojo manual, sin depender de clases antiguas. */
+#rmrAutoMode.mhModeAutomatic{background:#086d32!important;border:2px solid #4aff8a!important;color:#fff!important;opacity:1!important;animation:mhModeGreenFlash .9s ease-in-out infinite!important}
+#rmrAutoMode.mhModeManual{background:#891b24!important;border:2px solid #ff5a63!important;color:#fff!important;opacity:1!important;animation:mhModeRedFlash .9s ease-in-out infinite!important}
+#rmrAutoMode.mhModeAutomatic .rmrModeLight{background:#3fff7a!important;box-shadow:0 0 9px #1f6!important}
+#rmrAutoMode.mhModeManual .rmrModeLight{background:#ff3548!important;box-shadow:0 0 9px #f24!important}
+@keyframes mhModeGreenFlash{0%,100%{box-shadow:0 0 3px #16ec66;background:#075b29}50%{box-shadow:0 0 17px #00ff77;background:#15a34e}}
+@keyframes mhModeRedFlash{0%,100%{box-shadow:0 0 3px #ff3848;background:#7c1820}50%{box-shadow:0 0 17px #ff3848;background:#cb2732}}
+.mhStartupSetting{margin:16px 0;padding:15px;background:#102d3c;border:1px solid #5a8496;border-radius:8px}
+.mhStartupSetting label{display:flex;align-items:center;gap:12px;font-weight:800;cursor:pointer}
+.mhStartupSetting input{width:22px;height:22px;accent-color:#38d481}
+.mhStartupSetting small{display:block;margin-top:9px;color:#b5d5e2}
+</style><script id="mhReliableModeAndStartupScript">
+(function(){
+ const auto=document.getElementById('rmrAutoMode'),manual=document.getElementById('rmrManualMode');
+ if(!auto||!manual)return;
+ function current(){return window.rmrEngine?.getMode?.()||localStorage.getItem('rmrAdMode')||'automatic'}
+ function paint(){
+  const mode=current(),isAuto=mode==='automatic';
+  auto.classList.toggle('mhModeAutomatic',isAuto);auto.classList.toggle('mhModeManual',!isAuto);
+  auto.classList.toggle('isManual',!isAuto);auto.classList.toggle('isActive',isAuto);
+  manual.classList.toggle('isActive',!isAuto);
+  auto.setAttribute('aria-pressed',String(isAuto));manual.setAttribute('aria-pressed',String(!isAuto));
+  auto.title=isAuto?'AUTOMÁTICO activo · clic para cambiar a MANUAL':'MANUAL activo · clic para cambiar a AUTOMÁTICO';
+  const label=isAuto?'AUTOMÁTICO':'MANUAL';
+  if(auto.dataset.mhLastLabel!==label){auto.replaceChildren();const light=document.createElement('span');light.className='rmrModeLight';auto.append(light,document.createTextNode(label));auto.dataset.mhLastLabel=label}
+  const info=document.getElementById('rmrAdModeInfo');if(info)info.textContent=isAuto?'Tandas automáticas habilitadas.':'Tandas automáticas suspendidas; control del operador.';
+ }
+ // Captura primero para neutralizar los dos manejadores de alternancia antiguos que chocaban.
+ auto.addEventListener('click',e=>{
+  e.preventDefault();e.stopImmediatePropagation();
+  const next=current()==='automatic'?'manual':'automatic';
+  window.rmrEngine?.setMode?.(next);
+  if(!window.rmrEngine)localStorage.setItem('rmrAdMode',next);
+  paint();
+ },true);
+ manual.addEventListener('click',()=>queueMicrotask(paint));
+ const modeTimer=setInterval(()=>{if(window.rmrEngine){clearInterval(modeTimer);paint()}},150);
+ paint();
+ const settingKey='rmrStartPlaybackOnOpen';
+ const attachSetting=()=>{
+  const page=document.querySelector('.rmrAutomationSettingsPage')||document.querySelector('.rmrGeneralSettingsPage');
+  if(!page||document.getElementById('mhStartupSetting'))return false;
+  const section=document.createElement('section');section.id='mhStartupSetting';section.className='mhStartupSetting';
+  const label=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.id='mhAutoStartPlayback';input.checked=localStorage.getItem(settingKey)==='true';
+  label.append(input,document.createTextNode('INICIAR REPRODUCCIÓN AUTOMÁTICAMENTE AL ABRIR EL ESTUDIO'));
+  const note=document.createElement('small');note.textContent='Desactivado: el operador inicia con PLAY. Activado: intenta arrancar la música al abrir la consola. El navegador puede exigir un clic para habilitar el sonido.';
+  input.addEventListener('change',()=>localStorage.setItem(settingKey,String(input.checked)));
+  section.append(label,note);page.prepend(section);return true;
+ };
+ if(!attachSetting()){const o=new MutationObserver(()=>{if(attachSetting())o.disconnect()});o.observe(document.body,{childList:true,subtree:true});setTimeout(()=>o.disconnect(),12000)}
+ // Intento una sola vez por apertura; nunca altera la preferencia si el navegador bloquea audio.
+ if(localStorage.getItem(settingKey)==='true'){
+  window.addEventListener('load',()=>{
+   let tries=0;
+   const check=()=>{
+    const audio=document.getElementById('audio'),play=document.getElementById('play');
+    if(!audio||!play)return;
+    if(!audio.paused)return;
+    const ready=!!audio.src||!!document.querySelector('#playlist > *')||!!window.rmrEngine?.getMode;
+    if(!ready&&tries++<8){setTimeout(check,550);return}
+    play.click();
+    setTimeout(()=>{
+     if(audio.paused&&!document.getElementById('rmrAdAudio')?.paused)return;
+     if(audio.paused){const status=document.getElementById('status');if(status)status.textContent='INICIO AUTOMÁTICO: si el navegador bloqueó el audio, presioná PLAY una vez para habilitarlo.'}
+    },1600);
+   };
+   setTimeout(check,700);
+  },{once:true});
+ }
+})();
 </script></body></html>
