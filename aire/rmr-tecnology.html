@@ -1589,4 +1589,61 @@ document.body.appendChild(btn);
  setup(music,music?.querySelector('.rmrWideVu.rmrSpectrumVu'),music?.querySelector('.timeline'));
  setup(ads,ads?.querySelector('.rmrAdVuPanel'),ads?.querySelector('.rmrAdProgress'));
 })();
+</script><style id="mhVuFunctionalParityFix">
+/* El diseño gemelo respeta los analizadores reales y los elementos ya existentes. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck>.mhSignalTop,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck>.mhSignalTop{width:100%!important;min-width:0!important}
+.rmrDualDeck .mhSignalTop .rmrWideVu,
+.rmrDualDeck .mhSignalTop .rmrAdVuPanel{
+ position:static!important;display:flex!important;flex-direction:column!important;
+ width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+ margin:0!important;padding:0!important;border:0!important;background:transparent!important;
+ box-shadow:none!important;overflow:hidden!important;flex:1 1 auto!important;
+}
+.rmrDualDeck .mhSignalTop .rmrSpectrumColumns,
+.rmrDualDeck .mhSignalTop .rmrAdVuBars{
+ display:flex!important;flex-direction:row!important;align-items:flex-end!important;
+ flex:1 1 auto!important;height:48px!important;min-height:32px!important;max-height:48px!important;
+ width:100%!important;overflow:hidden!important;gap:3px!important;
+}
+.rmrDualDeck .mhSignalTop .rmrSpectrumColumns>.rmrSpectrumColumn,
+.rmrDualDeck .mhSignalTop .rmrAdVuBars>i{
+ display:block!important;flex:1 1 0!important;min-width:0!important;max-width:none!important;
+ align-self:flex-end!important;max-height:100%!important;
+ border-radius:2px 2px 0 0!important;
+ background:linear-gradient(to top,#1bbd7d 0%,#58d58c 55%,#e8c446 78%,#f04b3d 100%)!important;
+}
+.rmrDualDeck .mhSignalTop .rmrAdVuTitle{order:2!important}
+.rmrDualDeck .mhSignalTop .rmrAdVuBars{order:1!important}
+</style><script id="mhVuFunctionalParityFixScript">
+(function(){
+ // Evitar que la antigua sincronización de altura de publicidad afecte al VU reubicado.
+ const ad=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ const meter=ad?.querySelector('.mhSignalTop .rmrAdVuPanel');
+ if(meter){meter.style.removeProperty('height');meter.style.removeProperty('max-height');}
+ // Estado de diagnóstico visible únicamente en GENERAL, sin interferir con el aire.
+ const general=document.querySelector('.rmrGeneralSettingsPage');
+ if(!general)return;
+ const diagnostics=document.createElement('div');
+ diagnostics.className='mhVuDiagnostics';
+ diagnostics.style.cssText='padding:10px 12px;margin:8px 0;border:1px solid #64433e;border-radius:7px;background:#18191c;color:#ddd;font-size:12px';
+ diagnostics.innerHTML='<strong>ESTADO DE VÚMETROS</strong><p id="mhVuDiagnosticsText" style="margin:6px 0 0">Comprobando analizadores…</p>';
+ general.appendChild(diagnostics);
+ const status=diagnostics.querySelector('#mhVuDiagnosticsText');
+ function check(){
+  const music=document.getElementById('audio');
+  const ads=document.getElementById('rmrAdAudio');
+  const program=document.getElementById('rmrProgramMusicClone');
+  const mainBars=document.querySelectorAll('#rmrSpectrumColumns .rmrSpectrumColumn');
+  const adBars=document.querySelectorAll('#rmrAdVuBars i');
+  const programBars=program?.querySelectorAll('#program2_rmrSpectrumColumns .rmrSpectrumColumn');
+  const lines=[
+   'MÚSICA: '+(mainBars.length===32?'32 bandas conectadas':'revisar barras')+(music&&!music.paused?' · reproduciendo':' · en espera'),
+   'PUBLICIDAD: '+(adBars.length===24?'24 bandas conectadas':'revisar barras')+(ads&&!ads.paused?' · reproduciendo':' · en espera'),
+   'PROGRAMA 2: '+(programBars?.length===32?'32 bandas conectadas':'revisar barras')+(program?._rmrProgramAudio&&!program._rmrProgramAudio.paused?' · reproduciendo':' · en espera')
+  ];
+  status.textContent=lines.join(' | ');
+ }
+ check();setInterval(check,1500);
+})();
 </script></body></html>
