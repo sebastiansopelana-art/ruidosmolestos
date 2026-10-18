@@ -2227,4 +2227,28 @@ overflow-wrap:normal!important;word-break:normal!important
  wait.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('rmrAdPolicy','wait');sync()},true);
  window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync();
 })();
-</script></body></html>
+</script><style id="mhAd06PerfectButtonAlignment">
+/* Seis controles exactamente iguales: ancho, alto, margen, radio y tipografía. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{display:flex!important;flex-direction:column!important;align-items:stretch!important;padding:0!important;margin:0!important;gap:0!important;min-width:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:5px!important;margin:0!important;padding:0!important;width:100%!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdActionPair,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdPolicySplit,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings{
+display:flex!important;flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;
+gap:5px!important;width:100%!important;min-width:0!important;max-width:100%!important;
+height:auto!important;min-height:0!important;max-height:none!important;
+margin:0!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
+position:relative!important;inset:auto!important;transform:none!important;translate:none!important;
+display:flex!important;flex:0 0 35px!important;align-items:center!important;justify-content:center!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+height:35px!important;min-height:35px!important;max-height:35px!important;
+margin:0!important;padding:2px 4px!important;box-sizing:border-box!important;
+border-radius:6px!important;font:800 10px/1.1 system-ui,sans-serif!important;
+letter-spacing:0!important;text-align:center!important;white-space:normal!important;
+overflow:hidden!important;overflow-wrap:normal!important;word-break:normal!important
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrManualMode{display:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode .rmrModeLight{display:none!important}
+</style></body></html>
