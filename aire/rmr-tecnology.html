@@ -986,13 +986,22 @@ if(originalVolume){
 }
 
 const groupedPages={audio:settingsModal.querySelector('[data-rmr-page="audio"]'),silence:rmrSilencePage,automation:rmrAutomationPage};
-Object.values(groupedPages).forEach(page=>{if(page){page.hidden=true;generalContent.append(page)}});
+/* Configuración Beta: cada opción despliega su contenido inmediatamente debajo de su título. */
+Object.entries(groupedPages).forEach(([key,page])=>{
+ if(!page)return;
+ page.hidden=true;
+ const button=generalPage.querySelector('.rmrGeneralSection[data-general-section="'+key+'"]');
+ if(button)button.after(page);
+});
 function openGeneralSection(section){
- const selected=generalPage.querySelector('.rmrGeneralSection.active')?.dataset.generalSection;
- const next=selected===section?null:section;
- generalPage.querySelectorAll('.rmrGeneralSection').forEach(btn=>{const active=btn.dataset.generalSection===next;btn.classList.toggle('active',active);btn.setAttribute('aria-expanded',String(active));btn.querySelector('span').textContent=active?'▾':'▸'});
- Object.entries(groupedPages).forEach(([key,page])=>{if(page)page.hidden=key!==next});
- generalContent.hidden=!next;
+ const button=generalPage.querySelector('.rmrGeneralSection[data-general-section="'+section+'"]');
+ const page=groupedPages[section];
+ if(!button||!page)return;
+ const active=page.hidden;
+ page.hidden=!active;
+ button.classList.toggle('active',active);
+ button.setAttribute('aria-expanded',String(active));
+ button.querySelector('span').textContent=active?'▾':'▸';
 }
 generalPage.querySelectorAll('.rmrGeneralSection').forEach(btn=>btn.addEventListener('click',()=>openGeneralSection(btn.dataset.generalSection)));
 generalContent.hidden=true;
@@ -2510,4 +2519,13 @@ for(const el of audios){el.addEventListener('error',()=>{const error=el.error;co
 #rmrAutoMode.mhModeAutomatic,#rmrAutoMode.mhModeManual{animation-duration:1.15s!important;animation-timing-function:ease-in-out!important}
 #mhOrangeClockSlot .mhPhotoAir.live{animation:mhPhotoAirPulse 1.15s ease-in-out infinite!important}
 @keyframes mhPhotoAirPulse{0%,100%{background:transparent;box-shadow:0 0 1px #ff495e22}50%{background:#ff495e25;box-shadow:0 0 22px 7px #ff495ee6}}
+</style><style id="rmrBetaSettingsVertical20261018">
+/* Solo CONFIGURACIÓN: secciones en una columna y contenido debajo de su encabezado. */
+#rmrSettingsModal .rmrGeneralSettingsPage{min-width:0;overflow-y:auto!important;overflow-x:hidden!important}
+#rmrSettingsModal .rmrGeneralSettingsPage .rmrGeneralSections{display:contents!important}
+#rmrSettingsModal .rmrGeneralSettingsPage .rmrGeneralSection{display:flex!important;width:100%!important;margin:0 0 8px!important;box-sizing:border-box!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrSettingsPage{width:100%!important;min-width:0!important;max-width:100%!important;flex:none!important;margin:0 0 12px!important;padding:12px!important;border:1px solid #365b72!important;border-radius:8px!important;background:#091f30!important;box-sizing:border-box!important;overflow:visible!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrSettingsPage[hidden]{display:none!important}
+#rmrSettingsModal .rmrGeneralSettingsPage .rmrGeneralVolumeSection{margin-bottom:14px!important}
+#rmrSettingsModal .rmrGeneralSettingsPage select,#rmrSettingsModal .rmrGeneralSettingsPage input{max-width:100%;box-sizing:border-box}
 </style></body></html>
