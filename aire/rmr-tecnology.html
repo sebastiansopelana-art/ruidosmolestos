@@ -2154,28 +2154,4 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
 #mhClockBrandPanel .mhStudioTitle{grid-area:1/1!important;font-size:9px!important;letter-spacing:1.4px!important;line-height:12px!important}
 #mhClockBrandPanel .mhClockBrandTime{grid-area:2/1!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;max-width:100%!important;font:800 clamp(13px,1.65vw,25px)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.7px!important;padding:2px 0!important;overflow:hidden!important;text-align:center!important;border:1px solid #6c2222!important;border-radius:5px!important}
 #mhClockBrandPanel .mhOnAirFace{grid-area:3/1!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;font-size:clamp(12px,1.4vw,19px)!important;line-height:1.2!important;letter-spacing:2px!important;padding:2px!important;border-radius:5px!important}
-</style><style id="mhClockInMusicVuApproved">
-/* Reemplaza solamente el gráfico del vúmetro superior de música 04. */
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop>.mhSignalMeter.mhClockVuSlot{height:78px!important;min-height:78px!important;max-height:78px!important;padding:0!important;display:block!important;overflow:hidden!important}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop>.mhSignalMeter.mhClockVuSlot>*:not(#mhClockBrandPanel){display:none!important}
-#mhClockBrandPanel.mhLiveFace.mhClockInVu{width:100%!important;max-width:100%!important;height:100%!important;min-height:0!important;margin:0!important;padding:4px 6px!important;box-sizing:border-box!important;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important;gap:6px!important;border:0!important;border-radius:6px!important}
-#mhClockBrandPanel.mhClockInVu .mhBrandMeter{min-height:0!important;height:100%!important;padding:2px 3px!important}
-#mhClockBrandPanel.mhClockInVu .mhNeedleScale{height:15px!important;flex-shrink:0}
-#mhClockBrandPanel.mhClockInVu .mhNeedle{height:13px!important}
-#mhClockBrandPanel.mhClockInVu .mhMeterTitle{font-size:clamp(10px,1.2vw,18px)!important}
-#mhClockBrandPanel.mhClockInVu .mhMeterSub{font-size:6px!important}
-#mhClockBrandPanel.mhClockInVu .mhMeterBy{font-size:7px!important}
-#mhClockBrandPanel.mhClockInVu .mhLiveRight{grid-template-rows:10px minmax(19px,1fr) minmax(18px,.8fr)!important;gap:2px!important}
-#mhClockBrandPanel.mhClockInVu .mhStudioTitle{font-size:8px!important;line-height:10px!important}
-#mhClockBrandPanel.mhClockInVu .mhClockBrandTime{font-size:clamp(11px,1.2vw,19px)!important;line-height:1.1!important}
-#mhClockBrandPanel.mhClockInVu .mhOnAirFace{font-size:clamp(10px,1.1vw,16px)!important;padding:1px!important}
-</style><script id="mhClockInMusicVuApprovedScript">
-(function(){
- const slot=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop>.mhSignalMeter');
- const panel=document.getElementById('mhClockBrandPanel');
- if(!slot||!panel)return;
- slot.classList.add('mhClockVuSlot');
- panel.classList.add('mhClockInVu');
- slot.appendChild(panel);
-})();
-</script></body></html>
+</style></body></html>
