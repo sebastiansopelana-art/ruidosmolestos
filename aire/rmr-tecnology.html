@@ -2304,4 +2304,23 @@ margin:0!important;padding:2px 3px!important;transform:none!important;translate:
  // Mover los nodos originales preserva listeners, IDs y funciones existentes.
  buttons.forEach(button=>row.appendChild(button));
 })();
+</script><style id="mhAdSixButtonsVisibilityRepair">
+/* Los seis controles deben entrar dentro del alto real de la lista (250px). */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{align-items:start!important;overflow:visible!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{display:block!important;height:auto!important;min-height:220px!important;max-height:none!important;overflow:visible!important;position:relative!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:flex!important;flex-direction:column!important;gap:5px!important;min-height:0!important;max-height:none!important;height:auto!important;overflow:visible!important;position:static!important;padding:0!important;margin:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button:is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){display:flex!important;visibility:visible!important;opacity:1!important;flex:0 0 32px!important;height:32px!important;min-height:32px!important;max-height:32px!important;width:100%!important;min-width:0!important;max-width:100%!important;position:static!important;margin:0!important;padding:2px!important;font:800 10px/1.08 system-ui,sans-serif!important;align-items:center!important;justify-content:center!important;text-align:center!important;overflow:hidden!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode.mhModeAutomatic{animation:mhModeGreenFlash .9s ease-in-out infinite!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode.mhModeManual{animation:mhModeRedFlash .9s ease-in-out infinite!important}
+</style><script id="mhAdSixButtonsVisibilityRepairScript">
+(function(){
+ const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+ if(!row)return;
+ const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ function repair(){
+  const nodes=ids.map(id=>document.getElementById(id));if(nodes.some(n=>!n))return;
+  nodes.forEach((node,i)=>{if(node.parentElement!==row)row.appendChild(node);node.style.setProperty('order',String(i+1),'important');node.style.removeProperty('display')});
+ }
+ repair();
+})();
 </script></body></html>
