@@ -2215,7 +2215,7 @@ function fix(){
   b.style.setProperty('left','auto','important');
   b.style.setProperty('transform','none','important');
   b.style.setProperty('margin','0','important');
-  if(b.id!=='rmrClearOverdueQueue'&&b.id!=='rmrOpenSettings'){
+  {
    b.style.setProperty('height','32px','important');
    b.style.setProperty('min-height','32px','important');
    b.style.setProperty('max-height','32px','important');
@@ -2358,5 +2358,26 @@ const h=id==='rmrClearOverdueQueue'?54:id==='rmrOpenSettings'?52:32;
 for(const prop of ['height','min-height','max-height'])b.style.setProperty(prop,h+'px','important');
 b.style.setProperty('flex','0 0 '+h+'px','important');
 });
+})();
+</script><style id="mhAd06UniformSevenButtons">
+/* Siete botones idénticos dentro del reproductor 06. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{
+display:flex!important;flex-direction:column!important;gap:5px!important;
+height:254px!important;min-height:254px!important;max-height:254px!important;
+overflow:visible!important;justify-content:flex-start!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
+position:relative!important;display:flex!important;visibility:visible!important;opacity:1!important;
+height:32px!important;min-height:32px!important;max-height:32px!important;
+flex:0 0 32px!important;width:100%!important;min-width:0!important;max-width:100%!important;
+margin:0!important;padding:2px 4px!important;box-sizing:border-box!important;
+align-self:stretch!important;align-items:center!important;justify-content:center!important;
+font-size:10px!important;line-height:1.1!important;
+}
+</style><script id="mhAd06UniformSevenButtonsScript">
+(function(){
+const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');if(!row)return;
+const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ids.forEach((id,i)=>{const b=document.getElementById(id);if(!b)return;row.appendChild(b);b.style.setProperty('order',String(i),'important');for(const prop of ['height','min-height','max-height'])b.style.setProperty(prop,'32px','important');b.style.setProperty('flex','0 0 32px','important')});
 })();
 </script></body></html>
