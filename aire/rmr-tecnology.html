@@ -956,6 +956,16 @@ const generalPage=document.createElement('div');generalPage.className='rmrSettin
 generalPage.innerHTML='<div class="rmrGeneralSections" role="group" aria-label="Opciones generales"><button type="button" class="rmrGeneralSection" data-general-section="audio" aria-expanded="false">SALIDAS DE AUDIO · PLACA DE SONIDO <span aria-hidden="true">▸</span></button><button type="button" class="rmrGeneralSection" data-general-section="silence" aria-expanded="false">DETECTOR DE SILENCIO <span aria-hidden="true">▸</span></button><button type="button" class="rmrGeneralSection" data-general-section="automation" aria-expanded="false">CONFIGURACIONES AUTOMÁTICAS <span aria-hidden="true">▸</span></button></div><div id="rmrGeneralContent"></div>';
 settingsModal.querySelector('.rmrSettingsWindow').append(generalPage);
 const generalContent=generalPage.querySelector('#rmrGeneralContent');
+/* El control original se traslada a GENERAL sin clonarlo: conserva el mismo ID y eventos. */
+const originalVolume=document.querySelector('.rmrMusicColumn .rmrPlayerVolume');
+if(originalVolume){
+ const volumeSection=document.createElement('div');
+ volumeSection.className='rmrGeneralVolumeSection';
+ volumeSection.innerHTML='<h3>VOLUMEN DEL REPRODUCTOR DE MÚSICA</h3><p>Ajustá el nivel de salida del reproductor principal desde esta sección.</p>';
+ volumeSection.appendChild(originalVolume);
+ generalPage.insertBefore(volumeSection,generalPage.querySelector('.rmrGeneralSections'));
+}
+
 const groupedPages={audio:settingsModal.querySelector('[data-rmr-page="audio"]'),silence:rmrSilencePage,automation:rmrAutomationPage};
 Object.values(groupedPages).forEach(page=>{if(page){page.hidden=true;generalContent.append(page)}});
 function openGeneralSection(section){
@@ -1509,4 +1519,10 @@ document.body.appendChild(btn);
  if(window.ResizeObserver){const ro=new ResizeObserver(align);ro.observe(music);ro.observe(ads.parentElement)}
  requestAnimationFrame(align);
 })();
-</script></body></html>
+</script><style id="mhGeneralVolumeStyle">
+.rmrGeneralVolumeSection{padding:12px 14px;margin:0 0 12px;border:1px solid #694340;border-radius:7px;background:#18191c;color:#f0eee9}
+.rmrGeneralVolumeSection h3{font-size:13px;letter-spacing:.5px;margin:0 0 7px}
+.rmrGeneralVolumeSection p{font-size:11px;color:#c6b5b3;margin:0 0 10px}
+.rmrGeneralVolumeSection .rmrPlayerVolume{display:flex!important;flex-direction:column;gap:9px;max-width:440px;width:100%;color:#eee;font-size:12px}
+.rmrGeneralVolumeSection #volume{display:block!important;width:100%!important;max-width:440px!important;accent-color:#e8372e}
+</style></body></html>
