@@ -2197,4 +2197,18 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListTitle{display:block!important;flex:0 0 auto!important;min-width:0!important;font-size:9px!important;text-align:left!important;line-height:1.15!important;padding:3px!important;white-space:normal!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdList{position:relative!important;inset:auto!important;transform:none!important;display:block!important;flex:1 1 auto!important;width:100%!important;min-width:0!important;max-width:100%!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;box-sizing:border-box!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdVuPanel{max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+</style><style id="mhAd06OverlapDefinitive">
+/* Evita que posiciones arrastradas previamente superpongan la lista y los controles internos. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{display:grid!important;grid-template-columns:minmax(0,29fr) minmax(0,71fr)!important;column-gap:6px!important;align-items:start!important;overflow:hidden!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{
+position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;float:none!important;grid-column:auto!important;grid-row:1!important;justify-self:stretch!important;align-self:start!important;min-width:0!important;width:100%!important;max-width:100%!important;margin:0!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{grid-column:1!important;padding-right:0!important;overflow:hidden!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{grid-column:2!important;z-index:1!important;height:250px!important;overflow:hidden!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdControlRow,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .mhAdModeSettings{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair>button,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .mhAdModeSettings>button{font-size:8.5px!important;letter-spacing:-.1px!important;height:24px!important;min-height:24px!important;max-height:24px!important;max-width:100%!important;padding:2px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdListColumn #rmrAdList{position:relative!important;transform:none!important;translate:none!important;min-width:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
 </style></body></html>
