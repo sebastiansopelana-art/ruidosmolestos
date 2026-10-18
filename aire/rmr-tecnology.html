@@ -2035,45 +2035,4 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  const img=document.createElement('img');img.src='./megahertz-brand.svg';img.alt='MEGAHERTZ · RMR TECHNOLOGY';panel.appendChild(img);
  target.insertAdjacentElement('afterend',panel);
 })();
-</script><style id="mhStudioBrandFinalStyle">
-/* Compact broadcast faceplate; preserves 50% width of player 04. */
-.rmrDualDeck>.rmrMusicColumn{width:calc(50% - 5px)!important;max-width:calc(50% - 5px)!important}
-#mhClockBrandPanel.mhClockBrandPanel{width:100%;max-width:100%;min-width:0;box-sizing:border-box;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:7px;align-items:stretch;background:linear-gradient(135deg,#05080c,#182029 55%,#05080c);border:2px solid #58616a;border-radius:11px;padding:7px;box-shadow:inset 0 0 0 2px #090e12,0 2px 9px #000a;overflow:hidden}
-#mhClockBrandPanel .mhStudioIdentity{position:relative;min-width:0;padding:7px 5px;background:linear-gradient(180deg,#200607,#090609 80%);border:1px solid #ff3933;border-radius:7px;box-shadow:inset 0 0 11px #c9152070,0 0 7px #e31a2435;text-align:center}
-#mhClockBrandPanel .mhStudioScale{font:700 9px ui-monospace,monospace;color:#ff6966;letter-spacing:2px}
-#mhClockBrandPanel .mhStudioLogo{display:block;color:#e8e8e8;text-shadow:1px 2px 0 #5e6268,0 0 8px #ff2424;font:1000 clamp(13px,1.55vw,25px)/1.1 system-ui,Arial,sans-serif;letter-spacing:-1px;white-space:nowrap}
-#mhClockBrandPanel .mhStudioCaption{display:block;font:700 clamp(5px,.48vw,8px) system-ui;letter-spacing:2px;color:#e9e9e9}
-#mhClockBrandPanel .mhStudioBy{display:block;color:#ff4a4a;font:700 clamp(6px,.56vw,9px) system-ui;letter-spacing:1px}
-#mhClockBrandPanel .mhStudioRight{min-width:0;display:flex;flex-direction:column;align-items:stretch;justify-content:space-between;gap:4px}
-#mhClockBrandPanel .mhStudioVersion{font:800 10px system-ui;letter-spacing:2px;text-align:center;color:#d7d7d7}
-#mhClockBrandPanel .mhStudioVersion b{color:#ff4141}
-#mhClockBrandPanel .mhClockBrandTime{display:block;width:100%;font:800 clamp(17px,2vw,32px)/1 ui-monospace,monospace;color:#ff3838;text-shadow:0 0 9px #ed1111;letter-spacing:0;text-align:center;background:#050406;border:1px solid #444;border-radius:5px;padding:5px 1px}
-#mhClockBrandPanel .mhStudioOnAir{font:1000 clamp(10px,1.1vw,17px)/1 system-ui;text-align:center;color:#ffaaaa;background:#3a0509;border:1px solid #a52d32;border-radius:5px;padding:5px 2px;text-shadow:0 0 8px #ff3333}
-#mhClockBrandPanel .mhStudioOnAir.isOnAir{animation:mhOnAirBlink .85s steps(2,start) infinite}
-@keyframes mhOnAirBlink{0%,100%{background:#ec171e;color:#fff;box-shadow:0 0 16px #fa172b}50%{background:#31050a;color:#8b4347;box-shadow:none}}
-#rmrAutoMode.mhAutoBlink{background:#087b37!important;border-color:#43ff87!important;color:#fff!important;animation:mhAutoBlink 1s ease-in-out infinite!important}
-#rmrAutoMode.mhManualBlink{background:#a9191d!important;border-color:#ff7777!important;color:#fff!important;animation:mhManualBlink 1s ease-in-out infinite!important}
-@keyframes mhAutoBlink{0%,100%{box-shadow:0 0 3px #00e66a}50%{box-shadow:0 0 18px #00ff6b;background:#16b44f}}
-@keyframes mhManualBlink{0%,100%{box-shadow:0 0 3px #f22}50%{box-shadow:0 0 18px #ff3535;background:#e32b2b}}
-@media(max-width:900px){#mhClockBrandPanel .mhStudioLogo{font-size:14px}#mhClockBrandPanel .mhClockBrandTime{font-size:18px}}
-</style><script id="mhStudioBrandFinalScript">
-(function(){
- const panel=document.getElementById('mhClockBrandPanel');if(!panel)return;
- const clock=document.getElementById('clock');
- panel.replaceChildren();
- const left=document.createElement('div');left.className='mhStudioIdentity';
- left.innerHTML='<span class="mhStudioScale">−20　−10　−5　0　+3</span><strong class="mhStudioLogo">MEGAHERTZ</strong><span class="mhStudioCaption">BROADCAST AUTOMATION</span><span class="mhStudioBy">by RMR TECHNOLOGY</span>';
- const right=document.createElement('div');right.className='mhStudioRight';
- const version=document.createElement('div');version.className='mhStudioVersion';version.innerHTML='ESTUDIO <b>2.0</b>';
- const time=clock||document.createElement('span');time.className='mhClockBrandTime';time.style.display='';
- const onair=document.createElement('div');onair.className='mhStudioOnAir';onair.textContent='ON AIR';
- right.append(version,time,onair);panel.append(left,right);
- const audios=['audio','rmrDropAudio','rmrAdAudio'].map(id=>document.getElementById(id)).filter(Boolean);
- const syncAir=()=>onair.classList.toggle('isOnAir',audios.some(a=>!a.paused&&!a.ended));
- for(const a of audios)for(const ev of ['play','playing','pause','ended','emptied','error'])a.addEventListener(ev,syncAir);
- syncAir();
- const auto=document.getElementById('rmrAutoMode'),manual=document.getElementById('rmrManualMode');
- function syncMode(){if(!auto)return;const isManual=manual?.getAttribute('aria-pressed')==='true'||auto.classList.contains('isManual')||auto.textContent.trim().toUpperCase().includes('MANUAL');auto.classList.toggle('mhManualBlink',isManual);auto.classList.toggle('mhAutoBlink',!isManual)}
- if(auto){new MutationObserver(syncMode).observe(auto,{attributes:true,childList:true,subtree:true,characterData:true});if(manual)new MutationObserver(syncMode).observe(manual,{attributes:true,attributeFilter:['aria-pressed','class']});syncMode()}
-})();
 </script></body></html>
