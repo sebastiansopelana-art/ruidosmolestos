@@ -2136,14 +2136,34 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeManual{animation:mhModeRedFlash .9s ease-in-out infinite!important}
 </style><script id="mhAd06SingleLayoutScript">
 (function(){
-const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
-if(!row)return;
-const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
-const buttons=ids.map(id=>document.getElementById(id));
-if(buttons.some(el=>!el))return;
-buttons.forEach(el=>{row.appendChild(el);el.style.removeProperty('height');el.style.removeProperty('min-height');el.style.removeProperty('max-height');el.style.removeProperty('margin');el.style.removeProperty('translate');el.style.removeProperty('transform');});
-const exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
-function policy(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';exact.textContent='EXACTO';wait.textContent='ESPERAR';exact.setAttribute('aria-pressed',String(cut));wait.setAttribute('aria-pressed',String(!cut));exact.classList.toggle('isSelected',cut);wait.classList.toggle('isSelected',!cut)}
-exact.addEventListener('click',()=>queueMicrotask(policy));wait.addEventListener('click',()=>queueMicrotask(policy));policy();
+ const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+ if(!row)return;
+ const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ const buttons=ids.map(id=>document.getElementById(id));
+ if(buttons.some(el=>!el))return;
+ // El origen de los huecos: los contenedores vacíos y el vúmetro seguían ocupando filas del grid.
+ // Sacarlos de la fila, sin destruirlos ni perder sus eventos.
+ const column=row.closest('.rmrAdControlsColumn');
+ const vu=row.querySelector('.rmrAdVuPanel');
+ if(vu&&column)column.appendChild(vu);
+ for(const node of Array.from(row.children)){if(!buttons.includes(node))node.remove();}
+ buttons.forEach((button,index)=>{
+   row.appendChild(button);
+   button.style.removeProperty('grid-row');
+   button.style.removeProperty('grid-column');
+   button.style.removeProperty('order');
+   button.style.removeProperty('margin');
+   button.style.removeProperty('transform');
+   button.style.removeProperty('translate');
+   button.style.removeProperty('position');
+   button.style.removeProperty('height');
+   button.style.removeProperty('min-height');
+   button.style.removeProperty('max-height');
+ });
+ buttons[0].textContent='FORZAR';buttons[1].textContent='DETENER';
+ function policy(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';buttons[2].textContent='EXACTO';buttons[3].textContent='ESPERAR';buttons[2].setAttribute('aria-pressed',String(cut));buttons[3].setAttribute('aria-pressed',String(!cut));}
+ buttons[2].addEventListener('click',()=>queueMicrotask(policy));
+ buttons[3].addEventListener('click',()=>queueMicrotask(policy));
+ policy();
 })();
 </script></body></html>
