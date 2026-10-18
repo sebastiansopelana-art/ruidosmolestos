@@ -1559,4 +1559,34 @@ document.body.appendChild(btn);
  window.addEventListener('resize',()=>{last=0;sync()});
  requestAnimationFrame(sync);
 })();
+</script><style id="mhUnifiedVuProgressStyle">
+/* Diseño gemelo: VU superior + progreso inmediatamente debajo en 04 y 06. */
+.rmrDeck .mhSignalTop{display:flex;flex-direction:column;gap:7px;width:100%;margin:7px 0 11px;min-width:0}
+.rmrDeck .mhSignalTop .mhSignalMeter{height:88px!important;min-height:88px!important;max-height:88px!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;gap:5px!important;padding:10px 12px!important;border:1px solid #9e4c45!important;border-radius:8px!important;background:linear-gradient(155deg,#292b2f,#0c0e12 48%,#1a1b1f)!important;box-shadow:inset 0 1px 0 #c5a29a55,inset 0 -2px 8px #0009,0 0 7px #ff302122!important;overflow:hidden!important}
+.rmrDeck .mhSignalTop .rmrSpectrumColumns,.rmrDeck .mhSignalTop .rmrAdVuBars{flex:1 1 auto!important;min-height:36px!important;height:auto!important;width:100%!important;display:flex!important;align-items:flex-end!important;gap:2px!important}
+.rmrDeck .mhSignalTop .rmrSpectrumColumns>*,.rmrDeck .mhSignalTop .rmrAdVuBars>i{flex:1 1 0!important;min-width:0!important;max-width:none!important}
+.rmrDeck .mhSignalTop .rmrSpectrumLegend,.rmrDeck .mhSignalTop .rmrAdVuTitle{flex:0 0 auto!important;margin:0!important;line-height:12px!important;font-size:10px!important;color:#e4c2bd!important;letter-spacing:.5px!important}
+.rmrDeck .mhSignalTop .rmrAdVuPanel{width:100%!important}
+.rmrDeck .mhSignalTop .timeline,.rmrDeck .mhSignalTop .rmrAdProgress{display:flex!important;align-items:center!important;gap:9px!important;width:100%!important;min-width:0!important;min-height:30px!important;margin:0!important;padding:5px 9px!important;background:#111316!important;border:1px solid #6d4c49!important;border-radius:7px!important;box-sizing:border-box!important}
+.rmrDeck .mhSignalTop .timeline input,.rmrDeck .mhSignalTop .rmrAdProgress input{flex:1 1 auto!important;min-width:0!important;width:auto!important;accent-color:#ff4436!important}
+.rmrDeck .mhSignalTop .timeline span,.rmrDeck .mhSignalTop .rmrAdProgress span{flex:0 0 auto!important;color:#eae6e2!important;font:700 11px ui-monospace,monospace!important}
+</style><script id="mhUnifiedVuProgressScript">
+(function(){
+ function setup(deck,vu,progress){
+  if(!deck||!vu||!progress)return;
+  if(deck.querySelector('.mhSignalTop'))return;
+  const top=document.createElement('div');
+  top.className='mhSignalTop';
+  const meter=document.createElement('div');
+  meter.className='mhSignalMeter';
+  top.append(meter,progress);
+  meter.append(vu);
+  const title=deck.querySelector('.rmrDeckTitle');
+  if(title)title.insertAdjacentElement('afterend',top);else deck.prepend(top);
+ }
+ const music=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
+ const ads=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ setup(music,music?.querySelector('.rmrWideVu.rmrSpectrumVu'),music?.querySelector('.timeline'));
+ setup(ads,ads?.querySelector('.rmrAdVuPanel'),ads?.querySelector('.rmrAdProgress'));
+})();
 </script></body></html>
