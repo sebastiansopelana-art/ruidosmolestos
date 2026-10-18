@@ -2078,4 +2078,25 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  function frame(){const playing=audios.some(a=>!a.paused&&!a.ended&&a.readyState>1);air.classList.toggle('mhOrangePlaying',playing);let level=0;const an=window.rmrSilenceSpectrumAnalyser;if(playing&&an&&window.rmrVuContext?.state==='running'){const arr=new Uint8Array(an.frequencyBinCount);an.getByteFrequencyData(arr);let sum=0;for(let i=1;i<Math.min(130,arr.length);i++)sum+=arr[i]*arr[i];level=Math.min(1,Math.sqrt(sum/129)/160)}smooth+=(level-smooth)*.25;needle.style.transform='rotate('+(-50+smooth*90)+'deg)';requestAnimationFrame(frame)}
  setInterval(()=>{clock.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false})},250);clock.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false});requestAnimationFrame(frame);
 })();
+</script><style id="mhOrangeClockAnimationOnly">
+/* Animación únicamente: no altera dimensiones, distribución, colores ni tipografía. */
+#mhOrangeClockSlot .mhOrangeTime{transform-origin:50% 50%}
+#mhOrangeClockSlot .mhOrangeTime.mhSecondTick{animation:mhOrangeSecondTick .38s ease-out both}
+@keyframes mhOrangeSecondTick{0%{filter:brightness(1.6);transform:scale(1.035)}65%{filter:brightness(1.15);transform:scale(.997)}100%{filter:brightness(1);transform:scale(1)}}
+#mhOrangeClockSlot .mhOrangeNeedle{transition:transform .16s ease-out}
+@media(prefers-reduced-motion:reduce){#mhOrangeClockSlot .mhOrangeTime.mhSecondTick{animation:none!important}}
+</style><script id="mhOrangeClockAnimationOnlyScript">
+(function(){
+ const time=document.querySelector('#mhOrangeClockSlot .mhOrangeTime');if(!time)return;
+ let previous=time.textContent;
+ const observer=new MutationObserver(()=>{
+  const current=time.textContent;
+  if(current===previous)return;
+  previous=current;
+  time.classList.remove('mhSecondTick');
+  void time.offsetWidth;
+  time.classList.add('mhSecondTick');
+ });
+ observer.observe(time,{childList:true,characterData:true,subtree:true});
+})();
 </script></body></html>
