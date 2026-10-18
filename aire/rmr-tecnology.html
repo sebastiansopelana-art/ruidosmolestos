@@ -1457,27 +1457,29 @@ attach();new MutationObserver(attach).observe(document.body,{childList:true,subt
  const music=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
  const ads=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
  if(!music||!ads)return;
- let pending=false,last=0;
+ let frame=0;
  function sync(){
-  if(pending)return;pending=true;
-  requestAnimationFrame(()=>{
-   pending=false;
-   // Tomar el alto real del contenido sin sumar el mínimo aplicado previamente.
-   const heightOf=el=>{
-    const style=getComputedStyle(el);
-    const vertical=parseFloat(style.paddingTop||0)+parseFloat(style.paddingBottom||0)+parseFloat(style.borderTopWidth||0)+parseFloat(style.borderBottomWidth||0);
-    return Math.ceil(Math.max(el.scrollHeight+parseFloat(style.borderTopWidth||0)+parseFloat(style.borderBottomWidth||0),el.firstElementChild?.getBoundingClientRect().height+vertical||0));
+  cancelAnimationFrame(frame);
+  frame=requestAnimationFrame(()=>{
+   // Eliminar primero el mínimo anterior: de otro modo el cálculo sólo crecía.
+   document.documentElement.style.removeProperty('--mh-equal-04-06-height');
+   const required=el=>{
+    const cs=getComputedStyle(el);
+    const pad=(parseFloat(cs.paddingTop)||0)+(parseFloat(cs.paddingBottom)||0);
+    const border=(parseFloat(cs.borderTopWidth)||0)+(parseFloat(cs.borderBottomWidth)||0);
+    const children=[...el.children].filter(n=>getComputedStyle(n).position!=='absolute'&&getComputedStyle(n).display!=='none');
+    const top=el.getBoundingClientRect().top;
+    const bottom=Math.max(top,...children.map(n=>n.getBoundingClientRect().bottom));
+    return Math.ceil(Math.max(el.scrollHeight+border,bottom-top+pad+border));
    };
-   const h=Math.max(heightOf(music),heightOf(ads));
-   if(h>0&&h!==last){last=h;document.documentElement.style.setProperty('--mh-equal-04-06-height',h+'px')}
+   const h=Math.max(required(music),required(ads));
+   if(h>0&&Number.isFinite(h))document.documentElement.style.setProperty('--mh-equal-04-06-height',h+'px');
   });
  }
- if(window.ResizeObserver){
-  const ro=new ResizeObserver(sync);
-  for(const el of [music,ads])for(const child of el.children)ro.observe(child);
- }
- window.addEventListener('resize',()=>{last=0;sync()});
- requestAnimationFrame(sync);
+ if(window.ResizeObserver){const ro=new ResizeObserver(sync);[...music.children,...ads.children].forEach(el=>ro.observe(el))}
+ window.addEventListener('resize',sync);
+ window.addEventListener('load',sync,{once:true});
+ sync();
 })();
 </script><style id="mhUnifiedVuProgressStyle">
 /* Diseño gemelo: VU superior + progreso inmediatamente debajo en 04 y 06. */
@@ -2239,4 +2241,10 @@ panel.querySelector('#mhPrecisionSave').addEventListener('click',apply);
 panel.querySelector('#mhPrecisionReset').addEventListener('click',()=>{if(!chosen)return;let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')}catch(e){}delete saved[chosen.id];localStorage.setItem(key,JSON.stringify(saved));for(const prop of ['translate','width','height'])chosen.el.style.removeProperty(prop);load()});
 panel.querySelector('#mhPrecisionClose').addEventListener('click',()=>panel.classList.remove('open'));
 })();
-</script></body></html>
+</script><style id="mh04And06CompactSameHeight">
+/* Compactar espacios interiores y alinear el borde inferior de ambos decks. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{height:var(--mh-equal-04-06-height,auto)!important;min-height:var(--mh-equal-04-06-height,0px)!important;max-height:none!important;box-sizing:border-box!important;overflow:visible!important;align-self:flex-start!important}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicControlSide{gap:4px!important;padding:4px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{margin-top:4px!important}
+</style></body></html>
