@@ -1,6 +1,6 @@
 {
   "name": "rmr-technology-desktop",
-  "version": "0.1.0-beta.1",
+  "version": "0.1.0-beta.2",
   "private": true,
   "description": "RMR TECHNOLOGY Studio 2.0 - Beta de escritorio",
   "main": "main.js",
@@ -25,10 +25,7 @@
       "main.js",
       "preload.js",
       "package.json",
-      {
-        "from": "../aire/rmr-tecnology.html",
-        "to": "aire/rmr-tecnology.html"
-      }
+      "aire/rmr-tecnology.html"
     ],
     "mac": {
       "target": [
