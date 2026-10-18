@@ -2089,4 +2089,13 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  requestAnimationFrame(render)}
  const tick=()=>{time.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false})};tick();setInterval(tick,1000);requestAnimationFrame(render);
 })();
+</script><style id="mhClockSecondsFitFix">
+/* Ajuste exclusivo del reloj: HH:MM:SS siempre dentro del marco. */
+#mhOrangeClockSlot .mhBroadcastRight{min-width:0!important;width:100%!important;box-sizing:border-box!important;padding-inline:3px!important}
+#mhOrangeClockSlot .mhBroadcastTime{display:block!important;width:100%!important;min-width:0!important;max-width:100%!important;box-sizing:border-box!important;overflow:hidden!important;white-space:nowrap!important;text-align:center!important;letter-spacing:-.65px!important;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace!important;font-size:clamp(9px,1.15vw,19px)!important;line-height:1.25!important;padding:3px 1px!important}
+</style><script id="mhClockSecondsAutoFit">
+(function(){const el=document.querySelector('#mhOrangeClockSlot .mhBroadcastTime');if(!el)return;
+function fit(){const available=el.clientWidth-4;if(available<=0)return;let size=Math.min(24,Math.max(9,available/8));el.style.fontSize=size+'px';while(el.scrollWidth>el.clientWidth&&size>8){size-=.5;el.style.fontSize=size+'px'}}
+if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit();window.addEventListener('resize',fit);
+})();
 </script></body></html>
