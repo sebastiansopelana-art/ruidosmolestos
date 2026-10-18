@@ -1368,4 +1368,40 @@ input[type="range"],input[type="checkbox"]{accent-color:#e8372e}
 .rmrSettingsTab{background:#282b2f;color:#f2efed;border-color:#5a5c61}
 .rmrSettingsPage{background:#181a1e;color:#f2efed}
 .rmrSettingsPage input,.rmrSettingsPage select{accent-color:#e8372e}
-</style></body></html>
+</style><style id="mhSectionNumbersStyle">
+/* Etiquetas superpuestas: no participan del layout ni alteran tamaños. */
+.mhNumbered{position:relative!important}
+.mhSectionNumber{position:absolute;z-index:30;top:2px;right:3px;pointer-events:none;display:none;font:800 10px/1.1 ui-monospace,monospace;color:#fff;background:#ae2923;border:1px solid #ff7366;border-radius:3px;padding:2px 4px;box-shadow:0 1px 5px #000}
+body.mhShowNumbers .mhSectionNumber{display:block}
+#mhNumbersToggle{position:fixed;right:12px;bottom:12px;z-index:99998;background:#a52823;color:white;border:1px solid #fa6659;padding:7px 11px;font-size:11px}
+</style><script id="mhSectionNumbersScript">
+(function(){
+const parts=[
+['01','HEADER / MARCA','header'],['02','JINGLES Y PISADORES','.rmrJingleStrip'],
+['03','CONTROL AUTOMÁTICO / MANUAL','.rmrTitleModes'],
+['04','REPRODUCTOR MÚSICA AUTOMÁTICA','.rmrMusicColumn > .rmrDeck'],
+['05','LISTA MÚSICA AUTOMÁTICA','.rmrMusicColumn > .rmrInlineMusicPlaylist'],
+['06','REPRODUCTOR PUBLICIDAD','.rmrAdDeck'],
+['07','LISTA PUBLICIDAD','.rmrAdListColumn'],
+['08','REPRODUCTOR PROGRAMAS','.rmrDropPlayer'],
+['09','LISTA PROGRAMAS','.rmrDropList'],
+['10','VÚMETRO MÚSICA','.rmrMusicColumn .rmrWideVu'],
+['11','VÚMETRO PUBLICIDAD','.rmrAdVuPanel'],
+['12','INFORMACIÓN AHORA / PRÓXIMO','.rmrMusicColumn .rmrNowNext'],
+['13','DETECTOR DE SILENCIO','#rmrSilenceMonitor'],
+['14','CONTROLES DE REPRODUCCIÓN','.rmrMusicColumn .rmrVuControlGrid'],
+['15','CONTROLES DE PUBLICIDAD','.rmrAdControlsColumn'],
+['16','ESTADO DEL SISTEMA','.status'],
+['17','SECCIONES GENERALES','.rmrGeneralSections'],
+['18','CONFIGURACIÓN','#rmrOpenSettings']
+];
+function attach(){
+for(const [num,name,selector] of parts){
+ const el=document.querySelector(selector);if(!el||el.querySelector(':scope > .mhSectionNumber'))continue;
+ el.classList.add('mhNumbered');const tag=document.createElement('span');tag.className='mhSectionNumber';tag.textContent=num;tag.title=num+' — '+name;tag.setAttribute('aria-label',num+' — '+name);el.appendChild(tag);
+}
+}
+const btn=document.createElement('button');btn.id='mhNumbersToggle';btn.type='button';btn.textContent='MOSTRAR NÚMEROS';btn.addEventListener('click',()=>{const on=document.body.classList.toggle('mhShowNumbers');btn.textContent=on?'OCULTAR NÚMEROS':'MOSTRAR NÚMEROS'});document.body.appendChild(btn);
+attach();new MutationObserver(attach).observe(document.body,{childList:true,subtree:true});
+})();
+</script></body></html>
