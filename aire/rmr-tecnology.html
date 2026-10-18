@@ -1646,4 +1646,29 @@ document.body.appendChild(btn);
  }
  check();setInterval(check,1500);
 })();
+</script><style id="mhCleanMetersAndTopMusicControls">
+/* Quitar leyendas inferiores de los dos VU sin eliminar elementos usados por scripts. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck>.mhSignalTop .rmrSpectrumLegend,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck>.mhSignalTop .rmrAdVuTitle{display:none!important}
+/* No mostrar la etiqueta secundaria bajo el progreso de publicidad. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck>.rmrAdButtons{display:none!important}
+/* Transportes de música inmediatamente debajo del progreso, arriba del resto. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck>.mhSignalTop .rmrNowPlayingActions{
+ width:100%!important;margin:0!important;padding:0!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck>.mhSignalTop .rmrVuControlGrid{
+ display:flex!important;flex-wrap:nowrap!important;width:100%!important;
+ gap:4px!important;margin:0!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck>.mhSignalTop .rmrVuControlGrid>button{
+ flex:1 1 0!important;min-width:0!important;width:0!important;
+}
+</style><script id="mhMoveMusicTransportUp">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
+ const top=deck?.querySelector('.mhSignalTop');
+ const actions=deck?.querySelector('.rmrNowPlayingActions');
+ if(!top||!actions)return;
+ top.append(actions);
+})();
 </script></body></html>
