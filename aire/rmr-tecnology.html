@@ -2444,7 +2444,7 @@ requestAnimationFrame(draw);
 </style><script id="mhPhotoOfficialScript">
 (function(){
 const slot=document.getElementById('mhOrangeClockSlot');if(!slot||slot.dataset.photoOfficial)return;slot.dataset.photoOfficial='1';slot.classList.add('mhPhotoInstalled');
-const face=document.createElement('div');face.className='mhPhotoFace';face.innerHTML='<div class="mhPhotoMissing">CARGAR IMAGEN METÁLICA OFICIAL<br>MEGAHERTZ</div><div class="mhPhotoNeedle left"></div><div class="mhPhotoNeedle right"></div><time class="mhPhotoClock">00:00:00</time><div class="mhPhotoAir"></div>';
+const face=document.createElement('div');face.className='mhPhotoFace';face.innerHTML='<div class="mhPhotoMissing">CARGAR IMAGEN METÁLICA OFICIAL<br>MEGAHERTZ</div><div class="mhPhotoAir"></div>';
 const button=document.createElement('button');button.type='button';button.className='mhPhotoLoad';button.textContent='CARGAR DISEÑO';
 const input=document.createElement('input');input.type='file';input.accept='image/png,image/jpeg,image/webp';input.hidden=true;
 slot.append(face,button,input);button.addEventListener('click',()=>input.click());
@@ -2452,11 +2452,15 @@ let currentUrl=null;function setImage(blob){if(currentUrl)URL.revokeObjectURL(cu
 function database(){return new Promise((resolve,reject)=>{const req=indexedDB.open('mh-official-art',1);req.onupgradeneeded=()=>req.result.createObjectStore('images');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)})}
 database().then(db=>{const tx=db.transaction('images','readonly'),req=tx.objectStore('images').get('metallic');req.onsuccess=()=>{if(req.result)setImage(req.result)}}).catch(()=>{});
 input.addEventListener('change',async()=>{const file=input.files&&input.files[0];if(!file)return;setImage(file);try{const db=await database();const tx=db.transaction('images','readwrite');tx.objectStore('images').put(file,'metallic')}catch(e){console.warn('Imagen visible, pero no se pudo guardar localmente',e)}});
-const clock=face.querySelector('.mhPhotoClock'),air=face.querySelector('.mhPhotoAir'),needles=[...face.querySelectorAll('.mhPhotoNeedle')],audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean),states=[0,0],buffers=[new Float32Array(1024),new Float32Array(1024)];let last=0;
-function tick(){clock.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false})}tick();setInterval(tick,1000);
-function frame(now){requestAnimationFrame(frame);if(now-last<50)return;last=now;const playing=audios.some(a=>!a.paused&&!a.ended&&a.readyState>1);air.classList.toggle('live',playing);
-for(let ch=0;ch<2;ch++){let target=0;const an=window.rmrVuAnalysers?.[ch];if(playing&&an&&window.rmrVuContext?.state==='running'){const buf=buffers[ch];an.getFloatTimeDomainData(buf);let sum=0;for(let i=0;i<buf.length;i++)sum+=buf[i]*buf[i];const db=20*Math.log10(Math.max(.00001,Math.sqrt(sum/buf.length)));target=Math.max(0,Math.min(1,(db+38)/35))}else if(playing){target=.25+.1*Math.sin(now/340+ch)}states[ch]+=(target-states[ch])*(target>states[ch]?.25:.10);needles[ch].style.transform='rotate('+(-45+states[ch]*85)+'deg)'}
-}requestAnimationFrame(frame);
+const air=face.querySelector('.mhPhotoAir');
+const audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);
+function updateAir(){
+ const playing=audios.some(a=>!a.paused&&!a.ended&&a.readyState>1);
+ air.classList.toggle('live',playing);
+}
+for(const audio of audios){for(const event of ['play','playing','pause','ended','emptied','waiting','stalled','error'])audio.addEventListener(event,updateAir)}
+updateAir();
+setInterval(updateAir,400);
 })();
 </script><style id="mhEmergencyVisualAnd06Fix">
 /* Evitar vúmetros duplicados: la imagen oficial es el único frente. */
