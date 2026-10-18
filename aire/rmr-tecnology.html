@@ -1435,4 +1435,53 @@ button.addEventListener('click',()=>{
 });
 document.body.appendChild(button);
 })();
+</script><style id="mhHalfWidthDecksStyle">
+/* Prueba reversible: ancho de 04 y 06 al 50%; el resto del layout no cambia. */
+body.mhHalfWidthDecks .rmrDualDeck>.rmrMusicColumn>.rmrDeck,
+body.mhHalfWidthDecks .rmrDualDeck>.rmrRightStack>.rmrAdDeck{
+ width:50%!important;max-width:50%!important;min-width:0!important;
+ box-sizing:border-box!important;overflow-x:auto!important;
+ overflow-y:auto!important;scrollbar-width:thin;
+}
+body.mhHalfWidthDecks .rmrDualDeck>.rmrMusicColumn>.rmrDeck{margin-right:auto!important}
+body.mhHalfWidthDecks .rmrDualDeck>.rmrRightStack>.rmrAdDeck{margin-left:auto!important}
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrPlayerLayout,
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .player,
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .screen,
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrNowNext,
+body.mhHalfWidthDecks .rmrAdDeck .rmrAdBodySplit{
+ display:flex!important;flex-direction:column!important;gap:5px!important;
+ min-width:0!important;width:100%!important;max-width:100%!important;
+}
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrMusicControlSide,
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrMusicInfoSide,
+body.mhHalfWidthDecks .rmrAdDeck .rmrAdControlsColumn,
+body.mhHalfWidthDecks .rmrAdDeck .rmrAdListColumn{
+ min-width:0!important;width:100%!important;max-width:100%!important;
+}
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrVuControlGrid,
+body.mhHalfWidthDecks .rmrAdDeck .rmrAdControlRow,
+body.mhHalfWidthDecks .rmrAdDeck .rmrAdButtons{
+ display:flex!important;flex-wrap:wrap!important;gap:3px!important;
+}
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrVuControlGrid>button{
+ flex:1 1 28%!important;width:auto!important;min-width:32px!important;
+}
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck button,
+body.mhHalfWidthDecks .rmrAdDeck button{white-space:normal!important;overflow-wrap:anywhere!important}
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrNowPanel,
+body.mhHalfWidthDecks .rmrMusicColumn>.rmrDeck .rmrNextPanel{
+ display:block!important;min-width:0!important;width:100%!important;
+}
+#mhHalfWidthDecksButton{position:fixed;right:12px;bottom:86px;z-index:99998;background:#a52823;color:#fff;border:1px solid #fa6659;padding:7px 11px;font-size:11px}
+</style><script id="mhHalfWidthDecksScript">
+(function(){
+const btn=document.createElement('button');
+btn.id='mhHalfWidthDecksButton';btn.type='button';btn.textContent='PROBAR ANCHO 04 + 06 AL 50 %';
+btn.addEventListener('click',()=>{
+ const on=document.body.classList.toggle('mhHalfWidthDecks');
+ btn.textContent=on?'RESTAURAR ANCHO 04 + 06':'PROBAR ANCHO 04 + 06 AL 50 %';
+});
+document.body.appendChild(btn);
+})();
 </script></body></html>
