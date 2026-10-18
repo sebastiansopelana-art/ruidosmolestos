@@ -1829,14 +1829,14 @@ attach();new MutationObserver(attach).observe(document.body,{childList:true,subt
  if(right&&pads){
   const panel=document.createElement('section');panel.className='mhJingleBankPanel';
   const title=document.createElement('strong');title.textContent='PISADORES · SEPARADORES DE LA RADIO';
-  const caption=document.createElement('p');caption.className='mhBankCaption';caption.textContent='10 solapas · 8 pisadores por solapa · archivos guardados en este navegador';
+  
   const tabs=document.createElement('div');tabs.className='mhBankTabs';
   for(let i=0;i<10;i++){
    const tab=document.createElement('button');tab.type='button';tab.className='mhBankTab';tab.textContent=String(i+1);tab.setAttribute('aria-label','Solapa '+(i+1));
    tab.addEventListener('click',()=>{window.rmrSetJingleBank?.(i)});
    tabs.append(tab);
   }
-  panel.append(title,caption,tabs,pads);
+  panel.append(title,tabs,pads);
   const program=right.querySelector('#rmrProgramMusicClone');
   if(program)right.insertBefore(panel,program);else right.append(panel);
  }
@@ -2313,8 +2313,8 @@ for(const p of ['height','min-height','max-height'])list.style.setProperty(p,h+'
 align();window.addEventListener('load',align,{once:true});
 })();
 </script><style id="mhJingleBackupControlsStyle">
-.mhJingleBankPanel .mhJingleBackupActions{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:5px;margin:0;width:auto;max-width:100%}.mhJingleBankPanel .mhJingleBackupActions .mhJingleBackupStatus{flex-basis:100%;font-size:9px}
-.mhJingleBankPanel .mhJingleBackupActions button{border:1px solid #64849a;background:#25495d;color:#f0f8ff;border-radius:4px;padding:3px 7px!important;font:700 9px/1.1 system-ui,sans-serif!important;min-height:22px!important;height:22px!important;width:auto!important;min-width:0!important;max-width:none!important;flex:0 0 auto!important;cursor:pointer}
+.mhJingleBankPanel .mhJingleBackupActions{display:flex;flex-wrap:wrap;justify-content:flex-start;align-items:center;gap:5px;margin:0 0 0 auto;width:39%;max-width:39%;flex:0 0 39%}.mhJingleBankPanel .mhJingleBackupActions .mhJingleBackupStatus{flex-basis:100%;font-size:9px}
+.mhJingleBankPanel .mhJingleBackupActions button{border:1px solid #64849a;background:#25495d;color:#f0f8ff;border-radius:4px;padding:3px 7px!important;font:700 9px/1.1 system-ui,sans-serif!important;min-height:22px!important;height:22px!important;width:auto!important;min-width:0!important;max-width:100%!important;flex:1 1 0!important;cursor:pointer}
 .mhJingleBankPanel .mhJingleBackupActions button:disabled{opacity:.5;cursor:wait}
 .mhJingleBankPanel .mhJingleBackupStatus{font-size:10px;color:#a9c9d8}
 </style><script id="mhJingleBackupControlsScript">
@@ -2327,7 +2327,7 @@ const load=document.createElement('button');load.type='button';load.textContent=
 const status=document.createElement('span');status.className='mhJingleBackupStatus';status.setAttribute('role','status');
 const picker=document.createElement('input');picker.type='file';picker.accept='.json,application/json';picker.hidden=true;
 actions.append(save,load,status,picker);
-const title=panel.querySelector('strong');if(title){title.style.setProperty('display','flex');title.style.setProperty('align-items','center');title.style.setProperty('flex-wrap','wrap');title.style.setProperty('gap','6px');title.append(actions)}else panel.prepend(actions);
+const title=panel.querySelector('strong');if(title){title.style.setProperty('display','flex');title.style.setProperty('align-items','center');title.style.setProperty('justify-content','space-between');title.style.setProperty('flex-wrap','nowrap');title.style.setProperty('gap','6px');title.append(actions)}else panel.prepend(actions);
 const dbOpen=()=>new Promise((resolve,reject)=>{const r=indexedDB.open('RMR-Jingles-Pads',1);r.onupgradeneeded=()=>{if(!r.result.objectStoreNames.contains('pads'))r.result.createObjectStore('pads',{keyPath:'index'})};r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
 const all=db=>new Promise((resolve,reject)=>{const t=db.transaction('pads','readonly'),r=t.objectStore('pads').getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)});
 const write=(db,items)=>new Promise((resolve,reject)=>{const t=db.transaction('pads','readwrite'),store=t.objectStore('pads');store.clear();for(const item of items)store.put(item);t.oncomplete=resolve;t.onerror=()=>reject(t.error);t.onabort=()=>reject(t.error)});
