@@ -2193,12 +2193,12 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;display:flex!important;flex:0 0 32px!important;align-items:center!important;justify-content:center!important;align-self:stretch!important;order:0!important;grid-row:auto!important;grid-column:auto!important;width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;padding:2px 3px!important;box-sizing:border-box!important;font:800 10px/1.1 system-ui,sans-serif!important;text-align:center!important}
 </style><script id="mhAd06HardResetVerification">
 (function(){
-const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings','rmrClearOverdueQueue'];
+const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
 function fix(){
  const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
  if(!row)return false;
  const buttons=ids.map(id=>document.getElementById(id));
- if(buttons.slice(0,6).some(b=>!b))return false;
+ if(buttons.slice(1).some(b=>!b))return false;
  const column=row.closest('.rmrAdControlsColumn');
  const vu=row.querySelector('.rmrAdVuPanel');
  if(vu&&column)column.appendChild(vu);
@@ -2325,5 +2325,25 @@ const btn=document.getElementById('rmrClearOverdueQueue');
 if(!row||!btn)return;
 row.appendChild(btn);
 btn.style.setProperty('order','7','important');
+})();
+</script><style id="mhAd06SevenButtonsApprovedOrder">
+/* Orden aprobado, columna de controles más ancha y extremos inferiores alineados. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{grid-template-columns:minmax(0,50fr) minmax(0,50fr)!important;gap:6px!important;align-items:start!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{display:flex!important;flex-direction:column!important;gap:6px!important;min-height:260px!important;height:260px!important;max-height:none!important;overflow:visible!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){flex:0 0 32px!important;width:100%!important;max-width:100%!important;min-width:0!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;position:relative!important;grid-row:auto!important;align-self:stretch!important;box-sizing:border-box!important;font-size:10px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{order:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrForceAd{order:2!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdStop{order:3!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdExact{order:4!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdKnob{order:5!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode{order:6!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{order:7!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{height:260px!important;min-height:260px!important;max-height:260px!important}
+</style><script id="mhAd06SevenButtonsApprovedOrderScript">
+(function(){
+const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+if(!row)return;
+const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ids.forEach((id,i)=>{const el=document.getElementById(id);if(!el)return;row.appendChild(el);el.style.setProperty('order',String(i+1),'important')});
 })();
 </script></body></html>
