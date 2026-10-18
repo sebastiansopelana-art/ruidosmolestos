@@ -2480,4 +2480,19 @@ function frame(now){requestAnimationFrame(frame);if(now-last<50)return;last=now;
 for(let ch=0;ch<2;ch++){let target=0;const an=window.rmrVuAnalysers?.[ch];if(playing&&an&&window.rmrVuContext?.state==='running'){const buf=buffers[ch];an.getFloatTimeDomainData(buf);let sum=0;for(let i=0;i<buf.length;i++)sum+=buf[i]*buf[i];const db=20*Math.log10(Math.max(.00001,Math.sqrt(sum/buf.length)));target=Math.max(0,Math.min(1,(db+38)/35))}else if(playing){target=.25+.1*Math.sin(now/340+ch)}states[ch]+=(target-states[ch])*(target>states[ch]?.25:.10);needles[ch].style.transform='rotate('+(-45+states[ch]*85)+'deg)'}
 }requestAnimationFrame(frame);
 })();
+</script><style id="mhEmergencyVisualAnd06Fix">
+/* Evitar vúmetros duplicados: la imagen oficial es el único frente. */
+#mhOrangeClockSlot.mhPhotoInstalled .mhAnalogGauges,#mhOrangeClockSlot.mhPhotoInstalled .mhAnalogGauge,#mhOrangeClockSlot.mhPhotoInstalled .mhAnalogTitle,#mhOrangeClockSlot.mhPhotoInstalled .mhBroadcastBars,#mhOrangeClockSlot.mhPhotoInstalled .mhBroadcastWordmark{display:none!important}
+#mhOrangeClockSlot.mhPhotoInstalled>.mhBroadcastBrand,#mhOrangeClockSlot.mhPhotoInstalled>.mhBroadcastRight{display:none!important}
+#mhOrangeClockSlot.mhPhotoInstalled{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+.rmrDualDeck{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:start!important}
+.rmrDualDeck>.rmrDeck,.rmrDualDeck>.rmrMusicColumn,.rmrDualDeck>.rmrAdDeck{min-width:0!important;max-width:100%!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrAdDeck{grid-column:2!important}
+</style>
+<script id="mhPlaybackDiagnosticGuard">
+/* El módulo de imagen no modifica src, play, pause ni las listas de reproducción. */
+(function(){
+const audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);
+for(const el of audios){el.addEventListener('error',()=>{const error=el.error;console.error('[MEGAHERTZ] Error de audio',el.id,error?.code,error?.message,el.currentSrc)})}
+})();
 </script></body></html>
