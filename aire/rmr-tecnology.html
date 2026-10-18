@@ -2170,4 +2170,29 @@ overflow:visible!important;text-align:center!important;text-overflow:clip!import
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode{gap:0!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeAutomatic{animation:mhModeGreenFlash .9s ease-in-out infinite!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeManual{animation:mhModeRedFlash .9s ease-in-out infinite!important}
-</style></body></html>
+</style><style id="mhAdThreeButtonsStyle">
+/* Publicidad: tres botones operativos, sin perder los identificadores del motor. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit #rmrAdKnob{display:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit{display:block!important;grid-template-rows:none!important;height:auto!important;min-height:0!important;max-height:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdActionPair{display:flex!important;flex-direction:column!important;grid-template-rows:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrForceAd,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdStop,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact{
+display:flex!important;align-items:center!important;justify-content:center!important;
+height:34px!important;min-height:34px!important;max-height:34px!important;
+width:100%!important;max-width:100%!important;min-width:0!important;
+padding:3px!important;font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important;
+text-align:center!important;white-space:normal!important;overflow:hidden!important;box-sizing:border-box!important
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="true"]{background:#196b8c!important;border-color:#70d5ff!important;color:#fff!important;box-shadow:0 0 8px #43b6ed88!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="false"]{background:#304457!important;border-color:#7892a4!important;color:#fff!important;box-shadow:none!important}
+</style><script id="mhAdThreeButtonsScript">
+(function(){
+ const force=document.getElementById('rmrForceAd'),stop=document.getElementById('rmrAdStop'),exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
+ if(!force||!stop||!exact||!wait)return;
+ force.textContent='FORZAR';stop.textContent='DETENER';
+ function sync(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';exact.textContent=cut?'EXACTO':'ESPERAR';exact.setAttribute('aria-pressed',String(cut));exact.classList.toggle('isSelected',cut);wait.setAttribute('aria-pressed',String(!cut));wait.classList.toggle('isSelected',!cut);exact.title=cut?'EXACTO: cortar la canción a la hora de la tanda · clic para ESPERAR':'ESPERAR: aguardar el final del tema · clic para EXACTO'}
+ exact.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();const next=localStorage.getItem('rmrAdPolicy')==='cut'?'wait':'cut';localStorage.setItem('rmrAdPolicy',next);sync();window.dispatchEvent(new Event('rmr-ad-policy-changed'))},true);
+ window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync();
+})();
+</script></body></html>
