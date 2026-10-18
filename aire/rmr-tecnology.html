@@ -2247,4 +2247,37 @@ panel.querySelector('#mhPrecisionClose').addEventListener('click',()=>panel.clas
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck{height:var(--mh-equal-04-06-height,auto)!important;min-height:var(--mh-equal-04-06-height,0px)!important;max-height:none!important;box-sizing:border-box!important;overflow:visible!important;align-self:flex-start!important}
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicControlSide{gap:4px!important;padding:4px!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{margin-top:4px!important}
-</style></body></html>
+</style><style id="mhAdPlaylistVerticalExtension">
+/* Extender la lista hacia el borde inferior del reproductor sin alterar su ancho. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{
+height:auto!important;min-height:0!important;max-height:none!important;
+align-self:stretch!important;display:flex!important;flex-direction:column!important;
+overflow:hidden!important;width:100%!important;max-width:100%!important;min-width:0!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn>#rmrAdList{
+flex:1 1 auto!important;height:auto!important;min-height:0!important;max-height:none!important;
+width:100%!important;max-width:100%!important;box-sizing:border-box!important;
+overflow-y:auto!important;overflow-x:hidden!important;
+}
+</style><script id="mhAdPlaylistVerticalExtensionScript">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ if(!deck)return;
+ const list=deck.querySelector('.rmrAdListColumn'),body=deck.querySelector('.rmrAdBodySplit');
+ if(!list||!body)return;
+ let raf=0;
+ function fit(){
+  cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{
+   const controls=deck.querySelector('.rmrAdControlsColumn');
+   const contentBottom=Math.max(controls?.getBoundingClientRect().bottom||0,deck.getBoundingClientRect().bottom-12);
+   const top=list.getBoundingClientRect().top;
+   const target=Math.max(250,Math.round(contentBottom-top));
+   list.style.setProperty('height',target+'px','important');
+   list.style.setProperty('min-height',target+'px','important');
+   list.style.setProperty('max-height',target+'px','important');
+  });
+ }
+ if(window.ResizeObserver){const ro=new ResizeObserver(()=>fit());ro.observe(deck);const controls=deck.querySelector('.rmrAdControlsColumn');if(controls)ro.observe(controls)}
+ window.addEventListener('resize',fit);window.addEventListener('load',fit,{once:true});fit();
+})();
+</script></body></html>
