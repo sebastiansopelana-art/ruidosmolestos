@@ -1484,4 +1484,29 @@ btn.addEventListener('click',()=>{
 });
 document.body.appendChild(btn);
 })();
+</script><style id="mhPair04And06Left">
+/* 04 y 06 juntos a la izquierda, con sus medidas originales. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{position:relative!important;z-index:2}
+</style><script id="mhPair04And06LeftScript">
+(function(){
+ const music=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
+ const ads=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ if(!music||!ads)return;
+ let scheduled=false;
+ function align(){
+  if(scheduled)return;scheduled=true;
+  requestAnimationFrame(()=>{
+   scheduled=false;
+   ads.style.removeProperty('transform');
+   const a=ads.getBoundingClientRect(),m=music.getBoundingClientRect();
+   if(a.width===0||m.width===0)return;
+   // Alineación horizontal: 06 comienza 8px después de 04; no redimensionar.
+   const dx=Math.round(m.right+8-a.left);
+   ads.style.setProperty('transform','translateX('+dx+'px)','important');
+  });
+ }
+ window.addEventListener('resize',align);
+ if(window.ResizeObserver){const ro=new ResizeObserver(align);ro.observe(music);ro.observe(ads.parentElement)}
+ requestAnimationFrame(align);
+})();
 </script></body></html>
