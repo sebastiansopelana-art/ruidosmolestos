@@ -2077,8 +2077,16 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  const bars=slot.querySelector('.mhBroadcastBars'),time=slot.querySelector('.mhBroadcastTime'),air=slot.querySelector('.mhBroadcastAir');for(let i=0;i<28;i++){const el=document.createElement('i');el.className='mhBroadcastBar';bars.append(el)}
  const leds=[...bars.children],audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);let smooth=0;
  function render(){const active=audios.some(a=>!a.paused&&!a.ended&&a.readyState>1);air.classList.toggle('live',active);
- let level=0;const analyser=window.rmrSilenceSpectrumAnalyser;if(active&&analyser){const arr=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(arr);let sum=0,n=Math.min(160,arr.length);for(let i=1;i<n;i++)sum+=arr[i]*arr[i];level=Math.min(1,Math.sqrt(sum/Math.max(1,n-1))/120)}
- smooth+=(level-smooth)*(level>smooth?.36:.12);const count=Math.round(smooth*leds.length);leds.forEach((el,i)=>el.classList.toggle('lit',active&&i<count));requestAnimationFrame(render)}
+ let level=0;const analyser=window.rmrSilenceSpectrumAnalyser;if(active&&analyser){const arr=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(arr);let sum=0,n=Math.min(160,arr.length);for(let i=1;i<n;i++)sum+=arr[i]*arr[i];level=Math.min(1,Math.sqrt(sum/Math.max(1,n-1))/220)}
+ // Indicador visual con ganancia reducida y movimiento moderado, sin saturarse.
+ const now=performance.now()/1000;const pulse=.22+.13*Math.sin(now*4.7)+.07*Math.sin(now*9.3);
+ const target=active?Math.max(.08,Math.min(.68,level*.45+pulse)):0;
+ smooth+=(target-smooth)*(target>smooth?.14:.08);
+ const count=Math.round(smooth*leds.length);
+ leds.forEach((el,i)=>el.classList.toggle('lit',active&&i<count));
+ // Destello explícito para que funcione incluso si el CSS de la consola anula animaciones.
+ if(active){const bright=Math.floor(now*2.4)%2===0;air.style.background=bright?'#ed1b24':'#370609';air.style.color=bright?'#ffffff':'#ff8d8d';air.style.boxShadow=bright?'0 0 16px #ff2b2b':'none'}else{air.style.background='#370609';air.style.color='#ff8d8d';air.style.boxShadow='none'}
+ requestAnimationFrame(render)}
  const tick=()=>{time.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false})};tick();setInterval(tick,1000);requestAnimationFrame(render);
 })();
 </script></body></html>
