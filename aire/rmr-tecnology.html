@@ -1190,7 +1190,7 @@ requestAnimationFrame(tick);
 .rmrDualTitle #rmrAutoMode{min-width:132px!important;justify-content:center!important}
 .rmrDualTitle #rmrAutoMode.isManual{background:#4a1b23!important;border-color:#f06b77!important;color:#ffe2e4!important;animation:rmrRedGlow 1.15s ease-in-out infinite!important;opacity:1!important}
 .rmrDualTitle #rmrAutoMode.isManual .rmrModeLight{background:#ff495e!important;animation:rmrRedLight 1.15s ease-in-out infinite!important}
-</style><script id="rmrUnifiedModeToggleScript">
+</style><script type="text/plain" id="rmrUnifiedModeToggleScript">
 (function(){
  const auto=document.getElementById('rmrAutoMode'),manual=document.getElementById('rmrManualMode');
  if(!auto||!manual)return;
@@ -1899,12 +1899,7 @@ document.body.appendChild(btn);
   const program=right.querySelector('#rmrProgramMusicClone');
   if(program)right.insertBefore(panel,program);else right.append(panel);
  }
- if(auto&&manual){
-  const sync=()=>{const on=manual.getAttribute('aria-pressed')==='true';auto.classList.toggle('isManual',on);auto.innerHTML='<span class="rmrModeLight"></span>'+(on?'MANUAL':'AUTOMÁTICO');};
-  auto.onclick=null;
-  auto.addEventListener('click',e=>{e.stopImmediatePropagation();if(manual.getAttribute('aria-pressed')==='true')manual.click();else manual.click();sync()},{capture:true});
-  manual.addEventListener('click',()=>setTimeout(sync,0));sync();
- }
+
 })();
 </script><style id="mhJingleBanksAlignDeckTop">
 /* Pisadores en la columna derecha, alineados verticalmente con los reproductores 04 y 06. */
@@ -2127,15 +2122,16 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
   const info=document.getElementById('rmrAdModeInfo');if(info)info.textContent=isAuto?'Tandas automáticas habilitadas.':'Tandas automáticas suspendidas; control del operador.';
  }
  // Captura primero para neutralizar los dos manejadores de alternancia antiguos que chocaban.
- auto.addEventListener('click',e=>{
-  e.preventDefault();e.stopImmediatePropagation();
+ document.addEventListener('click',e=>{
+  if(!e.target.closest('#rmrAutoMode'))return;
+  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
   const next=current()==='automatic'?'manual':'automatic';
   window.rmrEngine?.setMode?.(next);
   if(!window.rmrEngine)localStorage.setItem('rmrAdMode',next);
   paint();
  },true);
  manual.addEventListener('click',()=>queueMicrotask(paint));
- const modeTimer=setInterval(()=>{if(window.rmrEngine){clearInterval(modeTimer);paint()}},150);
+ const modeTimer=setInterval(()=>{if(window.rmrEngine){clearInterval(modeTimer);paint()}},150);window.addEventListener('storage',e=>{if(e.key==='rmrAdMode')paint()});
  paint();
  const settingKey='rmrStartPlaybackOnOpen';
  const attachSetting=()=>{
@@ -2157,8 +2153,9 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
     const audio=document.getElementById('audio'),play=document.getElementById('play');
     if(!audio||!play)return;
     if(!audio.paused)return;
-    const ready=!!audio.src||!!document.querySelector('#playlist > *')||!!window.rmrEngine?.getMode;
+    const ready=!!audio.src||!!document.querySelector('#playlist > *');
     if(!ready&&tries++<8){setTimeout(check,550);return}
+    if(!ready){const status=document.getElementById('status');if(status)status.textContent='INICIO AUTOMÁTICO: no hay música cargada para reproducir.';return}
     play.click();
     setTimeout(()=>{
      if(audio.paused&&!document.getElementById('rmrAdAudio')?.paused)return;
