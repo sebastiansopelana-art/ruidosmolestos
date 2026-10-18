@@ -1436,29 +1436,7 @@ attach();new MutationObserver(attach).observe(document.body,{childList:true,subt
 </script><style id="mhPair04And06Left">
 /* 04 y 06 juntos a la izquierda, con sus medidas originales. */
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck{position:relative!important;z-index:2}
-</style><script id="mhPair04And06LeftScript">
-(function(){
- const music=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
- const ads=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
- if(!music||!ads)return;
- let scheduled=false;
- function align(){
-  if(scheduled)return;scheduled=true;
-  requestAnimationFrame(()=>{
-   scheduled=false;
-   ads.style.removeProperty('transform');
-   const a=ads.getBoundingClientRect(),m=music.getBoundingClientRect();
-   if(a.width===0||m.width===0)return;
-   // Alineación horizontal: 06 comienza 8px después de 04; no redimensionar.
-   const dx=Math.round(m.right+8-a.left);
-   ads.style.setProperty('transform','translateX('+dx+'px)','important');
-  });
- }
- window.addEventListener('resize',align);
- if(window.ResizeObserver){const ro=new ResizeObserver(align);ro.observe(music);ro.observe(ads.parentElement)}
- requestAnimationFrame(align);
-})();
-</script><style id="mhGeneralVolumeStyle">
+</style><script id="mhPair04And06LeftScript">/* Alineación 04/06 gestionada por grid; se elimina el desplazamiento calculado que movía 06 fuera de simetría. */</script><style id="mhGeneralVolumeStyle">
 .rmrGeneralVolumeSection{padding:12px 14px;margin:0 0 12px;border:1px solid #694340;border-radius:7px;background:#18191c;color:#f0eee9}
 .rmrGeneralVolumeSection h3{font-size:13px;letter-spacing:.5px;margin:0 0 7px}
 .rmrGeneralVolumeSection p{font-size:11px;color:#c6b5b3;margin:0 0 10px}
@@ -2494,5 +2472,18 @@ for(let ch=0;ch<2;ch++){let target=0;const an=window.rmrVuAnalysers?.[ch];if(pla
 (function(){
 const audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);
 for(const el of audios){el.addEventListener('error',()=>{const error=el.error;console.error('[MEGAHERTZ] Error de audio',el.id,error?.code,error?.message,el.currentSrc)})}
+})();
+</script><style id="mhPlaybackAnd06Recovery20261018">
+/* El 06 queda en su columna, sin desplazamientos acumulados del editor. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{transform:none!important;translate:none!important;max-width:100%!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck{max-width:100%!important;box-sizing:border-box!important}
+#mhOrangeClockSlot.mhPhotoInstalled .mhAnalogGauges,#mhOrangeClockSlot.mhPhotoInstalled .mhAnalogTitle{display:none!important}
+</style><script id="mhPlaybackAnd06RecoveryScript">
+(function(){
+ // Los analizadores Web Audio suspendidos pueden dejar muda la salida aunque audio.play() avance.
+ const ids=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'];
+ function resume(){const ctx=window.rmrVuContext;if(ctx&&ctx.state==='suspended')ctx.resume().catch(e=>console.warn('No se pudo reanudar AudioContext',e))}
+ for(const id of ids){const a=document.getElementById(id);if(!a)continue;a.addEventListener('play',resume);a.addEventListener('playing',resume)}
+ document.addEventListener('pointerdown',resume,{passive:true});
 })();
 </script></body></html>
