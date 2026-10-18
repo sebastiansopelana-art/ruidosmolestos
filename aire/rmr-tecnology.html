@@ -2154,4 +2154,25 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
 #mhClockBrandPanel .mhStudioTitle{grid-area:1/1!important;font-size:9px!important;letter-spacing:1.4px!important;line-height:12px!important}
 #mhClockBrandPanel .mhClockBrandTime{grid-area:2/1!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;max-width:100%!important;font:800 clamp(13px,1.65vw,25px)/1.2 ui-monospace,SFMono-Regular,Menlo,monospace!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.7px!important;padding:2px 0!important;overflow:hidden!important;text-align:center!important;border:1px solid #6c2222!important;border-radius:5px!important}
 #mhClockBrandPanel .mhOnAirFace{grid-area:3/1!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;font-size:clamp(12px,1.4vw,19px)!important;line-height:1.2!important;letter-spacing:2px!important;padding:2px!important;border-radius:5px!important}
-</style></body></html>
+</style><style id="mhSplitClockTwinStyle">
+.rmrDualDeck .mhSignalTop{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;align-items:center!important}
+.rmrDualDeck .mhSignalTop>.mhSignalMeter{grid-column:1!important;min-width:0!important}
+.rmrDualDeck .mhSignalTop>.mhClockTwin{grid-column:2!important;min-width:0!important;box-sizing:border-box!important;height:78px!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;padding:5px!important;background:linear-gradient(135deg,#131a20,#06090c)!important;border:1px solid #66717b!important;border-radius:7px!important;box-shadow:inset 0 0 0 1px #050607!important}
+.mhClockTwin .mhTwinBrand{font:900 clamp(10px,1.05vw,18px)/1 system-ui;letter-spacing:.6px;color:#f5eaea;text-shadow:0 0 5px #c62a28;white-space:nowrap}
+.mhClockTwin .mhTwinTime{font:800 clamp(12px,1.3vw,21px)/1.2 ui-monospace,monospace;color:#ff4440;text-shadow:0 0 7px #ee2424;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mhClockTwin .mhTwinAir{font:900 clamp(9px,1vw,14px)/1 system-ui;letter-spacing:1px;color:#ff7777;background:#37090b;border:1px solid #a82c2c;border-radius:4px;padding:3px 14px}
+.mhClockTwin .mhTwinAir.mhOnAirLive{animation:mhLiveFlash 1s steps(2,start) infinite}
+@media(prefers-reduced-motion:reduce){.mhClockTwin .mhTwinAir.mhOnAirLive{animation:none;background:#d71923;color:white}}
+#mhClockBrandPanel{display:none!important}
+</style><script id="mhSplitClockTwinScript">
+(function(){
+ const hosts=[document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop'),document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhSignalTop')];
+ const sources=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);
+ hosts.forEach((host,i)=>{if(!host||host.querySelector('.mhClockTwin'))return;
+  const box=document.createElement('div');box.className='mhClockTwin';box.innerHTML='<div class="mhTwinBrand">MEGAHERTZ</div><div class="mhTwinTime">--:--:--</div><div class="mhTwinAir">ON AIR</div>';host.append(box);
+  const time=box.querySelector('.mhTwinTime'),air=box.querySelector('.mhTwinAir');
+  function tick(){time.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false});const active=sources.some(a=>!a.paused&&!a.ended&&a.readyState>1);air.classList.toggle('mhOnAirLive',active)}
+  tick();setInterval(tick,500);
+ });
+})();
+</script></body></html>
