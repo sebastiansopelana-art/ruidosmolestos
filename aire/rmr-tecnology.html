@@ -2195,4 +2195,36 @@ text-align:center!important;white-space:normal!important;overflow:hidden!importa
  exact.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();const next=localStorage.getItem('rmrAdPolicy')==='cut'?'wait':'cut';localStorage.setItem('rmrAdPolicy',next);sync();window.dispatchEvent(new Event('rmr-ad-policy-changed'))},true);
  window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync();
 })();
+</script><style id="mhAd06RestoreMissingControl">
+/* Restaurar EXACTO y ESPERAR como controles separados; conservar los otros cuatro. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit #rmrAdKnob{display:flex!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow .rmrAdPolicySplit{display:flex!important;flex-direction:column!important;gap:4px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{grid-template-columns:minmax(0,45fr) minmax(0,55fr)!important;gap:5px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdControlsColumn{grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{grid-column:2!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdKnob,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrOpenSettings,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings #rmrAutoMode{
+display:flex!important;align-items:center!important;justify-content:center!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+height:36px!important;min-height:36px!important;max-height:36px!important;
+padding:3px 2px!important;box-sizing:border-box!important;
+font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important;
+text-align:center!important;white-space:normal!important;overflow:hidden!important;
+overflow-wrap:normal!important;word-break:normal!important
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrOpenSettings{font-size:10px!important;letter-spacing:-.2px!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdKnob[aria-pressed="true"],
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="true"]{background:#196b8c!important;border-color:#70d5ff!important;color:white!important}
+</style><script id="mhAd06RestoreMissingControlScript">
+(function(){
+ const exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
+ if(!exact||!wait)return;
+ function sync(){const cut=localStorage.getItem('rmrAdPolicy')==='cut';exact.textContent='EXACTO';wait.textContent='ESPERAR';exact.setAttribute('aria-pressed',String(cut));wait.setAttribute('aria-pressed',String(!cut));exact.classList.toggle('isSelected',cut);wait.classList.toggle('isSelected',!cut)}
+ // El manejador previo del botón EXACTO alternaba: reemplazarlo con selección explícita.
+ exact.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('rmrAdPolicy','cut');sync()},true);
+ wait.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();localStorage.setItem('rmrAdPolicy','wait');sync()},true);
+ window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});sync();
+})();
 </script></body></html>
