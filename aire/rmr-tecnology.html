@@ -2112,4 +2112,33 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
 #mhClockBrandPanel .mhStudioTitle{grid-column:1/-1;font-size:11px;line-height:1.1}
 #mhClockBrandPanel .mhClockBrandTime{grid-column:1;grid-row:2;min-width:0;width:100%;box-sizing:border-box;font-size:clamp(12px,1.6vw,24px)!important;letter-spacing:-.8px!important;padding:5px 2px!important;overflow:hidden;text-overflow:clip}
 #mhClockBrandPanel .mhOnAirFace{grid-column:2;grid-row:2;box-sizing:border-box;min-width:0;font-size:clamp(12px,1.8vw,24px);padding:5px 1px}
-</style></body></html>
+</style><style id="mhMusicVuTitlesStyle">
+/* El reloj queda a media anchura del espacio disponible. */
+#mhClockBrandPanel{width:50%!important;max-width:50%!important;min-width:0!important;box-sizing:border-box!important;align-self:flex-start!important}
+.rmrDualDeck>.rmrMusicColumn .rmrMusicSplit{display:flex!important;flex-direction:column!important;gap:5px!important}
+.rmrDualDeck>.rmrMusicColumn .rmrMusicControlSide{display:flex!important;flex-direction:column!important;align-items:stretch!important;width:100%!important;box-sizing:border-box!important;border-right:0!important;padding:5px!important;gap:5px!important}
+.rmrDualDeck>.rmrMusicColumn .rmrMusicInfoSide{display:none!important}
+.rmrDualDeck>.rmrMusicColumn .rmrSpectrumVu.rmrVerticalSpectrum{position:relative!important;min-height:150px!important;display:flex!important;flex-direction:column!important;gap:3px!important;padding:5px!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrMusicColumn .mhVuTracks{display:flex;flex-direction:column;gap:4px;flex:0 0 auto;position:relative;z-index:2;width:100%;min-width:0}
+.rmrDualDeck>.rmrMusicColumn .mhVuTrack{background:linear-gradient(90deg,#06131c,#103249);border:1px solid #5083a2;border-left:3px solid #34d38b;border-radius:5px;padding:4px 7px;min-width:0;box-shadow:0 1px 4px #0008}
+.rmrDualDeck>.rmrMusicColumn .mhVuTrack.next{border-left-color:#f4b448}
+.rmrDualDeck>.rmrMusicColumn .mhVuTrack .rmrNowPanel,.rmrDualDeck>.rmrMusicColumn .mhVuTrack .rmrNextPanel{display:block!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;background:none!important;box-shadow:none!important}
+.rmrDualDeck>.rmrMusicColumn .mhVuTrack .rmrNowLabel{display:block!important;font:800 10px system-ui!important;color:#8fdaff!important;letter-spacing:.7px!important}
+.rmrDualDeck>.rmrMusicColumn .mhVuTrack strong{display:block!important;color:#fff!important;font:800 clamp(12px,1.25vw,18px)/1.2 system-ui!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;text-shadow:0 0 4px #7ccaff55!important}
+.rmrDualDeck>.rmrMusicColumn .mhVuTrack small{display:block!important;color:#c3dce9!important;font:600 10px system-ui!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.rmrDualDeck>.rmrMusicColumn .rmrSpectrumColumns{flex:1 1 auto!important;min-height:42px!important}
+.rmrDualDeck>.rmrMusicColumn .rmrNowPlayingActions{width:100%!important}
+</style><script id="mhMusicVuTitlesScript">
+(function(){
+ const vu=document.querySelector('.rmrDualDeck>.rmrMusicColumn .rmrSpectrumVu.rmrVerticalSpectrum');
+ const info=document.querySelector('.rmrDualDeck>.rmrMusicColumn .rmrMusicInfoSide');
+ if(!vu||!info||document.getElementById('mhVuTracks'))return;
+ const current=info.querySelector('.rmrNowPanel'),next=info.querySelector('.rmrNextPanel');
+ if(!current||!next)return;
+ const wrapper=document.createElement('div');wrapper.id='mhVuTracks';wrapper.className='mhVuTracks';
+ for(const [el,cls] of [[current,'current'],[next,'next']]){
+  const box=document.createElement('div');box.className='mhVuTrack '+cls;box.appendChild(el);wrapper.appendChild(box);
+ }
+ vu.insertBefore(wrapper,vu.firstChild);
+})();
+</script></body></html>
