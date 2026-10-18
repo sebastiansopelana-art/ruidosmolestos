@@ -1906,4 +1906,23 @@ document.body.appendChild(btn);
   manual.addEventListener('click',()=>setTimeout(sync,0));sync();
  }
 })();
+</script><style id="mhJingleBanksAlignDeckTop">
+/* Pisadores en la columna derecha, alineados verticalmente con los reproductores 04 y 06. */
+.rmrDualDeck>.rmrRightStack{position:relative!important}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
+ order:-1!important;
+ margin:0 0 8px!important;
+ align-self:stretch!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{order:0!important}
+.rmrDualDeck>.rmrRightStack>#rmrProgramMusicClone{order:1!important}
+</style><script id="mhJingleBanksAlignDeckTopScript">
+(function(){
+ const right=document.querySelector('.rmrDualDeck>.rmrRightStack');
+ const panel=right?.querySelector('.mhJingleBankPanel');
+ const ad=right?.querySelector('.rmrAdDeck');
+ if(!right||!panel||!ad)return;
+ // Mover el panel al comienzo de la columna sin modificar controles ni sus eventos.
+ right.insertBefore(panel,ad);
+})();
 </script></body></html>
