@@ -1525,4 +1525,38 @@ document.body.appendChild(btn);
 .rmrGeneralVolumeSection p{font-size:11px;color:#c6b5b3;margin:0 0 10px}
 .rmrGeneralVolumeSection .rmrPlayerVolume{display:flex!important;flex-direction:column;gap:9px;max-width:440px;width:100%;color:#eee;font-size:12px}
 .rmrGeneralVolumeSection #volume{display:block!important;width:100%!important;max-width:440px!important;accent-color:#e8372e}
-</style></body></html>
+</style><style id="mhEqual04And06Height">
+/* Ambos módulos terminan exactamente en la misma línea inferior. */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{
+ min-height:var(--mh-equal-04-06-height,auto)!important;
+ box-sizing:border-box!important;
+}
+</style><script id="mhEqual04And06HeightScript">
+(function(){
+ const music=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');
+ const ads=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ if(!music||!ads)return;
+ let pending=false,last=0;
+ function sync(){
+  if(pending)return;pending=true;
+  requestAnimationFrame(()=>{
+   pending=false;
+   // Tomar el alto real del contenido sin sumar el mínimo aplicado previamente.
+   const heightOf=el=>{
+    const style=getComputedStyle(el);
+    const vertical=parseFloat(style.paddingTop||0)+parseFloat(style.paddingBottom||0)+parseFloat(style.borderTopWidth||0)+parseFloat(style.borderBottomWidth||0);
+    return Math.ceil(Math.max(el.scrollHeight+parseFloat(style.borderTopWidth||0)+parseFloat(style.borderBottomWidth||0),el.firstElementChild?.getBoundingClientRect().height+vertical||0));
+   };
+   const h=Math.max(heightOf(music),heightOf(ads));
+   if(h>0&&h!==last){last=h;document.documentElement.style.setProperty('--mh-equal-04-06-height',h+'px')}
+  });
+ }
+ if(window.ResizeObserver){
+  const ro=new ResizeObserver(sync);
+  for(const el of [music,ads])for(const child of el.children)ro.observe(child);
+ }
+ window.addEventListener('resize',()=>{last=0;sync()});
+ requestAnimationFrame(sync);
+})();
+</script></body></html>
