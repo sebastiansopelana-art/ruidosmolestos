@@ -2050,4 +2050,32 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  }
  vu.insertBefore(wrapper,vu.firstChild);
 })();
+</script><style id="mhOrangeSlotClockStyle">
+#mhOrangeClockSlot{position:relative;box-sizing:border-box;width:100%;height:100%;min-height:90px;display:flex;align-items:center;justify-content:center;padding:5px;background:linear-gradient(145deg,#13191e,#06090d);border:1px solid #bd3430;border-radius:5px;overflow:hidden}
+#mhOrangeClockSlot .mhOrangeFace{width:100%;height:100%;min-width:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:6px}
+#mhOrangeClockSlot .mhOrangeBrand{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;border:1px solid #ad2926;border-radius:6px;padding:7px 3px;background:radial-gradient(ellipse,#360d0e,#0a090b);box-shadow:inset 0 0 10px #a21c1c44}
+#mhOrangeClockSlot .mhOrangeNeedle{height:18px;width:2px;background:#f44;transform:rotate(-50deg);transform-origin:bottom;box-shadow:0 0 6px red}
+#mhOrangeClockSlot .mhOrangeBrand strong{font:900 clamp(12px,1.5vw,21px)/1 system-ui;color:#eee;text-shadow:1px 1px #b22;white-space:nowrap}
+#mhOrangeClockSlot .mhOrangeBrand small{font:700 clamp(6px,.6vw,9px)/1.2 system-ui;letter-spacing:.6px;color:#fa7774}
+#mhOrangeClockSlot .mhOrangeRight{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-width:0}
+#mhOrangeClockSlot .mhOrangeTime{font:900 clamp(13px,1.8vw,25px)/1.1 ui-monospace,monospace;font-variant-numeric:tabular-nums;color:#ff4440;text-shadow:0 0 7px #e22;white-space:nowrap;letter-spacing:-.7px}
+#mhOrangeClockSlot .mhOrangeAir{font:900 clamp(13px,1.6vw,23px)/1 system-ui;color:#fc9696;background:#430c10;border:1px solid #c23a36;border-radius:5px;padding:6px 12px;letter-spacing:1px}
+#mhOrangeClockSlot .mhOrangeAir.mhOrangePlaying{animation:mhOrangeBlink 1s steps(2,start) infinite}
+@keyframes mhOrangeBlink{0%,100%{background:#e22;color:white;box-shadow:0 0 10px #f33}50%{background:#430c10;color:#fc9696;box-shadow:none}}
+@media(prefers-reduced-motion:reduce){#mhOrangeClockSlot .mhOrangeAir.mhOrangePlaying{animation:none;background:#e22;color:white}}
+</style><script id="mhOrangeSlotClockScript">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrDeck');if(!deck)return;
+ const children=[...deck.querySelectorAll('*')];
+ const orange=children.filter(el=>{const c=getComputedStyle(el).backgroundColor;return c==='rgb(240, 91, 76)'||c==='rgb(239, 90, 75)'||c==='rgb(240, 92, 77)'}).sort((a,b)=>b.getBoundingClientRect().width*b.getBoundingClientRect().height-a.getBoundingClientRect().width*a.getBoundingClientRect().height)[0];
+ const anchor=orange||deck.querySelector('.rmrMusicSplit');
+ if(!anchor||document.getElementById('mhOrangeClockSlot'))return;
+ const slot=document.createElement('div');slot.id='mhOrangeClockSlot';slot.innerHTML='<div class="mhOrangeFace"><div class="mhOrangeBrand"><i class="mhOrangeNeedle"></i><strong>MEGAHERTZ</strong><small>BROADCAST AUTOMATION</small><small>by RMR TECHNOLOGY</small></div><div class="mhOrangeRight"><span class="mhOrangeTime">00:00:00</span><span class="mhOrangeAir">ON AIR</span></div></div>';
+ if(orange){orange.replaceChildren(slot);orange.style.padding='0';orange.style.background='transparent';slot.style.height='100%'}
+ else{anchor.insertAdjacentElement('afterend',slot);slot.style.height='105px';}
+ const clock=slot.querySelector('.mhOrangeTime'),air=slot.querySelector('.mhOrangeAir'),needle=slot.querySelector('.mhOrangeNeedle');
+ const audios=['audio','rmrAdAudio','rmrDropAudio','rmrJingleAudio'].map(id=>document.getElementById(id)).filter(Boolean);let smooth=0;
+ function frame(){const playing=audios.some(a=>!a.paused&&!a.ended&&a.readyState>1);air.classList.toggle('mhOrangePlaying',playing);let level=0;const an=window.rmrSilenceSpectrumAnalyser;if(playing&&an&&window.rmrVuContext?.state==='running'){const arr=new Uint8Array(an.frequencyBinCount);an.getByteFrequencyData(arr);let sum=0;for(let i=1;i<Math.min(130,arr.length);i++)sum+=arr[i]*arr[i];level=Math.min(1,Math.sqrt(sum/129)/160)}smooth+=(level-smooth)*.25;needle.style.transform='rotate('+(-50+smooth*90)+'deg)';requestAnimationFrame(frame)}
+ setInterval(()=>{clock.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false})},250);clock.textContent=new Date().toLocaleTimeString('es-AR',{hour12:false});requestAnimationFrame(frame);
+})();
 </script></body></html>
