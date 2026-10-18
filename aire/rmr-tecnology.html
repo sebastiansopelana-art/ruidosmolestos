@@ -1978,57 +1978,47 @@ body.mhLayoutEditing .mhDraggableSection.mhDragging{z-index:9999!important}
   });
  }
 })();
-</script><style id="mhUniversalMoveStyle">
-body.mhLayoutEditing .mhUniversalTarget{cursor:move}
-body.mhLayoutEditing .mhUniversalTarget.mhUniversalMoving{outline:2px solid #f3bd65!important;outline-offset:1px!important;z-index:214748100!important}
-body.mhLayoutEditing .mhUniversalResizable{resize:both!important;overflow:auto!important;min-width:45px;min-height:28px}
-#mhLayoutEditHint{position:fixed;right:14px;bottom:65px;z-index:2147482000;background:#0b1b29;color:#e9f3fb;border:1px solid #668397;border-radius:6px;padding:7px 10px;font:11px system-ui;display:none;max-width:320px}
-body.mhLayoutEditing #mhLayoutEditHint{display:block}
-</style><script id="mhUniversalMoveScript">
+</script><style id="mhLayoutEditorV2Style">
+body.mhLayoutEditing [data-mh-editable]{outline:1px dashed #b48d54;outline-offset:-1px}
+body.mhLayoutEditing [data-mh-editable]:hover{outline:2px solid #ffce70;outline-offset:1px}
+body.mhLayoutEditing .mhDragging{z-index:100000!important;outline:2px solid #ffce70!important}
+#mhLayoutV2Help{position:fixed;bottom:67px;right:12px;z-index:2147482000;background:#102a3c;border:1px solid #6b91a6;border-radius:5px;padding:8px;font:12px system-ui;display:none}
+body.mhLayoutEditing #mhLayoutV2Help{display:block}
+body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLayoutEditing .rmrMusicColumn{overflow:visible!important}
+</style><script id="mhLayoutEditorV2Script">
 (function(){
- const key='mh-layout-universal-v1', stored=(()=>{try{return JSON.parse(localStorage.getItem(key)||'{}')}catch(e){return {}}})();
- const positions=stored&&typeof stored==='object'?stored:{};
- const hint=document.createElement('div');hint.id='mhLayoutEditHint';hint.textContent='Arrastrá cualquier elemento manteniendo ALT. Para cambiar tamaños, usá la esquina inferior derecha de los paneles. Guardá al terminar.';document.body.appendChild(hint);
- const excluded='html,body,script,style,meta,link,head,#mhLayoutEditBar,#mhLayoutEditHint,.mhDragHandle,option';
- const candidates=Array.from(document.querySelectorAll('body *')).filter(el=>{
-  if(el.matches(excluded)||el.closest('#mhLayoutEditBar,#mhLayoutEditHint,.mhDragHandle,svg'))return false;
-  if(el.children.length===0&&!el.matches('button,input,select,textarea,a,img,canvas,video,audio'))return false;
-  const r=el.getBoundingClientRect(),css=getComputedStyle(el);
-  return r.width>=22&&r.height>=14&&css.display!=='none'&&css.visibility!=='hidden'&&css.position!=='fixed';
- });
- const entries=[];
- for(let i=0;i<candidates.length;i++){
-  const el=candidates[i],id=el.id?'id:'+el.id:'node:'+i;
-  el.classList.add('mhUniversalTarget');
-  const p=positions[id];
-  if(p){el.style.translate=(Number(p.x)||0)+'px '+(Number(p.y)||0)+'px';if(p.w&&p.h){el.style.width=p.w+'px';el.style.height=p.h+'px';}}
-  if(el.matches('.panel,.rmrDeck,.rmrAdDeck,.mhJingleBankPanel,.playlist,.rmrAdListColumn,.rmrRightStack,.rmrMusicColumn,.rmrDropList,.rmrDropPlayer'))el.classList.add('mhUniversalResizable');
-  entries.push({el,id});
- }
- const byElement=new Map(entries.map(v=>[v.el,v]));
- let active=null;
- const save=()=>{try{localStorage.setItem(key,JSON.stringify(positions))}catch(e){}};
- document.addEventListener('pointerdown',e=>{
-  if(!document.body.classList.contains('mhLayoutEditing')||!e.altKey||e.button!==0)return;
-  const el=e.target.closest('.mhUniversalTarget'),entry=byElement.get(el);
-  if(!entry)return;
-  e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-  const p=positions[entry.id]||{x:0,y:0};
-  active={...entry,pointer:e.pointerId,startX:e.clientX,startY:e.clientY,x:Number(p.x)||0,y:Number(p.y)||0};
-  el.classList.add('mhUniversalMoving');
+ const key='mh-layout-v2',legacy=['mh-layout-universal-v1','mh-layout-positions-v1'];
+ // Old transforms could move the entire advertising column off screen.
+ for(const k of legacy){try{localStorage.removeItem(k)}catch(e){}}
+ document.querySelectorAll('.mhDraggableSection').forEach(el=>{el.style.translate='';el.classList.remove('mhDraggableSection','mhDragging');el.querySelector(':scope > .mhDragHandle')?.remove()});
+ const oldStyle=document.getElementById('mhLayoutDragEditorStyles');if(oldStyle)oldStyle.disabled=true;
+ const oldBar=document.getElementById('mhLayoutEditBar');if(oldBar)oldBar.remove();
+ document.body.classList.remove('mhLayoutEditing');
+ let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
+ const help=document.createElement('div');help.id='mhLayoutV2Help';help.textContent='Elegí cualquier elemento con el mouse y arrastralo. SHIFT + arrastrar: cambiar tamaño. Las flechas ajustan de a 1 píxel (SHIFT: 10).';document.body.append(help);
+ const bar=document.createElement('div');bar.id='mhLayoutEditBar';const edit=document.createElement('button'),reset=document.createElement('button');
+ edit.textContent='↔ ORGANIZAR PANTALLA';reset.textContent='RESTABLECER';bar.append(edit,reset);document.body.append(bar);
+ const eligible=el=>el instanceof HTMLElement&&!el.closest('#mhLayoutEditBar,#mhLayoutV2Help,.mhDragHandle')&&!el.matches('html,body,script,style,option,template')&&getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>8&&el.getBoundingClientRect().height>8;
+ const selector=el=>{const parts=[];for(let n=el;n&&n!==document.body;n=n.parentElement){if(n.id){parts.unshift('#'+CSS.escape(n.id));break}const tag=n.tagName.toLowerCase();const index=Array.from(n.parentElement?.children||[]).filter(v=>v.tagName===n.tagName).indexOf(n)+1;parts.unshift(tag+':nth-of-type('+index+')')}return parts.join(' > ')};
+ const elements=new Map();
+ function register(){document.querySelectorAll('body *').forEach(el=>{if(!eligible(el)||elements.has(el))return;const id=selector(el);elements.set(el,id);el.dataset.mhEditable='1';const p=saved[id];if(p){el.style.translate=(p.x||0)+'px '+(p.y||0)+'px';if(p.w)el.style.width=p.w+'px';if(p.h)el.style.height=p.h+'px'}})}
+ register();
+ const observer=new MutationObserver(()=>{if(document.body.classList.contains('mhLayoutEditing'))register()});observer.observe(document.body,{childList:true,subtree:true});
+ let editing=false,drag=null,selected=null;
+ edit.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);edit.classList.toggle('active',editing);edit.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';if(!editing)localStorage.setItem(key,JSON.stringify(saved));else register()};
+ reset.onclick=()=>{if(!confirm('¿Restablecer toda la distribución?'))return;saved={};localStorage.removeItem(key);for(const el of elements.keys()){el.style.translate='';el.style.removeProperty('width');el.style.removeProperty('height')}};
+ document.addEventListener('pointerdown',e=>{if(!editing||e.button!==0||e.target.closest('#mhLayoutEditBar,#mhLayoutV2Help'))return;let el=e.target.closest('[data-mh-editable]');if(!el||!eligible(el))return;
+ // ALT selects the parent instead of the nested control, for complete freedom.
+ if(e.altKey&&el.parentElement?.dataset.mhEditable)el=el.parentElement;
+ const id=elements.get(el);if(!id)return;e.preventDefault();e.stopImmediatePropagation();selected=el;
+ const p=saved[id]||{x:0,y:0};const rect=el.getBoundingClientRect();
+ drag={el,id,x:e.clientX,y:e.clientY,ox:p.x||0,oy:p.y||0,w:rect.width,h:rect.height,resize:e.shiftKey};
+ el.classList.add('mhDragging');
  },true);
- document.addEventListener('pointermove',e=>{
-  if(!active||active.pointer!==e.pointerId)return;
-  e.preventDefault();const x=Math.round(active.x+e.clientX-active.startX),y=Math.round(active.y+e.clientY-active.startY);
-  active.el.style.translate=x+'px '+y+'px';
-  positions[active.id]={...positions[active.id],x,y};
- },true);
- const end=e=>{if(!active||active.pointer!==e.pointerId)return;active.el.classList.remove('mhUniversalMoving');active=null;save()};
- document.addEventListener('pointerup',end,true);document.addEventListener('pointercancel',end,true);
- document.addEventListener('click',e=>{if(document.body.classList.contains('mhLayoutEditing')&&e.altKey){e.preventDefault();e.stopImmediatePropagation()}},true);
- const reset=document.querySelector('#mhLayoutEditBar button:nth-child(2)');
- if(reset)reset.addEventListener('click',()=>{if(!localStorage.getItem(key))return;localStorage.removeItem(key);for(const {el} of entries){el.style.translate='';el.style.width='';el.style.height=''};for(const k of Object.keys(positions))delete positions[k]},true);
- const observer=new ResizeObserver(items=>{if(!document.body.classList.contains('mhLayoutEditing'))return;for(const item of items){const entry=byElement.get(item.target);if(!entry||!item.target.style.width)continue;positions[entry.id]={...positions[entry.id],w:Math.round(item.contentRect.width),h:Math.round(item.contentRect.height)}}save()});
- for(const {el} of entries)if(el.classList.contains('mhUniversalResizable'))observer.observe(el);
+ document.addEventListener('pointermove',e=>{if(!drag)return;e.preventDefault();const dx=e.clientX-drag.x,dy=e.clientY-drag.y;const p=saved[drag.id]||{};if(drag.resize){p.w=Math.max(20,Math.round(drag.w+dx));p.h=Math.max(20,Math.round(drag.h+dy));drag.el.style.width=p.w+'px';drag.el.style.height=p.h+'px'}else{p.x=Math.round(drag.ox+dx);p.y=Math.round(drag.oy+dy);drag.el.style.translate=p.x+'px '+p.y+'px'}saved[drag.id]=p},true);
+ function finish(e){if(!drag)return;drag.el.classList.remove('mhDragging');drag=null;try{localStorage.setItem(key,JSON.stringify(saved))}catch(err){}}
+ document.addEventListener('pointerup',finish,true);document.addEventListener('pointercancel',finish,true);
+ document.addEventListener('click',e=>{if(editing&&!e.target.closest('#mhLayoutEditBar')){e.preventDefault();e.stopImmediatePropagation()}},true);
+ document.addEventListener('keydown',e=>{if(!editing||!selected||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();const id=elements.get(selected),p=saved[id]||{x:0,y:0},step=e.shiftKey?10:1;p.x=(p.x||0)+(e.key==='ArrowLeft'?-step:e.key==='ArrowRight'?step:0);p.y=(p.y||0)+(e.key==='ArrowUp'?-step:e.key==='ArrowDown'?step:0);selected.style.translate=p.x+'px '+p.y+'px';saved[id]=p;localStorage.setItem(key,JSON.stringify(saved))});
 })();
 </script></body></html>
