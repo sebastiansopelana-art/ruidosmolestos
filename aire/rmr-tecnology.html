@@ -1995,24 +1995,24 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  const oldBar=document.getElementById('mhLayoutEditBar');if(oldBar)oldBar.remove();
  document.body.classList.remove('mhLayoutEditing');
  let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
- const help=document.createElement('div');help.id='mhLayoutV2Help';help.textContent='Elegí cualquier elemento con el mouse y arrastralo. SHIFT + arrastrar: cambiar tamaño. Las flechas ajustan de a 1 píxel (SHIFT: 10).';document.body.append(help);
+ const help=document.createElement('div');help.id='mhLayoutV2Help';help.textContent='Elegí cualquier elemento con el mouse y arrastralo. Tocá AJUSTAR TAMAÑO y arrastrá para cambiar ancho y alto. Las flechas ajustan de a 1 píxel (SHIFT: 10).';document.body.append(help);
  const bar=document.createElement('div');bar.id='mhLayoutEditBar';const edit=document.createElement('button'),reset=document.createElement('button');
- edit.textContent='↔ ORGANIZAR PANTALLA';reset.textContent='RESTABLECER';bar.append(edit,reset);document.body.append(bar);bar.style.cssText='position:fixed!important;bottom:16px!important;right:16px!important;top:auto!important;left:auto!important;display:flex!important;visibility:visible!important;opacity:1!important;z-index:2147483640!important';edit.style.cssText='display:inline-block!important;visibility:visible!important;min-width:170px!important';
+ edit.textContent='↔ ORGANIZAR PANTALLA';reset.textContent='RESTABLECER';const size=document.createElement('button');size.type='button';size.textContent='↗ AJUSTAR TAMAÑO';size.title='Activar el cambio de ancho y alto de cada elemento';bar.append(edit,size,reset);document.body.append(bar);bar.style.cssText='position:fixed!important;bottom:16px!important;right:16px!important;top:auto!important;left:auto!important;display:flex!important;visibility:visible!important;opacity:1!important;z-index:2147483640!important';edit.style.cssText='display:inline-block!important;visibility:visible!important;min-width:170px!important';
  const eligible=el=>el instanceof HTMLElement&&!el.closest('#mhLayoutEditBar,#mhLayoutV2Help,.mhDragHandle')&&!el.matches('html,body,script,style,option,template')&&getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>8&&el.getBoundingClientRect().height>8;
  const selector=el=>{const parts=[];for(let n=el;n&&n!==document.body;n=n.parentElement){if(n.id){parts.unshift('#'+CSS.escape(n.id));break}const tag=n.tagName.toLowerCase();const index=Array.from(n.parentElement?.children||[]).filter(v=>v.tagName===n.tagName).indexOf(n)+1;parts.unshift(tag+':nth-of-type('+index+')')}return parts.join(' > ')};
  const elements=new Map();
  function register(){document.querySelectorAll('body *').forEach(el=>{if(!eligible(el)||elements.has(el))return;const id=selector(el);elements.set(el,id);el.dataset.mhEditable='1';const p=saved[id];if(p){el.style.translate=(p.x||0)+'px '+(p.y||0)+'px';if(p.w)el.style.width=p.w+'px';if(p.h)el.style.height=p.h+'px'}})}
  register();
  const observer=new MutationObserver(()=>{if(document.body.classList.contains('mhLayoutEditing'))register()});observer.observe(document.body,{childList:true,subtree:true});
- let editing=false,drag=null,selected=null;
- edit.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);edit.classList.toggle('active',editing);edit.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';if(!editing)localStorage.setItem(key,JSON.stringify(saved));else register()};
+ let editing=false,sizing=false,drag=null,selected=null;size.onclick=()=>{if(!editing){edit.click()}sizing=!sizing;size.classList.toggle('active',sizing);size.textContent=sizing?'✓ TAMAÑO ACTIVADO':'↗ AJUSTAR TAMAÑO'};
+ edit.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);edit.classList.toggle('active',editing);edit.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';if(!editing){sizing=false;size.classList.remove('active');size.textContent='↗ AJUSTAR TAMAÑO';localStorage.setItem(key,JSON.stringify(saved))}else register()};
  reset.onclick=()=>{if(!confirm('¿Restablecer toda la distribución?'))return;saved={};localStorage.removeItem(key);for(const el of elements.keys()){el.style.translate='';el.style.removeProperty('width');el.style.removeProperty('height')}};
  document.addEventListener('pointerdown',e=>{if(!editing||e.button!==0||e.target.closest('#mhLayoutEditBar,#mhLayoutV2Help'))return;let el=e.target.closest('[data-mh-editable]');if(!el||!eligible(el))return;
  // ALT selects the parent instead of the nested control, for complete freedom.
  if(e.altKey&&el.parentElement?.dataset.mhEditable)el=el.parentElement;
  const id=elements.get(el);if(!id)return;e.preventDefault();e.stopImmediatePropagation();selected=el;
  const p=saved[id]||{x:0,y:0};const rect=el.getBoundingClientRect();
- drag={el,id,x:e.clientX,y:e.clientY,ox:p.x||0,oy:p.y||0,w:rect.width,h:rect.height,resize:e.shiftKey};
+ drag={el,id,x:e.clientX,y:e.clientY,ox:p.x||0,oy:p.y||0,w:rect.width,h:rect.height,resize:sizing||e.shiftKey};
  el.classList.add('mhDragging');
  },true);
  document.addEventListener('pointermove',e=>{if(!drag)return;e.preventDefault();const dx=e.clientX-drag.x,dy=e.clientY-drag.y;const p=saved[drag.id]||{};if(drag.resize){p.w=Math.max(20,Math.round(drag.w+dx));p.h=Math.max(20,Math.round(drag.h+dy));drag.el.style.width=p.w+'px';drag.el.style.height=p.h+'px'}else{p.x=Math.round(drag.ox+dx);p.y=Math.round(drag.oy+dy);drag.el.style.translate=p.x+'px '+p.y+'px'}saved[drag.id]=p},true);
