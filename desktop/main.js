@@ -1,7 +1,15 @@
 'use strict';
-const {app,BrowserWindow,dialog,shell}=require('electron');
+const {app,BrowserWindow,dialog,shell,ipcMain}=require('electron');
 const path=require('node:path');
 let mainWindow;
+// Inicio automático del sistema operativo; no inicia reproducción de audio.
+function autoStartState(){return app.getLoginItemSettings().openAtLogin;}
+ipcMain.handle('rmr:auto-start:get',()=>autoStartState());
+ipcMain.handle('rmr:auto-start:set',(_event,enabled)=>{
+ if(typeof enabled!=='boolean')throw new Error('Valor inválido');
+ app.setLoginItemSettings({openAtLogin:enabled});
+ return autoStartState();
+});
 function createWindow(){
  mainWindow=new BrowserWindow({
   width:1500,height:940,minWidth:1100,minHeight:700,
