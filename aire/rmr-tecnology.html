@@ -2277,58 +2277,47 @@ overflow-y:auto!important;overflow-x:hidden!important;
  });
 })();
 </script><style id="mhAd06UnifiedSevenControls">
-/* Los siete botones comparten la altura real de la lista, sin agrandar el reproductor. */
+/* Fuente única de medidas para los siete controles del reproductor 06. */
+#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings{
+box-sizing:border-box!important;
+}
 .rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow{
 display:flex!important;flex-direction:column!important;align-items:stretch!important;
-justify-content:space-between!important;gap:5px!important;
-height:var(--mh-ads-controls-height,280px)!important;
-min-height:var(--mh-ads-controls-height,280px)!important;
-max-height:var(--mh-ads-controls-height,280px)!important;
-padding:0!important;margin:0!important;overflow:hidden!important;box-sizing:border-box!important;
+justify-content:flex-start!important;gap:5px!important;
+height:auto!important;min-height:0!important;max-height:none!important;
+overflow:visible!important;padding:0!important;margin:0!important;
 }
 .rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
 position:relative!important;inset:auto!important;transform:none!important;
 display:flex!important;visibility:visible!important;opacity:1!important;
-height:var(--mh-ads-button-height,35px)!important;
-min-height:var(--mh-ads-button-height,35px)!important;
-max-height:var(--mh-ads-button-height,35px)!important;
-flex:0 0 var(--mh-ads-button-height,35px)!important;
-align-self:stretch!important;width:100%!important;min-width:0!important;max-width:100%!important;
-padding:2px 3px!important;margin:0!important;box-sizing:border-box!important;
+height:32px!important;min-height:32px!important;max-height:32px!important;
+flex:0 0 32px!important;align-self:stretch!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+padding:2px 3px!important;margin:0!important;
 align-items:center!important;justify-content:center!important;
 font:800 10px/1.1 system-ui,sans-serif!important;white-space:normal!important;
 }
 </style><script id="mhAd06UnifiedSevenControlsScript">
 (function(){
-const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
-if(!deck)return;
-const row=deck.querySelector('.rmrAdControlsColumn .rmrAdControlRow');
-const list=deck.querySelector('.rmrAdListColumn');
-if(!row||!list)return;
+function apply(){
+const row=document.querySelector('.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow');
+if(!row)return;
 const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
-function arrange(){
- ids.forEach((id,i)=>{const b=document.getElementById(id);if(b){row.appendChild(b);b.style.setProperty('order',String(i),'important')}});
+for(const [i,id] of ids.entries()){
+const b=document.getElementById(id);if(!b)continue;
+row.appendChild(b);
+b.style.setProperty('order',String(i),'important');
+for(const p of ['height','min-height','max-height'])b.style.setProperty(p,'32px','important');
+b.style.setProperty('flex','0 0 32px','important');
+b.style.setProperty('width','100%','important');
+b.style.setProperty('max-width','100%','important');
+b.style.setProperty('min-width','0','important');
 }
-let last=0;
-function size(){
- const h=Math.round(list.getBoundingClientRect().height);
- if(h<100||h===last)return;last=h;
- const gap=5;
- const buttonHeight=Math.max(24,Math.floor((h-gap*6)/7));
- row.style.setProperty('--mh-ads-controls-height',h+'px');
- row.style.setProperty('--mh-ads-button-height',buttonHeight+'px');
- row.style.setProperty('height',h+'px','important');
- row.style.setProperty('min-height',h+'px','important');
- row.style.setProperty('max-height',h+'px','important');
- for(const id of ids){
-  const b=document.getElementById(id);if(!b)continue;
-  for(const p of ['height','min-height','max-height'])b.style.setProperty(p,buttonHeight+'px','important');
-  b.style.setProperty('flex','0 0 '+buttonHeight+'px','important');
- }
+row.style.setProperty('height','auto','important');
+row.style.setProperty('max-height','none','important');
+row.style.setProperty('min-height','0','important');
+row.style.setProperty('gap','5px','important');
 }
-arrange();size();
-if(window.ResizeObserver)new ResizeObserver(size).observe(list);
-window.addEventListener('resize',size);
-window.addEventListener('load',()=>{arrange();size()},{once:true});
+apply();window.addEventListener('load',apply,{once:true});
 })();
 </script></body></html>
