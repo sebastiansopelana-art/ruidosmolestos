@@ -2385,4 +2385,23 @@ location.reload();
 #mhOrangeClockSlot .mhBroadcastTime{border:1px solid #922222!important;background:radial-gradient(ellipse,#200202,#030303)!important;color:#ff4541!important;text-shadow:0 0 9px #fa2020,0 0 17px #c31313!important}
 #mhOrangeClockSlot .mhBroadcastAir{border:2px solid #922a2a!important;text-shadow:0 0 8px #ff3a3a!important}
 @media(prefers-reduced-motion:reduce){#mhOrangeClockSlot .mhBroadcastBrand::before,#mhOrangeClockSlot .mhBroadcastBrand strong{animation:none!important}}
-</style></body></html>
+</style><style id="mhStudioWordmarkV2">
+#mhOrangeClockSlot .mhBroadcastBrand{isolation:isolate!important;border:1px solid #9b3130!important;box-shadow:inset 0 0 0 2px #090b0d,inset 0 0 20px #c61a1a66,0 0 0 1px #52565a!important;background:radial-gradient(ellipse at 50% 105%,#441012 0,#100d11 42%,#050609 80%)!important}
+#mhOrangeClockSlot .mhBroadcastBrand::after{content:"";position:absolute;inset:4px;z-index:-1;border:1px solid #fb43333a;border-radius:4px;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#ffffff04 4px 5px)}
+#mhOrangeClockSlot .mhBroadcastWordmark{width:96%;height:auto;max-height:44%;display:block;overflow:visible;position:relative;z-index:2;filter:drop-shadow(0 2px 1px #000) drop-shadow(0 0 4px #ed2b2b88)}
+#mhOrangeClockSlot .mhBroadcastBrand strong{display:none!important}
+#mhOrangeClockSlot .mhBroadcastBrand small{font-family:'Arial Narrow',Arial,sans-serif!important;font-size:clamp(5px,.59vw,10px)!important;font-weight:900!important;letter-spacing:clamp(.5px,.19vw,3px)!important;line-height:1.12!important}
+#mhOrangeClockSlot .mhBroadcastBrand small:last-child{color:#f54b42!important}
+#mhOrangeClockSlot .mhBroadcastBars{height:24%!important;max-height:23px!important;margin-bottom:3px;box-shadow:0 2px 0 #b22b2840}
+#mhOrangeClockSlot .mhBroadcastRight{background:repeating-linear-gradient(145deg,transparent 0 5px,#ffffff04 6px 7px),linear-gradient(#111519,#050607)!important;border-radius:4px}
+</style>
+<script id="mhStudioWordmarkV2Script">
+(function(){
+const brand=document.querySelector('#mhOrangeClockSlot .mhBroadcastBrand');if(!brand||brand.querySelector('.mhBroadcastWordmark'))return;
+const strong=brand.querySelector('strong');if(!strong)return;
+const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+svg.setAttribute('viewBox','0 0 880 130');svg.setAttribute('class','mhBroadcastWordmark');svg.setAttribute('role','img');svg.setAttribute('aria-label','MEGAHERTZ');
+svg.innerHTML='<defs><linearGradient id="mhMetalTextV2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f8fa"/><stop offset=".18" stop-color="#a9afb7"/><stop offset=".35" stop-color="#3c444e"/><stop offset=".49" stop-color="#f2f5f8"/><stop offset=".60" stop-color="#c0c8cd"/><stop offset=".78" stop-color="#50565d"/><stop offset="1" stop-color="#d9dee1"/></linearGradient><linearGradient id="mhEdgeV2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff"/><stop offset=".5" stop-color="#24272a"/><stop offset="1" stop-color="#ff302a"/></linearGradient><filter id="mhTextGlowV2" x="-20%" y="-50%" width="140%" height="200%"><feGaussianBlur stdDeviation="5"/></filter></defs><text x="440" y="102" text-anchor="middle" textLength="850" lengthAdjust="spacingAndGlyphs" font-family="Impact,Arial Black,sans-serif" font-size="111" font-weight="900" fill="#fa211b" opacity=".65" filter="url(#mhTextGlowV2)">MEGAHERTZ</text><text x="440" y="106" text-anchor="middle" textLength="850" lengthAdjust="spacingAndGlyphs" font-family="Impact,Arial Black,sans-serif" font-size="111" font-weight="900" fill="#0a090a" stroke="#0a090a" stroke-width="9">MEGAHERTZ</text><text x="440" y="100" text-anchor="middle" textLength="850" lengthAdjust="spacingAndGlyphs" font-family="Impact,Arial Black,sans-serif" font-size="111" font-weight="900" fill="url(#mhMetalTextV2)" stroke="url(#mhEdgeV2)" stroke-width="2.3" paint-order="stroke">MEGAHERTZ</text><path d="M20 116 H860" stroke="#ff4135" stroke-width="2" opacity=".85"/>';
+strong.replaceWith(svg);
+})();
+</script></body></html>
