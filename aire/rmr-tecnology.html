@@ -2035,4 +2035,25 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  const img=document.createElement('img');img.src='./megahertz-brand.svg';img.alt='MEGAHERTZ · RMR TECHNOLOGY';panel.appendChild(img);
  target.insertAdjacentElement('afterend',panel);
 })();
+</script><style id="mhClockMotionStyle">
+/* Animación discreta del reloj sin cambiar la geometría aprobada. */
+#mhClockBrandPanel .mhClockBrandTime{display:inline-block;transform-origin:center;will-change:transform,filter}
+#mhClockBrandPanel .mhClockBrandTime.mhClockTick{animation:mhClockTick .42s cubic-bezier(.2,.75,.25,1) both}
+@keyframes mhClockTick{0%{transform:translateY(-4px) scale(1.025);filter:brightness(1.5)}55%{transform:translateY(1px) scale(.995);filter:brightness(1.12)}100%{transform:translateY(0) scale(1);filter:brightness(1)}}
+#mhClockBrandPanel{transition:box-shadow .4s ease}
+#mhClockBrandPanel img{transition:filter .6s ease}
+#mhClockBrandPanel:hover img{filter:drop-shadow(0 0 5px #e64d4d)}
+@media(prefers-reduced-motion:reduce){#mhClockBrandPanel .mhClockBrandTime.mhClockTick{animation:none!important}#mhClockBrandPanel img{transition:none!important}}
+</style><script id="mhClockMotionScript">
+(function(){
+ const clock=document.querySelector('#mhClockBrandPanel .mhClockBrandTime');if(!clock)return;
+ let previous=clock.textContent,queued=false;
+ const observer=new MutationObserver(()=>{
+  const now=clock.textContent;if(now===previous)return;previous=now;
+  if(queued)return;queued=true;
+  requestAnimationFrame(()=>{queued=false;clock.classList.remove('mhClockTick');void clock.offsetWidth;clock.classList.add('mhClockTick')});
+ });
+ observer.observe(clock,{childList:true,characterData:true,subtree:true});
+ clock.addEventListener('animationend',()=>clock.classList.remove('mhClockTick'));
+})();
 </script></body></html>
