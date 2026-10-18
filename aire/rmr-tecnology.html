@@ -2243,28 +2243,7 @@ flex:1 1 auto!important;height:auto!important;min-height:0!important;max-height:
 width:100%!important;max-width:100%!important;box-sizing:border-box!important;
 overflow-y:auto!important;overflow-x:hidden!important;
 }
-</style><script id="mhAdPlaylistVerticalExtensionScript">
-(function(){
- const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
- if(!deck)return;
- const list=deck.querySelector('.rmrAdListColumn'),body=deck.querySelector('.rmrAdBodySplit');
- if(!list||!body)return;
- let raf=0;
- function fit(){
-  cancelAnimationFrame(raf);raf=requestAnimationFrame(()=>{
-   const controls=deck.querySelector('.rmrAdControlsColumn');
-   const contentBottom=Math.max(controls?.getBoundingClientRect().bottom||0,deck.getBoundingClientRect().bottom-12);
-   const top=list.getBoundingClientRect().top;
-   const target=Math.max(250,Math.round(contentBottom-top));
-   list.style.setProperty('height',target+'px','important');
-   list.style.setProperty('min-height',target+'px','important');
-   list.style.setProperty('max-height',target+'px','important');
-  });
- }
- if(window.ResizeObserver){const ro=new ResizeObserver(()=>fit());ro.observe(deck);const controls=deck.querySelector('.rmrAdControlsColumn');if(controls)ro.observe(controls)}
- window.addEventListener('resize',fit);window.addEventListener('load',fit,{once:true});fit();
-})();
-</script><script id="mhClearOverdueQueueScript">
+</style><script id="mhClearOverdueQueueScript">
 (function(){
  const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');if(!row||document.getElementById('rmrClearOverdueQueue'))return;
  const button=document.createElement('button');button.type='button';button.id='rmrClearOverdueQueue';button.textContent='BORRAR COLA';button.title='Descartar tandas atrasadas pendientes; conservar tandas en horario y la tanda en reproducción';
@@ -2277,47 +2256,60 @@ overflow-y:auto!important;overflow-x:hidden!important;
  });
 })();
 </script><style id="mhAd06UnifiedSevenControls">
-/* Fuente única de medidas para los siete controles del reproductor 06. */
-#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings{
-box-sizing:border-box!important;
+/* Reproductor 06: lista y columna de controles con la misma altura y bordes. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
+display:grid!important;grid-template-columns:minmax(0,44fr) minmax(0,56fr)!important;
+gap:6px!important;align-items:start!important;
 }
-.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow{
-display:flex!important;flex-direction:column!important;align-items:stretch!important;
-justify-content:flex-start!important;gap:5px!important;
-height:auto!important;min-height:0!important;max-height:none!important;
-overflow:visible!important;padding:0!important;margin:0!important;
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{
+height:280px!important;min-height:280px!important;max-height:280px!important;
+box-sizing:border-box!important;overflow:hidden!important;
 }
-.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
-position:relative!important;inset:auto!important;transform:none!important;
-display:flex!important;visibility:visible!important;opacity:1!important;
-height:32px!important;min-height:32px!important;max-height:32px!important;
-flex:0 0 32px!important;align-self:stretch!important;
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{
+display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+grid-template-rows:repeat(7,minmax(0,1fr))!important;
+row-gap:5px!important;column-gap:0!important;
+height:280px!important;min-height:280px!important;max-height:280px!important;
+padding:0!important;margin:0!important;box-sizing:border-box!important;overflow:hidden!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
+display:flex!important;position:relative!important;inset:auto!important;transform:none!important;
+grid-column:1!important;grid-row:auto!important;align-self:stretch!important;justify-self:stretch!important;
+height:100%!important;min-height:0!important;max-height:none!important;
 width:100%!important;min-width:0!important;max-width:100%!important;
-padding:2px 3px!important;margin:0!important;
-align-items:center!important;justify-content:center!important;
+flex:none!important;margin:0!important;padding:2px 3px!important;
+box-sizing:border-box!important;align-items:center!important;justify-content:center!important;
 font:800 10px/1.1 system-ui,sans-serif!important;white-space:normal!important;
 }
 </style><script id="mhAd06UnifiedSevenControlsScript">
 (function(){
-function apply(){
-const row=document.querySelector('.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow');
-if(!row)return;
 const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+function align(){
+const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+const row=deck?.querySelector('.rmrAdControlsColumn .rmrAdControlRow');
+const list=deck?.querySelector('.rmrAdListColumn');
+if(!row||!list)return;
+const h=280;
 for(const [i,id] of ids.entries()){
 const b=document.getElementById(id);if(!b)continue;
 row.appendChild(b);
+for(const p of ['height','min-height','max-height','flex','grid-row','grid-column','order'])b.style.removeProperty(p);
+b.style.setProperty('height','100%','important');
+b.style.setProperty('min-height','0','important');
+b.style.setProperty('max-height','none','important');
+b.style.setProperty('flex','none','important');
+b.style.setProperty('grid-row',String(i+1),'important');
+b.style.setProperty('grid-column','1','important');
 b.style.setProperty('order',String(i),'important');
-for(const p of ['height','min-height','max-height'])b.style.setProperty(p,'32px','important');
-b.style.setProperty('flex','0 0 32px','important');
-b.style.setProperty('width','100%','important');
-b.style.setProperty('max-width','100%','important');
-b.style.setProperty('min-width','0','important');
 }
-row.style.setProperty('height','auto','important');
-row.style.setProperty('max-height','none','important');
-row.style.setProperty('min-height','0','important');
-row.style.setProperty('gap','5px','important');
+row.style.setProperty('display','grid','important');
+row.style.setProperty('grid-template-rows','repeat(7,minmax(0,1fr))','important');
+row.style.setProperty('grid-template-columns','minmax(0,1fr)','important');
+row.style.setProperty('height',h+'px','important');
+row.style.setProperty('min-height',h+'px','important');
+row.style.setProperty('max-height',h+'px','important');
+for(const p of ['height','min-height','max-height'])list.style.setProperty(p,h+'px','important');
 }
-apply();window.addEventListener('load',apply,{once:true});
+align();window.addEventListener('load',align,{once:true});
 })();
 </script></body></html>
