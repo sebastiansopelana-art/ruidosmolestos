@@ -2251,4 +2251,17 @@ overflow:hidden!important;overflow-wrap:normal!important;word-break:normal!impor
 }
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrManualMode{display:none!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode .rmrModeLight{display:none!important}
+</style><style id="mhSixButtonsExactGrid">
+/* Un único grid controla las seis posiciones, sin espacios entre subgrupos. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:repeat(6,35px)!important;row-gap:5px!important;column-gap:0!important;align-content:start!important;align-items:stretch!important;justify-items:stretch!important;width:100%!important;height:auto!important;margin:0!important;padding:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdActionPair,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.rmrAdPolicySplit,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>.mhAdModeSettings{display:contents!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrForceAd{grid-row:1!important;grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdStop{grid-row:2!important;grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdExact{grid-row:3!important;grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAdKnob{grid-row:4!important;grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrAutoMode{grid-row:5!important;grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow #rmrOpenSettings{grid-row:6!important;grid-column:1!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow :is(#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){align-self:stretch!important;justify-self:stretch!important;position:relative!important;top:auto!important;left:auto!important;transform:none!important;translate:none!important;margin:0!important;width:100%!important;min-width:0!important;max-width:100%!important;height:35px!important;min-height:35px!important;max-height:35px!important;box-sizing:border-box!important;padding:2px 3px!important;border-radius:6px!important;font-size:10px!important;line-height:1.1!important}
 </style></body></html>
