@@ -1,0 +1,49 @@
+name: RMR TECHNOLOGY Desktop Beta
+on:
+  push:
+    branches:
+      - beta/rmr-technology-1
+    paths:
+      - 'desktop/**'
+      - 'aire/rmr-tecnology.html'
+      - '.github/workflows/rmr-desktop-beta.yml'
+  workflow_dispatch:
+jobs:
+  build:
+    name: Beta ${{ matrix.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macOS
+            os: macos-latest
+            script: dist:mac
+          - platform: Windows
+            os: windows-latest
+            script: dist:win
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar dependencias
+        run: npm install --no-audit --no-fund
+      - name: Crear instalador preliminar
+        run: npm run ${{ matrix.script }} -- --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: 'true'
+      - name: Publicar instaladores para descargar
+        uses: actions/upload-artifact@v4
+        with:
+          name: RMR-TECHNOLOGY-BETA-${{ matrix.platform }}
+          path: |
+            desktop/dist/*.dmg
+            desktop/dist/*.zip
+            desktop/dist/*.exe
+          if-no-files-found: error
+          retention-days: 30
