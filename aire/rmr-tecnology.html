@@ -2211,4 +2211,50 @@ position:relative!important;top:auto!important;left:auto!important;right:auto!im
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair>button,
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .mhAdModeSettings>button{font-size:8.5px!important;letter-spacing:-.1px!important;height:24px!important;min-height:24px!important;max-height:24px!important;max-width:100%!important;padding:2px!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdListColumn #rmrAdList{position:relative!important;transform:none!important;translate:none!important;min-width:0!important;width:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
-</style></body></html>
+</style><style id="mhAd06ButtonTextFit">
+/* Texto de los seis controles: centrado, legible y dentro de cada botón. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdButtonPair>button,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-width:0!important;max-width:100%!important;box-sizing:border-box!important;
+ text-align:center!important;white-space:normal!important;overflow-wrap:normal!important;
+ word-break:normal!important;hyphens:none!important;line-height:1.08!important;
+ padding:2px 3px!important;letter-spacing:0!important;overflow:hidden!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button .rmrModeLight{flex:0 0 auto!important;margin-right:3px!important}
+</style><script id="mhAd06ButtonTextFitScript">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');if(!deck)return;
+ const ids=['rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
+ const buttons=ids.map(id=>document.getElementById(id)).filter(Boolean);
+ function fit(){
+  for(const b of buttons){
+   if(!b.isConnected||!b.clientWidth)continue;
+   const text=b.textContent.trim();
+   if(!text)continue;
+   const usable=Math.max(18,b.clientWidth-9-(b.querySelector('.rmrModeLight')?12:0));
+   const canvas=fit.canvas||(fit.canvas=document.createElement('canvas'));
+   const ctx=canvas.getContext('2d');if(!ctx)continue;
+   const weight=800;let size=11;
+   while(size>6.5){
+    ctx.font=weight+' '+size+'px system-ui';
+    const words=text.split(/\s+/);
+    let lines=1,width=0;
+    for(const word of words){
+     const w=ctx.measureText(word).width,space=ctx.measureText(' ').width;
+     if(width&&width+space+w>usable){lines++;width=w}else width+=width?space+w:w;
+    }
+    const height=lines*size*1.08+4;
+    if(lines<=2&&height<=b.clientHeight-1&&words.every(w=>ctx.measureText(w).width<=usable))break;
+    size-=.5;
+   }
+   b.style.setProperty('font-size',size+'px','important');
+  }
+ }
+ const schedule=()=>requestAnimationFrame(fit);
+ if(typeof ResizeObserver!=='undefined'){const ro=new ResizeObserver(schedule);buttons.forEach(b=>ro.observe(b))}
+ const mode=document.getElementById('rmrAutoMode');
+ if(mode&&typeof MutationObserver!=='undefined')new MutationObserver(schedule).observe(mode,{childList:true,subtree:true});
+ window.addEventListener('resize',schedule);document.fonts?.ready?.then(schedule);schedule();
+})();
+</script></body></html>
