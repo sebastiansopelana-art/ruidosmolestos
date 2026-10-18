@@ -2191,44 +2191,7 @@ if(typeof ResizeObserver!=='undefined')new ResizeObserver(fit).observe(el);fit()
 /* Forzar flujo vertical real, independientemente de reglas anteriores. */
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{display:flex!important;flex-flow:column nowrap!important;justify-content:flex-start!important;align-items:stretch!important;align-content:flex-start!important;gap:6px!important;row-gap:6px!important;grid-template-rows:none!important;grid-template-columns:none!important;position:relative!important;inset:auto!important;transform:none!important;width:100%!important;height:222px!important;min-height:222px!important;max-height:222px!important;margin:0!important;padding:0!important;overflow:visible!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;transform:none!important;translate:none!important;display:flex!important;flex:0 0 32px!important;align-items:center!important;justify-content:center!important;align-self:stretch!important;order:0!important;grid-row:auto!important;grid-column:auto!important;width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;padding:2px 3px!important;box-sizing:border-box!important;font:800 10px/1.1 system-ui,sans-serif!important;text-align:center!important}
-</style><script id="mhAd06HardResetVerification">
-(function(){
-const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
-function fix(){
- const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
- if(!row)return false;
- const buttons=ids.map(id=>document.getElementById(id));
- if(buttons.slice(1).some(b=>!b))return false;
- const column=row.closest('.rmrAdControlsColumn');
- const vu=row.querySelector('.rmrAdVuPanel');
- if(vu&&column)column.appendChild(vu);
- buttons.filter(Boolean).forEach(b=>row.appendChild(b));
- [...row.children].forEach(el=>{if(!buttons.includes(el))el.remove()});
- // Los botones quedan como únicos seis hijos, sin huecos ni contenedores auxiliares.
- row.style.setProperty('display','flex','important');
- row.style.setProperty('flex-direction','column','important');
- row.style.setProperty('gap','6px','important');
- row.style.setProperty('justify-content','flex-start','important');
- buttons.filter(Boolean).forEach((b,i)=>{
-  b.style.setProperty('position','relative','important');
-  b.style.setProperty('top','auto','important');
-  b.style.setProperty('left','auto','important');
-  b.style.setProperty('transform','none','important');
-  b.style.setProperty('margin','0','important');
-  {
-   b.style.setProperty('height','32px','important');
-   b.style.setProperty('min-height','32px','important');
-   b.style.setProperty('max-height','32px','important');
-   b.style.setProperty('flex','0 0 32px','important');
-  }
-  b.style.setProperty('order',String(i),'important');
- });
- return row.children.length>=6&&buttons.filter(Boolean).every(b=>b.parentElement===row);
-}
-if(!fix())document.addEventListener('DOMContentLoaded',fix,{once:true});
-window.addEventListener('load',fix,{once:true});
-})();
-</script><style id="mhBroadcastClockAlignFinal">
+</style><style id="mhBroadcastClockAlignFinal">
 /* Centrar el bloque completo en su alojamiento sin cambiar la estética aprobada. */
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck #mhOrangeClockSlot{width:100%!important;max-width:100%!important;min-width:0!important;height:100%!important;box-sizing:border-box!important;display:grid!important;grid-template-columns:minmax(0,58fr) minmax(0,42fr)!important;align-items:stretch!important;justify-items:stretch!important;margin:0 auto!important;padding:3px!important;overflow:hidden!important}
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck #mhOrangeClockSlot .mhBroadcastBrand{height:100%!important;min-height:0!important;box-sizing:border-box!important;align-self:stretch!important;justify-content:center!important;text-align:center!important}
@@ -2301,11 +2264,7 @@ overflow-y:auto!important;overflow-x:hidden!important;
  if(window.ResizeObserver){const ro=new ResizeObserver(()=>fit());ro.observe(deck);const controls=deck.querySelector('.rmrAdControlsColumn');if(controls)ro.observe(controls)}
  window.addEventListener('resize',fit);window.addEventListener('load',fit,{once:true});fit();
 })();
-</script><style id="mhClearOverdueQueueStyle">
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow{grid-template-rows:repeat(7,32px)!important;height:260px!important;min-height:260px!important;max-height:260px!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{grid-row:7!important;display:flex!important;position:relative!important;align-items:center!important;justify-content:center!important;flex:0 0 32px!important;width:100%!important;min-width:0!important;max-width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;padding:2px 3px!important;box-sizing:border-box!important;border:1px solid #8d6060!important;border-radius:6px!important;background:#563037!important;color:#fff!important;font:800 10px/1.1 system-ui,sans-serif!important;letter-spacing:0!important;cursor:pointer!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{min-height:260px!important}
-</style><script id="mhClearOverdueQueueScript">
+</script><script id="mhClearOverdueQueueScript">
 (function(){
  const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');if(!row||document.getElementById('rmrClearOverdueQueue'))return;
  const button=document.createElement('button');button.type='button';button.id='rmrClearOverdueQueue';button.textContent='BORRAR COLA';button.title='Descartar tandas atrasadas pendientes; conservar tandas en horario y la tanda en reproducción';
@@ -2317,67 +2276,48 @@ overflow-y:auto!important;overflow-x:hidden!important;
   const status=document.getElementById('status');if(status)status.textContent='COLA ATRASADA BORRADA · '+result.removed+' pendientes quitadas · '+result.discarded+' horarios vencidos descartados';
  });
 })();
-</script><style id="mhClearQueueSevenVisibleFix">
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{height:auto!important;min-height:260px!important;max-height:none!important;display:flex!important;flex-direction:column!important;gap:6px!important;overflow:visible!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>#rmrClearOverdueQueue{display:flex!important;visibility:visible!important;opacity:1!important;position:relative!important;order:7!important;flex:0 0 32px!important;align-self:stretch!important;width:100%!important;height:32px!important;min-height:32px!important;max-height:32px!important;margin:0!important;grid-row:auto!important}
-</style><style id="mhSettingsButtonTaller">
-/* Volver a la distribución anterior y dar más altura sólo a CONFIGURACIÓN. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{height:auto!important;min-height:280px!important;max-height:none!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{
-height:52px!important;min-height:52px!important;max-height:52px!important;flex:0 0 52px!important;
-padding:6px 4px!important;align-items:center!important;justify-content:center!important;
-font:800 10px/1.2 system-ui,sans-serif!important;white-space:normal!important;
+</script><style id="mhAd06UnifiedSevenControls">
+/* Fuente única de medidas para los siete controles del reproductor 06. */
+#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings{
+box-sizing:border-box!important;
 }
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit>.rmrAdListColumn{min-height:280px!important}
-</style><style id="mhAd06QueueFirstCompactFinal">
-/* Controles 06 compactos: BORRAR COLA arriba, CONFIGURACIÓN abajo. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{
-display:flex!important;flex-direction:column!important;gap:6px!important;
-height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow{
+display:flex!important;flex-direction:column!important;align-items:stretch!important;
+justify-content:flex-start!important;gap:5px!important;
+height:auto!important;min-height:0!important;max-height:none!important;
+overflow:visible!important;padding:0!important;margin:0!important;
 }
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrClearOverdueQueue{
-order:0!important;display:flex!important;visibility:visible!important;opacity:1!important;
-height:54px!important;min-height:54px!important;max-height:54px!important;flex:0 0 54px!important;
-width:100%!important;align-self:stretch!important;align-items:center!important;justify-content:center!important;
+.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
+position:relative!important;inset:auto!important;transform:none!important;
+display:flex!important;visibility:visible!important;opacity:1!important;
+height:32px!important;min-height:32px!important;max-height:32px!important;
+flex:0 0 32px!important;align-self:stretch!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+padding:2px 3px!important;margin:0!important;
+align-items:center!important;justify-content:center!important;
+font:800 10px/1.1 system-ui,sans-serif!important;white-space:normal!important;
 }
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrOpenSettings{
-order:6!important;height:52px!important;min-height:52px!important;max-height:52px!important;flex:0 0 52px!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrForceAd{order:1!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdStop{order:2!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdExact{order:3!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAdKnob{order:4!important}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>#rmrAutoMode{order:5!important}
-</style><script id="mhAd06QueueFirstCompactFinalScript">
+</style><script id="mhAd06UnifiedSevenControlsScript">
 (function(){
-const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');
+function apply(){
+const row=document.querySelector('.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow');
 if(!row)return;
 const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
-ids.forEach((id,i)=>{const b=document.getElementById(id);if(!b)return;row.appendChild(b);b.style.setProperty('order',String(i),'important');
-const h=id==='rmrClearOverdueQueue'?54:id==='rmrOpenSettings'?52:32;
-for(const prop of ['height','min-height','max-height'])b.style.setProperty(prop,h+'px','important');
-b.style.setProperty('flex','0 0 '+h+'px','important');
-});
-})();
-</script><style id="mhAd06UniformSevenButtons">
-/* Siete botones idénticos dentro del reproductor 06. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow{
-display:flex!important;flex-direction:column!important;gap:5px!important;
-height:254px!important;min-height:254px!important;max-height:254px!important;
-overflow:visible!important;justify-content:flex-start!important;
+for(const [i,id] of ids.entries()){
+const b=document.getElementById(id);if(!b)continue;
+row.appendChild(b);
+b.style.setProperty('order',String(i),'important');
+for(const p of ['height','min-height','max-height'])b.style.setProperty(p,'32px','important');
+b.style.setProperty('flex','0 0 32px','important');
+b.style.setProperty('width','100%','important');
+b.style.setProperty('max-width','100%','important');
+b.style.setProperty('min-width','0','important');
 }
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn>.rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){
-position:relative!important;display:flex!important;visibility:visible!important;opacity:1!important;
-height:32px!important;min-height:32px!important;max-height:32px!important;
-flex:0 0 32px!important;width:100%!important;min-width:0!important;max-width:100%!important;
-margin:0!important;padding:2px 4px!important;box-sizing:border-box!important;
-align-self:stretch!important;align-items:center!important;justify-content:center!important;
-font-size:10px!important;line-height:1.1!important;
+row.style.setProperty('height','auto','important');
+row.style.setProperty('max-height','none','important');
+row.style.setProperty('min-height','0','important');
+row.style.setProperty('gap','5px','important');
 }
-</style><script id="mhAd06UniformSevenButtonsScript">
-(function(){
-const row=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow');if(!row)return;
-const ids=['rmrClearOverdueQueue','rmrForceAd','rmrAdStop','rmrAdExact','rmrAdKnob','rmrAutoMode','rmrOpenSettings'];
-ids.forEach((id,i)=>{const b=document.getElementById(id);if(!b)return;row.appendChild(b);b.style.setProperty('order',String(i),'important');for(const prop of ['height','min-height','max-height'])b.style.setProperty(prop,'32px','important');b.style.setProperty('flex','0 0 32px','important')});
+apply();window.addEventListener('load',apply,{once:true});
 })();
 </script></body></html>
