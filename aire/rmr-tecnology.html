@@ -2153,4 +2153,21 @@ position:relative!important;top:auto!important;left:auto!important;right:auto!im
 #mhCompactDeckTrialButton,#mhHalfWidthDecksButton{display:none!important}
 </style><script id="mhPermanentCompactDecksScript">
 (function(){document.body.classList.remove('mhCompactDeckTrial');document.body.classList.add('mhHalfWidthDecks');document.getElementById('mhCompactDeckTrialButton')?.remove();document.getElementById('mhHalfWidthDecksButton')?.remove()})();
-</script></body></html>
+</script><style id="mhAd06FinalButtonLegibility">
+/* Botones compactos legibles: misma letra, dos renglones cuando haga falta. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit .rmrAdButtonPair>button,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhAdModeSettings>button{
+display:flex!important;align-items:center!important;justify-content:center!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+height:36px!important;min-height:36px!important;max-height:36px!important;
+padding:3px 5px!important;box-sizing:border-box!important;
+font:800 10px/1.13 system-ui,sans-serif!important;letter-spacing:0!important;
+white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;
+overflow:visible!important;text-align:center!important;text-overflow:clip!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode .rmrModeLight,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrManualMode .rmrModeLight{display:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode{gap:0!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeAutomatic{animation:mhModeGreenFlash .9s ease-in-out infinite!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeManual{animation:mhModeRedFlash .9s ease-in-out infinite!important}
+</style></body></html>
