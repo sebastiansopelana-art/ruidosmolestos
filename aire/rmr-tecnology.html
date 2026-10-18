@@ -2495,4 +2495,19 @@ for(const el of audios){el.addEventListener('error',()=>{const error=el.error;co
  for(const id of ids){const a=document.getElementById(id);if(!a)continue;a.addEventListener('play',resume);a.addEventListener('playing',resume)}
  document.addEventListener('pointerdown',resume,{passive:true});
 })();
-</script></body></html>
+</script><style id="mhClassicFlashUnified">
+/* Recupera el pulso clásico de automático/manual para todos los indicadores activos. */
+@keyframes mhModeGreenFlash{0%,100%{box-shadow:0 0 1px #3cf18a22}50%{box-shadow:0 0 22px 7px #3cf18ae6}}
+@keyframes mhModeRedFlash{0%,100%{box-shadow:0 0 1px #ff495e22}50%{box-shadow:0 0 22px 7px #ff495ee6}}
+@keyframes mhManualPulse{0%,100%{box-shadow:0 0 1px #ff495e22}50%{box-shadow:0 0 22px 7px #ff495ee6}}
+@keyframes rmrPadAutoPulse{0%,100%{box-shadow:0 0 1px #3cf18a22}50%{box-shadow:0 0 22px 7px #3cf18ae6}}
+@keyframes rmrPadRedPulse{0%,100%{box-shadow:0 0 1px #ff495e22}50%{box-shadow:0 0 22px 7px #ff495ee6}}
+@keyframes rmrMusicModeBlink{0%,100%{box-shadow:0 0 1px #3cf18a22}50%{box-shadow:0 0 22px 7px #3cf18ae6}}
+@keyframes rmrForceReadyPulse{0%,100%{box-shadow:0 0 1px #3cf18a22}50%{box-shadow:0 0 22px 7px #3cf18ae6}}
+@keyframes rmrMusicLivePulse{0%,100%{box-shadow:0 0 1px #3cf18a22}50%{box-shadow:0 0 22px 7px #3cf18ae6}}
+@keyframes rmrAdTopPulse{0%,100%{box-shadow:0 0 1px #ff495e22}50%{box-shadow:0 0 22px 7px #ff495ee6}}
+@keyframes rmrStopAfterPulse{0%,100%{box-shadow:0 0 1px #ff495e22}50%{box-shadow:0 0 22px 7px #ff495ee6}}
+#rmrAutoMode.mhModeAutomatic,#rmrAutoMode.mhModeManual{animation-duration:1.15s!important;animation-timing-function:ease-in-out!important}
+#mhOrangeClockSlot .mhPhotoAir.live{animation:mhPhotoAirPulse 1.15s ease-in-out infinite!important}
+@keyframes mhPhotoAirPulse{0%,100%{background:transparent;box-shadow:0 0 1px #ff495e22}50%{background:#ff495e25;box-shadow:0 0 22px 7px #ff495ee6}}
+</style></body></html>
