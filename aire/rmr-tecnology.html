@@ -2736,7 +2736,7 @@ function align(){
   scheduled=false;
   right.style.setProperty('top','0px','important');
   const delta=Math.round(left.getBoundingClientRect().top-right.getBoundingClientRect().top);
-  if(Math.abs(delta)<=80)right.style.setProperty('top',delta+'px','important');
+  if(Math.abs(delta)<=80 && delta!==0)right.style.setProperty('top',delta+'px','important');
  });
 }
 right.style.setProperty('position','relative','important');
