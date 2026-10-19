@@ -2717,4 +2717,31 @@ visibility:visible!important;opacity:1!important;
 #rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar{
 margin-top:0!important;align-self:stretch!important;
 }
-</style></body></html>
+</style><script id="mhPlaylistMeasuredTopAlignment20261019">
+/* Alinea el borde superior REAL de ambas playlists, no sólo sus títulos. */
+(()=>{
+const left=document.querySelector('.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist');
+const right=document.querySelector('#rmrProgramMusicClone>.rmrInlineMusicPlaylist');
+if(!left||!right)return;
+let scheduled=false;
+function align(){
+ if(scheduled)return;
+ scheduled=true;
+ requestAnimationFrame(()=>{
+  scheduled=false;
+  right.style.setProperty('top','0px','important');
+  const delta=Math.round(left.getBoundingClientRect().top-right.getBoundingClientRect().top);
+  if(Math.abs(delta)<=80)right.style.setProperty('top',delta+'px','important');
+ });
+}
+right.style.setProperty('position','relative','important');
+align();
+window.addEventListener('resize',align);
+if(window.ResizeObserver){
+ const obs=new ResizeObserver(align);
+ obs.observe(left);
+ const deck=document.querySelector('#rmrProgramMusicClone>.rmrDeck');
+ if(deck)obs.observe(deck);
+}
+})();
+</script></body></html>
