@@ -1316,6 +1316,26 @@ holder.querySelector('.rmrInlineMusicPlaylist>.paneltitle').textContent='PLAYLIS
 // Ocultar únicamente el rótulo AGREGAR MÚSICA de la playlist del Reproductor 2; conservar el input para arrastrar/cargar archivos.
 const program2AddMusic=holder.querySelector('#program2_addMusic');if(program2AddMusic)program2AddMusic.style.setProperty('display','none','important');
 const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];holder._rmrProgramAudio=audio;let pos=-1,objectUrl=null;
+const programModeSelect=$('rmrPlaylistMode');
+let programMode=localStorage.getItem('rmrProgram2PlaylistMode')||'normal';
+if(!['normal','random','single'].includes(programMode))programMode='normal';
+const programPlayed=new Set();
+if(programModeSelect){
+ programModeSelect.value=programMode;
+ programModeSelect.onchange=()=>{
+  programMode=programModeSelect.value;
+  programPlayed.clear();
+  localStorage.setItem('rmrProgram2PlaylistMode',programMode);
+ };
+}
+function programNextIndex(){
+ if(programMode==='single')return -1;
+ if(programMode==='normal')return pos+1<tracks.length?pos+1:-1;
+ programPlayed.add(pos);
+ const available=tracks.map((_,i)=>i).filter(i=>!programPlayed.has(i));
+ return available.length?available[Math.floor(Math.random()*available.length)]:-1;
+}
+
 const set=(id,value)=>{const e=$(id);if(e)e.textContent=value};
 const fmt=n=>Number.isFinite(n)?String(Math.floor(n/60)).padStart(2,'0')+':'+String(Math.floor(n%60)).padStart(2,'0'):'00:00';
 const clean=n=>n.replace(/\.[^.]+$/,'');
@@ -1325,7 +1345,7 @@ const add=files=>{for(const f of files)if(f.type.startsWith('audio/')||/\.(mp3|w
 $('play').onclick=()=>{if(!audio.src){start(pos<0?0:pos);return}if(audio.paused)audio.play().catch(e=>set('sub',e.message));else audio.pause()};
 $('stop').onclick=()=>{audio.pause();audio.currentTime=0;set('rmrMusicPlaybackStatus','DETENIDO')};
 $('next').onclick=()=>start(pos+1);$('prev').onclick=()=>start(Math.max(0,pos-1));
-audio.onended=()=>{if(holder._rmrStopAfter?.()){set('rmrMusicPlaybackStatus','DETENIDO');set('sub','Detenido al terminar el tema');return}if(pos+1<tracks.length)start(pos+1);else set('rmrMusicPlaybackStatus','FINALIZADO')};
+audio.onended=()=>{if(holder._rmrStopAfter?.()){set('rmrMusicPlaybackStatus','DETENIDO');set('sub','Detenido al terminar el tema');return}const nextIndex=programNextIndex();if(nextIndex>=0)start(nextIndex);else{set('rmrMusicPlaybackStatus','FINALIZADO');set('sub',programMode==='single'?'Modo 1 EN 1 · detenido al terminar':'Lista finalizada')}};
 audio.ontimeupdate=()=>{set('elapsed',fmt(audio.currentTime));set('total',fmt(audio.duration));if($('seek')&&audio.duration)$('seek').value=String(Math.round(audio.currentTime/audio.duration*100))};
 $('seek').oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*Number(e.target.value)/100};
 if($('volume')){$('volume').oninput=e=>audio.volume=Number(e.target.value)/100;audio.volume=Number($('volume').value)/100}
@@ -2574,4 +2594,17 @@ font-weight:800!important;cursor:pointer!important;margin:0!important;
 }
 .rmrInlineMusicPlaylist .toolbar #rmrShuffle,
 .rmrInlineMusicPlaylist .toolbar #rmrRepeat{display:none!important}
+</style><style id="mhProgram2PlaylistMode20261019">
+/* Reproductor 2: modo de reproducción arriba de BORRAR LISTA. */
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar{
+display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+justify-content:center!important;gap:5px!important;
+}
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>#program2_rmrPlaylistMode{
+display:block!important;align-self:flex-end!important;width:118px!important;
+min-width:118px!important;max-width:118px!important;height:26px!important;
+min-height:26px!important;margin:0!important;padding:3px 5px!important;
+border:1px solid #5685a0!important;border-radius:5px!important;
+background:#173c53!important;color:#f3fbff!important;font-size:10px!important;font-weight:800!important;
+}
 </style></body></html>
