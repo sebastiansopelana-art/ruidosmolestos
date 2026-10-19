@@ -2659,4 +2659,42 @@ min-width:104px!important;max-width:140px!important;background:#173c53!important
 color:#f3fbff!important;border:1px solid #5685a0!important;
 }
 #rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>#program2_rmrBackupFile{display:none!important}
+</style><style id="mhPlaylistExactSymmetry20261019">
+/* Misma geometría, ubicación y acabado para los cuatro mandos de ambas playlists. */
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar{
+display:grid!important;grid-template-columns:112px repeat(3,minmax(0,1fr))!important;
+grid-template-rows:36px!important;gap:5px!important;
+align-items:stretch!important;justify-content:stretch!important;
+width:100%!important;max-width:100%!important;height:auto!important;
+min-height:50px!important;margin:0!important;padding:7px!important;
+box-sizing:border-box!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar>
+:is(#rmrPlaylistMode,#rmrRestoreList,#rmrSaveList,#rmrClearList),
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>
+:is(#program2_rmrPlaylistMode,#program2_rmrRestoreList,#program2_rmrSaveList,#program2_rmrClearList){
+display:flex!important;position:static!important;grid-row:1!important;
+align-items:center!important;justify-content:center!important;
+width:100%!important;min-width:0!important;max-width:100%!important;
+height:36px!important;min-height:36px!important;max-height:36px!important;
+margin:0!important;padding:4px 5px!important;box-sizing:border-box!important;
+font-size:10px!important;font-weight:800!important;line-height:1.1!important;
+border-radius:6px!important;white-space:nowrap!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar>#rmrPlaylistMode,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>#program2_rmrPlaylistMode{
+grid-column:1!important;background:#173c53!important;color:#f3fbff!important;
+border:1px solid #5685a0!important;cursor:pointer!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar>#rmrRestoreList,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>#program2_rmrRestoreList{grid-column:2!important}
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar>#rmrSaveList,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>#program2_rmrSaveList{grid-column:3!important}
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar>#rmrClearList,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar>#program2_rmrClearList{grid-column:4!important}
+@media(max-width:520px){
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar{grid-template-columns:100px repeat(3,minmax(0,1fr))!important}
+}
 </style></body></html>
