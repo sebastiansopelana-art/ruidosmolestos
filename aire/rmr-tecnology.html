@@ -2697,4 +2697,24 @@ border:1px solid #5685a0!important;cursor:pointer!important;
 .rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar,
 #rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar{grid-template-columns:100px repeat(3,minmax(0,1fr))!important}
 }
+</style><style id="mhPlaylistHeaderLineAlignment20261019">
+/* La cabecera del programa ocupa el mismo espacio que la automática. */
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.paneltitle,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.paneltitle{
+display:flex!important;align-items:center!important;flex:0 0 34px!important;
+height:34px!important;min-height:34px!important;max-height:34px!important;
+width:100%!important;box-sizing:border-box!important;
+padding:8px 10px!important;margin:0!important;
+font-size:11px!important;font-weight:800!important;line-height:1!important;
+letter-spacing:.4px!important;
+}
+/* El encabezado no debe quedar oculto por reglas del clon. */
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.paneltitle{
+visibility:visible!important;opacity:1!important;
+}
+/* Ambos juegos de botones arrancan inmediatamente bajo sus títulos. */
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.toolbar,
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.toolbar{
+margin-top:0!important;align-self:stretch!important;
+}
 </style></body></html>
