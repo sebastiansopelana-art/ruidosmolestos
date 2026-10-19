@@ -1312,7 +1312,12 @@ holder.querySelectorAll('input[type=file]').forEach(el=>{el.value='';el.removeAt
 holder.querySelectorAll('[data-rmr-ads-window]').forEach(el=>el.classList.add('rmrProgramHidden'));
 holder.querySelectorAll('.rmrPlayerNextBreak,.side,.rmrIntroPanel').forEach(el=>el.classList.add('rmrProgramHidden'));
 holder.querySelector('.rmrDeckTitle').textContent='REPRODUCTOR DE MÚSICA · PROGRAMA 2';
-holder.querySelector('.rmrInlineMusicPlaylist>.paneltitle').textContent='PLAYLIST MANUAL - PROGRAMAS RADIO';
+const programPlaylistTitle=holder.querySelector('.rmrInlineMusicPlaylist>.paneltitle');
+if(programPlaylistTitle){
+ programPlaylistTitle.textContent='PLAYLIST MANUAL - PROGRAMAS RADIO';
+ programPlaylistTitle.removeAttribute('hidden');
+ programPlaylistTitle.classList.remove('rmrProgramHidden');
+}
 // Ocultar únicamente el rótulo AGREGAR MÚSICA de la playlist del Reproductor 2; conservar el input para arrastrar/cargar archivos.
 const program2AddMusic=holder.querySelector('#program2_addMusic');if(program2AddMusic)program2AddMusic.style.setProperty('display','none','important');
 const $=id=>holder.querySelector('#program2_'+id),audio=new Audio(),tracks=[];holder._rmrProgramAudio=audio;let pos=-1,objectUrl=null;
@@ -2743,5 +2748,32 @@ if(window.ResizeObserver){
  const deck=document.querySelector('#rmrProgramMusicClone>.rmrDeck');
  if(deck)obs.observe(deck);
 }
+})();
+</script><style id="mhManualPlaylistTitleVisible20261019">
+/* Título manual visible, idéntico en altura y estética al de la lista automática. */
+#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.paneltitle{
+display:flex!important;visibility:visible!important;opacity:1!important;
+align-items:center!important;flex:0 0 34px!important;
+height:34px!important;min-height:34px!important;max-height:34px!important;
+margin:0!important;padding:8px 10px!important;
+width:100%!important;box-sizing:border-box!important;
+background:#292b2f!important;border-bottom:1px solid #813b36!important;
+color:#f1efec!important;font-size:11px!important;font-weight:800!important;
+letter-spacing:.4px!important;line-height:1!important;
+}
+</style>
+<script id="mhManualPlaylistTitleEnsure20261019">
+(()=>{
+const manual=document.querySelector('#rmrProgramMusicClone>.rmrInlineMusicPlaylist');
+if(!manual)return;
+let heading=manual.querySelector(':scope>.paneltitle');
+if(!heading){
+ heading=document.createElement('div');
+ heading.className='paneltitle';
+ manual.prepend(heading);
+}
+heading.textContent='PLAYLIST MANUAL - PROGRAMAS RADIO';
+heading.hidden=false;
+heading.classList.remove('rmrProgramHidden');
 })();
 </script></body></html>
