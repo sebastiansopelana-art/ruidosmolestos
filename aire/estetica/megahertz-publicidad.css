@@ -99,3 +99,15 @@
  border:1px solid #596174!important;color:#aab7c7!important;
  box-shadow:none!important;
 }
+
+/* v10: selectores basados en IDs reales, sin depender de la posición DOM */
+#rmrAdExact[aria-pressed="true"],#rmrAdKnob[aria-pressed="true"]{
+ background:#7045ac!important;background-color:#7045ac!important;
+ border:2px solid #c5a0ff!important;color:#fff!important;
+ box-shadow:0 0 0 1px #35204f inset,0 0 10px #9864e680!important;
+}
+#rmrAdExact[aria-pressed="false"],#rmrAdKnob[aria-pressed="false"]{
+ background:#292f3b!important;background-color:#292f3b!important;
+ border:1px solid #596174!important;color:#aab7c7!important;
+ box-shadow:none!important;
+}
