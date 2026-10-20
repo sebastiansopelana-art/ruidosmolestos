@@ -2799,4 +2799,20 @@ heading.classList.remove('rmrProgramHidden');
  window.addEventListener('load',sync);
  sync();
 })();
-</script><link rel="stylesheet" href="./estetica/megahertz-configuracion.css?v=20261020-config01"></body></html>
+</script><link rel="stylesheet" href="./estetica/megahertz-configuracion.css?v=20261020-config01"><script id="mhSettingsGeneralGroup20261020">
+(function(){
+ const modal=document.getElementById('rmrSettingsModal');
+ const tabs=modal?.querySelector('.rmrSettingsTabs');
+ if(!tabs||tabs.querySelector('.mhGeneralGroup'))return;
+ const group=document.createElement('div');
+ group.className='mhGeneralGroup';
+ const header=document.createElement('button');
+ header.type='button';header.className='mhGeneralGroupTitle';
+ header.textContent='GENERAL';header.setAttribute('aria-expanded','true');
+ const content=document.createElement('div');
+ content.className='mhGeneralGroupContent';
+ while(tabs.firstChild)content.appendChild(tabs.firstChild);
+ header.addEventListener('click',()=>{const open=header.getAttribute('aria-expanded')!=='true';header.setAttribute('aria-expanded',String(open));content.hidden=!open;});
+ group.append(header,content);tabs.append(group);
+})();
+</script></body></html>
