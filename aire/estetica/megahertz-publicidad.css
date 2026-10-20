@@ -46,3 +46,15 @@
  box-sizing:border-box!important;max-width:calc(100% - 12px)!important;
  margin-left:6px!important;margin-right:6px!important;
 }
+
+/* v02: prioridades reales de los controles y filas generadas dinámicamente */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{grid-template-columns:minmax(0,50fr) minmax(0,50fr)!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow>button:is(#rmrClearOverdueQueue,#rmrForceAd,#rmrAdStop,#rmrAdExact,#rmrAdKnob,#rmrAutoMode,#rmrOpenSettings){min-height:0!important;height:100%!important;margin:0!important;max-height:none!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdList>div:not(.rmrAdListEmpty){height:46px!important;min-height:46px!important;max-height:46px!important;overflow:hidden!important;box-sizing:border-box!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="true"],
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdKnob[aria-pressed="true"]{background:#217947!important;border:2px solid #77f5a5!important;color:white!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="false"],
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdKnob[aria-pressed="false"]{background:#203b4d!important;border:1px solid #4d7186!important;color:#d4e4ec!important}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{background:#101e2b!important;border:1px solid #41657a!important;box-shadow:none!important}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab:not(.active){background:#23445a!important;border-color:#567789!important;color:#e6f2f8!important}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab.active{background:#205c79!important;border-color:#76c5e9!important}
