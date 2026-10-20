@@ -2776,21 +2776,27 @@ heading.textContent='PLAYLIST MANUAL - PROGRAMAS RADIO';
 heading.hidden=false;
 heading.classList.remove('rmrProgramHidden');
 })();
-</script><link rel="stylesheet" href="./estetica/megahertz-publicidad.css?v=20261020-policy07"><script id="mhAdPolicyReliable20261020">
+</script><link rel="stylesheet" href="./estetica/megahertz-publicidad.css?v=20261020-policy08"><script id="mhAdPolicyReliable20261020">
 (function(){
- const exact=document.getElementById('rmrAdExact'),wait=document.getElementById('rmrAdKnob');
- if(!exact||!wait)return;
  function sync(){
   const cut=localStorage.getItem('rmrAdPolicy')==='cut';
-  exact.setAttribute('aria-pressed',String(cut));
-  wait.setAttribute('aria-pressed',String(!cut));
-  exact.classList.toggle('isSelected',cut);
-  wait.classList.toggle('isSelected',!cut);
+  for(const [id,active] of [['rmrAdExact',cut],['rmrAdKnob',!cut]]){
+   const b=document.getElementById(id);if(!b)return;
+   b.setAttribute('aria-pressed',String(active));
+   b.classList.toggle('isSelected',active);
+   b.style.setProperty('background-color',active?'#247e49':'#203b4d','important');
+   b.style.setProperty('border-color',active?'#7ef6a6':'#4d7186','important');
+   b.style.setProperty('color',active?'#fff':'#c0d4df','important');
+  }
  }
- function setPolicy(value){localStorage.setItem('rmrAdPolicy',value);sync();}
- exact.addEventListener('click',()=>setPolicy('cut'));
- wait.addEventListener('click',()=>setPolicy('wait'));
+ document.addEventListener('click',function(e){
+  const button=e.target.closest?.('#rmrAdExact,#rmrAdKnob');
+  if(!button)return;
+  localStorage.setItem('rmrAdPolicy',button.id==='rmrAdExact'?'cut':'wait');
+  sync();
+ },true);
  window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});
+ window.addEventListener('load',sync);
  sync();
 })();
 </script></body></html>
