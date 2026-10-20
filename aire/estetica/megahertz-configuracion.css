@@ -21,3 +21,22 @@
 #rmrSettingsModal .mhGeneralGroupTitle[aria-expanded="false"]::after{content:"▸"}
 #rmrSettingsModal .mhGeneralGroupContent{display:flex;flex-direction:column;gap:6px;padding-left:9px;border-left:1px solid #4d7087}
 #rmrSettingsModal .mhGeneralGroupContent[hidden]{display:none!important}
+
+/* Configuración: pestañas a la izquierda; opciones completas, verticales a la derecha.
+   Publicidad conserva su propia interfaz. */
+#rmrSettingsModal .rmrSettingsPage:not([data-rmr-page="ads"]){
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ gap:12px!important;overflow-y:auto!important;overflow-x:hidden!important;
+}
+#rmrSettingsModal .rmrSettingsPage[hidden]{display:none!important}
+#rmrSettingsModal .rmrSettingsPage:not([data-rmr-page="ads"])> :is(div,section,fieldset,label,p,select,input,button){
+ flex:0 0 auto!important;max-width:100%!important;box-sizing:border-box!important;
+}
+#rmrSettingsModal .rmrSettingsPage:not([data-rmr-page="ads"]) :is(.rmrGeneralSections,.rmrGeneralSettingsPage,.rmrGeneralSection){
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ gap:10px!important;width:100%!important;max-width:100%!important;
+ min-width:0!important;height:auto!important;overflow:visible!important;
+}
+#rmrSettingsModal .rmrSettingsPage:not([data-rmr-page="ads"]) :is(input,select,textarea){
+ max-width:100%!important;box-sizing:border-box!important;
+}
