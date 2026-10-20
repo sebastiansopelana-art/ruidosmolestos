@@ -2776,7 +2776,7 @@ heading.textContent='PLAYLIST MANUAL - PROGRAMAS RADIO';
 heading.hidden=false;
 heading.classList.remove('rmrProgramHidden');
 })();
-</script><link rel="stylesheet" href="./estetica/megahertz-publicidad.css?v=20261020-policy08"><script id="mhAdPolicyReliable20261020">
+</script><link rel="stylesheet" href="./estetica/megahertz-publicidad.css?v=20261020-violet09"><script id="mhAdPolicyReliable20261020">
 (function(){
  function sync(){
   const cut=localStorage.getItem('rmrAdPolicy')==='cut';
@@ -2784,9 +2784,9 @@ heading.classList.remove('rmrProgramHidden');
    const b=document.getElementById(id);if(!b)return;
    b.setAttribute('aria-pressed',String(active));
    b.classList.toggle('isSelected',active);
-   b.style.setProperty('background-color',active?'#247e49':'#203b4d','important');
-   b.style.setProperty('border-color',active?'#7ef6a6':'#4d7186','important');
-   b.style.setProperty('color',active?'#fff':'#c0d4df','important');
+   b.style.removeProperty('background-color');
+   b.style.removeProperty('border-color');
+   b.style.removeProperty('color');
   }
  }
  document.addEventListener('click',function(e){
