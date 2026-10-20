@@ -8,7 +8,7 @@
     "Paul Pena",
     "Snooks Eaglin"
   ],
-  "nota": "Los 16 temas se cargan como búsquedas automáticas en YouTube Music. No se verificaron IDs, disponibilidad ni audio real. Revisar antes de emitir.",
+  "nota": "Bloque 3: búsquedas corregidas a pistas individuales del álbum New Train (2000), evitando búsquedas genéricas que pueden elegir videos de 22 minutos. La reproducción real debe comprobarse.",
   "tracks": [
     {
       "query": "Jeff Healey Confidence Man audio",
@@ -59,28 +59,32 @@
       "verificacion": "reproduccion-pendiente"
     },
     {
-      "query": "Paul Pena Gonna Move audio",
+      "query": "Paul Pena Gonna Move New Train 2000 studio album 4:31 official audio -full album -live -playlist",
       "label": "Paul Pena — Gonna Move",
       "bloque": 3,
-      "verificacion": "reproduccion-pendiente"
+      "verificacion": "duracion_estudio_referencial_reproduccion_pendiente",
+      "durationSeconds": 0
     },
     {
-      "query": "Paul Pena Jet Airliner audio",
+      "query": "Paul Pena Jet Airliner New Train 2000 studio album 5:42 official audio -full album -live -playlist",
       "label": "Paul Pena — Jet Airliner",
       "bloque": 3,
-      "verificacion": "reproduccion-pendiente"
+      "verificacion": "duracion_estudio_referencial_reproduccion_pendiente",
+      "durationSeconds": 0
     },
     {
-      "query": "Paul Pena Cosmic Mirror audio",
+      "query": "Paul Pena Cosmic Mirror New Train 2000 studio album 5:23 official audio -full album -live -playlist",
       "label": "Paul Pena — Cosmic Mirror",
       "bloque": 3,
-      "verificacion": "reproduccion-pendiente"
+      "verificacion": "duracion_estudio_referencial_reproduccion_pendiente",
+      "durationSeconds": 0
     },
     {
-      "query": "Paul Pena New Train audio",
+      "query": "Paul Pena New Train New Train 2000 studio album 4:53 official audio -full album -live -playlist",
       "label": "Paul Pena — New Train",
       "bloque": 3,
-      "verificacion": "reproduccion-pendiente"
+      "verificacion": "duracion_estudio_referencial_reproduccion_pendiente",
+      "durationSeconds": 0
     },
     {
       "query": "Snooks Eaglin Teasin' You audio",
