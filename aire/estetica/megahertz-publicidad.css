@@ -79,3 +79,9 @@
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAutoMode.mhModeAutomatic{
  background:#236d40!important;border-color:#65ed97!important;color:#fff!important;
 }
+
+/* Seguridad visual: los estados los decide el motor, no la apariencia. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="true"],
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdKnob[aria-pressed="true"]{background:#247e49!important;border:2px solid #7ef6a6!important;color:#fff!important}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdExact[aria-pressed="false"],
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck #rmrAdKnob[aria-pressed="false"]{background:#203b4d!important;border:1px solid #4d7186!important;color:#c0d4df!important}
