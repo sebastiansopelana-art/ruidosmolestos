@@ -13,3 +13,11 @@
 #rmrSettingsModal .rmrSettingsPage iframe{width:100%!important;height:100%!important;min-height:100%!important;background:#111923!important;border:1px solid #344a5a!important;border-radius:7px!important}
 #rmrSettingsModal .rmrSettingsPage select,#rmrSettingsModal .rmrSettingsPage input{border-radius:6px!important}
 @media(max-width:680px){#rmrSettingsModal .rmrSettingsWindow{grid-template-columns:145px minmax(0,1fr)!important}#rmrSettingsModal .rmrSettingsTabs{padding:10px 5px!important}#rmrSettingsModal .rmrSettingsTab{font-size:10px!important;padding:8px!important}#rmrSettingsModal .rmrSettingsPage{padding:8px!important}}
+
+/* Grupo GENERAL: conserva pestañas y sus funciones existentes */
+#rmrSettingsModal .rmrSettingsTabs>.mhGeneralGroup{display:flex;flex-direction:column;gap:7px;min-width:0}
+#rmrSettingsModal .mhGeneralGroupTitle{width:100%;text-align:left;background:#30475a!important;border:1px solid #7196b0!important;color:#fff!important;padding:13px 12px!important;border-radius:7px!important;font-weight:900!important;letter-spacing:1.3px!important;font-size:12px!important;cursor:pointer}
+#rmrSettingsModal .mhGeneralGroupTitle::after{content:"▾";float:right;color:#a6d7f0}
+#rmrSettingsModal .mhGeneralGroupTitle[aria-expanded="false"]::after{content:"▸"}
+#rmrSettingsModal .mhGeneralGroupContent{display:flex;flex-direction:column;gap:6px;padding-left:9px;border-left:1px solid #4d7087}
+#rmrSettingsModal .mhGeneralGroupContent[hidden]{display:none!important}
