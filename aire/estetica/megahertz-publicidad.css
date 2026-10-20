@@ -69,3 +69,16 @@
  border-bottom:1px solid #41657a!important;
 }
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrDeckTitle{border-color:#41657a!important}
+
+/* v04 — eliminar la línea roja bajo los reproductores 04 y 06 */
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.paneltitle,
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist .paneltitle,
+.rmrDualDeck>.rmrRightStack>#rmrProgramMusicClone>.rmrInlineMusicPlaylist>.paneltitle,
+.rmrDualDeck .rmrInlineMusicPlaylist>.paneltitle{
+ border-bottom:1px solid #41657a!important;
+ box-shadow:none!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{
+ border-bottom-color:#545f68!important;
+}
