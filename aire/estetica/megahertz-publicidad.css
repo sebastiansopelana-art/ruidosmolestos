@@ -58,3 +58,14 @@
 .rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{background:#101e2b!important;border:1px solid #41657a!important;box-shadow:none!important}
 .rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab:not(.active){background:#23445a!important;border-color:#567789!important;color:#e6f2f8!important}
 .rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab.active{background:#205c79!important;border-color:#76c5e9!important}
+
+/* v03: quitar exclusivamente líneas decorativas rojizas, sin afectar alarmas ni controles */
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrAdProgress,
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrMusicProgress,
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .progress,
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .seekbar{border-color:#41657a!important}
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist>.paneltitle,
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist .paneltitle{
+ border-bottom:1px solid #41657a!important;
+}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrDeckTitle{border-color:#41657a!important}
