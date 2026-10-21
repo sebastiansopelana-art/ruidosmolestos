@@ -3205,4 +3205,32 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
  window.addEventListener('resize',sync,{passive:true});
  if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(sync);observer.observe(row)}
 })();
-</script></body></html>
+</script><style id="mhAdNoticeFlashAllStates20261021">
+/* El aviso destella con el color de su estado: azul, ámbar o verde. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhSoon,
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhOnAir{
+ animation:mhNoticeBlueFlash 1.5s ease-in-out infinite!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhSoon{
+ animation-name:mhNoticeAmberFlash!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhOnAir{
+ animation-name:mhNoticeGreenFlash!important;
+}
+@keyframes mhNoticeBlueFlash{
+ 0%,100%{background-color:#112b3c;box-shadow:inset 0 0 0 0 transparent;filter:brightness(1)}
+ 50%{background-color:#245579;box-shadow:inset 0 0 0 1px #78b9eb;filter:brightness(1.2)}
+}
+@keyframes mhNoticeAmberFlash{
+ 0%,100%{background-color:#35291e;box-shadow:none;filter:brightness(1)}
+ 50%{background-color:#8b5824;box-shadow:inset 0 0 0 1px #f6bd68;filter:brightness(1.16)}
+}
+@keyframes mhNoticeGreenFlash{
+ 0%,100%{background-color:#15372e;box-shadow:none;filter:brightness(1)}
+ 50%{background-color:#286e4b;box-shadow:inset 0 0 0 1px #7beaab;filter:brightness(1.16)}
+}
+@media(prefers-reduced-motion:reduce){
+ .rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{animation:none!important}
+}
+</style></body></html>
