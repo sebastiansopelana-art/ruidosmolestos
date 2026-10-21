@@ -2985,4 +2985,37 @@ button:focus-visible,[role="button"]:focus-visible,.track[draggable="true"]:focu
  border-bottom-width:2px!important;
 }
 #rmrProgramMusicClone .mhProgramTools button:active{box-shadow:inset 0 2px 5px #0008!important}
+</style><style id="mhUnifiedButtonFinish20261021">
+/* Terminación visual uniforme sin modificar dimensiones, distribución ni estados funcionales. */
+#rmrProgramMusicClone button,
+.rmrDualDeck button,
+#rmrSettingsModal button{
+ font-family:inherit!important;
+ font-weight:750!important;
+ letter-spacing:.25px!important;
+ border-style:solid!important;
+ border-radius:6px!important;
+ background-image:linear-gradient(to bottom,rgba(255,255,255,.13),rgba(0,0,0,.12))!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.19),0 2px 3px rgba(0,0,0,.25)!important;
+ text-shadow:0 1px 1px rgba(0,0,0,.3)!important;
+ transition:filter .12s,box-shadow .12s,transform .08s!important;
+ -webkit-user-select:none!important;user-select:none!important;
+ cursor:pointer;
+}
+#rmrProgramMusicClone button:hover:not(:disabled),
+.rmrDualDeck button:hover:not(:disabled),
+#rmrSettingsModal button:hover:not(:disabled){
+ filter:brightness(1.13)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 3px 6px rgba(0,0,0,.35)!important;
+}
+#rmrProgramMusicClone button:active:not(:disabled),
+.rmrDualDeck button:active:not(:disabled),
+#rmrSettingsModal button:active:not(:disabled){
+ transform:translateY(1px)!important;
+ filter:brightness(.91)!important;
+ box-shadow:inset 0 2px 4px rgba(0,0,0,.4)!important;
+}
+#rmrProgramMusicClone button:disabled,
+.rmrDualDeck button:disabled,
+#rmrSettingsModal button:disabled{cursor:not-allowed;opacity:.55}
 </style></body></html>
