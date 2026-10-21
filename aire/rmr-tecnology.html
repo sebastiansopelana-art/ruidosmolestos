@@ -1346,55 +1346,23 @@ function programNextIndex(){
  return available.length?available[Math.floor(Math.random()*available.length)]:-1;
 }
 
-/* Solape de 2 segundos exclusivo de la playlist manual de programas. */
-let mhCrossfading=false,mhFadeAudio=null,mhFadeUrl=null,mhFadeTimer=null;
-function mhStopFade(){
- if(mhFadeTimer){clearInterval(mhFadeTimer);mhFadeTimer=null}
- if(mhFadeAudio){mhFadeAudio.pause();mhFadeAudio.removeAttribute('src');mhFadeAudio=null}
- if(mhFadeUrl){URL.revokeObjectURL(mhFadeUrl);mhFadeUrl=null}
- mhCrossfading=false;
-}
-function mhCrossfadeTo(nextIndex){
- if(mhCrossfading||nextIndex<0||nextIndex>=tracks.length||audio.paused)return;
- mhCrossfading=true;
- const outgoing=tracks[pos];
- const duration=2000;
- const originalVolume=audio.volume;
- mhFadeUrl=URL.createObjectURL(outgoing);
- mhFadeAudio=new Audio(mhFadeUrl);
- mhFadeAudio.volume=originalVolume;
- try{mhFadeAudio.currentTime=audio.currentTime}catch(e){}
- const tail=mhFadeAudio;
- tail.play().then(()=>{
-  if(mhFadeAudio!==tail)return;
-  start(nextIndex);
-  audio.volume=0;
-  const began=performance.now();
-  mhFadeTimer=setInterval(()=>{
-   const fraction=Math.min(1,(performance.now()-began)/duration);
-   tail.volume=Math.max(0,originalVolume*(1-fraction));
-   audio.volume=originalVolume*fraction;
-   if(fraction>=1){clearInterval(mhFadeTimer);mhFadeTimer=null;mhStopFade();audio.volume=originalVolume}
-  },50);
- }).catch(()=>{mhStopFade();start(nextIndex)});
-}
 const set=(id,value)=>{const e=$(id);if(e)e.textContent=value};
 const fmt=n=>Number.isFinite(n)?String(Math.floor(n/60)).padStart(2,'0')+':'+String(Math.floor(n%60)).padStart(2,'0'):'00:00';
 const clean=n=>n.replace(/\.[^.]+$/,'');
 function render(){const area=$('playlist');area.replaceChildren();if(!tracks.length){const empty=document.createElement('div');empty.className='rmrProgramEmptyPlaylist';empty.textContent='PLAYLIST VACÍA · ARRASTRÁ CANCIONES AQUÍ PARA ARMAR LA LISTA';area.appendChild(empty)}tracks.forEach((f,i)=>{const row=document.createElement('div');row.className='track'+(i===pos?' active':'');const number=document.createElement('span');number.className='rmrProgramTrackNumber';number.textContent=String(i+1);const type=document.createElement('span');type.className='rmrProgramTrackType';type.textContent=programTypes.get(f)||'MÚSICA';const name=document.createElement('span');name.className='rmrProgramTrackName';name.textContent=f.name;const state=document.createElement('span');state.className='rmrProgramTrackState';state.textContent=i===pos?'EN REPRODUCCIÓN':'EN COLA';row.append(number,type,name,state);row.draggable=true;row.dataset.programIndex=String(i);row.title='Arrastrá para cambiar el orden · doble clic para reproducir';row.ondragstart=e=>{e.dataTransfer.setData('application/x-megahertz-program-index',String(i));e.dataTransfer.effectAllowed='move'};row.ondblclick=()=>start(i);area.append(row)});set('count',tracks.length+' temas');set('rmrNextSong',tracks[pos+1]?.name||'Sin siguiente tema')}
-function start(i){if(i<0||i>=tracks.length)return;if(!mhCrossfading)mhStopFade();pos=i;audio.pause();if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(tracks[i]);audio.src=objectUrl;set('song',clean(tracks[i].name));set('sub','PROGRAMA 2 · '+(i+1)+' / '+tracks.length);set('rmrMusicPlaybackStatus','REPRODUCIENDO');audio.play().catch(e=>set('sub','Error de audio: '+e.message));render()}
+function start(i){if(i<0||i>=tracks.length)return;pos=i;audio.pause();if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=URL.createObjectURL(tracks[i]);audio.src=objectUrl;set('song',clean(tracks[i].name));set('sub','PROGRAMA 2 · '+(i+1)+' / '+tracks.length);set('rmrMusicPlaybackStatus','REPRODUCIENDO');audio.play().catch(e=>set('sub','Error de audio: '+e.message));render()}
 const add=(files,type='MÚSICA')=>{for(const f of files)if(f.type.startsWith('audio/')||/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(f.name)){programTypes.set(f,type);tracks.push(f)}render()};
 function reorder(from,to){if(from===to||from<0||from>=tracks.length||to<0||to>=tracks.length)return;const playing=tracks[pos];const [item]=tracks.splice(from,1);tracks.splice(to,0,item);pos=playing?tracks.indexOf(playing):-1;render()}
 $('play').onclick=()=>{if(!audio.src){start(pos<0?0:pos);return}if(audio.paused)audio.play().catch(e=>set('sub',e.message));else audio.pause()};
-$('stop').onclick=()=>{mhStopFade();audio.pause();audio.currentTime=0;set('rmrMusicPlaybackStatus','DETENIDO')};
+$('stop').onclick=()=>{audio.pause();audio.currentTime=0;set('rmrMusicPlaybackStatus','DETENIDO')};
 $('next').onclick=()=>start(pos+1);$('prev').onclick=()=>start(Math.max(0,pos-1));
 audio.onended=()=>{if(holder._rmrStopAfter?.()){set('rmrMusicPlaybackStatus','DETENIDO');set('sub','Detenido al terminar el tema');return}const nextIndex=programNextIndex();if(nextIndex>=0)start(nextIndex);else{set('rmrMusicPlaybackStatus','FINALIZADO');set('sub',programMode==='single'?'Modo 1 EN 1 · detenido al terminar':'Lista finalizada')}};
-audio.ontimeupdate=()=>{if(!mhCrossfading&&programMode==='normal'&&!holder._rmrStopAfter?.()&&pos>=0&&pos+1<tracks.length&&Number.isFinite(audio.duration)&&audio.duration>3&&audio.duration-audio.currentTime<=2.05&&audio.duration-audio.currentTime>0){mhCrossfadeTo(pos+1);return}set('elapsed',fmt(audio.currentTime));set('total',fmt(audio.duration));if($('seek')&&audio.duration)$('seek').value=String(Math.round(audio.currentTime/audio.duration*100))};
+audio.ontimeupdate=()=>{set('elapsed',fmt(audio.currentTime));set('total',fmt(audio.duration));if($('seek')&&audio.duration)$('seek').value=String(Math.round(audio.currentTime/audio.duration*100))};
 $('seek').oninput=e=>{if(audio.duration)audio.currentTime=audio.duration*Number(e.target.value)/100};
 if($('volume')){$('volume').oninput=e=>audio.volume=Number(e.target.value)/100;audio.volume=Number($('volume').value)/100}
 const picker=$('musicFiles');if(picker)picker.onchange=e=>{add(e.target.files);e.target.value=''};
 const drop=$('rmrMusicDrop');if(drop){drop.onclick=()=>picker?.click();drop.ondragover=e=>e.preventDefault();drop.ondrop=e=>{e.preventDefault();add(e.dataTransfer.files)}}
-for(const id of ['rmrClearList','clear'])if($(id))$(id).onclick=()=>{mhStopFade();audio.pause();tracks.length=0;pos=-1;set('song','Sin audio en reproducción');render()};
+for(const id of ['rmrClearList','clear'])if($(id))$(id).onclick=()=>{audio.pause();tracks.length=0;pos=-1;set('song','Sin audio en reproducción');render()};
 for(const id of ['rmrShuffle','rmrRepeat','refresh','insertAd','rmrIntroSeconds'])if($(id))$(id).classList.add('rmrProgramHidden');
 const backupPicker=$('rmrBackupFile');
 if(backupPicker)backupPicker.accept='.json,application/json';
@@ -2030,37 +1998,22 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  const oldBar=document.getElementById('mhLayoutEditBar');if(oldBar)oldBar.remove();
  document.body.classList.remove('mhLayoutEditing');
  let saved={};try{saved=JSON.parse(localStorage.getItem(key)||'{}')||{}}catch(e){}
- /* Recuperar diseño maestro cuando el borrador local no exista. */
- if(!Object.keys(saved).length){try{saved=JSON.parse(localStorage.getItem('mh-layout-approved-master-v1')||'{}')||{}}catch(e){}}
- const help=document.createElement('div');help.id='mhLayoutV2Help';help.textContent='ORGANIZAR: arrastrá cualquier elemento. AJUSTAR TAMAÑO: arrastrá para cambiar ancho y alto. ✕ OCULTAR: elegí el elemento que querés sacar de la vista. RESTAURAR OCULTOS: los vuelve a mostrar. FIJAR DISEÑO guarda todo en este navegador.';document.body.append(help);
+ const help=document.createElement('div');help.id='mhLayoutV2Help';help.textContent='Elegí cualquier elemento con el mouse y arrastralo. Tocá AJUSTAR TAMAÑO y arrastrá para cambiar ancho y alto. Las flechas ajustan de a 1 píxel (SHIFT: 10).';document.body.append(help);
  const bar=document.createElement('div');bar.id='mhLayoutEditBar';const edit=document.createElement('button'),reset=document.createElement('button');
- edit.textContent='↔ ORGANIZAR PANTALLA';reset.textContent='RESTABLECER';const size=document.createElement('button');size.type='button';size.textContent='↗ AJUSTAR TAMAÑO';size.title='Activar el cambio de ancho y alto de cada elemento';const approve=document.createElement('button');approve.type='button';approve.textContent='★ FIJAR DISEÑO ACTUAL';approve.title='Guardar esta distribución como diseño maestro aprobado en este navegador';const remove=document.createElement('button');remove.type='button';remove.className='mhLayoutDelete';remove.textContent='✕ OCULTAR ELEMENTO';remove.title='Ocultar una línea o panel de forma reversible; no borra archivos ni funciones';
- const restore=document.createElement('button');restore.type='button';restore.textContent='↶ RESTAURAR OCULTOS';restore.title='Volver a mostrar elementos ocultos';
- bar.append(edit,size,remove,restore,approve,reset);document.body.append(bar);bar.style.cssText='position:fixed!important;bottom:16px!important;right:16px!important;top:auto!important;left:auto!important;display:flex!important;visibility:visible!important;opacity:1!important;z-index:2147483640!important';edit.style.cssText='display:inline-block!important;visibility:visible!important;min-width:170px!important';
+ edit.textContent='↔ ORGANIZAR PANTALLA';reset.textContent='RESTABLECER';const size=document.createElement('button');size.type='button';size.textContent='↗ AJUSTAR TAMAÑO';size.title='Activar el cambio de ancho y alto de cada elemento';const approve=document.createElement('button');approve.type='button';approve.textContent='★ FIJAR DISEÑO ACTUAL';approve.title='Guardar esta distribución como diseño maestro aprobado en este navegador';bar.append(edit,size,approve,reset);document.body.append(bar);bar.style.cssText='position:fixed!important;bottom:16px!important;right:16px!important;top:auto!important;left:auto!important;display:flex!important;visibility:visible!important;opacity:1!important;z-index:2147483640!important';edit.style.cssText='display:inline-block!important;visibility:visible!important;min-width:170px!important';
  const eligible=el=>el instanceof HTMLElement&&!el.closest('#mhLayoutEditBar,#mhLayoutV2Help,.mhDragHandle')&&!el.matches('html,body,script,style,option,template')&&getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>8&&el.getBoundingClientRect().height>8;
  const selector=el=>{const parts=[];for(let n=el;n&&n!==document.body;n=n.parentElement){if(n.id){parts.unshift('#'+CSS.escape(n.id));break}const tag=n.tagName.toLowerCase();const index=Array.from(n.parentElement?.children||[]).filter(v=>v.tagName===n.tagName).indexOf(n)+1;parts.unshift(tag+':nth-of-type('+index+')')}return parts.join(' > ')};
- /* Mantener los identificadores de los paneles y no aplicar medidas a elementos auxiliares dinámicos. */
- const persistentPanels=['.rmrDualDeck>.rmrMusicColumn','.rmrDualDeck>.rmrRightStack','.rmrDualDeck>.rmrMusicColumn>.rmrDeck','.rmrDualDeck>.rmrRightStack>.rmrAdDeck','#rmrProgramMusicClone','.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist','#rmrProgramMusicClone .rmrInlineMusicPlaylist'];
- for(const [i,sel] of persistentPanels.entries()){const el=document.querySelector(sel);if(el&&!el.id)el.id='mhPersistentPanel'+i}
- const hiddenKey='mh-layout-hidden-v1';
- let hidden={};try{hidden=JSON.parse(localStorage.getItem(hiddenKey)||'{}')||{}}catch(e){}
- const persistHidden=()=>{try{localStorage.setItem(hiddenKey,JSON.stringify(hidden))}catch(e){alert('No se pudo guardar qué elementos ocultaste: '+e.message)}};
  const elements=new Map();
- function register(){document.querySelectorAll('body *').forEach(el=>{if(!eligible(el)||elements.has(el))return;const id=selector(el);elements.set(el,id);el.dataset.mhEditable='1';if(hidden[id])el.classList.add('mhLayoutHidden');const p=saved[id];if(p){el.style.translate=(p.x||0)+'px '+(p.y||0)+'px';if(p.w)el.style.width=p.w+'px';if(p.h)el.style.height=p.h+'px'}})}
+ function register(){document.querySelectorAll('body *').forEach(el=>{if(!eligible(el)||elements.has(el))return;const id=selector(el);elements.set(el,id);el.dataset.mhEditable='1';const p=saved[id];if(p){el.style.translate=(p.x||0)+'px '+(p.y||0)+'px';if(p.w)el.style.width=p.w+'px';if(p.h)el.style.height=p.h+'px'}})}
  register();
- const observer=new MutationObserver(()=>{register()});observer.observe(document.body,{childList:true,subtree:true});
- let editing=false,sizing=false,hiding=false,drag=null,selected=null;
- remove.onclick=()=>{if(!editing)edit.click();hiding=!hiding;if(hiding&&sizing){sizing=false;size.classList.remove('active');size.textContent='↗ AJUSTAR TAMAÑO'}remove.classList.toggle('active',hiding);remove.textContent=hiding?'✓ ELEGÍ QUÉ OCULTAR':'✕ OCULTAR ELEMENTO'};
- restore.onclick=()=>{hidden={};persistHidden();for(const el of elements.keys())el.classList.remove('mhLayoutHidden');};
-const approvedKey='mh-layout-approved-master-v1';approve.onclick=()=>{register();const snapshot={...saved};for(const [el,id] of elements){const style=el.style;if(style.translate||style.width||style.height){const p=snapshot[id]||{};if(style.translate){const xy=style.translate.match(/(-?[\\d.]+)px\\s+(-?[\\d.]+)px/);if(xy){p.x=Number(xy[1]);p.y=Number(xy[2])}}if(style.width)p.w=Math.round(el.getBoundingClientRect().width);if(style.height)p.h=Math.round(el.getBoundingClientRect().height);snapshot[id]=p}}try{localStorage.setItem(approvedKey,JSON.stringify(snapshot));localStorage.setItem(key,JSON.stringify(snapshot));saved=snapshot;approve.textContent='✓ DISEÑO MAESTRO GUARDADO';setTimeout(()=>approve.textContent='★ FIJAR DISEÑO ACTUAL',2500)}catch(err){alert('No se pudo guardar la distribución: '+err.message)}};size.onclick=()=>{if(!editing){edit.click()}sizing=!sizing;if(sizing&&hiding){hiding=false;remove.classList.remove('active');remove.textContent='✕ OCULTAR ELEMENTO'}size.classList.toggle('active',sizing);size.textContent=sizing?'✓ TAMAÑO ACTIVADO':'↗ AJUSTAR TAMAÑO'};
- edit.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);edit.classList.toggle('active',editing);edit.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';if(!editing){sizing=false;hiding=false;remove.classList.remove('active');remove.textContent='✕ OCULTAR ELEMENTO';size.classList.remove('active');size.textContent='↗ AJUSTAR TAMAÑO';localStorage.setItem(key,JSON.stringify(saved))}else register()};
- reset.onclick=()=>{if(!confirm('¿Restablecer el diseño maestro guardado? Los elementos ocultos se pueden recuperar con RESTAURAR OCULTOS.'))return;try{saved=JSON.parse(localStorage.getItem(approvedKey)||'{}')||{}}catch(err){saved={}};localStorage.setItem(key,JSON.stringify(saved));for(const [el,id] of elements){const p=saved[id];el.style.translate=p?(p.x||0)+'px '+(p.y||0)+'px':'';el.style.width=p?.w?p.w+'px':'';el.style.height=p?.h?p.h+'px':''}};
+ const observer=new MutationObserver(()=>{if(document.body.classList.contains('mhLayoutEditing'))register()});observer.observe(document.body,{childList:true,subtree:true});
+ let editing=false,sizing=false,drag=null,selected=null;const approvedKey='mh-layout-approved-master-v1';approve.onclick=()=>{register();const snapshot={...saved};for(const [el,id] of elements){const style=el.style;if(style.translate||style.width||style.height){const p=snapshot[id]||{};if(style.translate){const xy=style.translate.match(/(-?[\\d.]+)px\\s+(-?[\\d.]+)px/);if(xy){p.x=Number(xy[1]);p.y=Number(xy[2])}}if(style.width)p.w=Math.round(el.getBoundingClientRect().width);if(style.height)p.h=Math.round(el.getBoundingClientRect().height);snapshot[id]=p}}try{localStorage.setItem(approvedKey,JSON.stringify(snapshot));localStorage.setItem(key,JSON.stringify(snapshot));saved=snapshot;approve.textContent='✓ DISEÑO MAESTRO GUARDADO';setTimeout(()=>approve.textContent='★ FIJAR DISEÑO ACTUAL',2500)}catch(err){alert('No se pudo guardar la distribución: '+err.message)}};size.onclick=()=>{if(!editing){edit.click()}sizing=!sizing;size.classList.toggle('active',sizing);size.textContent=sizing?'✓ TAMAÑO ACTIVADO':'↗ AJUSTAR TAMAÑO'};
+ edit.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);edit.classList.toggle('active',editing);edit.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';if(!editing){sizing=false;size.classList.remove('active');size.textContent='↗ AJUSTAR TAMAÑO';localStorage.setItem(key,JSON.stringify(saved))}else register()};
+ reset.onclick=()=>{if(!confirm('¿Restablecer el diseño maestro guardado?'))return;try{saved=JSON.parse(localStorage.getItem(approvedKey)||'{}')||{}}catch(err){saved={}};localStorage.setItem(key,JSON.stringify(saved));for(const [el,id] of elements){const p=saved[id];el.style.translate=p?(p.x||0)+'px '+(p.y||0)+'px':'';el.style.width=p?.w?p.w+'px':'';el.style.height=p?.h?p.h+'px':''}};
  document.addEventListener('pointerdown',e=>{if(!editing||e.button!==0||e.target.closest('#mhLayoutEditBar,#mhLayoutV2Help'))return;let el=e.target.closest('[data-mh-editable]');if(!el||!eligible(el))return;
  // ALT selects the parent instead of the nested control, for complete freedom.
  if(e.altKey&&el.parentElement?.dataset.mhEditable)el=el.parentElement;
- const id=elements.get(el);if(!id)return;e.preventDefault();e.stopImmediatePropagation();
- if(hiding){if(!confirm('¿Ocultar este elemento de la pantalla? Podés recuperarlo con RESTAURAR OCULTOS.'))return;hidden[id]=true;el.classList.add('mhLayoutHidden');persistHidden();return}
- selected=el;document.dispatchEvent(new CustomEvent('mh-layout-selected',{detail:{element:el,id}}));
+ const id=elements.get(el);if(!id)return;e.preventDefault();e.stopImmediatePropagation();selected=el;document.dispatchEvent(new CustomEvent('mh-layout-selected',{detail:{element:el,id}}));
  const p=saved[id]||{x:0,y:0};const rect=el.getBoundingClientRect();
  drag={el,id,x:e.clientX,y:e.clientY,ox:p.x||0,oy:p.y||0,w:rect.width,h:rect.height,resize:sizing||e.shiftKey};
  el.classList.add('mhDragging');
@@ -3000,285 +2953,4 @@ button:focus-visible,[role="button"]:focus-visible,.track[draggable="true"]:focu
  border-bottom-width:2px!important;
 }
 #rmrProgramMusicClone .mhProgramTools button:active{box-shadow:inset 0 2px 5px #0008!important}
-</style><style id="mhUnifiedButtonFinish20261021">
-/* Terminación visual uniforme sin modificar dimensiones, distribución ni estados funcionales. */
-#rmrProgramMusicClone button,
-.rmrDualDeck button,
-#rmrSettingsModal button{
- font-family:inherit!important;
- font-weight:750!important;
- letter-spacing:.25px!important;
- border-style:solid!important;
- border-radius:6px!important;
- background-image:linear-gradient(to bottom,rgba(255,255,255,.13),rgba(0,0,0,.12))!important;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.19),0 2px 3px rgba(0,0,0,.25)!important;
- text-shadow:0 1px 1px rgba(0,0,0,.3)!important;
- transition:filter .12s,box-shadow .12s,transform .08s!important;
- -webkit-user-select:none!important;user-select:none!important;
- cursor:pointer;
-}
-#rmrProgramMusicClone button:hover:not(:disabled),
-.rmrDualDeck button:hover:not(:disabled),
-#rmrSettingsModal button:hover:not(:disabled){
- filter:brightness(1.13)!important;
- box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 3px 6px rgba(0,0,0,.35)!important;
-}
-#rmrProgramMusicClone button:active:not(:disabled),
-.rmrDualDeck button:active:not(:disabled),
-#rmrSettingsModal button:active:not(:disabled){
- transform:translateY(1px)!important;
- filter:brightness(.91)!important;
- box-shadow:inset 0 2px 4px rgba(0,0,0,.4)!important;
-}
-#rmrProgramMusicClone button:disabled,
-.rmrDualDeck button:disabled,
-#rmrSettingsModal button:disabled{cursor:not-allowed;opacity:.55}
-</style><style id="mhUnifiedBlueLines20261021">
-/* Terminación azul uniforme de las líneas de la consola. */
-:root{--mh-line-blue:#397eb5;--mh-line-width:2px}
-.rmrDualDeck :is(.rmrDeck,.rmrAdDeck,.rmrInlineMusicPlaylist,.rmrAdListColumn,.panel,.rmrDeckTitle,.paneltitle),
-.rmrDualDeck #rmrProgramMusicClone,
-.rmrDualDeck .mhJingleBankPanel{
- border-color:var(--mh-line-blue)!important;
- box-shadow:none!important;
-}
-.rmrDualDeck :is(.rmrDeck,.rmrAdDeck,.rmrInlineMusicPlaylist,.rmrAdListColumn,.panel,.mhJingleBankPanel),
-.rmrDualDeck #rmrProgramMusicClone{border-width:var(--mh-line-width)!important;border-style:solid!important;box-sizing:border-box!important}
-.rmrDualDeck :is(.rmrDeckTitle,.paneltitle){border-bottom:var(--mh-line-width) solid var(--mh-line-blue)!important}
-body.mhLayoutEditing [data-mh-editable]{outline:1px dashed #76b9e9!important}
-body.mhLayoutEditing .mhDragging{outline:2px solid #a5d9ff!important}
-body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
-.mhLayoutHidden{display:none!important}
-.mhLayoutEditTarget{outline:2px solid #8bcbff!important;outline-offset:2px!important}
-#mhLayoutV2Help{max-width:420px!important}
-#mhLayoutEditBar .mhLayoutDelete{background:#702d3a!important;color:#fff!important}
-</style><style id="mhUpcomingAdVuNoticeStyle">
-.rmrAdVuPanel .mhUpcomingAdNotice{flex:0 0 auto;box-sizing:border-box;width:100%;padding:7px 8px;border:2px solid #4387b7;border-radius:6px;background:#102d42;color:#d8edff;font:700 11px/1.35 Arial,sans-serif;text-align:center;white-space:normal;overflow-wrap:anywhere}
-.rmrAdVuPanel .mhUpcomingAdNotice.mhSoon{background:#493019;border-color:#f3a64a;color:#fff0d2;animation:mhAdSoonPulse 1.3s ease-in-out infinite}
-.rmrAdVuPanel .mhUpcomingAdNotice.mhOnAir{background:#153c2a;border-color:#4bca86;color:#d8ffe9;animation:none}
-@keyframes mhAdSoonPulse{50%{box-shadow:0 0 12px #f3a64a99}}
-</style>
-<script id="mhUpcomingAdVuNotice20261021">
-(function(){
- const vu=document.querySelector('.rmrAdBodySplit .rmrAdVuPanel')||document.querySelector('.rmrAdVuPanel');
- if(!vu||vu.querySelector('.mhUpcomingAdNotice'))return;
- const notice=document.createElement('div');notice.className='mhUpcomingAdNotice';notice.setAttribute('role','status');notice.setAttribute('aria-live','off');
- notice.textContent='PRÓXIMA TANDA · CONSULTANDO AGENDA';
- /* La alerta va fuera del instrumento: jamás tapa ni achica las barras del VU. */
- const deck=vu.closest('.rmrAdDeck');
- const signal=vu.closest('.mhSignalTop');
- if(signal){signal.insertAdjacentElement('afterend',notice)}
- else if(deck){const progress=deck.querySelector('.rmrAdProgress');if(progress)progress.insertAdjacentElement('afterend',notice);else vu.insertAdjacentElement('afterend',notice)}
- else vu.insertAdjacentElement('afterend',notice);
- let config=null;
- function read(){
-  return new Promise((resolve,reject)=>{
-   const req=indexedDB.open('RMR-Publicidad',1);
-   req.onerror=()=>reject(req.error);
-   req.onsuccess=()=>{
-    const db=req.result;
-    if(!db.objectStoreNames.contains('data')){db.close();resolve(null);return}
-    const tx=db.transaction('data','readonly'),q=tx.objectStore('data').get('config');
-    q.onsuccess=()=>{resolve(q.result||null);db.close()};
-    q.onerror=()=>{reject(q.error);db.close()};
-   };
-  });
- }
- function update(){
-  const live=window.rmrEngine?.getLiveAds?.();
-  notice.classList.toggle('mhOnAir',!!live);
-  if(live){notice.classList.remove('mhSoon');notice.textContent='EN EL AIRE · '+(live.break?.name||'TANDA PUBLICITARIA');return}
-  const now=new Date(),events=config?.events||[],breaks=config?.breaks||[];
-  let upcoming=null;
-  for(let day=0;day<8;day++){
-   const date=new Date(now.getFullYear(),now.getMonth(),now.getDate()+day);
-   for(const e of events){
-    if(!Array.isArray(e.days)||!e.days.includes(date.getDay())||!/^\d{2}:\d{2}$/.test(e.hour||''))continue;
-    const b=breaks.find(x=>x.id===e.breakId);if(!b)continue;
-    const [h,m]=e.hour.split(':').map(Number),at=new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);
-    if(at<now||upcoming&&at>=upcoming.at)continue;
-    upcoming={at,b,e};
-   }
-  }
-  if(!upcoming){notice.classList.remove('mhSoon');notice.textContent='PUBLICIDAD · SIN TANDAS PRÓXIMAS';return}
-  const ms=upcoming.at-now,minutes=Math.floor(ms/60000),seconds=Math.floor(ms%60000/1000);
-  const hour=upcoming.at.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
-  const soon=ms<=5*60*1000;
-  notice.classList.toggle('mhSoon',soon);
-  notice.textContent=(soon?'⚠ POR SALIR · ':'PRÓXIMA TANDA · ')+upcoming.b.name+' · '+hour+' HS'+(soon?' · FALTAN '+String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0'):'');
- }
- async function refresh(){try{config=await read()}catch(e){notice.textContent='AGENDA DE PUBLICIDAD NO DISPONIBLE'}update()}
- refresh();setInterval(update,1000);setInterval(refresh,15000);
-})();
-</script><style id="mhJingleBlueUniformCorrection20261021">
-/* Pisadores: igual ancho de columna y misma terminación azul que los demás paneles. */
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
- width:100%!important;
- min-width:0!important;
- max-width:100%!important;
- align-self:stretch!important;
- box-sizing:border-box!important;
- border:2px solid #397eb5!important;
- border-radius:8px!important;
- background:#102b3d!important;
- box-shadow:none!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTabs{
- width:100%!important;box-sizing:border-box!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab{
- border:2px solid #397eb5!important;
- background:#24465e!important;
- color:#edf6ff!important;
- box-sizing:border-box!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab.active{
- border-color:#8ec8f2!important;
- background:#326e9d!important;
- color:#fff!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel #rmrJinglePads .rmrJinglePad{
- border:2px solid #397eb5!important;
- box-sizing:border-box!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhJingleBackupActions button{
- border:2px solid #397eb5!important;
- background:#24465e!important;
- box-sizing:border-box!important;
-}
-</style><style id="mhAdNoticeIntegratedConsole20261021">
-/* Aviso integrado: franja de información bajo el medidor, sin tocar las barras. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{
- display:flex!important;align-items:center!important;justify-content:center!important;
- box-sizing:border-box!important;width:100%!important;min-width:0!important;
- min-height:26px!important;height:auto!important;
- margin:2px 0 6px!important;padding:5px 9px!important;
- border:1px solid #397eb5!important;border-left:3px solid #5e9ac7!important;
- border-radius:4px!important;background:#112b3c!important;
- color:#b8d9ef!important;font:800 10px/1.3 system-ui,sans-serif!important;
- letter-spacing:.35px!important;text-align:center!important;
- white-space:normal!important;overflow-wrap:anywhere!important;
- box-shadow:none!important;animation:none!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhSoon{
- background:#35291e!important;color:#ffe5bd!important;
- border-color:#ad783b!important;border-left-color:#f3a64a!important;
- animation:mhAdNoticeSoftPulse 1.6s ease-in-out infinite!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhOnAir{
- background:#15372e!important;color:#d2ffe6!important;
- border-color:#34785a!important;border-left-color:#50ca8a!important;
- animation:none!important;
-}
-@keyframes mhAdNoticeSoftPulse{50%{border-left-color:#fff1b7;filter:brightness(1.12)}}
-</style><style id="mhAdListButtonHeightSync20261021">
-/* Publicidad: la lista no puede exceder la altura del conjunto de botones izquierdo. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
- align-items:start!important;min-height:0!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
- height:280px!important;min-height:0!important;max-height:280px!important;
- align-self:start!important;box-sizing:border-box!important;overflow:hidden!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn .rmrAdList{
- flex:1 1 auto!important;min-height:0!important;max-height:100%!important;
- overflow-y:auto!important;overflow-x:hidden!important;
-}
-</style>
-<script id="mhAdListButtonHeightSyncScript20261021">
-(function(){
- const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
- if(!deck)return;
- const row=deck.querySelector('.rmrAdControlsColumn .rmrAdControlRow');
- const list=deck.querySelector('.rmrAdListColumn');
- if(!row||!list)return;
- let previous=0;
- function sync(){
-  const h=Math.round(row.getBoundingClientRect().height);
-  if(!h||h===previous)return;
-  previous=h;
-  for(const prop of ['height','max-height'])list.style.setProperty(prop,h+'px','important');
-  list.style.setProperty('min-height','0','important');
- }
- sync();
- window.addEventListener('load',sync,{once:true});
- window.addEventListener('resize',sync,{passive:true});
- if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(sync);observer.observe(row)}
-})();
-</script><style id="mhAdNoticeFlashAllStates20261021">
-/* El aviso destella con el color de su estado: azul, ámbar o verde. */
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhSoon,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhOnAir{
- animation:mhNoticeBlueFlash 1.5s ease-in-out infinite!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhSoon{
- animation-name:mhNoticeAmberFlash!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice.mhOnAir{
- animation-name:mhNoticeGreenFlash!important;
-}
-@keyframes mhNoticeBlueFlash{
- 0%,100%{background-color:#112b3c;box-shadow:inset 0 0 0 0 transparent;filter:brightness(1)}
- 50%{background-color:#245579;box-shadow:inset 0 0 0 1px #78b9eb;filter:brightness(1.2)}
-}
-@keyframes mhNoticeAmberFlash{
- 0%,100%{background-color:#35291e;box-shadow:none;filter:brightness(1)}
- 50%{background-color:#8b5824;box-shadow:inset 0 0 0 1px #f6bd68;filter:brightness(1.16)}
-}
-@keyframes mhNoticeGreenFlash{
- 0%,100%{background-color:#15372e;box-shadow:none;filter:brightness(1)}
- 50%{background-color:#286e4b;box-shadow:inset 0 0 0 1px #7beaab;filter:brightness(1.16)}
-}
-@media(prefers-reduced-motion:reduce){
- .rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{animation:none!important}
-}
-</style><style id="mhConsoleGeometry20261021">
-/* ÚNICA capa de composición: proporciones y alineación, sin cambiar reproductores ni lógica. */
-:root{--mh-console-blue:#397eb5;--mh-console-gap:9px}
-.rmrDualDeck{gap:var(--mh-console-gap)!important;align-items:start!important}
-.rmrDualDeck>.rmrMusicColumn,.rmrDualDeck>.rmrRightStack{
- min-width:0!important;box-sizing:border-box!important;gap:var(--mh-console-gap)!important;
-}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck,
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel,
-.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist,
-.rmrDualDeck>.rmrRightStack #rmrProgramMusicClone{
- box-sizing:border-box!important;min-width:0!important;
- border:2px solid var(--mh-console-blue)!important;
- border-radius:7px!important;box-shadow:none!important;
-}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck{padding:9px!important}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
- padding:9px!important;margin:0!important;background:#102b3d!important;
-}
-.rmrDualDeck .rmrDeckTitle,.rmrDualDeck .paneltitle{
- text-align:center!important;line-height:1.3!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
- gap:8px!important;min-width:0!important;align-items:start!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow{
- gap:5px!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow button{
- width:100%!important;box-sizing:border-box!important;
- display:flex!important;align-items:center!important;justify-content:center!important;
- text-align:center!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
- border:2px solid var(--mh-console-blue)!important;border-radius:6px!important;
- box-sizing:border-box!important;min-width:0!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTabs{gap:5px!important;margin:7px 0!important}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab,
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .rmrJinglePad{
- box-sizing:border-box!important;text-align:center!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{
- box-sizing:border-box!important;max-width:100%!important;text-align:center!important;
-}
-</style>
-</body></html>
+</style></body></html>
