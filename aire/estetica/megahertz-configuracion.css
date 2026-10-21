@@ -40,3 +40,19 @@
 #rmrSettingsModal .rmrSettingsPage:not([data-rmr-page="ads"]) :is(input,select,textarea){
  max-width:100%!important;box-sizing:border-box!important;
 }
+
+/* v03 - GENERAL: todos los ajustes desplegados en una columna; publicidad intacta. */
+#rmrSettingsModal .rmrGeneralSettingsPage{display:block!important;overflow-y:auto!important;overflow-x:hidden!important;padding:16px!important}
+#rmrSettingsModal .rmrGeneralSettingsPage[hidden]{display:none!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrGeneralSections{display:none!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrGeneralVolumeSection{width:100%!important;margin:0 0 12px!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrSettingsPage[data-rmr-page]{
+ display:block!important;position:static!important;grid-column:auto!important;grid-row:auto!important;
+ width:100%!important;min-width:0!important;max-width:100%!important;height:auto!important;
+ min-height:0!important;overflow:visible!important;padding:14px!important;margin:0 0 12px!important;
+ border:1px solid #405c70!important;border-radius:8px!important;background:#1d2934!important;
+ box-sizing:border-box!important;
+}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrSettingsPage[data-rmr-page][hidden]{display:block!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrSettingsPage[data-rmr-page] :is(label,select,input,button){max-width:100%!important}
+#rmrSettingsModal .rmrGeneralSettingsPage>.rmrSettingsPage[data-rmr-page] h3{margin:0 0 12px!important;color:#cce6f7!important}
