@@ -2928,4 +2928,29 @@ heading.classList.remove('rmrProgramHidden');
 #rmrProgramMusicClone .mhProgramTools button:hover{background:#355f78}
 #rmrProgramMusicClone #program2_playlist .track[draggable="true"]{cursor:grab}
 #rmrProgramMusicClone #program2_playlist .track[draggable="true"]:active{cursor:grabbing}
+</style><style id="mhInteractiveFeel20261021">
+/* Los controles se reconocen como controles; doble clic no selecciona texto. */
+button,[role="button"],.track[draggable="true"],.rmrSettingsTab,.rmrGeneralSection,.mhGeneralGroupTitle{
+ cursor:pointer;-webkit-user-select:none!important;user-select:none!important;
+ -webkit-tap-highlight-color:transparent;
+}
+button,[role="button"]{touch-action:manipulation}
+button:not(:disabled):active,[role="button"]:active{
+ transform:translateY(1px);filter:brightness(.88);
+}
+button:focus-visible,[role="button"]:focus-visible,.track[draggable="true"]:focus-visible{
+ outline:2px solid #a3d8ff!important;outline-offset:2px!important;
+}
+#rmrProgramMusicClone #program2_playlist .track{
+ -webkit-user-select:none!important;user-select:none!important;
+ border:1px solid transparent;border-radius:5px;
+}
+#rmrProgramMusicClone #program2_playlist .track:hover{background:#24435b!important;border-color:#6c96af!important}
+#rmrProgramMusicClone #program2_playlist .track:active{background:#315f7b!important}
+#rmrProgramMusicClone #program2_playlist .track *{-webkit-user-select:none!important;user-select:none!important;pointer-events:none}
+#rmrProgramMusicClone .mhProgramTools button{
+ box-shadow:inset 0 1px 0 #ffffff35,0 2px 3px #0007!important;
+ border-bottom-width:2px!important;
+}
+#rmrProgramMusicClone .mhProgramTools button:active{box-shadow:inset 0 2px 5px #0008!important}
 </style></body></html>
