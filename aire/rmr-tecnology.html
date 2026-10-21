@@ -2860,4 +2860,60 @@ heading.classList.remove('rmrProgramHidden');
  const order=['general','audio','silence','automation','ads','institucionales'];
  for(const key of order){const tab=tabs.querySelector('[data-rmr-tab="'+key+'"]');if(tab)tabs.appendChild(tab);}
 })();
-</script></body></html>
+</script><script id="mhButtonHelp20261021">
+/* Ayuda contextual no invasiva: aparece encima del botón al pasar el mouse. */
+(function(){
+ if(document.getElementById('mhButtonHelpTip'))return;
+ const descriptions={
+  rmrAdExact:'Emite la tanda a la hora exacta, aunque deba interrumpir la canción.',
+  rmrAdKnob:'Espera a que termine la canción antes de emitir la tanda.',
+  rmrOpenSettings:'Abre las opciones de configuración de Megahertz.',
+  rmrCloseSettings:'Cierra la ventana de configuración.',
+  rmrSilenceToggle:'Activa o desactiva el detector de silencio.',
+  rmrAutoRecoveryEnabled:'Permite volver automáticamente al modo automático después del período configurado.'
+ };
+ const tip=document.createElement('div');tip.id='mhButtonHelpTip';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+ let current=null;
+ function description(el){
+  if(el.id&&descriptions[el.id])return descriptions[el.id];
+  if(el.hasAttribute('data-rmr-tab'))return 'Muestra la configuración de '+el.textContent.trim().toLowerCase()+'.';
+  const explicit=el.getAttribute('aria-description')||el.getAttribute('data-help')||el.getAttribute('title');
+  if(explicit)return explicit;
+  const label=(el.getAttribute('aria-label')||el.textContent||'').replace(/\s+/g,' ').trim();
+  if(!label||label.length>90)return '';
+  const words={
+   'PLAY':'Inicia la reproducción.','PAUSA':'Pausa la reproducción.','STOP':'Detiene la reproducción.',
+   'DETENER TANDA':'Detiene la tanda publicitaria.','FORZAR TANDA':'Inicia una tanda publicitaria manualmente.',
+   'AUTOMÁTICO':'Permite al sistema ejecutar la programación automáticamente.',
+   'MANUAL':'Deja el control de la emisión en manos del operador.',
+   'SIGUIENTE':'Pasa al siguiente elemento.','ANTERIOR':'Vuelve al elemento anterior.',
+   'GUARDAR':'Guarda los cambios de esta sección.','CARGAR':'Permite cargar archivos.',
+   'AGREGAR MÚSICA':'Incorpora música a la lista de reproducción.',
+   'CONFIGURACIÓN':'Abre las opciones de configuración.'
+  };
+  const upper=label.toUpperCase();
+  return words[upper]||'Función: '+label+'.';
+ }
+ function hide(){current=null;tip.classList.remove('visible');}
+ function position(el){
+  const r=el.getBoundingClientRect();tip.style.left=Math.max(10,Math.min(window.innerWidth-tip.offsetWidth-10,r.left+r.width/2-tip.offsetWidth/2))+'px';
+  tip.style.top=Math.max(8,r.top-tip.offsetHeight-9)+'px';
+ }
+ document.addEventListener('pointerover',e=>{
+  if(e.pointerType==='touch')return;
+  const el=e.target.closest?.('button,[role="button"],input[type="button"],input[type="submit"]');
+  if(!el||el===current)return;
+  const msg=description(el);if(!msg){hide();return;}
+  current=el;tip.textContent=msg;tip.classList.add('visible');position(el);
+ },true);
+ document.addEventListener('pointerout',e=>{if(current&&!current.contains(e.relatedTarget))hide()},true);
+ document.addEventListener('focusin',e=>{const el=e.target.closest?.('button,[role="button"]');if(!el)return;const msg=description(el);if(msg){current=el;tip.textContent=msg;tip.classList.add('visible');position(el)}},true);
+ document.addEventListener('focusout',hide,true);
+ document.addEventListener('scroll',hide,true);
+ window.addEventListener('resize',hide);
+})();
+</script>
+<style id="mhButtonHelpStyle20261021">
+#mhButtonHelpTip{position:fixed;z-index:2147483647;pointer-events:none;max-width:min(320px,85vw);padding:9px 12px;background:#101c29;color:#f1f7fc;border:1px solid #8baac3;border-radius:7px;box-shadow:0 7px 25px #000a;font:600 12px/1.45 Arial,sans-serif;opacity:0;visibility:hidden;transition:opacity .12s}
+#mhButtonHelpTip.visible{opacity:1;visibility:visible}
+</style></body></html>
