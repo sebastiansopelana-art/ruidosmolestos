@@ -3171,4 +3171,38 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
  animation:none!important;
 }
 @keyframes mhAdNoticeSoftPulse{50%{border-left-color:#fff1b7;filter:brightness(1.12)}}
-</style></body></html>
+</style><style id="mhAdListButtonHeightSync20261021">
+/* Publicidad: la lista no puede exceder la altura del conjunto de botones izquierdo. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
+ align-items:start!important;min-height:0!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
+ height:280px!important;min-height:0!important;max-height:280px!important;
+ align-self:start!important;box-sizing:border-box!important;overflow:hidden!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn .rmrAdList{
+ flex:1 1 auto!important;min-height:0!important;max-height:100%!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+}
+</style>
+<script id="mhAdListButtonHeightSyncScript20261021">
+(function(){
+ const deck=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck');
+ if(!deck)return;
+ const row=deck.querySelector('.rmrAdControlsColumn .rmrAdControlRow');
+ const list=deck.querySelector('.rmrAdListColumn');
+ if(!row||!list)return;
+ let previous=0;
+ function sync(){
+  const h=Math.round(row.getBoundingClientRect().height);
+  if(!h||h===previous)return;
+  previous=h;
+  for(const prop of ['height','max-height'])list.style.setProperty(prop,h+'px','important');
+  list.style.setProperty('min-height','0','important');
+ }
+ sync();
+ window.addEventListener('load',sync,{once:true});
+ window.addEventListener('resize',sync,{passive:true});
+ if(typeof ResizeObserver!=='undefined'){const observer=new ResizeObserver(sync);observer.observe(row)}
+})();
+</script></body></html>
