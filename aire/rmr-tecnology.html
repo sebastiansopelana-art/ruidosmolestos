@@ -3105,4 +3105,40 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
  async function refresh(){try{config=await read()}catch(e){notice.textContent='AGENDA DE PUBLICIDAD NO DISPONIBLE'}update()}
  refresh();setInterval(update,1000);setInterval(refresh,15000);
 })();
-</script></body></html>
+</script><style id="mhJingleBlueUniformCorrection20261021">
+/* Pisadores: igual ancho de columna y misma terminación azul que los demás paneles. */
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
+ width:100%!important;
+ min-width:0!important;
+ max-width:100%!important;
+ align-self:stretch!important;
+ box-sizing:border-box!important;
+ border:2px solid #397eb5!important;
+ border-radius:8px!important;
+ background:#102b3d!important;
+ box-shadow:none!important;
+}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTabs{
+ width:100%!important;box-sizing:border-box!important;
+}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab{
+ border:2px solid #397eb5!important;
+ background:#24465e!important;
+ color:#edf6ff!important;
+ box-sizing:border-box!important;
+}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab.active{
+ border-color:#8ec8f2!important;
+ background:#326e9d!important;
+ color:#fff!important;
+}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel #rmrJinglePads .rmrJinglePad{
+ border:2px solid #397eb5!important;
+ box-sizing:border-box!important;
+}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhJingleBackupActions button{
+ border:2px solid #397eb5!important;
+ background:#24465e!important;
+ box-sizing:border-box!important;
+}
+</style></body></html>
