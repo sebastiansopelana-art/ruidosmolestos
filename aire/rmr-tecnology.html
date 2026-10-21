@@ -2776,7 +2776,7 @@ heading.textContent='PLAYLIST MANUAL - PROGRAMAS RADIO';
 heading.hidden=false;
 heading.classList.remove('rmrProgramHidden');
 })();
-</script><link rel="stylesheet" href="./estetica/megahertz-publicidad.css?v=20261020-violet10"><script id="mhAdPolicyReliable20261020">
+</script><link rel="stylesheet" href="./estetica/megahertz-publicidad.css?v=violet11"><script id="mhAdPolicyReliable20261020">
 (function(){
  function sync(){
   const cut=localStorage.getItem('rmrAdPolicy')==='cut';
@@ -2784,9 +2784,11 @@ heading.classList.remove('rmrProgramHidden');
    const b=document.getElementById(id);if(!b)return;
    b.setAttribute('aria-pressed',String(active));
    b.classList.toggle('isSelected',active);
-   b.style.removeProperty('background-color');
-   b.style.removeProperty('border-color');
-   b.style.removeProperty('color');
+   b.style.setProperty('background',active?'#7045ac':'#292f3b','important');
+   b.style.setProperty('background-color',active?'#7045ac':'#292f3b','important');
+   b.style.setProperty('border',active?'2px solid #c5a0ff':'1px solid #596174','important');
+   b.style.setProperty('color',active?'#ffffff':'#aab7c7','important');
+   b.style.setProperty('box-shadow',active?'0 0 10px #9864e680':'none','important');
   }
  }
  document.addEventListener('click',function(e){
@@ -2794,6 +2796,7 @@ heading.classList.remove('rmrProgramHidden');
   if(!button)return;
   localStorage.setItem('rmrAdPolicy',button.id==='rmrAdExact'?'cut':'wait');
   sync();
+  queueMicrotask(sync);
  },true);
  window.addEventListener('storage',e=>{if(e.key==='rmrAdPolicy')sync()});
  window.addEventListener('load',sync);
