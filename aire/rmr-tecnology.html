@@ -3052,4 +3052,57 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
 .mhLayoutEditTarget{outline:2px solid #8bcbff!important;outline-offset:2px!important}
 #mhLayoutV2Help{max-width:420px!important}
 #mhLayoutEditBar .mhLayoutDelete{background:#702d3a!important;color:#fff!important}
-</style></body></html>
+</style><style id="mhUpcomingAdVuNoticeStyle">
+.rmrAdVuPanel .mhUpcomingAdNotice{flex:0 0 auto;box-sizing:border-box;width:100%;padding:7px 8px;border:2px solid #4387b7;border-radius:6px;background:#102d42;color:#d8edff;font:700 11px/1.35 Arial,sans-serif;text-align:center;white-space:normal;overflow-wrap:anywhere}
+.rmrAdVuPanel .mhUpcomingAdNotice.mhSoon{background:#493019;border-color:#f3a64a;color:#fff0d2;animation:mhAdSoonPulse 1.3s ease-in-out infinite}
+.rmrAdVuPanel .mhUpcomingAdNotice.mhOnAir{background:#153c2a;border-color:#4bca86;color:#d8ffe9;animation:none}
+@keyframes mhAdSoonPulse{50%{box-shadow:0 0 12px #f3a64a99}}
+</style>
+<script id="mhUpcomingAdVuNotice20261021">
+(function(){
+ const vu=document.querySelector('.rmrAdBodySplit .rmrAdVuPanel')||document.querySelector('.rmrAdVuPanel');
+ if(!vu||vu.querySelector('.mhUpcomingAdNotice'))return;
+ const notice=document.createElement('div');notice.className='mhUpcomingAdNotice';notice.setAttribute('role','status');notice.setAttribute('aria-live','off');
+ notice.textContent='PRÓXIMA TANDA · CONSULTANDO AGENDA';
+ vu.prepend(notice);
+ let config=null;
+ function read(){
+  return new Promise((resolve,reject)=>{
+   const req=indexedDB.open('RMR-Publicidad',1);
+   req.onerror=()=>reject(req.error);
+   req.onsuccess=()=>{
+    const db=req.result;
+    if(!db.objectStoreNames.contains('data')){db.close();resolve(null);return}
+    const tx=db.transaction('data','readonly'),q=tx.objectStore('data').get('config');
+    q.onsuccess=()=>{resolve(q.result||null);db.close()};
+    q.onerror=()=>{reject(q.error);db.close()};
+   };
+  });
+ }
+ function update(){
+  const live=window.rmrEngine?.getLiveAds?.();
+  notice.classList.toggle('mhOnAir',!!live);
+  if(live){notice.classList.remove('mhSoon');notice.textContent='EN EL AIRE · '+(live.break?.name||'TANDA PUBLICITARIA');return}
+  const now=new Date(),events=config?.events||[],breaks=config?.breaks||[];
+  let upcoming=null;
+  for(let day=0;day<8;day++){
+   const date=new Date(now.getFullYear(),now.getMonth(),now.getDate()+day);
+   for(const e of events){
+    if(!Array.isArray(e.days)||!e.days.includes(date.getDay())||!/^\d{2}:\d{2}$/.test(e.hour||''))continue;
+    const b=breaks.find(x=>x.id===e.breakId);if(!b)continue;
+    const [h,m]=e.hour.split(':').map(Number),at=new Date(date.getFullYear(),date.getMonth(),date.getDate(),h,m);
+    if(at<now||upcoming&&at>=upcoming.at)continue;
+    upcoming={at,b,e};
+   }
+  }
+  if(!upcoming){notice.classList.remove('mhSoon');notice.textContent='PUBLICIDAD · SIN TANDAS PRÓXIMAS';return}
+  const ms=upcoming.at-now,minutes=Math.floor(ms/60000),seconds=Math.floor(ms%60000/1000);
+  const hour=upcoming.at.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
+  const soon=ms<=5*60*1000;
+  notice.classList.toggle('mhSoon',soon);
+  notice.textContent=(soon?'⚠ POR SALIR · ':'PRÓXIMA TANDA · ')+upcoming.b.name+' · '+hour+' HS'+(soon?' · FALTAN '+String(minutes).padStart(2,'0')+':'+String(seconds).padStart(2,'0'):'');
+ }
+ async function refresh(){try{config=await read()}catch(e){notice.textContent='AGENDA DE PUBLICIDAD NO DISPONIBLE'}update()}
+ refresh();setInterval(update,1000);setInterval(refresh,15000);
+})();
+</script></body></html>
