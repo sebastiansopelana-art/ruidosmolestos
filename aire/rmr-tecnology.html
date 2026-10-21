@@ -3233,130 +3233,32 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
 @media(prefers-reduced-motion:reduce){
  .rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{animation:none!important}
 }
-</style><style id="mhSymmetryMaster20261021">
-/* MEGAHERTZ — pasada visual integral. No altera motor, eventos ni medidas guardadas. */
-:root{--mh-ui-edge:#397eb5;--mh-ui-panel:#102838;--mh-ui-gap:8px;--mh-ui-radius:7px;--mh-ui-text:#e1eff8}
-.rmrDualDeck,
-.rmrDualDeck>.rmrMusicColumn,
-.rmrDualDeck>.rmrRightStack{box-sizing:border-box!important;min-width:0!important}
-.rmrDualDeck>.rmrMusicColumn,
-.rmrDualDeck>.rmrRightStack{gap:var(--mh-ui-gap)!important}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck,
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel,
-.rmrDualDeck>.rmrRightStack>#rmrProgramMusicClone{
- box-sizing:border-box!important;min-width:0!important;
- border:2px solid var(--mh-ui-edge)!important;
- border-radius:var(--mh-ui-radius)!important;
- box-shadow:none!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
- margin:0 0 var(--mh-ui-gap)!important;
- padding:8px!important;
- background:var(--mh-ui-panel)!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel>strong{
- color:var(--mh-ui-text)!important;
- font-size:11px!important;
- font-weight:800!important;
- line-height:1.3!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTabs{
- margin:7px 0!important;gap:4px!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel #rmrJinglePads{gap:5px!important}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel #rmrJinglePads .rmrJinglePad{
- display:flex!important;align-items:center!important;justify-content:center!important;
- text-align:center!important;border-radius:6px!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
- box-sizing:border-box!important;min-width:0!important;
- column-gap:8px!important;align-items:start!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
- box-sizing:border-box!important;min-width:0!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlRow button{
- display:flex!important;align-items:center!important;justify-content:center!important;
- text-align:center!important;box-sizing:border-box!important;
- border-radius:6px!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
- border:2px solid var(--mh-ui-edge)!important;
- border-radius:6px!important;
- box-shadow:none!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn .rmrAdList{
- box-sizing:border-box!important;min-width:0!important;
-}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck .mhSignalTop,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhSignalTop{
- box-sizing:border-box!important;width:100%!important;min-width:0!important;
-}
-.rmrDualDeck .mhSignalTop .mhSignalMeter{
- box-sizing:border-box!important;border:2px solid var(--mh-ui-edge)!important;
- border-radius:var(--mh-ui-radius)!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{
- box-sizing:border-box!important;max-width:100%!important;
- text-align:center!important;
-}
-.rmrDualDeck :is(button,.mhBankTab,.rmrJinglePad){
- font-family:inherit!important;
- text-align:center!important;
- vertical-align:middle!important;
-}
-.rmrDualDeck :is(.rmrDeckTitle,.paneltitle,.rmrAdListTitle){
- text-align:center!important;
- box-sizing:border-box!important;
-}
-.rmrDualDeck :is(.track,.rmrAdMonitorRow,.rmrAdListRow){
- box-sizing:border-box!important;min-width:0!important;
-}
-@media(max-width:850px){
- .rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{padding:6px!important}
- .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{column-gap:5px!important}
-}
-</style><style id="mhPureSymmetry20261021">
-/* Simetría estricta de la consola: geometría, ritmo y alineaciones; sin tocar lógica. */
-:root{--mh-sym-gap:9px;--mh-sym-line:#397eb5;--mh-sym-radius:7px}
-.rmrDualDeck{align-items:start!important;gap:var(--mh-sym-gap)!important}
+</style><style id="mhConsoleGeometry20261021">
+/* ÚNICA capa de composición: proporciones y alineación, sin cambiar reproductores ni lógica. */
+:root{--mh-console-blue:#397eb5;--mh-console-gap:9px}
+.rmrDualDeck{gap:var(--mh-console-gap)!important;align-items:start!important}
 .rmrDualDeck>.rmrMusicColumn,.rmrDualDeck>.rmrRightStack{
- min-width:0!important;box-sizing:border-box!important;
+ min-width:0!important;box-sizing:border-box!important;gap:var(--mh-console-gap)!important;
 }
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck,
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck,
 .rmrDualDeck>.rmrRightStack>.mhJingleBankPanel,
-.rmrDualDeck>.rmrRightStack #rmrDropPlayer{
- border:2px solid var(--mh-sym-line)!important;
- border-radius:var(--mh-sym-radius)!important;
- box-sizing:border-box!important;
+.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist,
+.rmrDualDeck>.rmrRightStack #rmrProgramMusicClone{
+ box-sizing:border-box!important;min-width:0!important;
+ border:2px solid var(--mh-console-blue)!important;
+ border-radius:7px!important;box-shadow:none!important;
 }
 .rmrDualDeck>.rmrMusicColumn>.rmrDeck,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck{
- padding:9px!important;
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck{padding:9px!important}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
+ padding:9px!important;margin:0!important;background:#102b3d!important;
 }
-.rmrDualDeck .rmrDeckTitle,
-.rmrDualDeck .rmrAdDeck .rmrDeckTitle,
-.rmrDualDeck .paneltitle{
- margin:0 0 8px!important;padding:0 0 5px!important;
+.rmrDualDeck .rmrDeckTitle,.rmrDualDeck .paneltitle{
  text-align:center!important;line-height:1.3!important;
 }
-.rmrDualDeck .mhSignalTop{
- margin:0 0 8px!important;gap:7px!important;
-}
-.rmrDualDeck .mhSignalTop .mhSignalMeter{
- height:78px!important;min-height:78px!important;max-height:78px!important;
- margin:0!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{
- margin:7px 0!important;min-height:26px!important;
- display:flex!important;align-items:center!important;justify-content:center!important;
- padding:4px 8px!important;
-}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
- gap:8px!important;align-items:stretch!important;
+ gap:8px!important;min-width:0!important;align-items:start!important;
 }
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow{
  gap:5px!important;
@@ -3364,28 +3266,18 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdControlsColumn .rmrAdControlRow button{
  width:100%!important;box-sizing:border-box!important;
  display:flex!important;align-items:center!important;justify-content:center!important;
- padding:3px 7px!important;
+ text-align:center!important;
 }
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
- box-sizing:border-box!important;margin:0!important;
+ border:2px solid var(--mh-console-blue)!important;border-radius:6px!important;
+ box-sizing:border-box!important;min-width:0!important;
 }
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
- padding:9px!important;margin:0!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTabs{
- gap:5px!important;margin:7px 0!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab{
- display:flex!important;align-items:center!important;justify-content:center!important;
-}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTabs{gap:5px!important;margin:7px 0!important}
+.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .mhBankTab,
 .rmrDualDeck>.rmrRightStack>.mhJingleBankPanel .rmrJinglePad{
  box-sizing:border-box!important;text-align:center!important;
 }
-.rmrDualDeck>.rmrMusicColumn>.rmrInlineMusicPlaylist,
-.rmrDualDeck>.rmrRightStack #rmrProgramMusicClone{
- box-sizing:border-box!important;
- border:2px solid var(--mh-sym-line)!important;
- border-radius:var(--mh-sym-radius)!important;
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{
+ box-sizing:border-box!important;max-width:100%!important;text-align:center!important;
 }
-.rmrDualDeck :is(button,.rmrJinglePad,.mhBankTab){background-clip:padding-box!important}
 </style></body></html>
