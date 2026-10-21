@@ -2802,7 +2802,7 @@ heading.classList.remove('rmrProgramHidden');
  window.addEventListener('load',sync);
  sync();
 })();
-</script><link rel="stylesheet" href="./estetica/megahertz-configuracion.css?v=general03"><script id="mhSettingsGeneralGroup20261020">
+</script><link rel="stylesheet" href="./estetica/megahertz-configuracion.css?v=zara-nav04"><script id="mhSettingsGeneralGroup20261020">
 (function(){
  const modal=document.getElementById('rmrSettingsModal');
  const tabs=modal?.querySelector('.rmrSettingsTabs');
@@ -2817,5 +2817,47 @@ heading.classList.remove('rmrProgramHidden');
  while(tabs.firstChild)content.appendChild(tabs.firstChild);
  header.addEventListener('click',()=>{const open=header.getAttribute('aria-expanded')!=='true';header.setAttribute('aria-expanded',String(open));content.hidden=!open;});
  group.append(header,content);tabs.append(group);
+})();
+</script><script id="mhZaraNavigation20261021">
+/* Navegación de ajustes existentes; sin controles simulados ni cambios al motor. */
+(function(){
+ const modal=document.getElementById('rmrSettingsModal');
+ if(!modal||modal.dataset.mhNavigationReady)return;
+ const tabs=modal.querySelector('.rmrSettingsTabs');
+ const windowPanel=modal.querySelector('.rmrSettingsWindow');
+ if(!tabs||!windowPanel)return;
+ modal.dataset.mhNavigationReady='true';
+ const wrapper=tabs.querySelector('.mhGeneralGroupContent');
+ if(wrapper){while(wrapper.firstChild)tabs.appendChild(wrapper.firstChild);wrapper.closest('.mhGeneralGroup')?.remove();}
+ const general=modal.querySelector('[data-rmr-page="general"]');
+ const definitions=[
+  ['audio','SALIDAS DE AUDIO'],
+  ['silence','DETECTOR DE SILENCIO'],
+  ['automation','AUTOMATIZACIÓN']
+ ];
+ for(const [key,label] of definitions){
+  const page=general?.querySelector('[data-rmr-page="'+key+'"]')||modal.querySelector('[data-rmr-page="'+key+'"]');
+  if(!page)continue;
+  windowPanel.appendChild(page);
+  page.hidden=true;
+  let tab=tabs.querySelector('[data-rmr-tab="'+key+'"]');
+  if(!tab){tab=document.createElement('button');tab.type='button';tab.className='rmrSettingsTab';tab.dataset.rmrTab=key;tab.textContent=label;tabs.appendChild(tab);}
+  tab.addEventListener('click',()=>{
+   modal.querySelectorAll('.rmrSettingsTab').forEach(x=>x.classList.toggle('active',x===tab));
+   modal.querySelectorAll('.rmrSettingsPage').forEach(x=>{x.hidden=x!==page});
+   page.hidden=false;
+  });
+ }
+ const sections=general?.querySelector('.rmrGeneralSections');
+ if(sections)sections.remove();
+ const empty=general?.querySelector('#rmrGeneralContent');
+ if(empty)empty.remove();
+ const volume=general?.querySelector('.rmrGeneralVolumeSection');
+ if(volume){
+  let title=general.querySelector('.mhGeneralIntro');
+  if(!title){title=document.createElement('div');title.className='mhGeneralIntro';title.innerHTML='<h3>GENERAL</h3><p>Ajustes generales de la consola. Las demás categorías están disponibles en las solapas de la izquierda.</p>';general.insertBefore(title,volume);}
+ }
+ const order=['general','audio','silence','automation','ads','institucionales'];
+ for(const key of order){const tab=tabs.querySelector('[data-rmr-tab="'+key+'"]');if(tab)tabs.appendChild(tab);}
 })();
 </script></body></html>
