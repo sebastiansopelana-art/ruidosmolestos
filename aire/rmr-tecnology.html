@@ -3280,47 +3280,4 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
 .rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{
  box-sizing:border-box!important;max-width:100%!important;text-align:center!important;
 }
-</style><style id="mhVisibleGeometryCorrection20261021">
-/* Cambio estructural visible: dos columnas de igual ancho y fila superior alineada. */
-.rmrDualDeck{
- display:grid!important;
- grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
- gap:10px!important;
- align-items:start!important;
-}
-.rmrDualDeck>.rmrMusicColumn,.rmrDualDeck>.rmrRightStack{
- width:100%!important;min-width:0!important;max-width:100%!important;
- display:flex!important;flex-direction:column!important;gap:10px!important;
-}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck,
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck{
- min-height:0!important;
- height:auto!important;
- align-self:stretch!important;
-}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck{
- display:flex!important;flex-direction:column!important;
-}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck .rmrPlayerLayout{
- flex:0 0 auto!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdBodySplit{
- grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
- gap:10px!important;
-}
-.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
- width:100%!important;max-width:100%!important;
-}
-.rmrDualDeck>.rmrRightStack>.mhJingleBankPanel{
- width:100%!important;min-width:0!important;
-}
-.rmrDualDeck>.rmrRightStack>#rmrDropPlayer{
- width:100%!important;min-width:0!important;
-}
-@media(max-width:950px){
- .rmrDualDeck{grid-template-columns:minmax(0,1fr)!important}
- .rmrDualDeck>.rmrMusicColumn,.rmrDualDeck>.rmrRightStack{
- grid-column:1!important;grid-row:auto!important;
- }
-}
 </style></body></html>
