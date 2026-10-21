@@ -2045,8 +2045,10 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  const hiddenKey='mh-layout-hidden-v1';
  let hidden={};try{hidden=JSON.parse(localStorage.getItem(hiddenKey)||'{}')||{}}catch(e){}
  const persistHidden=()=>{try{localStorage.setItem(hiddenKey,JSON.stringify(hidden))}catch(e){alert('No se pudo guardar qué elementos ocultaste: '+e.message)}};
+ const adListForLayout=document.querySelector('.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn');
+ if(adListForLayout&&!adListForLayout.id)adListForLayout.id='mhAdListResizable';
  const elements=new Map();
- function register(){document.querySelectorAll('body *').forEach(el=>{if(!eligible(el)||elements.has(el))return;const id=selector(el);elements.set(el,id);el.dataset.mhEditable='1';if(hidden[id])el.classList.add('mhLayoutHidden');const p=saved[id];if(p){el.style.translate=(p.x||0)+'px '+(p.y||0)+'px';if(p.w)el.style.width=p.w+'px';if(p.h)el.style.height=p.h+'px'}})}
+ function register(){document.querySelectorAll('body *').forEach(el=>{if(!eligible(el)||elements.has(el))return;const id=selector(el);elements.set(el,id);el.dataset.mhEditable='1';if(hidden[id])el.classList.add('mhLayoutHidden');const p=saved[id];if(p){el.style.translate=(p.x||0)+'px '+(p.y||0)+'px';if(p.w)el.style.setProperty('width',p.w+'px','important');if(p.h){el.style.setProperty('height',p.h+'px','important');el.style.setProperty('max-height',p.h+'px','important')}}})}
  register();
  const observer=new MutationObserver(()=>{register()});observer.observe(document.body,{childList:true,subtree:true});
  let editing=false,sizing=false,hiding=false,drag=null,selected=null;
@@ -2054,7 +2056,7 @@ body.mhLayoutEditing .rmrDualDeck,body.mhLayoutEditing .rmrRightStack,body.mhLay
  restore.onclick=()=>{hidden={};persistHidden();for(const el of elements.keys())el.classList.remove('mhLayoutHidden');};
 const approvedKey='mh-layout-approved-master-v1';approve.onclick=()=>{register();const snapshot={...saved};for(const [el,id] of elements){const style=el.style;if(style.translate||style.width||style.height){const p=snapshot[id]||{};if(style.translate){const xy=style.translate.match(/(-?[\\d.]+)px\\s+(-?[\\d.]+)px/);if(xy){p.x=Number(xy[1]);p.y=Number(xy[2])}}if(style.width)p.w=Math.round(el.getBoundingClientRect().width);if(style.height)p.h=Math.round(el.getBoundingClientRect().height);snapshot[id]=p}}try{localStorage.setItem(approvedKey,JSON.stringify(snapshot));localStorage.setItem(key,JSON.stringify(snapshot));saved=snapshot;approve.textContent='✓ DISEÑO MAESTRO GUARDADO';setTimeout(()=>approve.textContent='★ FIJAR DISEÑO ACTUAL',2500)}catch(err){alert('No se pudo guardar la distribución: '+err.message)}};size.onclick=()=>{if(!editing){edit.click()}sizing=!sizing;if(sizing&&hiding){hiding=false;remove.classList.remove('active');remove.textContent='✕ OCULTAR ELEMENTO'}size.classList.toggle('active',sizing);size.textContent=sizing?'✓ TAMAÑO ACTIVADO':'↗ AJUSTAR TAMAÑO'};
  edit.onclick=()=>{editing=!editing;document.body.classList.toggle('mhLayoutEditing',editing);edit.classList.toggle('active',editing);edit.textContent=editing?'✓ GUARDAR POSICIONES':'↔ ORGANIZAR PANTALLA';if(!editing){sizing=false;hiding=false;remove.classList.remove('active');remove.textContent='✕ OCULTAR ELEMENTO';size.classList.remove('active');size.textContent='↗ AJUSTAR TAMAÑO';localStorage.setItem(key,JSON.stringify(saved))}else register()};
- reset.onclick=()=>{if(!confirm('¿Restablecer el diseño maestro guardado? Los elementos ocultos se pueden recuperar con RESTAURAR OCULTOS.'))return;try{saved=JSON.parse(localStorage.getItem(approvedKey)||'{}')||{}}catch(err){saved={}};localStorage.setItem(key,JSON.stringify(saved));for(const [el,id] of elements){const p=saved[id];el.style.translate=p?(p.x||0)+'px '+(p.y||0)+'px':'';el.style.width=p?.w?p.w+'px':'';el.style.height=p?.h?p.h+'px':''}};
+ reset.onclick=()=>{if(!confirm('¿Restablecer el diseño maestro guardado? Los elementos ocultos se pueden recuperar con RESTAURAR OCULTOS.'))return;try{saved=JSON.parse(localStorage.getItem(approvedKey)||'{}')||{}}catch(err){saved={}};localStorage.setItem(key,JSON.stringify(saved));for(const [el,id] of elements){const p=saved[id];el.style.translate=p?(p.x||0)+'px '+(p.y||0)+'px':'';el.style.setProperty('width',p?.w?p.w+'px':'',p?.w?'important':'');el.style.setProperty('height',p?.h?p.h+'px':'',p?.h?'important':'');el.style.setProperty('max-height',p?.h?p.h+'px':'',p?.h?'important':'')}};
  document.addEventListener('pointerdown',e=>{if(!editing||e.button!==0||e.target.closest('#mhLayoutEditBar,#mhLayoutV2Help'))return;let el=e.target.closest('[data-mh-editable]');if(!el||!eligible(el))return;
  // ALT selects the parent instead of the nested control, for complete freedom.
  if(e.altKey&&el.parentElement?.dataset.mhEditable)el=el.parentElement;
@@ -2065,7 +2067,7 @@ const approvedKey='mh-layout-approved-master-v1';approve.onclick=()=>{register()
  drag={el,id,x:e.clientX,y:e.clientY,ox:p.x||0,oy:p.y||0,w:rect.width,h:rect.height,resize:sizing||e.shiftKey};
  el.classList.add('mhDragging');
  },true);
- document.addEventListener('pointermove',e=>{if(!drag)return;e.preventDefault();const dx=e.clientX-drag.x,dy=e.clientY-drag.y;const p=saved[drag.id]||{};if(drag.resize){p.w=Math.max(20,Math.round(drag.w+dx));p.h=Math.max(20,Math.round(drag.h+dy));drag.el.style.width=p.w+'px';drag.el.style.height=p.h+'px'}else{p.x=Math.round(drag.ox+dx);p.y=Math.round(drag.oy+dy);drag.el.style.translate=p.x+'px '+p.y+'px'}saved[drag.id]=p},true);
+ document.addEventListener('pointermove',e=>{if(!drag)return;e.preventDefault();const dx=e.clientX-drag.x,dy=e.clientY-drag.y;const p=saved[drag.id]||{};if(drag.resize){p.w=Math.max(20,Math.round(drag.w+dx));p.h=Math.max(20,Math.round(drag.h+dy));drag.el.style.setProperty('width',p.w+'px','important');drag.el.style.setProperty('height',p.h+'px','important');drag.el.style.setProperty('max-height',p.h+'px','important')}else{p.x=Math.round(drag.ox+dx);p.y=Math.round(drag.oy+dy);drag.el.style.translate=p.x+'px '+p.y+'px'}saved[drag.id]=p},true);
  function finish(e){if(!drag)return;drag.el.classList.remove('mhDragging');drag=null;try{localStorage.setItem(key,JSON.stringify(saved))}catch(err){}}
  document.addEventListener('pointerup',finish,true);document.addEventListener('pointercancel',finish,true);
  document.addEventListener('click',e=>{if(editing&&!e.target.closest('#mhLayoutEditBar')){e.preventDefault();e.stopImmediatePropagation()}},true);
@@ -3194,6 +3196,9 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
  if(!row||!list)return;
  let previous=0;
  function sync(){
+  const stored=JSON.parse(localStorage.getItem('mh-layout-v2')||'{}');
+  const listKey=list.id?'#'+list.id:null;
+  if(listKey&&stored[listKey]?.h)return;
   const h=Math.round(row.getBoundingClientRect().height);
   if(!h||h===previous)return;
   previous=h;
@@ -3232,5 +3237,17 @@ body.mhLayoutEditing [data-mh-editable].mhLayoutHidden{outline:none!important}
 }
 @media(prefers-reduced-motion:reduce){
  .rmrDualDeck>.rmrRightStack>.rmrAdDeck .mhUpcomingAdNotice{animation:none!important}
+}
+</style><style id="mhResizableAdvertisingFrame20261021">
+/* El marco de avisos puede redimensionarse, con scroll interno y sin forzar 280px. */
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn{
+ min-width:0!important;box-sizing:border-box!important;
+ overflow:hidden!important;
+}
+.rmrDualDeck>.rmrRightStack>.rmrAdDeck .rmrAdListColumn .rmrAdList{
+ min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;
+}
+body.mhLayoutEditing #mhAdListResizable{
+ outline:2px dashed #86c9ff!important;outline-offset:2px!important;
 }
 </style></body></html>
