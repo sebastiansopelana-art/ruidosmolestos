@@ -105,6 +105,13 @@
 #vu .vu-letter i{border-radius:.5px}
 #stop svg{fill:#ed5961;stroke:#ffa2a8;stroke-width:1}
 @media(max-width:800px){#vu::after{font-size:19px;letter-spacing:0}}
+
+#vu{padding:5px 6px}
+#vu .word-vu{display:block;width:100%;height:100%;opacity:0;transition:opacity .18s;overflow:visible}
+#vu .word-vu text{font-family:Arial,Helvetica,sans-serif;font-size:39px;font-weight:900}
+#vu.is-playing .word-vu{opacity:1}
+#vu .word-vu rect{transition:y .09s linear,height .09s linear}
+#vu::after{font-size:24px;letter-spacing:.5px}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="now" id="musicNow">Sin audio en reproducción</div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></section>
@@ -122,11 +129,13 @@ const lists={music:[],ads:[]},index={music:-1,ads:-1};let kind='music',automatic
 const say=(s,error=false)=>{$('status').textContent=s;$('status').classList.toggle('error',error)};
 const playing=a=>!a.paused&&!a.ended;const active=()=>playing(ads)?ads:playing(music)?music:kind==='ads'?ads:music;
 function meter(){if(!context){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;context=new AC();analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);for(const a of [music,ads]){const source=context.createMediaElementSource(a);source.connect(analyser)}analyser.connect(context.destination)}if(context.state==='suspended')context.resume().catch(()=>say('No se pudo activar la salida de audio',true))}
-const glyphs={M:['10001','11011','10101','10101','10001','10001','10001'],E:['11111','10000','10000','11110','10000','10000','11111'],G:['01111','10000','10000','10111','10001','10001','01111'],A:['01110','10001','10001','11111','10001','10001','10001'],H:['10001','10001','10001','11111','10001','10001','10001'],R:['11110','10001','10001','11110','10100','10010','10001'],T:['11111','00100','00100','00100','00100','00100','00100'],Z:['11111','00001','00010','00100','01000','10000','11111']};
-const wordCells=[];$('vu').replaceChildren();$('vu').setAttribute('aria-label','MEGAHERTZ · Vúmetro de audio real');
-[...'MEGAHERTZ'].forEach((letter,l)=>{const glyph=document.createElement('span');glyph.className='vu-letter';glyph.setAttribute('aria-hidden','true');glyphs[letter].forEach((row,y)=>[...row].forEach((bit,x)=>{const pixel=document.createElement('i');pixel.className=bit==='1'?'vu-pixel':'vu-blank';glyph.append(pixel);if(bit==='1')wordCells.push({pixel,column:l*5+x,row:y})}));$('vu').append(glyph)});
+const ns='http://www.w3.org/2000/svg',vu=$('vu');vu.replaceChildren();vu.setAttribute('aria-label','MEGAHERTZ · Indicador de nivel vertical por letra');
+const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 234 50');svg.setAttribute('aria-hidden','true');svg.classList.add('word-vu');
+const defs=document.createElementNS(ns,'defs');defs.innerHTML='<linearGradient id="wordVuGradient" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#48caaa"/><stop offset="67%" stop-color="#99e6c3"/><stop offset="85%" stop-color="#efd18b"/><stop offset="100%" stop-color="#f48b78"/></linearGradient>';svg.append(defs);
+const wordFills=[];[...'MEGAHERTZ'].forEach((letter,i)=>{const x=i*26;const clip=document.createElementNS(ns,'clipPath');clip.id='letterVuClip'+i;const clipText=document.createElementNS(ns,'text');clipText.setAttribute('x',x+13);clipText.setAttribute('y','39');clipText.setAttribute('text-anchor','middle');clipText.setAttribute('textLength','23');clipText.setAttribute('lengthAdjust','spacingAndGlyphs');clipText.textContent=letter;clip.append(clipText);defs.append(clip);const base=clipText.cloneNode(true);base.setAttribute('fill','#263d40');svg.append(base);const fill=document.createElementNS(ns,'rect');fill.setAttribute('x',x);fill.setAttribute('width','26');fill.setAttribute('y','43');fill.setAttribute('height','0');fill.setAttribute('fill','url(#wordVuGradient)');fill.setAttribute('clip-path','url(#letterVuClip'+i+')');svg.append(fill);wordFills.push(fill)});vu.append(svg);
 const wordLevels=new Float32Array(9);
-function drawWord(on){$('vu').classList.toggle('is-playing',on);for(let letter=0;letter<9;letter++){const lo=Math.floor(Math.pow(letter/9,1.7)*(buffer.length-2))+1,hi=Math.max(lo+1,Math.floor(Math.pow((letter+1)/9,1.7)*(buffer.length-2))+1);let sum=0,n=0;for(let bin=lo;bin<Math.min(buffer.length,hi);bin++){sum+=buffer[bin]*buffer[bin];n++}const target=n?Math.min(1,Math.sqrt(sum/n)/210):0;wordLevels[letter]=on?Math.max(target,wordLevels[letter]*.86):0}for(const cell of wordCells){const level=wordLevels[Math.floor(cell.column/5)],lit=level>(6-cell.row)/7+.025;cell.pixel.style.background=lit?(cell.row<2?'#ffc36a':cell.row<4?'#9de6c9':'#5ddfb5'):'#1b332e';cell.pixel.style.boxShadow=lit?'0 0 2px #78e5be55':'none'}}
+function drawWord(on){$('vu').classList.toggle('is-playing',on);for(let letter=0;letter<9;letter++){const lo=Math.floor(Math.pow(letter/9,1.7)*(buffer.length-2))+1,hi=Math.max(lo+1,Math.floor(Math.pow((letter+1)/9,1.7)*(buffer.length-2))+1);let sum=0,n=0;for(let bin=lo;bin<Math.min(buffer.length,hi);bin++){sum+=buffer[bin]*buffer[bin];n++}const target=n?Math.min(1,Math.sqrt(sum/n)/210):0;wordLevels[letter]=on?Math.max(target,wordLevels[letter]*.86):0}for(let i=0;i<9;i++){const height=Math.max(0,Math.min(36,wordLevels[i]*36));wordFills[i].setAttribute('y',String(42-height));wordFills[i].setAttribute('height',String(height))}}
+
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
 for(const id of ['shuffle','repeat','endStop','silence'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
