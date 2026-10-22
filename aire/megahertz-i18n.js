@@ -29,7 +29,7 @@ function translate(source){
  }
  if(!translated) {
    const m=clean.match(/^(\d+) salida\(s\) · (.*)$/);
-   if(m)translated=[null,m[1]+' plays · '+m[2],m[1]+' saídas · '+m[2],m[1]+' diffusions · '+m[2],m[1]+' 次播放 · '+m[2]][i];
+   if(m){const rest=m[2].split(' · ').map(part=>texts.get(part)?.[i]||part).join(' · ');translated=[null,m[1]+' plays · '+rest,m[1]+' saídas · '+rest,m[1]+' diffusions · '+rest,m[1]+' 次播放 · '+rest][i]}
  }
  if(!translated) {
    const count=clean.match(/^(\d+) veces$/);
@@ -42,6 +42,14 @@ function translate(source){
  if(!translated) {
    const count=clean.match(/^(\d+) audios cargados en (música|publicidad)$/);
    if(count){const n=count[1],isMusic=count[2]==='música';translated=[null,n+' audio files loaded in '+(isMusic?'music':'advertising'),n+' arquivos carregados em '+(isMusic?'música':'publicidade'),n+' fichiers chargés en '+(isMusic?'musique':'publicité'),n+' 个音频已加载到'+(isMusic?'音乐':'广告')][i]}
+ }
+ if(!translated){
+   const p=clean.match(/^Playlist de (música|avisos) guardada en este navegador$/);
+   if(p){const ads=p[1]==='avisos';translated=[null,(ads?'Ad':'Music')+' playlist saved in this browser', 'Playlist de '+(ads?'anúncios':'músicas')+' salva neste navegador','Liste '+(ads?'publicitaire':'musicale')+' enregistrée dans ce navigateur', (ads?'广告':'音乐')+'播放列表已保存到此浏览器'][i]}
+ }
+ if(!translated){
+   const p=clean.match(/^Listas recuperadas · (\d+) canciones y (\d+) avisos$/);
+   if(p)translated=[null,'Playlists restored · '+p[1]+' songs and '+p[2]+' ads','Playlists restauradas · '+p[1]+' músicas e '+p[2]+' anúncios','Listes restaurées · '+p[1]+' morceaux et '+p[2]+' annonces','播放列表已恢复 · '+p[1]+' 首曲目、'+p[2]+' 条广告'][i]
  }
  if(!translated)return source;
  const before=source.match(/^\s*/)[0],after=source.match(/\s*$/)[0];
