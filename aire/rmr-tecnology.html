@@ -1207,7 +1207,7 @@ const audio=document.getElementById('rmrAdAudio'),bars=document.getElementById('
 if(!audio||!bars||!state)return;
 const cells=Array.from({length:24},()=>{const e=document.createElement('i');bars.appendChild(e);return e});
 let context,analyser,buffer,connected=false;
-function connect(){if(connected)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;context=new C();const source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);source.connect(analyser);analyser.connect(context.destination);connected=true}catch(e){state.textContent='SIN MEDICIÓN'}}
+function connect(){if(connected)return;try{const C=window.AudioContext||window.webkitAudioContext;if(!C)return;context=new C();const source=context.createMediaElementSource(audio);analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);source.connect(analyser);analyser.connect(context.destination);window.mhAdAnalyser=analyser;window.mhAdAudioContext=context;connected=true}catch(e){state.textContent='SIN MEDICIÓN'}}
 function tick(){const active=!audio.paused&&!audio.ended&&audio.readyState>=2;state.textContent=active?'EN EMISIÓN':'EN ESPERA';if(active){connect();if(context?.state==='suspended')context.resume().catch(()=>{});}if(active&&analyser){analyser.getByteFrequencyData(buffer);cells.forEach((el,i)=>{const idx=Math.min(buffer.length-1,Math.floor(i*buffer.length/cells.length));el.style.height=Math.max(5,Math.min(100,buffer[idx]/255*110))+'%'})}else cells.forEach(el=>el.style.height='5%');requestAnimationFrame(tick)}
 requestAnimationFrame(tick);
 })();</script><script id="rmrAdVuEdgeSynchronizer">
@@ -3008,22 +3008,72 @@ air.appendChild(shared);sections.appendChild(music);sections.appendChild(ads);
 const vu=document.getElementById('rmrUnifiedVu');
 for(let i=0;i<22;i++){const b=document.createElement('span');vu.appendChild(b)}
 const musicAudio=document.getElementById('audio'),adAudio=document.getElementById('rmrAdAudio');
-let tick=0;
 function refresh(){
 const adOn=adAudio&&!adAudio.paused&&!adAudio.ended;
 const musicOn=musicAudio&&!musicAudio.paused&&!musicAudio.ended;
-const active=adOn||musicOn;
-const bars=vu.children;
-for(let i=0;i<bars.length;i++){
-const on=active&&((i*7+tick)%13)<9;
-bars[i].classList.toggle('active',!!on);
-bars[i].style.height=on?(8+(i*11+tick*3)%28)+'px':'3px';
+const analyser=adOn?window.mhAdAnalyser:musicOn?window.rmrSilenceSpectrumAnalyser:null;
+const data=analyser?new Uint8Array(analyser.frequencyBinCount):null;
+if(data)analyser.getByteFrequencyData(data);
+for(let i=0;i<vu.children.length;i++){
+const level=data?data[Math.min(data.length-1,Math.floor(i*data.length/ vu.children.length))]/255:0;
+vu.children[i].classList.toggle('active',level>.025);
+vu.children[i].style.height=Math.max(3,level*30)+'px';
 }
-tick++;
 }
 for(const a of [musicAudio,adAudio])if(a)for(const event of ['play','pause','ended'])a.addEventListener(event,refresh);
 refresh();
 setInterval(refresh,160);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script><style id="mh-top-strip-v4">
+body main{max-width:none!important;width:100%!important;padding:6px!important}
+.rmrDualDeck .rmrUnifiedSections{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important}
+.rmrDualDeck{padding:6px!important;gap:6px!important}
+#mhTopStrip{display:grid!important;grid-template-columns:minmax(0,1fr) 150px minmax(0,1fr)!important;gap:8px!important;min-height:170px!important;width:100%!important;background:#071724!important;border:1px solid #527b94!important;border-radius:8px!important;padding:7px!important;align-items:stretch!important}
+#mhTopStrip .rmrDeck{margin:0!important;padding:6px!important;min-width:0!important;width:100%!important;position:static!important;display:flex!important;flex-direction:column!important;gap:5px!important;border:0!important;background:transparent!important}
+#mhTopStrip .rmrDeckTitle{padding:2px!important;margin:0!important;height:20px!important;font-size:11px!important;text-align:center!important}
+#mhTopStrip .rmrPlayerLayout,#mhTopStrip .player,#mhTopStrip .player>div,#mhTopStrip .screen,#mhTopStrip .rmrNowNext,#mhTopStrip .rmrMusicControlSide,#mhTopStrip .rmrMusicInfoSide{display:contents!important}
+#mhTopStrip .rmrNowPanel,#mhTopStrip .rmrNextPanel{padding:3px 6px!important;min-height:0!important;margin:0!important;background:transparent!important;border:0!important}
+#mhTopStrip #song,#mhTopStrip #rmrNextSong{font-size:12px!important;line-height:1.2!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#mhTopStrip .rmrNowLabel,#mhTopStrip small{font-size:9px!important}
+#mhTopStrip .rmrNowPlayingActions{order:4!important;margin:0!important}
+#mhTopStrip .rmrVuControlGrid,#mhTopStrip .rmrAdControlRow{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important;width:100%!important;margin:0!important}
+#mhTopStrip button{height:28px!important;min-height:28px!important;min-width:0!important;padding:3px!important;font-size:10px!important;width:100%!important}
+#mhTopStrip .rmrAdBodySplit,#mhTopStrip .rmrAdControlsColumn,#mhTopStrip .rmrAdButtonPair{display:contents!important}
+#mhTopStrip .rmrAdControlRow{margin-top:auto!important}
+#mhTopStrip .mhMusicExtras{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;order:5!important}
+#mhTopStrip .rmrPlayerVolume{order:6!important;display:flex!important;flex-direction:row!important;align-items:center!important;gap:6px!important;margin:0!important;padding:0!important;border:0!important;font-size:9px!important}
+#mhTopStrip .rmrPlayerVolume input{flex:1!important}
+#mhTopStrip .rmrUnifiedAir{width:auto!important;padding:6px!important;justify-content:center!important;gap:7px!important}
+#mhTopStrip .rmrAirMeta{font-size:9px!important;text-align:center!important}
+#mhTopStrip .rmrSharedAir label{display:grid!important;grid-template-columns:1fr 1fr!important;font-size:10px!important;gap:4px!important}
+#mhTopStrip .rmrSharedAir input{grid-column:1/-1!important;grid-row:2!important;width:100%!important}
+#mhTopStrip .rmrAirSource{grid-column:1/-1!important}
+#mhTopStrip .rmrSharedAir strong{font-size:10px!important;text-align:center!important}
+#mhTopStrip .rmrAdVuPanel,#mhTopStrip .rmrSpectrumVu{display:none!important}
+.mhAdSummary{min-height:44px;font-size:12px;line-height:1.4;padding:4px 6px;color:#b8dff1}
+.rmrUnifiedHeading{font-size:11px!important;padding:2px 6px!important}
+@media(max-width:760px){#mhTopStrip{grid-template-columns:minmax(0,1fr) 110px minmax(0,1fr)!important}#mhTopStrip button{font-size:8px!important}}
+</style>
+<script id="mh-top-strip-layout-v4">
+(function(){
+function install(){
+const sections=document.querySelector('.rmrUnifiedSections'),air=document.querySelector('.rmrUnifiedAir');
+const music=sections?.querySelector('.rmrMusicColumn>.rmrDeck'),ad=sections?.querySelector('.rmrAdDeck');
+if(!sections||!air||!music||!ad)return;
+const strip=document.createElement('section');strip.id='mhTopStrip';strip.setAttribute('aria-label','Reproductor unificado de música y tandas');
+sections.before(strip);
+const info=music.querySelector('.rmrSongInfo');if(info)sections.querySelector('.rmrMusicColumn').prepend(info);
+const adList=ad.querySelector('.rmrAdListColumn');if(adList)sections.querySelector('.rmrRightStack').prepend(adList);
+const extras=document.createElement('div');extras.className='mhMusicExtras';
+for(const id of ['rmrShuffle','rmrRepeat']){const b=document.getElementById(id);if(b)extras.append(b)}
+music.querySelector('.screen').append(extras);
+const summary=document.createElement('div');summary.className='mhAdSummary';summary.setAttribute('aria-live','polite');ad.querySelector('.rmrAdHeader').after(summary);
+function update(){summary.textContent=[document.getElementById('rmrAdState')?.textContent,document.getElementById('rmrAdUpcoming')?.textContent].filter(Boolean).join(' · ')}
+const observer=new MutationObserver(update);
+for(const id of ['rmrAdState','rmrAdUpcoming']){const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})}
+update();strip.append(music,air,ad);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
