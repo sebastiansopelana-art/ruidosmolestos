@@ -209,6 +209,16 @@
 
 .mh-metal-logo>img{position:absolute;width:109.5%;height:auto;max-width:none;left:-6.3%;top:-28%;object-fit:initial;transform:none}
 .metal-glow-overlay{transform:none}
+
+.master{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) 28px;gap:4px;align-items:stretch;padding:0 8px;overflow:hidden}
+.master>#vu{grid-column:1;grid-row:1;height:100%;min-height:0;margin:0;overflow:hidden}
+.master>div:not(#vu){grid-column:1;grid-row:2;min-height:0;display:grid;grid-template-rows:16px 12px;gap:0}
+.master #seek{height:16px;min-height:0;margin:0;width:100%}
+.master .times{height:12px;line-height:12px;font-size:10px}
+.channel-meter{bottom:-40px;top:19px}
+.center-controls{grid-template-columns:1fr 1fr;gap:8px;padding:0 8px}
+.emission-controls .center-controls button,.emission-controls .center-controls #settings{height:28px;min-height:28px;font-size:12px;line-height:14px;padding:3px 6px;border:1px solid #7894a5;border-bottom:2px solid #4b6576;border-radius:4px;background:linear-gradient(#415b6d,#233b4c);box-shadow:inset 0 1px 0 #ffffff25,0 1px 2px #0005;letter-spacing:.35px}
+@media(max-width:1200px){.channel-meter{bottom:-66px}.emission-controls .center-controls button,.emission-controls .center-controls #settings{font-size:11px}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
