@@ -2996,4 +2996,13 @@ update();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
 })();
-</script></body></html>
+</script><style id="rmr-unificacion-fase2-fix">
+/* Corrige el grid heredado: encabezado y barra de emisión a ancho completo. */
+.rmrDualDeck{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;align-items:start!important;gap:10px!important}
+.rmrDualDeck::before{grid-column:1 / -1!important;grid-row:1!important;position:static!important;writing-mode:horizontal-tb!important;transform:none!important;white-space:normal!important;max-width:none!important;min-width:0!important;width:auto!important;height:auto!important;align-self:stretch!important;justify-self:stretch!important;padding:5px 8px 10px!important;line-height:1.4!important}
+.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important;min-width:0!important;width:100%!important;position:relative!important}
+.rmrDualDeck>.rmrRightStack{grid-column:2!important;grid-row:2!important;min-width:0!important;width:100%!important;position:relative!important}
+.rmrDualDeck>.rmrSharedAir{grid-column:1 / -1!important;grid-row:3!important;width:100%!important;min-width:0!important;position:relative!important}
+.rmrDualDeck>.rmrMusicColumn .rmrDeck,.rmrDualDeck>.rmrRightStack .rmrDeck{width:100%!important;max-width:none!important;min-width:0!important}
+@media(max-width:850px){.rmrDualDeck{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto auto!important}.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important}.rmrDualDeck>.rmrRightStack{grid-column:1!important;grid-row:3!important}.rmrDualDeck>.rmrSharedAir{grid-column:1!important;grid-row:4!important}}
+</style></body></html>
