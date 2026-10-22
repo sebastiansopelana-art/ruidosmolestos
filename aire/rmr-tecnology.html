@@ -112,6 +112,26 @@
 #vu.is-playing .word-vu{opacity:1}
 #vu .word-vu rect{transition:y .09s linear,height .09s linear}
 #vu::after{font-size:24px;letter-spacing:.5px}
+
+#vu{padding:0 2px;border:none;box-shadow:none;background:transparent;overflow:hidden;height:76px;min-height:76px}
+#vu::after{display:none}
+#vu .mh-brand{display:block;width:100%;height:100%;overflow:visible}
+@keyframes mhWavePulse{0%,100%{opacity:.22}45%{opacity:1}}
+@keyframes mhSignalSweep{0%{transform:translateX(0);opacity:0}15%,80%{opacity:1}100%{transform:translateX(170px);opacity:0}}
+.mh-wave{animation:mhWavePulse 3.2s ease-in-out infinite}.wave2{animation-delay:.4s}
+.mh-scan{animation:mhSignalSweep 5s ease-in-out infinite}
+.console>.deck{position:relative}
+.console>.deck[aria-label="Música automática"]{padding-right:24px}
+.console>.deck[aria-label="Tandas publicitarias"]{padding-left:24px}
+.channel-meter{position:absolute;top:20px;bottom:20px;width:16px;display:flex;flex-direction:column-reverse;gap:2px;padding:3px;background:#080f14;border:1px solid #405462;border-radius:3px}
+.music-meter{right:0}.ads-meter{left:0}
+.channel-meter i{display:block;flex:1;min-height:1px;background:#1b302a;border-radius:.5px}
+.channel-meter i.lit{background:#66d9a0;box-shadow:0 0 2px #66d9a066}
+.channel-meter i[data-zone="warm"]{background:#332f20}
+.channel-meter i[data-zone="warm"].lit{background:#e3c96d}
+.channel-meter i[data-zone="peak"]{background:#352026}
+.channel-meter i[data-zone="peak"].lit{background:#ed7b78}
+@media(prefers-reduced-motion:reduce){.mh-wave,.mh-scan{animation:none;opacity:.8}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="now" id="musicNow">Sin audio en reproducción</div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></section>
@@ -128,14 +148,11 @@
 const lists={music:[],ads:[]},index={music:-1,ads:-1};let kind='music',automatic=true,exact=false,pending=false,resumeMusic=false,context,analyser,buffer,silentSince=0,lastSchedule='';
 const say=(s,error=false)=>{$('status').textContent=s;$('status').classList.toggle('error',error)};
 const playing=a=>!a.paused&&!a.ended;const active=()=>playing(ads)?ads:playing(music)?music:kind==='ads'?ads:music;
-function meter(){if(!context){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;context=new AC();analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);for(const a of [music,ads]){const source=context.createMediaElementSource(a);source.connect(analyser)}analyser.connect(context.destination)}if(context.state==='suspended')context.resume().catch(()=>say('No se pudo activar la salida de audio',true))}
-const ns='http://www.w3.org/2000/svg',vu=$('vu');vu.replaceChildren();vu.setAttribute('aria-label','MEGAHERTZ · Indicador de nivel vertical por letra');
-const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 234 50');svg.setAttribute('aria-hidden','true');svg.classList.add('word-vu');
-const defs=document.createElementNS(ns,'defs');defs.innerHTML='<linearGradient id="wordVuGradient" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#48caaa"/><stop offset="67%" stop-color="#99e6c3"/><stop offset="85%" stop-color="#efd18b"/><stop offset="100%" stop-color="#f48b78"/></linearGradient>';svg.append(defs);
-const wordFills=[];[...'MEGAHERTZ'].forEach((letter,i)=>{const x=i*26;const clip=document.createElementNS(ns,'clipPath');clip.id='letterVuClip'+i;const clipText=document.createElementNS(ns,'text');clipText.setAttribute('x',x+13);clipText.setAttribute('y','39');clipText.setAttribute('text-anchor','middle');clipText.setAttribute('textLength','23');clipText.setAttribute('lengthAdjust','spacingAndGlyphs');clipText.textContent=letter;clip.append(clipText);defs.append(clip);const base=clipText.cloneNode(true);base.setAttribute('fill','#263d40');svg.append(base);const fill=document.createElementNS(ns,'rect');fill.setAttribute('x',x);fill.setAttribute('width','26');fill.setAttribute('y','43');fill.setAttribute('height','0');fill.setAttribute('fill','url(#wordVuGradient)');fill.setAttribute('clip-path','url(#letterVuClip'+i+')');svg.append(fill);wordFills.push(fill)});vu.append(svg);
-const wordLevels=new Float32Array(9);
-function drawWord(on){$('vu').classList.toggle('is-playing',on);for(let letter=0;letter<9;letter++){const lo=Math.floor(Math.pow(letter/9,1.7)*(buffer.length-2))+1,hi=Math.max(lo+1,Math.floor(Math.pow((letter+1)/9,1.7)*(buffer.length-2))+1);let sum=0,n=0;for(let bin=lo;bin<Math.min(buffer.length,hi);bin++){sum+=buffer[bin]*buffer[bin];n++}const target=n?Math.min(1,Math.sqrt(sum/n)/210):0;wordLevels[letter]=on?Math.max(target,wordLevels[letter]*.86):0}for(let i=0;i<9;i++){const height=Math.max(0,Math.min(36,wordLevels[i]*36));wordFills[i].setAttribute('y',String(42-height));wordFills[i].setAttribute('height',String(height))}}
-
+function meter(){if(!context){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;context=new AC();analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);for(const a of [music,ads]){const source=context.createMediaElementSource(a);const channel=context.createAnalyser();channel.fftSize=256;source.connect(channel);channel.connect(analyser);independentMeters.set(a,{analyser:channel,samples:new Float32Array(channel.fftSize)})}analyser.connect(context.destination)}if(context.state==='suspended')context.resume().catch(()=>say('No se pudo activar la salida de audio',true))}
+const independentMeters=new Map(),vu=$('vu');vu.replaceChildren();vu.setAttribute('aria-label','MEGAHERTZ · Marca animada');
+vu.innerHTML='<svg class="mh-brand" viewBox="0 0 280 76" role="img" aria-label="MEGAHERTZ Broadcast Systems"><defs><linearGradient id="mhMetal" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f1f6f7"/><stop offset=".48" stop-color="#adc2cd"/><stop offset="1" stop-color="#718d9d"/></linearGradient><linearGradient id="mhSignal"><stop stop-color="#4cbdca"/><stop offset="1" stop-color="#b1f9ec"/></linearGradient></defs><g class="mh-emblem"><path d="M9 49V23l13 17 13-17v26" fill="none" stroke="url(#mhMetal)" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/><path class="mh-wave wave1" d="M42 28q10 10 0 20" fill="none" stroke="#73d9d6" stroke-width="2.5"/><path class="mh-wave wave2" d="M48 22q17 16 0 32" fill="none" stroke="#73d9d6" stroke-width="2"/><circle cx="22" cy="58" r="2" fill="#a0f6e6"/></g><text x="66" y="44" fill="url(#mhMetal)" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="900" letter-spacing=".2" textLength="207" lengthAdjust="spacingAndGlyphs">MEGAHERTZ</text><path d="M67 52H272" stroke="#425d6c" stroke-width=".7"/><path class="mh-scan" d="M67 52h34" stroke="url(#mhSignal)" stroke-width="1.8"/><text x="68" y="64" fill="#90a9b7" font-family="Arial,sans-serif" font-size="7.5" letter-spacing="3">BROADCAST SYSTEMS</text></svg>';
+const meterBars={};for(const k of ['music','ads']){const deck=document.querySelector(k==='music'?'.deck[aria-label="Música automática"]':'.deck[aria-label="Tandas publicitarias"]');const host=document.createElement('div');host.className='channel-meter '+k+'-meter';host.setAttribute('role','img');host.setAttribute('aria-label','Nivel de audio de '+(k==='music'?'música':'tandas'));for(let i=0;i<18;i++){const segment=document.createElement('i');segment.dataset.zone=i>14?'peak':i>11?'warm':'normal';host.append(segment)}deck.append(host);meterBars[k]=host.children}
+function drawWord(){for(const [k,a] of [['music',music],['ads',ads]]){const meter=independentMeters.get(a);let rms=0;if(meter&&!a.paused&&!a.ended){meter.analyser.getFloatTimeDomainData(meter.samples);for(const x of meter.samples)rms+=x*x;rms=Math.sqrt(rms/meter.samples.length)}const db=20*Math.log10(Math.max(rms,1e-8));const level=Math.max(0,Math.min(1,(db+54)/54));for(let i=0;i<18;i++)meterBars[k][i].classList.toggle('lit',i/18<level)}}
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
 for(const id of ['shuffle','repeat','endStop','silence'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
