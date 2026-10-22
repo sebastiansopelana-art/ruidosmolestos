@@ -32,15 +32,15 @@ function translate(source){
    if(m)translated=[null,m[1]+' plays · '+m[2],m[1]+' saídas · '+m[2],m[1]+' diffusions · '+m[2],m[1]+' 次播放 · '+m[2]][i];
  }
  if(!translated) {
-   const count=clean.match(/^(\\d+) veces$/);
+   const count=clean.match(/^(\d+) veces$/);
    if(count){const n=count[1];translated=[null,n+' times',n+' vezes',n+' fois',n+'次'][i]}
  }
  if(!translated) {
-   const count=clean.match(/^(\\d+) avisos$/);
+   const count=clean.match(/^(\d+) avisos$/);
    if(count){const n=count[1];translated=[null,n+' ads',n+' anúncios',n+' annonces',n+' 条广告'][i]}
  }
  if(!translated) {
-   const count=clean.match(/^(\\d+) audios cargados en (música|publicidad)$/);
+   const count=clean.match(/^(\d+) audios cargados en (música|publicidad)$/);
    if(count){const n=count[1],isMusic=count[2]==='música';translated=[null,n+' audio files loaded in '+(isMusic?'music':'advertising'),n+' arquivos carregados em '+(isMusic?'música':'publicidade'),n+' fichiers chargés en '+(isMusic?'musique':'publicité'),n+' 个音频已加载到'+(isMusic?'音乐':'广告')][i]}
  }
  if(!translated)return source;
