@@ -80,6 +80,15 @@
 .ad-controls{grid-column:3;grid-row:1}
 @media(max-width:1050px){.console{height:210px;grid-template-rows:minmax(0,1fr) 64px}.ad-controls{grid-template-columns:repeat(4,minmax(0,1fr))}.music-controls{grid-template-columns:repeat(4,minmax(0,1fr));align-content:start}}
 @media(max-width:800px){.emission-controls{grid-template-columns:minmax(0,1fr) 200px minmax(0,1fr)}}
+
+.console{height:192px;grid-template-rows:minmax(0,1fr) 40px}
+.emission-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;width:100%}
+.music-controls{grid-column:1;grid-row:1}
+.ad-controls{grid-column:2;grid-row:1}
+.music-controls,.ad-controls{grid-template-columns:repeat(8,minmax(0,1fr));gap:4px;align-content:start}
+.emission-controls button{height:38px;min-height:38px;font-size:10px;line-height:12px;padding:3px 4px;white-space:normal;overflow:visible;overflow-wrap:normal;word-break:normal;text-align:center}
+.music-controls svg{width:20px;height:20px}
+@media(max-width:1200px){.console{height:232px;grid-template-rows:minmax(0,1fr) 82px}.ad-controls,.music-controls{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:38px 38px;gap:4px}.emission-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.emission-controls button{font-size:11px}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="now" id="musicNow">Sin audio en reproducción</div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></section>
