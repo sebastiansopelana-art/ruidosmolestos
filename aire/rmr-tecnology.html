@@ -15,6 +15,14 @@
 .master{gap:3px;padding:2px 6px}
 .vu{height:35px}.vu i{max-height:25px}.now{padding:7px;font-size:12px}
 @media(max-width:800px){.console{height:155px;grid-template-columns:minmax(0,1fr) 100px minmax(0,1fr)}.music-transport button,.music-extra button{font-size:8px}.deck h1{letter-spacing:.6px}}
+
+.music-transport button,.music-extra button{display:flex;align-items:center;justify-content:center;background:linear-gradient(#344c5d,#203340);border:1px solid #6b8799;border-bottom:2px solid #10232f;border-radius:5px;box-shadow:inset 0 1px 0 #ffffff24,0 1px 2px #0006;padding:3px}
+.music-transport button:hover,.music-extra button:hover{background:linear-gradient(#45677b,#2c4759);border-color:#a2c4d8}
+.music-transport button:active,.music-extra button:active{box-shadow:inset 0 2px 4px #0006;transform:translateY(1px)}
+.music-transport svg,.music-extra svg{width:18px;height:18px;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round;fill:none;pointer-events:none}
+#play svg,#pause svg{fill:currentColor;stroke:none}
+#stop svg{fill:#ed4c50;stroke:#ff9b9d;stroke-width:1}
+.music-extra button[aria-pressed=true]{background:linear-gradient(#387453,#204b35);color:#c5ffdb;border-color:#87cea5;box-shadow:inset 0 1px 0 #ffffff25,0 0 4px #76d69a55}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="now" id="musicNow">Sin audio en reproducción</div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div><div class="buttons music-transport"><button id="prev" aria-label="Canción anterior">ANTERIOR</button><button id="play">PLAY</button><button id="pause">PAUSA</button><button id="stop">DETENER</button><button id="next" aria-label="Canción siguiente">SIGUIENTE</button></div><div class="buttons music-extra"><button id="shuffle" aria-pressed="false">ALEATORIO</button><button id="repeat" aria-pressed="false">REPETIR</button><button id="endStop" aria-pressed="false">PARAR AL FINAL</button></div></section>
