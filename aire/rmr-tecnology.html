@@ -2953,4 +2953,24 @@ button:focus-visible,[role="button"]:focus-visible,.track[draggable="true"]:focu
  border-bottom-width:2px!important;
 }
 #rmrProgramMusicClone .mhProgramTools button:active{box-shadow:inset 0 2px 5px #0008!important}
+</style><style id="orion-radio-theme-v1">
+/* ORION RADIO — fase 1, solamente estética. No modifica la lógica ni el DOM. */
+:root{color-scheme:dark!important;--orion-bg:#080d0c;--orion-panel:#111b18;--orion-panel-2:#17241f;--orion-border:#335548;--orion-green:#a9ed73;--orion-green-bright:#c8ff93;--orion-text:#e8f6eb;--orion-muted:#9cb8a6}
+html,body{background:#080d0c!important;color:var(--orion-text)!important}
+body{background-image:linear-gradient(145deg,#080d0c,#101a16 60%,#0a100e)!important}
+.rmrShell,.rmrShell main,.rmrRail{background-color:transparent}
+.panel,.rmrDeck,.rmrRail,.rmrJingleStrip,.rmrMusicDrop,.rmrAdList,.rmrAdCurrent,.rmrAdState,.screen,.side .mini,.rmrSongInfo{border-color:var(--orion-border)!important}
+.panel,.rmrDeck,.rmrRail,.rmrJingleStrip{background-color:var(--orion-panel)!important;background-image:linear-gradient(160deg,rgba(186,255,160,.045),transparent 46%,rgba(0,0,0,.18))!important}
+.paneltitle,.rmrDeckTitle,.rmrJingleStripHead,.rmrRail h2,.rmrRail h3{color:var(--orion-green-bright)!important;border-color:var(--orion-border)!important;letter-spacing:.085em!important}
+.screen,.rmrAdCurrent,.rmrAdList,.side .mini,.rmrSongInfo{background-color:#0a1511!important;color:var(--orion-text)!important}
+button,.header-actions a,.rmrRailActionButtons>a,.rmrNativeMusicPicker{border-color:#547b60!important;color:#effcf0!important;background-color:#203b2c!important;background-image:linear-gradient(160deg,rgba(215,255,195,.12),transparent 55%,rgba(0,0,0,.16))!important}
+button:hover,.header-actions a:hover,.rmrRailActionButtons>a:hover{border-color:var(--orion-green)!important;filter:brightness(1.13)!important}
+button:focus-visible,input:focus-visible{outline-color:var(--orion-green-bright)!important}
+input[type=range],input[type=checkbox]{accent-color:var(--orion-green)!important}
+.rmrDeckTitle,.paneltitle,.rmrAdListTitle{color:var(--orion-green)!important}
+.rmrAdListRow.isPlaying,.track.active{background:#204e37!important;border-left-color:var(--orion-green-bright)!important}
+.rmrAdListRow:hover,.track:hover{background-color:rgba(134,221,136,.1)!important}
+.clock,#song,.rmrAdCurrent{color:var(--orion-green-bright)!important}
+small,.note,.rmrAdState{color:var(--orion-muted)!important}
+/* Estados de emergencia, emisión y pisadores conservan sus colores funcionales. */
 </style></body></html>
