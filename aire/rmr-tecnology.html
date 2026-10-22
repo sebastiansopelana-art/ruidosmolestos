@@ -356,16 +356,13 @@
 @media(max-width:680px){#config{width:97vw!important;height:94dvh!important;max-height:94dvh!important}}
 
 /* Selector global y selector dentro de Configuración. No modifica el motor de audio. */
-.mh-language-bar{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:30px;margin:0 0 6px}
-.mh-language-bar label{font-size:10px;font-weight:800;color:#9bcee9;letter-spacing:1px}
-.mh-language-bar select{min-width:140px;min-height:27px;padding:4px 8px;border-radius:5px;border:1px solid #537e98;color:#e3f5ff;background:#152f43;font:700 11px Arial,sans-serif}
 #config .mh-language-setting{display:grid;grid-template-columns:minmax(0,1fr) 210px;align-items:center;gap:8px;padding:10px 12px;margin:10px 0;border:1px solid #3d6880;background:#0c2232;border-radius:6px}
 #config .mh-language-setting label{margin:0;font-size:11px;font-weight:800;color:#d1efff}
 #config .mh-language-setting select{width:100%;min-height:34px}
 #config .mh-language-setting p{grid-column:1/-1;margin:0;font-size:11px}
 .mh-cjk #config,.mh-cjk .console{font-family:Arial,"Noto Sans SC","Microsoft YaHei",sans-serif}
-@media(max-width:640px){.mh-language-bar{justify-content:flex-end;margin-bottom:4px}.mh-language-bar select{min-width:116px}.mh-language-setting{grid-template-columns:1fr!important}}
-</style></head><body><main><div class="mh-language-bar"><label for="mhLanguage">IDIOMA</label><select id="mhLanguage" aria-label="Idioma de la interfaz"><option value="es">Español</option><option value="en">English</option><option value="pt">Português</option><option value="fr">Français</option><option value="zh-CN">简体中文</option></select></div>
+@media(max-width:640px){.mh-language-setting{grid-template-columns:1fr!important}}
+</style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
 <section class="master" aria-label="Salida de aire compartida"><strong id="air">EN ESPERA</strong><div class="vu" id="vu" role="img" aria-label="Nivel real de la salida de audio"></div><div><input id="seek" aria-label="Progreso del audio en emisión" type="range" min="0" max="1000" value="0" disabled><div class="times"><span id="elapsed">00:00</span><span id="duration">00:00</span></div></div></section>
