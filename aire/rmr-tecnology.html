@@ -343,6 +343,17 @@
 #config .mh-muted{color:#93b4c5;padding:12px;font-size:11px}
 #config .config-foot{flex:0 0 auto;padding:10px 16px;border-top:1px solid #395c71;min-height:54px}
 @media(max-width:680px){#config .mh-settings-layout{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}#config .config-tabs{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid #38576c;padding:8px;gap:5px}#config .config-tabs button{flex:0 0 auto;width:auto;text-align:center;height:34px;min-height:34px;padding:5px 8px;font-size:9px}#config [data-settings-page]{padding:12px}#config .mh-form-grid{grid-template-columns:1fr}#config .config-foot{flex-wrap:wrap}}
+
+/* Ventana de configuracion estable y sin saltos entre solapas. */
+#config{width:min(1000px,96vw)!important;height:min(740px,92dvh)!important;max-height:92dvh!important;overflow:hidden!important;padding:0!important}
+#config form{height:100%!important;max-height:none!important;min-height:0!important;overflow:hidden!important}
+#config .mh-settings-layout{flex:1 1 0!important;min-height:0!important;overflow:hidden!important}
+#config .mh-settings-content{min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain}
+#config [data-settings-page]{min-height:0!important}
+#config #adsConfigDrop{border:1px dashed #5ca0c4;min-height:83px;display:flex;align-items:center;justify-content:center;line-height:1.5;padding:17px;transition:border-color .14s,background .14s}
+#config #adsConfigDrop.dragging{border:2px solid #8edcff;background:#25516a}
+#config #adsDropCount{color:#b5d7e9;font-size:11px}
+@media(max-width:680px){#config{width:97vw!important;height:94dvh!important;max-height:94dvh!important}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -399,6 +410,10 @@
         <label>Primera salida exacta<input id="adTime" type="time"></label>
         <div class="mh-inline-actions"><button type="button" id="distributeAdHours">↻ DISTRIBUIR REPETICIONES</button></div>
       </div>
+      <div class="mh-settings-subtitle">CARGAR AVISOS PUBLICITARIOS</div>
+      <div class="mh-inline-actions"><button type="button" class="mh-primary" id="adsDropSelect">+ AGREGAR AVISOS</button><span id="adsDropCount" role="status">Los avisos cargados aparecerán en la playlist de publicidad.</span></div>
+      <input type="file" id="adsDropFiles" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac" multiple hidden>
+      <div id="adsConfigDrop" role="button" tabindex="0" aria-label="Arrastrar aquí archivos de publicidad" class="mh-drop">ARRASTRÁ Y SOLTÁ AQUÍ LOS ARCHIVOS DE PUBLICIDAD, O PULSÁ + AGREGAR AVISOS</div>
       <div class="mh-settings-subtitle">HORARIOS DE SALIDA</div>
       <div id="adSlots" class="mh-time-grid"></div>
       <input id="extraTimes" type="hidden" value="">
@@ -563,6 +578,20 @@ ads.addEventListener('playing',()=>{lastManualAds=Date.now();if(!automatic)manua
 $('mode').addEventListener('click',()=>{manualSince=automatic?0:Date.now();lastManualAds=0;showRecoveryStatus()});
 setInterval(()=>{if(!$('autoRecoveryEnabled').checked||automatic||!lists.ads.length){if(automatic)manualSince=0;return}if(!manualSince){manualSince=Date.now();return}if(Date.now()-Math.max(manualSince,lastManualAds)>=600000){$('mode').click();say('Protección de publicidad: regreso automático después de 10 minutos en MANUAL.');showRecoveryStatus()}},15000);
 
+
+/* Publicidad: carga nativa de audios desde configuración, misma playlist y persistencia. */
+$('adsDropSelect').onclick=()=>$('adsDropFiles').click();
+$('adsDropFiles').onchange=e=>{const files=[...e.target.files];const before=lists.ads.length;add('ads',files);$('adsDropCount').textContent=(lists.ads.length-before)+' aviso(s) añadido(s). Total: '+lists.ads.length+'.';e.target.value=''};
+const adsDrop=$('adsConfigDrop');
+adsDrop.onclick=()=>$('adsDropFiles').click();
+adsDrop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('adsDropFiles').click()}};
+adsDrop.ondragover=e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.add('dragging');e.dataTransfer.dropEffect='copy'};
+adsDrop.ondragenter=e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.add('dragging')};
+adsDrop.ondragleave=e=>{if(!adsDrop.contains(e.relatedTarget))adsDrop.classList.remove('dragging')};
+adsDrop.ondrop=async e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.remove('dragging');try{const files=await collectDrop(e.dataTransfer);const before=lists.ads.length;add('ads',files);$('adsDropCount').textContent=(lists.ads.length-before)+' aviso(s) añadido(s). Total: '+lists.ads.length+'.'}catch(err){$('adsDropCount').textContent='No se pudieron cargar los avisos: '+err.message}};
+$('adsDropCount').textContent=lists.ads.length+' aviso(s) en la playlist publicitaria.';
+/* Clic en fondo exterior cierra; el contenido y los campos mantienen sus acciones. */
+$('config').addEventListener('click',e=>{if(e.target!==$('config'))return;const r=$('config').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('config').close()});
 for(const button of document.querySelectorAll('[data-settings-tab]'))button.onclick=()=>{document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!==button.dataset.settingsTab);document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b===button));if(button.dataset.settingsTab==='audio')deviceList()};
 $('saveConfig').onclick=()=>{const invalid=$('extraTimes').value.split(',').map(x=>x.trim()).filter(Boolean).some(x=>!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(x));if(invalid){$('settingsSaved').textContent='Revisá los horarios: usá HH:MM separados por comas';return}const settings=collectSettings();applySettings(settings);try{localStorage.setItem(settingKey,JSON.stringify(settings));$('config').close();say('Configuración guardada')}catch(error){$('settingsSaved').textContent='No se pudo guardar: '+error.message}};
 $('exportConfig').onclick=()=>{const data={...collectSettings(),breakPresets},url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='megahertz-configuracion.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
