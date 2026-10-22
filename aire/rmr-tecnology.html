@@ -2962,4 +2962,38 @@ button:focus-visible,[role="button"]:focus-visible,.track[draggable="true"]:focu
 .rmrDualDeck .rmrDeck{border-color:#294b63!important;border-radius:6px!important;background:#0b2234!important;box-shadow:none!important}
 .rmrDualDeck .rmrDeckTitle{color:#a9def9!important;letter-spacing:.08em!important}
 @media(max-width:850px){.rmrDualDeck>.rmrMusicColumn{padding-right:0!important}.rmrDualDeck>.rmrRightStack{padding-left:0!important;border-left:0!important;border-top:1px solid #36566d!important;padding-top:8px!important}}
-</style></body></html>
+</style><style id="rmr-unificacion-fase2">
+/* Una consola de emisión con dos fuentes de audio independientes. */
+.rmrDualDeck{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;background:#0a1b2b!important;border:2px solid #4b829e!important;border-radius:12px!important;padding:12px!important}
+.rmrDualDeck::before{content:"CONSOLA DE EMISIÓN · MÚSICA + PUBLICIDAD";grid-column:1/-1;display:block;color:#9bd8ff;font-weight:800;font-size:13px;letter-spacing:1.5px;padding:0 4px 9px;border-bottom:1px solid #38647d}
+.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important;padding:0!important}
+.rmrDualDeck>.rmrRightStack{grid-column:2!important;grid-row:2!important;padding:0!important;border:0!important}
+.rmrDualDeck .rmrDeck{border:0!important;background:transparent!important;box-shadow:none!important;padding:5px!important}
+.rmrDualDeck .rmrDeckTitle{color:#9bd8ff!important}
+.rmrDualDeck>.rmrMusicColumn>.rmrDeck,.rmrDualDeck>.rmrRightStack>.rmrDeck{min-height:0!important}
+.rmrSharedAir{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:9px 12px;background:#081522;border:1px solid #3b6d89;border-radius:7px}
+.rmrSharedAir label{display:flex;align-items:center;gap:8px;min-width:0;font:700 11px system-ui;color:#b8e6ff}
+.rmrSharedAir input{flex:1;min-width:0;accent-color:#63c6ff}
+.rmrSharedAir strong{color:#9be0ff;font:700 11px ui-monospace,monospace}
+.rmrSharedAir .rmrAirSource{color:#fff;letter-spacing:.1em}
+@media(max-width:850px){.rmrDualDeck{grid-template-columns:minmax(0,1fr)!important}.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important}.rmrDualDeck>.rmrRightStack{grid-column:1!important;grid-row:3!important}.rmrSharedAir{grid-column:1!important;grid-row:4!important;grid-template-columns:1fr}}
+</style>
+<script id="rmr-unificacion-fase2-script">
+(function(){
+function ready(){
+const deck=document.querySelector('.rmrDualDeck'),music=document.getElementById('audio'),ad=document.getElementById('rmrAdAudio');
+if(!deck||!music||!ad||document.getElementById('rmrSharedAir'))return;
+const bar=document.createElement('div');bar.className='rmrSharedAir';bar.id='rmrSharedAir';
+bar.innerHTML='<label><span class="rmrAirSource" id="rmrAirSource">EN ESPERA</span><span id="rmrAirElapsed">00:00</span><input id="rmrAirSeek" type="range" min="0" max="100" value="0" aria-label="Progreso del audio en emisión"><span id="rmrAirTotal">00:00</span></label><strong id="rmrAirKind">SIN AUDIO</strong>';
+deck.appendChild(bar);
+const source=bar.querySelector('#rmrAirSource'),elapsed=bar.querySelector('#rmrAirElapsed'),total=bar.querySelector('#rmrAirTotal'),seek=bar.querySelector('#rmrAirSeek'),kind=bar.querySelector('#rmrAirKind');
+function fmt(t){if(!Number.isFinite(t)||t<0)return '00:00';return String(Math.floor(t/60)).padStart(2,'0')+':'+String(Math.floor(t%60)).padStart(2,'0')}
+function active(){if(!ad.paused&&!ad.ended)return [ad,'PUBLICIDAD'];if(!music.paused&&!music.ended)return [music,'MÚSICA'];return [null,'EN ESPERA']}
+function update(){const [a,label]=active();source.textContent=label==='EN ESPERA'?'EN ESPERA':'EN EL AIRE';kind.textContent=label;seek.disabled=!a;seek.value=a&&Number.isFinite(a.duration)&&a.duration>0?Math.round(a.currentTime/a.duration*100):0;elapsed.textContent=fmt(a?a.currentTime:0);total.textContent=fmt(a?a.duration:0)}
+seek.addEventListener('input',function(){const [a]=active();if(a&&Number.isFinite(a.duration)&&a.duration>0){const original=document.getElementById(a===ad?'rmrAdSeek':'seek');if(original&&!original.disabled){original.value=seek.value;original.dispatchEvent(new Event('input',{bubbles:true}));original.dispatchEvent(new Event('change',{bubbles:true}))}else{a.currentTime=a.duration*Number(seek.value)/100}}});
+for(const a of [music,ad])for(const event of ['play','pause','ended','timeupdate','durationchange','loadedmetadata','seeked'])a.addEventListener(event,update);
+update();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
+})();
+</script></body></html>
