@@ -3064,17 +3064,24 @@ const music=sections?.querySelector('.rmrMusicColumn>.rmrDeck'),ad=sections?.que
 if(!sections||!air||!music||!ad)return;
 const strip=document.createElement('section');strip.id='mhTopStrip';strip.setAttribute('aria-label','Reproductor unificado de música y tandas');
 sections.before(strip);
+strip.append(music,air,ad);
 const info=music.querySelector('.rmrSongInfo');if(info)sections.querySelector('.rmrMusicColumn').prepend(info);
 const adList=ad.querySelector('.rmrAdListColumn');if(adList)sections.querySelector('.rmrRightStack').prepend(adList);
 const extras=document.createElement('div');extras.className='mhMusicExtras';
 for(const id of ['rmrShuffle','rmrRepeat']){const b=document.getElementById(id);if(b)extras.append(b)}
-music.querySelector('.screen').append(extras);
-const summary=document.createElement('div');summary.className='mhAdSummary';summary.setAttribute('aria-live','polite');ad.querySelector('.rmrAdHeader').after(summary);
+(music.querySelector('.screen')||music).append(extras);
+const summary=document.createElement('div');summary.className='mhAdSummary';summary.setAttribute('aria-live','polite');const adHead=ad.querySelector('.rmrAdHeader,.rmrDeckTitle');if(adHead)adHead.after(summary);else ad.prepend(summary);
 function update(){summary.textContent=[document.getElementById('rmrAdState')?.textContent,document.getElementById('rmrAdUpcoming')?.textContent].filter(Boolean).join(' · ')}
 const observer=new MutationObserver(update);
 for(const id of ['rmrAdState','rmrAdUpcoming']){const el=document.getElementById(id);if(el)observer.observe(el,{subtree:true,childList:true,characterData:true})}
-update();strip.append(music,air,ad);
+update();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
-</script></body></html>
+</script><style id="mh-strip-visibility-fix">
+#mhTopStrip,#mhTopStrip>.rmrDeck,#mhTopStrip>.rmrUnifiedAir{visibility:visible!important;opacity:1!important;transform:none!important;inset:auto!important;max-height:none!important;overflow:visible!important;flex-shrink:0!important}
+#mhTopStrip{height:auto!important;min-height:180px!important;position:relative!important;grid-column:1/-1!important;grid-row:auto!important;max-width:none!important}
+#mhTopStrip>.rmrDeck{height:auto!important;min-height:160px!important;max-width:none!important;grid-column:auto!important;grid-row:auto!important}
+#mhTopStrip .timeline,#mhTopStrip .rmrAdProgress{display:none!important}
+.rmrDualDeck>.rmrUnifiedSections{height:auto!important;max-height:none!important;overflow:visible!important;flex-shrink:0!important}
+</style></body></html>
