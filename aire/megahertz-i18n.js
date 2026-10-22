@@ -24,15 +24,15 @@ function translate(source){
    for(const entry of suffixes){if(clean.endsWith(entry[0])){const beginning=clean.slice(0,-entry[0].length);translated=beginning+entry[i];break}}
  }
  if(!translated) {
-    let match=clean.match(/^(\\d+) aviso\\(s\\) añadido\\(s\\)\\. Total: (\\d+)\\.$/);
+    let match=clean.match(/^(\d+) aviso\(s\) añadido\(s\)\. Total: (\d+)\.$/);
     if(match){const n=match[1],total=match[2];translated=[null,n+' ads added. Total: '+total+'.',n+' anúncios adicionados. Total: '+total+'.',n+' annonces ajoutées. Total : '+total+'.',n+' 条广告已添加，总数：'+total+'。'][i]}
  }
  if(!translated) {
-   const m=clean.match(/^(\\d+) salida\\(s\\) · (.*)$/);
+   const m=clean.match(/^(\d+) salida\(s\) · (.*)$/);
    if(m)translated=[null,m[1]+' plays · '+m[2],m[1]+' saídas · '+m[2],m[1]+' diffusions · '+m[2],m[1]+' 次播放 · '+m[2]][i];
  }
  if(!translated)return source;
- const before=source.match(/^\\s*/)[0],after=source.match(/\\s*$/)[0];
+ const before=source.match(/^\s*/)[0],after=source.match(/\s*$/)[0];
  return before+translated+after;
 }
 function ignored(node){const e=node.parentElement;return !!e?.closest('script,style,textarea,[data-i18n-ignore],.track span,.mh-record-name strong');}
@@ -49,7 +49,7 @@ function visitAttributes(el){
  if(el.nodeType!==Node.ELEMENT_NODE)return;
  let saved=attributes.get(el);if(!saved){saved={};attributes.set(el,saved)}
  for(const a of attributeKeys){
-   if(!el.hasAttribute(a))continue;
+   if(!el.hasAttribute(a)||a==='aria-label'&&el.matches('.deck'))continue;
    const current=el.getAttribute(a);
    if(!saved[a]||current!==saved[a].out)saved[a]={source:current,out:current};
    const next=translate(saved[a].source);
