@@ -2953,30 +2953,6 @@ button:focus-visible,[role="button"]:focus-visible,.track[draggable="true"]:focu
  border-bottom-width:2px!important;
 }
 #rmrProgramMusicClone .mhProgramTools button:active{box-shadow:inset 0 2px 5px #0008!important}
-</style><style id="rmr-consola-unificada-fase1">
-/* Fase 1: carcasa compartida, sin alterar reproductores, IDs ni eventos. */
-.rmrDualDeck{position:relative!important;gap:0!important;padding:8px!important;background:linear-gradient(160deg,#10283c,#071827)!important;border:1px solid #4a7895!important;border-radius:12px!important;box-shadow:inset 0 1px 0 #9dd9ff22,0 8px 28px #0005!important}
-.rmrDualDeck>.rmrMusicColumn,.rmrDualDeck>.rmrRightStack{min-width:0!important}
-.rmrDualDeck>.rmrMusicColumn{padding-right:5px!important}
-.rmrDualDeck>.rmrRightStack{padding-left:5px!important;border-left:1px solid #36566d!important}
-.rmrDualDeck .rmrDeck{border-color:#294b63!important;border-radius:6px!important;background:#0b2234!important;box-shadow:none!important}
-.rmrDualDeck .rmrDeckTitle{color:#a9def9!important;letter-spacing:.08em!important}
-@media(max-width:850px){.rmrDualDeck>.rmrMusicColumn{padding-right:0!important}.rmrDualDeck>.rmrRightStack{padding-left:0!important;border-left:0!important;border-top:1px solid #36566d!important;padding-top:8px!important}}
-</style><style id="rmr-unificacion-fase2">
-/* Una consola de emisión con dos fuentes de audio independientes. */
-.rmrDualDeck{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;background:#0a1b2b!important;border:2px solid #4b829e!important;border-radius:12px!important;padding:12px!important}
-.rmrDualDeck::before{content:"CONSOLA DE EMISIÓN · MÚSICA + PUBLICIDAD";grid-column:1/-1;display:block;color:#9bd8ff;font-weight:800;font-size:13px;letter-spacing:1.5px;padding:0 4px 9px;border-bottom:1px solid #38647d}
-.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important;padding:0!important}
-.rmrDualDeck>.rmrRightStack{grid-column:2!important;grid-row:2!important;padding:0!important;border:0!important}
-.rmrDualDeck .rmrDeck{border:0!important;background:transparent!important;box-shadow:none!important;padding:5px!important}
-.rmrDualDeck .rmrDeckTitle{color:#9bd8ff!important}
-.rmrDualDeck>.rmrMusicColumn>.rmrDeck,.rmrDualDeck>.rmrRightStack>.rmrDeck{min-height:0!important}
-.rmrSharedAir{grid-column:1/-1;grid-row:3;display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:9px 12px;background:#081522;border:1px solid #3b6d89;border-radius:7px}
-.rmrSharedAir label{display:flex;align-items:center;gap:8px;min-width:0;font:700 11px system-ui;color:#b8e6ff}
-.rmrSharedAir input{flex:1;min-width:0;accent-color:#63c6ff}
-.rmrSharedAir strong{color:#9be0ff;font:700 11px ui-monospace,monospace}
-.rmrSharedAir .rmrAirSource{color:#fff;letter-spacing:.1em}
-@media(max-width:850px){.rmrDualDeck{grid-template-columns:minmax(0,1fr)!important}.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important}.rmrDualDeck>.rmrRightStack{grid-column:1!important;grid-row:3!important}.rmrSharedAir{grid-column:1!important;grid-row:4!important;grid-template-columns:1fr}}
 </style>
 <script id="rmr-unificacion-fase2-script">
 (function(){
@@ -2996,13 +2972,59 @@ update();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',ready);else ready();
 })();
-</script><style id="rmr-unificacion-fase2-fix">
-/* Corrige el grid heredado: encabezado y barra de emisión a ancho completo. */
-.rmrDualDeck{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;grid-template-rows:auto auto auto!important;align-items:start!important;gap:10px!important}
-.rmrDualDeck::before{grid-column:1 / -1!important;grid-row:1!important;position:static!important;writing-mode:horizontal-tb!important;transform:none!important;white-space:normal!important;max-width:none!important;min-width:0!important;width:auto!important;height:auto!important;align-self:stretch!important;justify-self:stretch!important;padding:5px 8px 10px!important;line-height:1.4!important}
-.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important;min-width:0!important;width:100%!important;position:relative!important}
-.rmrDualDeck>.rmrRightStack{grid-column:2!important;grid-row:2!important;min-width:0!important;width:100%!important;position:relative!important}
-.rmrDualDeck>.rmrSharedAir{grid-column:1 / -1!important;grid-row:3!important;width:100%!important;min-width:0!important;position:relative!important}
-.rmrDualDeck>.rmrMusicColumn .rmrDeck,.rmrDualDeck>.rmrRightStack .rmrDeck{width:100%!important;max-width:none!important;min-width:0!important}
-@media(max-width:850px){.rmrDualDeck{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto auto auto auto!important}.rmrDualDeck>.rmrMusicColumn{grid-column:1!important;grid-row:2!important}.rmrDualDeck>.rmrRightStack{grid-column:1!important;grid-row:3!important}.rmrDualDeck>.rmrSharedAir{grid-column:1!important;grid-row:4!important}}
-</style></body></html>
+</script><style id="rmr-unificada-estructural-v3">
+/* Consola única: anula el grid conflictivo con un contenedor flex real. */
+.rmrDualDeck{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:10px!important;width:100%!important;min-width:0!important;padding:12px!important;border:1px solid #4e819f!important;border-radius:12px!important;background:#0b2031!important;position:relative!important}
+.rmrDualDeck::before{content:none!important;display:none!important}
+.rmrUnifiedHeading{display:block!important;width:100%!important;flex:0 0 auto!important;color:#a9def7!important;font-weight:850!important;font-size:14px!important;letter-spacing:1.1px!important;padding:6px 8px 12px!important;border-bottom:1px solid #365a73!important}
+.rmrUnifiedAir{display:flex!important;flex-direction:column!important;gap:10px!important;min-width:0!important;width:100%!important;padding:12px!important;background:#071724!important;border:1px solid #365a73!important;border-radius:9px!important}
+.rmrUnifiedAir .rmrAirMeta{font-size:11px!important;font-weight:850!important;letter-spacing:1px!important;color:#a7dcfa!important}
+.rmrUnifiedAir .rmrSharedAir{display:flex!important;flex-direction:column!important;gap:7px!important;grid-column:auto!important;grid-row:auto!important;width:100%!important;margin:0!important;padding:0!important;background:none!important;border:0!important;position:static!important}
+.rmrUnifiedAir .rmrSharedAir label{display:flex!important;width:100%!important;gap:10px!important}
+.rmrUnifiedAir .rmrSharedAir input{flex:1!important}
+.rmrUnifiedSections{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:12px!important;align-items:start!important;min-width:0!important;width:100%!important}
+.rmrUnifiedSections>.rmrMusicColumn,.rmrUnifiedSections>.rmrRightStack{grid-column:auto!important;grid-row:auto!important;display:block!important;width:100%!important;min-width:0!important;padding:0!important;margin:0!important;border:0!important;position:static!important}
+.rmrUnifiedSections .rmrDeck{width:100%!important;min-width:0!important;border:1px solid #31556f!important;border-radius:8px!important;background:#10293d!important;padding:9px!important}
+.rmrUnifiedSections .rmrDeckTitle{font-size:12px!important;color:#a9def7!important}
+.rmrUnifiedSections .rmrMusicColumn .timeline,.rmrUnifiedSections .rmrAdDeck .rmrAdProgress{display:none!important}
+.rmrUnifiedSections .rmrMusicColumn .rmrSpectrumVu,.rmrUnifiedSections .rmrAdDeck .rmrAdVuPanel{display:none!important}
+.rmrUnifiedAir .rmrUnifiedVu{display:flex!important;align-items:end!important;gap:3px!important;height:42px!important;padding:6px!important;border:1px solid #294d65!important;border-radius:5px!important;background:#06111b!important}
+.rmrUnifiedVu>span{flex:1!important;min-width:2px!important;height:3px!important;background:#315e77!important;border-radius:2px!important;transition:height .1s linear!important}
+.rmrUnifiedVu>span.active{background:#64c8f2!important}
+@media(max-width:850px){.rmrUnifiedSections{grid-template-columns:minmax(0,1fr)!important}}
+</style>
+<script id="rmr-unificada-estructural-v3-js">
+(function(){
+function install(){
+const deck=document.querySelector('.rmrDualDeck');
+if(!deck||document.getElementById('rmrUnifiedHeading'))return;
+const music=deck.querySelector(':scope > .rmrMusicColumn'),ads=deck.querySelector(':scope > .rmrRightStack'),shared=deck.querySelector(':scope > .rmrSharedAir');
+if(!music||!ads||!shared)return;
+const heading=document.createElement('div');heading.id='rmrUnifiedHeading';heading.className='rmrUnifiedHeading';heading.textContent='CONSOLA ÚNICA DE EMISIÓN · MÚSICA + PUBLICIDAD';
+const air=document.createElement('div');air.className='rmrUnifiedAir';air.innerHTML='<div class="rmrAirMeta">AUDIO EN EMISIÓN · VÚMETRO Y PROGRESO COMPARTIDOS</div><div class="rmrUnifiedVu" id="rmrUnifiedVu" aria-label="Indicador visual de actividad del audio"></div>';
+const sections=document.createElement('div');sections.className='rmrUnifiedSections';
+deck.insertBefore(heading,deck.firstChild);deck.insertBefore(air,heading.nextSibling);deck.insertBefore(sections,air.nextSibling);
+air.appendChild(shared);sections.appendChild(music);sections.appendChild(ads);
+const vu=document.getElementById('rmrUnifiedVu');
+for(let i=0;i<22;i++){const b=document.createElement('span');vu.appendChild(b)}
+const musicAudio=document.getElementById('audio'),adAudio=document.getElementById('rmrAdAudio');
+let tick=0;
+function refresh(){
+const adOn=adAudio&&!adAudio.paused&&!adAudio.ended;
+const musicOn=musicAudio&&!musicAudio.paused&&!musicAudio.ended;
+const active=adOn||musicOn;
+const bars=vu.children;
+for(let i=0;i<bars.length;i++){
+const on=active&&((i*7+tick)%13)<9;
+bars[i].classList.toggle('active',!!on);
+bars[i].style.height=on?(8+(i*11+tick*3)%28)+'px':'3px';
+}
+tick++;
+}
+for(const a of [musicAudio,adAudio])if(a)for(const event of ['play','pause','ended'])a.addEventListener(event,refresh);
+refresh();
+setInterval(refresh,160);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
+})();
+</script></body></html>
