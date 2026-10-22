@@ -18,6 +18,14 @@ function translate(source){
  const i=codeIndex[language];
  let translated=texts.get(clean)?.[i];
  if(!translated){
+   const p=clean.match(/^Playlist de (música|avisos) guardada en este navegador$/);
+   if(p){const ads=p[1]==='avisos';translated=[null,(ads?'Ad':'Music')+' playlist saved in this browser','Playlist de '+(ads?'anúncios':'músicas')+' salva neste navegador','Liste '+(ads?'publicitaire':'musicale')+' enregistrée dans ce navigateur',(ads?'广告':'音乐')+'播放列表已保存到此浏览器'][i]}
+ }
+ if(!translated){
+   const p=clean.match(/^Listas recuperadas · (\d+) canciones y (\d+) avisos$/);
+   if(p)translated=[null,'Playlists restored · '+p[1]+' songs and '+p[2]+' ads','Playlists restauradas · '+p[1]+' músicas e '+p[2]+' anúncios','Listes restaurées · '+p[1]+' morceaux et '+p[2]+' annonces','播放列表已恢复 · '+p[1]+' 首曲目、'+p[2]+' 条广告'][i]
+ }
+ if(!translated){
    for(const entry of prefixes){if(clean.startsWith(entry[0])){const suffix=clean.slice(entry[0].length);translated=entry[i]+(texts.get(suffix)?.[i]||suffix);break}}
  }
  if(!translated){
