@@ -196,7 +196,7 @@ function merge(payload,token){
  if(!consistent(payload.title||current.title,current.title))return false;
  if(current.artist&&!artistMatches(payload.artist,current.artist))return false;
  for(const f of ['title','artist','album','year','writer']){
-   if(!protectedFields.has(f)&&payload[f]&&(!current[f]||f==='writer'&&current.source!=='Etiquetas ID3'))current[f]=clean(payload[f]);
+   if(!protectedFields.has(f)&&payload[f]&&(!current[f]||['writer','album','year'].includes(f)))current[f]=clean(payload[f]);
  }
  current.source=payload.source||current.source||'Catálogo';
  display('Información encontrada: '+current.source);
@@ -206,8 +206,8 @@ function merge(payload,token){
 async function lookup(token){
  if(!current.title||navigator.onLine===false){display('Datos locales; sin consulta de internet');return}
  const cached=cache[trackName],complete=!!(current.writer&&current.album&&current.year);
- if(complete&&cached?.lookupAt&&Date.now()-cached.lookupAt<14*86400000)return;
- if(cached?.attemptAt&&Date.now()-cached.attemptAt<20*60000&&!complete)return;
+ if(complete&&cached?.lookupVersion===2&&cached?.lookupAt&&Date.now()-cached.lookupAt<14*86400000)return;
+ if(cached?.lookupVersion===2&&cached?.attemptAt&&Date.now()-cached.attemptAt<20*60000&&!complete)return;
  current.attemptAt=Date.now();
  display('Buscando autor, disco y año…');
  let found=false,workerFailed=false;
@@ -227,7 +227,7 @@ async function lookup(token){
    try{const mb=await directMusicBrainz(token);if(token!==generation)return;found=merge(mb,token)||found}catch(_){}
  }
  if(token!==generation)return;
- if(found){current.lookupAt=Date.now();persist();display('Información musical encontrada')}
+ if(found){current.lookupVersion=2;current.lookupAt=Date.now();persist();display('Información musical encontrada')}
  else{persist();display('Sin resultados verificables; se muestran datos del archivo')}
 }
 async function show(item){
