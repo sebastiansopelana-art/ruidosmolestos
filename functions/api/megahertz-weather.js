@@ -76,9 +76,9 @@ export async function onRequestGet({request,context}){
  const altitude=q.get('altitude');
  const forecast=new URL('https://api.open-meteo.com/v1/forecast');
  forecast.searchParams.set('latitude',String(lat));forecast.searchParams.set('longitude',String(lon));
- forecast.searchParams.set('timezone','auto');forecast.searchParams.set('forecast_days','2');
+ forecast.searchParams.set('timezone','auto');forecast.searchParams.set('forecast_days','7');
  forecast.searchParams.set('current','temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,is_day,cloud_cover,precipitation,wind_speed_10m,wind_direction_10m,wind_gusts_10m,pressure_msl');
- forecast.searchParams.set('daily','temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_probability_max');
+ forecast.searchParams.set('daily','weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_probability_max');
  forecast.searchParams.set('hourly','visibility,precipitation_probability,uv_index');
  const air=new URL('https://air-quality-api.open-meteo.com/v1/air-quality');
  air.searchParams.set('latitude',String(lat));air.searchParams.set('longitude',String(lon));air.searchParams.set('timezone','auto');
@@ -113,7 +113,18 @@ export async function onRequestGet({request,context}){
   expires:f.properties?.expires||'',source:'NOAA/NWS - alerta oficial',
   url:'https://www.weather.gov/'
  })):null;
- const current=w.current||{},today=Object.fromEntries(Object.entries(w.daily||{}).map(([k,v])=>[k,Array.isArray(v)?v[0]:v]));
+ const current=w.current||{},daily=w.daily||{},
+  today=Object.fromEntries(Object.entries(daily).map(([k,v])=>[k,Array.isArray(v)?v[0]:v]));
+ const week=Array.isArray(daily.time)?daily.time.slice(0,7).map((date,i)=>({
+  date,
+  weather_code:daily.weather_code?.[i]??null,
+  min:daily.temperature_2m_min?.[i]??null,
+  max:daily.temperature_2m_max?.[i]??null,
+  precipitation_probability:daily.precipitation_probability_max?.[i]??null,
+  precipitation_sum:daily.precipitation_sum?.[i]??null,
+  sunrise:daily.sunrise?.[i]??null,
+  sunset:daily.sunset?.[i]??null
+ })):[];
  const hour=(w.hourly?.time||[]).findIndex(t=>t===current.time?.slice(0,13)+':00');
  const hourly={visibility_m:hour>=0?w.hourly.visibility?.[hour]:null,precipitation_probability:hour>=0?w.hourly.precipitation_probability?.[hour]:null};
  let warning=null;
@@ -129,7 +140,7 @@ export async function onRequestGet({request,context}){
  }
  return json({
   location:{lat,lon,city,region,country,countryName:countryName(country||'XX'),source:placeSource,timezone:w.timezone||geocoded?.timezone||cf.timezone||'UTC'},
-  updatedAt:new Date().toISOString(),current,today,hourly,air:a?.current||null,
+  updatedAt:new Date().toISOString(),current,today,week,hourly,air:a?.current||null,
   earthquakes:observed,officialAlerts:nws,officialCoverage:country==='US'?'NOAA/NWS Estados Unidos':'Sin integración de alertas oficiales para este país',
   warning,failed,
   sources:{weather:'Open-Meteo',air:'Open-Meteo / CAMS',earthquakes:'USGS',official:country==='US'?'NOAA/NWS':'No disponible en esta versión'}
