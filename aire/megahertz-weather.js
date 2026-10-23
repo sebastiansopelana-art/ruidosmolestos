@@ -279,14 +279,16 @@ function displayNationalHeadlines(items,label,updatedAt,emptyMessage){
  if(update){
   let time='';
   if(updatedAt){try{time=new Intl.DateTimeFormat(lang(),{timeZone:state.clockTZ||undefined,hour:'2-digit',minute:'2-digit'}).format(new Date(updatedAt))}catch(_){}}
-  update.textContent=time?'ACT. '+time:'SIN DATOS';
+  const count=Array.isArray(items)?items.length:0;
+  update.textContent=time?(count+' NOT. · '+time):'SIN DATOS';
+  update.title=time?(count+' titulares · Última consulta '+time):'Noticias sin conexión';
  }
  if(!Array.isArray(items)||items.length===0){
   const empty=document.createElement('div');empty.className='mh-news-empty';
   empty.textContent=emptyMessage||'Todavía no hay titulares disponibles para la ubicación seleccionada.';
   host.append(empty);return;
  }
- for(const item of items.slice(0,9)){
+ for(const item of items.slice(0,30)){
   try{
    const target=new URL(item.url);if(target.protocol!=='https:')continue;
    const a=document.createElement('a');a.className='mh-news-headline';
@@ -334,6 +336,14 @@ async function loadNews(){
    data.error||'No hay noticias disponibles en esta edición. Se reintentará automáticamente.');
   $('mhNewsRegion').textContent=country;
   if(!nation.length&&data.status==='unavailable')$('mhNewsUpdated').textContent='SIN FUENTES';
+  const diag=$('mhNewsHeadlines');
+  if(diag){
+   const received=Number.isFinite(data.returned)?data.returned:nation.length;
+   const counts=data.feedCounts||{};
+   const detail=Object.entries(counts).map(([kind,count])=>kind+': '+count).join(' | ');
+   diag.title='Titulares encontrados: '+received+(data.failedSources?.length?' · Fuentes sin respuesta: '+data.failedSources.join(', '):'')+
+    (detail?' · '+detail:'');
+  }
   animateNews(nation.length?nation:[{title:'SIN TITULARES DE ESTA ZONA POR AHORA · REINTENTO AUTOMÁTICO',scope:'nacional'}]);
  }catch(error){
   if(token!==newsSeq)return;
