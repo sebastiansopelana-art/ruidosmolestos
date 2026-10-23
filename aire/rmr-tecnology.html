@@ -616,15 +616,134 @@ function drawWord(){let sum=0;if(analyser){const samples=new Float32Array(analys
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
 for(const id of ['shuffle','repeat','endStop','silence'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
-function render(k){if(k==='third'){renderBreakSchedule();return}renderAdQueue();if(k==='ads')renderBreakSchedule();const host=$(k+'List');host.replaceChildren();if(!lists[k].length){const empty=document.createElement('div');empty.className='empty';empty.textContent=k==='music'?'Arrastrá canciones aquí o pulsá + MÚSICA':k==='programs'?'Arrastrá aquí los audios del programa o pulsá + AUDIO':k==='third'?'Arrastrá audios aquí o pulsá + AUDIO':'Arrastrá avisos aquí o pulsá + AVISOS';host.append(empty)}lists[k].forEach((item,i)=>{const b=document.createElement('button');b.className='track'+(index[k]===i?' active':'');const s=document.createElement('span');s.textContent=String(i+1).padStart(2,'0')+' · '+item.name;b.append(s);b.ondblclick=()=>k==='music'?startMusic(i):k==='programs'?startProgram(i):k==='third'?startThird(i):previewLooseAd(i);host.append(b)});$('musicNext').textContent='PRÓXIMO · '+(lists.music[index.music+1]?.name||'Fin de lista');$('adsNext').textContent=(pending?'PENDIENTES '+pendingBreaks.length+' · ':'EN ESPERA · ')+(activeBreak?activeAdQueue.length+' avisos de '+activeBreak.name:scheduleEntries().length+' salidas programadas')}
+
+/* Buscadores predictivos e intercambio por arrastre entre las dos playlists.
+   No modificamos la programación del árbol publicitario. */
+function makeTrackId(){return 'audio-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2)}
+function normalizeSearch(value){return String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
+function matchesTrack(name,query){
+ const wanted=normalizeSearch(query),source=normalizeSearch(name);
+ if(!wanted||source.includes(wanted))return true;
+ const words=source.split(' ');
+ return wanted.split(' ').every(term=>words.some(word=>{
+  if(word.includes(term))return true;
+  if(term.length>=4&&word.startsWith(term.slice(0,4)))return true;
+  if(term.length>=4&&Math.abs(term.length-word.length)<=2){
+   let errors=0,a=term,b=word;
+   for(let i=0;i<Math.min(a.length,b.length);i++)if(a[i]!==b[i])errors++;
+   return errors+Math.abs(a.length-b.length)<=1;
+  }
+  return false;
+ }));
+}
+const playlistSearch={music:'',programs:''};
+let draggedTrack=null;
+function playlistKey(k){return k==='music'?'music':k==='programs'?'programs':null}
+function updateSearchCount(k,shown){
+ const count=$(k+'SearchCount');
+ if(count)count.textContent=shown+'/'+lists[k].length;
+}
+function resetMusicSelection(k){
+ const a=k==='music'?music:programs;
+ a.pause();a.removeAttribute('src');a.load();index[k]=-1;
+ if(k==='music'){$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}
+ else $('programsNow').textContent='—';
+}
+function relocateTrack(from,id,to,targetIndex){
+ if(!playlistKey(from)||!playlistKey(to))return;
+ const fromIndex=lists[from].findIndex(track=>track.id===id);
+ if(fromIndex<0)return;
+ const track=lists[from][fromIndex],sourceAudio=from==='music'?music:programs;
+ if(from!==to&&index[from]===fromIndex&&playing(sourceAudio)){
+  say('Detené el tema que está al aire antes de pasarlo de playlist.',true);return;
+ }
+ const selected={music:lists.music[index.music],programs:lists.programs[index.programs]};
+ const seen={music:[...seenTracks.music].map(i=>lists.music[i]),programs:[...seenTracks.programs].map(i=>lists.programs[i])};
+ const existingLength=lists[to].length;
+ let destination=Math.max(0,Math.min(existingLength,targetIndex));
+ lists[from].splice(fromIndex,1);
+ if(from===to&&fromIndex<destination)destination--;
+ lists[to].splice(destination,0,track);
+ for(const k of ['music','programs']){
+  seenTracks[k].clear();
+  seen[k].forEach(item=>{const i=lists[k].indexOf(item);if(i>=0)seenTracks[k].add(i)});
+  index[k]=selected[k]?lists[k].indexOf(selected[k]):-1;
+ }
+ if(from!==to&&selected[from]===track)resetMusicSelection(from);
+ render('music');render('programs');syncProgramAir();
+ savePlaylist(from);if(from!==to)savePlaylist(to);
+ say((from===to?'Orden actualizado en ':'Tema movido a ')+(to==='music'?'Playlist Automática':'Playlist Para Programas')+': '+track.name);
+}
+function clearDraggedState(){
+ draggedTrack=null;
+ document.querySelectorAll('#musicList .track-row,#programsList .track-row').forEach(row=>row.classList.remove('is-dragging','drag-over'));
+}
+function render(k){
+ if(k==='third'){renderBreakSchedule();return}
+ renderAdQueue();if(k==='ads')renderBreakSchedule();
+ const host=$(k+'List');host.replaceChildren();
+ const searchable=!!playlistKey(k),query=searchable?playlistSearch[k]:'';
+ let visible=0;
+ if(!lists[k].length){
+  const empty=document.createElement('div');empty.className='empty';
+  empty.textContent=k==='music'?'Arrastrá canciones aquí o pulsá + MÚSICA':k==='programs'?'Arrastrá aquí los audios del programa o pulsá + AUDIO':'Arrastrá avisos aquí o pulsá + AVISOS';
+  host.append(empty);
+ }
+ lists[k].forEach((item,i)=>{
+  if(searchable&&!matchesTrack(item.name,query))return;
+  visible++;
+  const b=document.createElement('button');b.type='button';b.className='track'+(index[k]===i?' active':'');
+  const name=document.createElement('span');name.textContent=String(i+1).padStart(2,'0')+' · '+item.name;
+  b.append(name);
+  b.ondblclick=()=>k==='music'?startMusic(i):k==='programs'?startProgram(i):previewLooseAd(i);
+  if(!searchable){host.append(b);return}
+  if(!item.id)item.id=makeTrackId();
+  const row=document.createElement('div');row.className='track-row';row.draggable=true;row.dataset.trackId=item.id;row.title='Arrastrá para ordenar o pasar a la otra playlist. Doble clic para reproducir.';
+  const other=k==='music'?'programs':'music';
+  const transfer=document.createElement('button');transfer.type='button';transfer.className='playlist-transfer';
+  transfer.title='Pasar a '+(other==='music'?'Playlist Automática':'Playlist Para Programas');
+  transfer.setAttribute('aria-label',transfer.title+' · '+item.name);
+  transfer.textContent=k==='music'?'→':'←';
+  transfer.onclick=()=>relocateTrack(k,item.id,other,lists[other].length);
+  row.ondragstart=e=>{
+   draggedTrack={from:k,id:item.id};
+   e.dataTransfer.effectAllowed='move';
+   e.dataTransfer.setData('application/x-megahertz-playlist',JSON.stringify(draggedTrack));
+   e.dataTransfer.setData('text/plain',item.name);
+   row.classList.add('is-dragging');
+  };
+  row.ondragend=clearDraggedState;
+  row.ondragover=e=>{if(!draggedTrack)return;e.preventDefault();e.stopPropagation();e.dataTransfer.dropEffect='move';row.classList.add('drag-over')};
+  row.ondragleave=()=>row.classList.remove('drag-over');
+  row.ondrop=e=>{
+   if(!draggedTrack)return;
+   e.preventDefault();e.stopPropagation();
+   const dragged={...draggedTrack};clearDraggedState();
+   relocateTrack(dragged.from,dragged.id,k,i);
+  };
+  row.append(b,transfer);host.append(row);
+ });
+ if(searchable&&!visible&&lists[k].length){const note=document.createElement('div');note.className='list-empty-filter';note.textContent='Sin coincidencias para «'+query+'». Probá otra parte del nombre.';host.append(note)}
+ if(searchable){
+  updateSearchCount(k,visible);
+  host.ondragover=e=>{if(!draggedTrack)return;e.preventDefault();e.stopPropagation();e.dataTransfer.dropEffect='move'};
+  host.ondrop=e=>{if(!draggedTrack)return;e.preventDefault();e.stopPropagation();const payload={...draggedTrack};clearDraggedState();relocateTrack(payload.from,payload.id,k,lists[k].length)};
+ }
+ $('musicNext').textContent='PRÓXIMO · '+(lists.music[index.music+1]?.name||'Fin de lista');
+ $('adsNext').textContent=(pending?'PENDIENTES '+pendingBreaks.length+' · ':'EN ESPERA · ')+(activeBreak?activeAdQueue.length+' avisos de '+activeBreak.name:scheduleEntries().length+' salidas programadas');
+}
+for(const k of ['music','programs']){
+ $(k+'Search').addEventListener('input',e=>{playlistSearch[k]=e.target.value;render(k)});
+ $(k+'SearchClear').onclick=()=>{$(k+'Search').value='';playlistSearch[k]='';render(k);$(k+'Search').focus()};
+}
 function previewLooseAd(i){const item=lists.ads[i];if(!item)return;stopAdsPreview();previewAdQueue=[item];previewAdIndex=0;playPreviewAdNext();say('Preescucha de biblioteca · '+item.name+' (NO ESTÁ AL AIRE)')}
 function renderAdQueue(){const host=$('adQueueView');host.replaceChildren();if(!activeAdQueue.length){host.textContent='Sin tanda al aire';return}activeAdQueue.forEach((item,i)=>{const row=document.createElement('div');row.textContent=String(i+1).padStart(2,'0')+' · '+item.name;row.className=i===index.ads?'queue-active':'';host.append(row)})}
 let playlistDB;
 function openPlaylistDB(){if(playlistDB)return playlistDB;playlistDB=new Promise((resolve,reject)=>{const request=indexedDB.open('megahertz-console-v2',1);request.onupgradeneeded=()=>request.result.createObjectStore('playlists');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)});return playlistDB}
-async function savePlaylist(k){const snapshot=lists[k].map(item=>({name:item.name,file:item.file}));try{if(snapshot.some(item=>!item.file))throw Error('Hay archivos sin respaldo');const db=await openPlaylistDB();await new Promise((resolve,reject)=>{const tx=db.transaction('playlists','readwrite');tx.objectStore('playlists').put(snapshot,k);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});say('Playlist de '+(k==='music'?'música':k==='programs'?'programas':k==='third'?'playlist 3':'avisos')+' guardada en este navegador')}catch(error){say('No se pudo guardar la playlist: '+error.message,true)}}
-async function restorePlaylists(){try{const db=await openPlaylistDB();for(const k of ['music','ads','programs','third']){const saved=await new Promise((resolve,reject)=>{const request=db.transaction('playlists','readonly').objectStore('playlists').get(k);request.onsuccess=()=>resolve(request.result||[]);request.onerror=()=>reject(request.error)});if(!lists[k].length){lists[k]=saved.filter(item=>item.file instanceof Blob).map(item=>({name:item.name,file:item.file,url:URL.createObjectURL(item.file)}));render(k)}}if(lists.music.length||lists.ads.length||lists.programs.length||lists.third.length)say('Listas recuperadas · '+lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+lists.third.length+' audios de playlist 3 y '+lists.ads.length+' avisos')}catch(error){say('No se pudieron recuperar las listas guardadas: '+error.message,true)}}
+async function savePlaylist(k){const snapshot=lists[k].map(item=>({id:item.id||makeTrackId(),name:item.name,file:item.file}));try{if(snapshot.some(item=>!item.file))throw Error('Hay archivos sin respaldo');const db=await openPlaylistDB();await new Promise((resolve,reject)=>{const tx=db.transaction('playlists','readwrite');tx.objectStore('playlists').put(snapshot,k);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});say('Playlist de '+(k==='music'?'música':k==='programs'?'programas':k==='third'?'playlist 3':'avisos')+' guardada en este navegador')}catch(error){say('No se pudo guardar la playlist: '+error.message,true)}}
+async function restorePlaylists(){try{const db=await openPlaylistDB();for(const k of ['music','ads','programs','third']){const saved=await new Promise((resolve,reject)=>{const request=db.transaction('playlists','readonly').objectStore('playlists').get(k);request.onsuccess=()=>resolve(request.result||[]);request.onerror=()=>reject(request.error)});if(!lists[k].length){lists[k]=saved.filter(item=>item.file instanceof Blob).map(item=>({id:item.id||makeTrackId(),name:item.name,file:item.file,url:URL.createObjectURL(item.file)}));render(k)}}if(lists.music.length||lists.ads.length||lists.programs.length||lists.third.length)say('Listas recuperadas · '+lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+lists.third.length+' audios de playlist 3 y '+lists.ads.length+' avisos')}catch(error){say('No se pudieron recuperar las listas guardadas: '+error.message,true)}}
 restorePlaylists().then(()=>migrateLegacyBreaks());
-function add(k,files){let count=0;for(const f of files)if((f.type||'').startsWith('audio/')||/\.(mp3|wav|wave|ogg|opus|m4a|aac|flac|aiff|aif|mp4|webm)$/i.test(f.name)){lists[k].push({name:f.name,url:URL.createObjectURL(f),file:f});count++}render(k);if(count)savePlaylist(k);say(count?count+' audios cargados en '+(k==='music'?'música':k==='programs'?'programas':k==='third'?'playlist 3':'publicidad'):'No se encontraron archivos de audio compatibles',!count);return count}
+function add(k,files){let count=0;for(const f of files)if((f.type||'').startsWith('audio/')||/\.(mp3|wav|wave|ogg|opus|m4a|aac|flac|aiff|aif|mp4|webm)$/i.test(f.name)){lists[k].push({id:makeTrackId(),name:f.name,url:URL.createObjectURL(f),file:f});count++}render(k);if(count)savePlaylist(k);say(count?count+' audios cargados en '+(k==='music'?'música':k==='programs'?'programas':k==='third'?'playlist 3':'publicidad'):'No se encontraron archivos de audio compatibles',!count);return count}
 async function readDropEntry(entry){if(entry.isFile)return [await new Promise((resolve,reject)=>entry.file(resolve,reject))];if(!entry.isDirectory)return [];const reader=entry.createReader(),files=[];while(true){const batch=await new Promise((resolve,reject)=>reader.readEntries(resolve,reject));if(!batch.length)break;for(const child of batch)files.push(...await readDropEntry(child))}return files}
 function collectDrop(transfer){const entries=Array.from(transfer.items||[]).filter(i=>i.kind==='file').map(i=>i.webkitGetAsEntry?.()).filter(Boolean);const fallback=Array.from(transfer.files||[]);return entries.length?Promise.all(entries.map(readDropEntry)).then(batches=>batches.flat()):Promise.resolve(fallback)}
 document.addEventListener('dragover',e=>{if(Array.from(e.dataTransfer?.types||[]).includes('Files'))e.preventDefault()});
@@ -690,7 +809,7 @@ $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUT
 $('clearPending').onclick=()=>{pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
-for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');let depth=0;panel.ondragenter=e=>{e.preventDefault();depth++;panel.classList.add('drop')};panel.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';panel.classList.add('drop')};panel.ondragleave=()=>{depth=Math.max(0,depth-1);if(!depth)panel.classList.remove('drop')};panel.ondrop=async e=>{e.preventDefault();e.stopPropagation();depth=0;panel.classList.remove('drop');const task=collectDrop(e.dataTransfer);say('Leyendo los audios arrastrados…');try{add(k,await task)}catch(error){say('No se pudo leer el arrastre: '+error.message,true)}}}
+for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');let depth=0;panel.ondragenter=e=>{e.preventDefault();depth++;panel.classList.add('drop')};panel.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';panel.classList.add('drop')};panel.ondragleave=()=>{depth=Math.max(0,depth-1);if(!depth)panel.classList.remove('drop')};panel.ondrop=async e=>{e.preventDefault();e.stopPropagation();depth=0;panel.classList.remove('drop');if(draggedTrack){const payload={...draggedTrack};clearDraggedState();if(playlistKey(k))relocateTrack(payload.from,payload.id,k,lists[k].length);return}const task=collectDrop(e.dataTransfer);say('Leyendo los audios arrastrados…');try{add(k,await task)}catch(error){say('No se pudo leer el arrastre: '+error.message,true)}}}
 for(const a of [music,ads,programs,third])a.onerror=()=>say('El formato de audio no se pudo abrir. Probá otro archivo.',true);
 
 
