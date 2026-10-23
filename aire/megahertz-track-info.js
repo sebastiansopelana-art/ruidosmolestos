@@ -104,7 +104,11 @@ function hydrated(d){return ['title','artist','album','year','writer'].filter(f=
 function matchCatalog(candidates,query){
  if(!candidates?.length)return null;
  const a=normalized(query.artist),t=normalized(query.title);
- const scores=candidates.map(r=>{
+ const scores=candidates.filter(r=>{
+   const b=normalized(artistCredit(r['artist-credit'])),title=normalized(r.title);
+   return (!a||b===a||b.includes(a)||a.includes(b)) &&
+     (!t||title===t||title.includes(t)||t.includes(title));
+ }).map(r=>{
    const b=normalized(artistCredit(r['artist-credit'])),s=normalized(r.title);
    let score=Number(r.score)||0;
    if(t&&s===t)score+=45;else if(t&&s.includes(t))score+=15;else score-=40;
@@ -203,7 +207,7 @@ async function show(item){
    if(!previous||hydrated(embedded)>0||verified)save(meta);
  }
  render(meta,meta.source||'Ficha disponible');
- if(!sourceIsStrong(meta)&&!meta.writer&&meta.artist&&meta.title&&navigator.onLine!==false)
+ if(!sourceIsStrong(meta)&&meta.source!=='MusicBrainz'&&!meta.writer&&meta.artist&&meta.title&&navigator.onLine!==false)
    lookup({title:meta.title,artist:meta.artist});
 }
 $('mhTrackLookup').onclick=()=>{
