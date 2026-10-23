@@ -217,7 +217,23 @@ async function deviceLocation(force=false){
  });
  if(coords){
   state.geoMode='gps';state.citySearch='';
-  await requestWeather('?lat='+encodeURIComponent(coords.lat)+'&lon='+encodeURIComponent(coords.lon));
+  // Free client-side reverse geocoding is only used after user consent to GPS.
+  // Resolving country from true GPS prevents IP/VPN from selecting wrong news
+  // edition or issuing official weather warnings for the wrong country.
+  let extra='';
+  try{
+   const reverse='https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+
+      encodeURIComponent(coords.lat)+'&longitude='+encodeURIComponent(coords.lon)+
+      '&localityLanguage='+encodeURIComponent(lang().slice(0,2));
+   const r=await requestJSON(reverse,6500);
+   if(r.countryCode&&/^[A-Z]{2}$/.test(r.countryCode)){
+    extra+='&country='+encodeURIComponent(r.countryCode);
+    const locality=short(r.city||r.locality||r.principalSubdivision||'');
+    if(locality)extra+='&city='+encodeURIComponent(locality);
+    if(r.principalSubdivision)extra+='&region='+encodeURIComponent(short(r.principalSubdivision));
+   }
+  }catch(_){ /* Coordinates and timezone still provide a useful local forecast. */ }
+  await requestWeather('?lat='+encodeURIComponent(coords.lat)+'&lon='+encodeURIComponent(coords.lon)+extra);
  }else{
   state.geoMode='ip';await requestWeather('');
  }
@@ -244,7 +260,7 @@ $('mhWeatherGPS').onclick=async()=>{
 };
 clock();setInterval(clock,1000);
 setInterval(()=>{if(state.geoMode==='city'&&state.citySearch)requestWeather('?place='+encodeURIComponent(state.citySearch));
- else if(state.geoMode==='gps'&&state.location)requestWeather('?lat='+state.location.lat+'&lon='+state.location.lon);
+ else if(state.geoMode==='gps'&&state.location)requestWeather('?lat='+state.location.lat+'&lon='+state.location.lon+'&country='+encodeURIComponent(state.location.country||'')+'&city='+encodeURIComponent(state.location.city||'')+'&region='+encodeURIComponent(state.location.region||''));
  else requestWeather('')},600000);
 setInterval(loadNews,900000);
 let preferred='';
