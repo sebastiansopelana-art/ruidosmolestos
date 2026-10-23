@@ -58,29 +58,7 @@ function clock(){
  catch(_){clockElement.textContent='--:--:--'}
  clockElement.title='Zona horaria: '+zone;
 }
-function alertState(data){
- const strip=$('mhWeatherAlert'),symbol=$('mhAlertSymbol'),line=$('mhAlertText');
- strip.classList.remove('danger','warning');
- const warning=data?.warning;
- if(warning){
-  const danger=warning.severity==='high';
-  strip.classList.add(danger?'danger':'warning');
-  symbol.textContent=danger?'!':'▲';
-  line.textContent=(warning.type==='earthquake-observed'?'REGISTRADO · ':'')+short(warning.text);
-  strip.title=short(warning.source)+' · Consultá los detalles y organismos de emergencia';
-  return;
- }
- const missingAlerts=data?.officialAlerts===null&&data?.location?.country!=='US';
- if(missingAlerts){
-  symbol.textContent='◈';
-  line.textContent='ALERTAS · COBERTURA OFICIAL PARCIAL';
- }else if(data?.failed?.length){
-  symbol.textContent='◈';line.textContent='Datos parciales · Consultá detalles y fuentes';
- }else{
-  symbol.textContent='◈';line.textContent='MONITOREO ACTIVO · SIN EVENTOS DESTACADOS';
- }
- strip.title='Los avisos oficiales pueden no estar integrados para esta ubicación';
-}
+// Alert UI removed from the meteorological dashboard.
 /* Compact seven-day outlook belongs inside the existing station display.
    Dates and numbers come exclusively from the forecast API (no invented values). */
 function renderWeek(week){
@@ -108,6 +86,7 @@ function renderWeek(week){
   element.title=day.date+' · '+ico[0]+' · Máx '+show(day.max,'°')+' · Mín '+show(day.min,'°')+
     ' · Probabilidad de lluvia '+show(day.precipitation_probability,'%');
   element.setAttribute('aria-label',element.title);
+  element.dataset.today=i===0?'true':'false';
   element.append(row1,row2,row3,row4);host.append(element);
  }
 }
@@ -119,6 +98,17 @@ function displayWeather(data){
  $('mhWeatherPlace').textContent=title||'Ubicación aproximada';
  $('mhWeatherPlace').title=(location.source||'')+' · '+(location.countryName||location.country||'');
  const [description,symbol]=weatherCode(c.weather_code);
+ const screen=$('mhWeatherScreen');
+ if(screen){
+  const code=Number(c.weather_code);
+  const sky=[95,96,99].includes(code)?'storm':
+   [51,53,55,56,57,61,63,65,66,67,80,81,82].includes(code)?'rain':
+   [71,73,75,77,85,86].includes(code)?'snow':
+   [0,1].includes(code)?'sun':'cloud';
+  screen.dataset.sky=(c.is_day===0&&sky==='sun')?'night':sky;
+  const wind=screen.querySelector('.mh-metric-wind');
+  if(wind&&n(c.wind_direction_10m)!==null)wind.style.setProperty('--mh-wind-angle',Number(c.wind_direction_10m)+'deg');
+ }
  $('mhWeatherIcon').textContent=symbol;
  $('mhWeatherTemp').textContent=show(c.temperature_2m,'°',0);
  $('mhWeatherCondition').textContent=description;
@@ -131,7 +121,7 @@ function displayWeather(data){
  $('mhRain').textContent=show(c.precipitation,' mm',1);
  $('mhUV').textContent=show(air.uv_index,'',1);
  $('mhAQI').textContent=show(air.us_aqi);
- clock();alertState(data);renderWeek(data.week);renderDetails();
+ clock();renderWeek(data.week);renderDetails();
  const newsLoc=[location.city,location.region,location.country].join('|');
  if(state.lastNews!==newsLoc){state.lastNews=newsLoc;loadNews()}
 }
@@ -141,22 +131,11 @@ function rowDetail(key,value){
  const strong=document.createElement('strong');strong.textContent=value;
  el.append(label,strong);return el;
 }
-function eventDetail(className,title,sub,url){
- const line=document.createElement('div');line.className='mh-weather-event'+(className?' '+className:'');
- const primary=document.createElement('strong');primary.textContent=title;
- line.append(primary);
- if(sub){const note=document.createElement('div');note.textContent=sub;line.append(note)}
- if(url){
-  try{const parsed=new URL(url);if(parsed.protocol==='https:'){
-   const a=document.createElement('a');a.textContent='Ver fuente ↗';a.href=parsed.toString();a.target='_blank';a.rel='noopener noreferrer';line.append(a)
-  }}catch(_){}
- }
- return line;
-}
 function renderDetails(){
  const d=state.forecast;if(!d)return;
  const place=d.location||{},c=d.current||{},day=d.today||{},hour=d.hourly||{},aq=d.air||{};
- $('mhDetailLocation').textContent=[place.city,place.region,place.countryName||place.country].filter(Boolean).join(' · ')+' · '+(place.source||'')+' · '+(place.timezone||'');
+ $('mhDetailLocation').textContent=[place.city,place.region,place.countryName||place.country].filter(Boolean).join(' · ')+
+  ' · '+(place.source||'')+' · '+(place.timezone||'');
  const items=[
   ['Temperatura',show(c.temperature_2m,' °C',1)],['Sensación térmica',show(c.apparent_temperature,' °C',1)],
   ['Mínima / Máxima',show(day.temperature_2m_min,'°')+' / '+show(day.temperature_2m_max,'°')],
@@ -175,31 +154,14 @@ function renderDetails(){
   ['Atardecer',String(day.sunset||'').slice(11,16)||'—'],
   ['Zona horaria',place.timezone||'—']
  ];
- const holder=$('mhWeatherDetailContent');holder.replaceChildren(...items.map(([k,v])=>rowDetail(k,v)));
- const list=$('mhWeatherEventList');list.replaceChildren();
- const official=d.officialAlerts||[];
- if(official.length)for(const a of official){
-  list.append(eventDetail('official',a.headline||a.event,'ALERTA OFICIAL · '+a.source+' · '+a.severity+(a.instruction?' · '+a.instruction.slice(0,260):''),a.url));
- }else{
-  list.append(eventDetail('','Alertas oficiales',
-   d.officialCoverage+(d.location?.country==='US'?' · Sin alertas activas devueltas por el servicio (no garantiza ausencia de riesgo).':' · Consultá al organismo oficial de tu país.'),null));
- }
- const quakes=d.earthquakes||[];
- if(quakes.length)for(const q of quakes.slice(0,5)){
-  const t=q.time?new Intl.DateTimeFormat(lang(),{timeZone:state.clockTZ,hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'}).format(new Date(q.time)):'';
-  list.append(eventDetail('quake','SISMO REGISTRADO · M '+show(q.magnitude,'',1)+' · '+show(q.distanceKm,' km'),(q.place||'')+' · '+t+' · USGS (no es alerta temprana)',q.url));
- }else{
-  list.append(eventDetail('','Sismología USGS','No se registraron eventos M≥2.5 dentro de 350 km en las últimas 24 h en los datos consultados, o el servicio no respondió.',null));
- }
- if(d.warning?.type==='forecast-risk')list.append(eventDetail('','CONDICIÓN A VIGILAR',d.warning.text+' · Pronóstico estimado, NO alerta oficial',null));
- if(d.failed?.length)list.append(eventDetail('','Servicios con información incompleta',d.failed.join(' · '),null));
+ const holder=$('mhWeatherDetailContent');
+ if(holder)holder.replaceChildren(...items.map(([k,v])=>rowDetail(k,v)));
 }
 function showError(message){
  $('mhWeatherPlace').textContent='SIN DATOS';
  $('mhWeatherCondition').textContent=short(message);
  $('mhWeatherUpdated').textContent='Revisá conexión o ciudad';
- $('mhAlertSymbol').textContent='◈';$('mhAlertText').textContent='Monitor de emergencia sin conexión: consultar servicios oficiales';
- $('mhWeatherAlert').classList.remove('danger','warning');
+ const screen=$('mhWeatherScreen');if(screen)screen.dataset.sky='cloud';
 }
 async function requestWeather(query){
  const token=++weatherSeq;
