@@ -411,6 +411,22 @@
 #thirdList .schedule-children div{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 #thirdList .schedule-note{padding:8px 10px;color:#a9c3d1;font-size:10px}
 #thirdPanel .playlist-playmode span:last-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:9px;font-weight:600}
+#thirdList .schedule-branch{display:flex;align-items:stretch}
+#thirdList .schedule-toggle{min-width:25px;width:25px;height:auto;background:#1b3644;border:0;border-right:1px solid #426174;color:#aacfe5}
+#thirdList .schedule-branch>.schedule-row{flex:1;min-width:0;grid-template-columns:48px minmax(0,1fr) auto}
+#thirdList .schedule-status{font-size:9px;font-weight:800;white-space:nowrap;color:#a9bccc}
+#thirdList .schedule-status.live{color:#a0f2be}
+#thirdList .schedule-status.due{color:#ffe09d}
+#thirdList .schedule-children{border-left:2px solid #47748b;margin-left:12px;padding-left:15px}
+#thirdList .schedule-children[hidden]{display:none}
+#thirdList .schedule-children .schedule-child{display:flex;justify-content:space-between;gap:8px}
+#thirdList .schedule-children .schedule-child.is-playing{color:#aaf0b9;font-weight:800}
+#thirdList .schedule-foot{padding:3px 8px 7px 42px;color:#b6cada;font-size:9px}
+.mh-break-editor{border:1px solid #496779;border-radius:5px;max-height:230px;overflow:auto;background:#0c202d;margin:8px 0;padding:4px}
+.mh-break-ad{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto auto;gap:5px;align-items:center;border-bottom:1px solid #284454;padding:5px 4px}
+.mh-break-ad:last-child{border-bottom:0}.mh-break-ad .mh-break-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-break-ad button{min-width:28px;padding:3px 5px;height:26px}
+.mh-break-ad .mh-break-duration{font:10px monospace;color:#c5dbe5}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -455,7 +471,7 @@
   <div class="list" id="thirdList"><div class="empty">No hay tandas programadas. Cargalas en Configuración.</div></div>
 </section>
 <section class="list-panel" id="adsPanel">
-  <div class="list-head"><strong>AVISOS DE LA TANDA</strong><div><button id="addAds">+ AVISOS</button><button id="clearAds">VACIAR</button></div></div>
+  <div class="list-head"><strong>BIBLIOTECA DE AVISOS SUELTOS</strong><div><button id="addAds">+ AVISOS</button><button id="clearAds">VACIAR</button></div></div>
   <div class="list" id="adsList"><div class="empty">Arrastrá avisos aquí o pulsá + AVISOS</div></div>
 </section></section>
 <div id="status" class="status" role="status">Consola nueva · Cargá música o avisos para probar la reproducción.</div>
@@ -500,18 +516,20 @@
     </section>
     <section data-settings-page="ads" hidden>
       <h3>PUBLICIDAD · CONFIGURACIÓN DE TANDAS</h3>
-      <p>Creá y guardá horarios de tandas. Los horarios usan la playlist de avisos cargada en la consola de emisión.</p>
+      <p>Cada tanda tiene sus avisos propios, sus días, sus horarios y su regla de emisión.</p>
       <div class="mh-form-grid">
         <label>Nombre de la tanda<input id="breakLabel" type="text" value="Tanda publicitaria" maxlength="100"></label>
         <label>Cantidad de salidas por día<select id="adFrequency"></select></label>
         <label>Primera salida exacta<input id="adTime" type="time"></label>
         <div class="mh-inline-actions"><button type="button" id="distributeAdHours">↻ DISTRIBUIR REPETICIONES</button></div>
       </div>
-      <div class="mh-settings-subtitle">CARGAR AVISOS PUBLICITARIOS</div>
-      <div class="mh-inline-actions"><button type="button" class="mh-primary" id="adsDropSelect">+ AGREGAR AVISOS</button><span id="adsDropCount" role="status">Los avisos cargados aparecerán en la playlist de publicidad.</span></div>
-      <input type="file" id="adsDropFiles" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac" multiple hidden>
-      <div id="adsConfigDrop" role="button" tabindex="0" aria-label="Arrastrar aquí archivos de publicidad" class="mh-drop">ARRASTRÁ Y SOLTÁ AQUÍ LOS ARCHIVOS DE PUBLICIDAD, O PULSÁ + AGREGAR AVISOS</div>
-      <div class="mh-settings-subtitle">HORARIOS DE SALIDA</div>
+      <div class="mh-settings-subtitle">AVISOS DE ESTA TANDA · ORDEN DE EMISIÓN</div>
+       <div class="mh-inline-actions"><button type="button" class="mh-primary" id="adsDropSelect">+ AGREGAR AVISOS</button><button type="button" id="copyLibraryAds">COPIAR DE BIBLIOTECA</button><span id="adsDropCount" role="status">Esta tanda todavía no tiene avisos.</span></div>
+       <input type="file" id="adsDropFiles" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac" multiple hidden>
+       <div id="adsConfigDrop" role="button" tabindex="0" aria-label="Arrastrar archivos a esta tanda" class="mh-drop">ARRASTRÁ Y SOLTÁ AQUÍ LOS AVISOS DE ESTA TANDA</div>
+       <div class="mh-break-editor" id="breakAdsEditor" aria-label="Avisos exclusivos de esta tanda"></div>
+       <p class="mh-muted">Ordená los avisos con las flechas; quitá los que no correspondan. Guardá para aplicar los cambios.</p>
+       <div class="mh-settings-subtitle">HORARIOS DE SALIDA</div>
       <div id="adSlots" class="mh-time-grid"></div>
       <input id="extraTimes" type="hidden" value="">
       <fieldset class="mh-fieldset"><legend>DÍAS DE EMISIÓN</legend><div id="scheduleDays"></div></fieldset>
@@ -521,7 +539,7 @@
         <button type="button" id="adPolicyWait" aria-pressed="true">ESPERAR FIN DEL TEMA</button>
       </div>
       <select id="startPolicy" hidden aria-label="Regla de inicio"><option value="end">Fin de tema</option><option value="exact">Hora exacta</option></select>
-      <p>HORA EXACTA puede interrumpir una canción. ESPERAR FIN DEL TEMA la deja terminar. Las tandas pendientes se conservan en MANUAL.</p>
+      <p>Cada tanda tiene su propia regla: HORA EXACTA interrumpe el tema; FIN DEL TEMA espera. Las pendientes se conservan en MANUAL.</p>
       <div class="mh-inline-actions">
         <button type="button" class="mh-primary" id="saveAdBreak">GUARDAR TANDA Y HORARIOS</button>
         <button type="button" id="previewAdBreak">▶ PROBAR TANDA</button>
@@ -549,7 +567,7 @@
       <h3>RESPALDOS DE CONFIGURACIÓN</h3>
       <div class="mh-inline-actions"><button type="button" id="exportConfig">EXPORTAR CONFIGURACIÓN</button><button type="button" id="importConfig">IMPORTAR CONFIGURACIÓN</button></div>
       <input type="file" id="configFile" accept=".json,application/json" hidden>
-      <p>Incluye volumen, modo, detector de silencio, automatización, tandas guardadas y horarios. Los archivos de audio permanecen en la biblioteca de este navegador.</p>
+      <p>Exporta tandas, horarios y orden de sus avisos, pero no los audios. Los archivos de audio permanecen guardados en este navegador y deben copiarse por separado para otro equipo.</p>
       <p id="storageSummary"></p>
     </section>
     </div>
