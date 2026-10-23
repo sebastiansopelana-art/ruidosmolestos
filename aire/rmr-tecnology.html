@@ -1622,15 +1622,32 @@ function getNextTrackIndex(k){
  if(idx===-1)nextTrackId[k]=null;
  return idx;
 }
+function getGlobalNextTrack(){
+ for(const kind of ['music','programs']){
+  const i=getNextTrackIndex(kind);
+  if(i>=0)return{kind,index:i,id:nextTrackId[kind]};
+ }
+ return null;
+}
+function startGlobalNext(){
+ const next=getGlobalNextTrack();
+ if(!next)return false;
+ if(next.kind==='music')startMusic(next.index);
+ else startProgram(next.index);
+ return true;
+}
 function setNextTrack(k,id){
  if(!playlistKey(k))return;
  const found=lists[k].find(item=>item.id===id);
  if(!found)return;
- nextTrackId[k]=nextTrackId[k]===id?null:id;
- render(k);
+ const unmark=nextTrackId[k]===id;
+ // Exactly one cross-playlist on-air NEXT marker at any time.
+ nextTrackId.music=null;nextTrackId.programs=null;
+ if(!unmark)nextTrackId[k]=id;
+ render('music');render('programs');
  const title=k==='music'?'Playlist Automática':'Playlist Para Programas';
- say(nextTrackId[k]?'MARCADO COMO SIGUIENTE · '+title+' · '+found.name:
-   'Marca SIGUIENTE cancelada · '+title);
+ say(unmark?'Marca SIGUIENTE cancelada · '+title:
+   'MARCADO COMO SIGUIENTE · '+title+' · '+found.name);
 }
 function nextTrackPlayed(k,id){
  if(!playlistKey(k)||!id||nextTrackId[k]!==id)return;
@@ -1694,7 +1711,7 @@ function relocateTrack(from,id,to,targetIndex){
   seen[k].forEach(item=>{const i=lists[k].indexOf(item);if(i>=0)seenTracks[k].add(i)});
   index[k]=selected[k]?lists[k].indexOf(selected[k]):-1;
  }
- if(from!==to&&nextTrackId[from]===track.id)nextTrackId[from]=null;
+ if(from!==to&&nextTrackId[from]===track.id){nextTrackId[from]=null;nextTrackId[to]=track.id;}
  if(from!==to&&selected[from]===track)resetMusicSelection(from);
  render('music');render('programs');syncProgramAir();
  savePlaylist(from);if(from!==to)savePlaylist(to);
@@ -1862,6 +1879,7 @@ function stopBreakPlayback(resume=true){
 }
 function finishAds(){stopBreakPlayback(true)}
 function advanceMusicAfterBreak(){
+ if(startGlobalNext())return;
  // Commercial breaks mark a new musical segment: start a fresh song instead
  // of resuming a paused song in the middle. Never leave AUTO silent at list end.
  if(!lists.music.length){say('La tanda terminó, pero no hay música cargada en Playlist Automática',true);return}
@@ -1873,9 +1891,9 @@ function advanceMusicAfterBreak(){
  run('music',target);
 }
 function chooseNextTrack(k){const n=lists[k].length;if(!n)return -1;const forced=getNextTrackIndex(k);if(forced>=0)return forced;const repeat=k==='music'?pressed('repeat'):k==='programs'?programRepeat:thirdRepeat,random=k==='music'?pressed('shuffle'):k==='programs'?programShuffle:thirdShuffle;if(!random){const next=index[k]+1;return next<n?next:repeat?0:-1}let possibilities=Array.from({length:n},(_,i)=>i).filter(i=>!seenTracks[k].has(i));if(!possibilities.length){if(!repeat)return -1;seenTracks[k].clear();possibilities=Array.from({length:n},(_,i)=>i)}if(possibilities.length>1)possibilities=possibilities.filter(i=>i!==index[k]);return possibilities[Math.floor(Math.random()*possibilities.length)]}
-function advance(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdMusicNext=true;return}}if(pressed('endStop')&&getNextTrackIndex('music')<0){say('Reproducción detenida al final');return}const i=chooseNextTrack('music');if(i<0){say('Fin de la playlist');return}run('music',i)}
-function advancePrograms(){if(pressed('programsListEndStop')&&getNextTrackIndex('programs')<0){say('Programa detenido al final del audio');return}if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdProgramNext=true;return}}const i=chooseNextTrack('programs');if(i<0){$('programsAir').textContent='EN ESPERA';say('Fin de la playlist para programas');return}run('programs',i)}
-function advanceThird(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdThirdNext=true;return}}const i=chooseNextTrack('third');if(i<0){$('thirdAir').textContent='EN ESPERA';say('Fin de la playlist auxiliar anterior');return}run('third',i)}
+function advance(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdMusicNext=true;return}}if(startGlobalNext())return;if(pressed('endStop')){say('Reproducción detenida al final');return}const i=chooseNextTrack('music');if(i<0){say('Fin de la playlist');return}run('music',i)}
+function advancePrograms(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdProgramNext=true;return}}if(startGlobalNext())return;if(pressed('programsListEndStop')){say('Programa detenido al final del audio');return}const i=chooseNextTrack('programs');if(i<0){$('programsAir').textContent='EN ESPERA';say('Fin de la playlist para programas');return}run('programs',i)}
+function advanceThird(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdThirdNext=true;return}}if(startGlobalNext())return;const i=chooseNextTrack('third');if(i<0){$('thirdAir').textContent='EN ESPERA';say('Fin de la playlist auxiliar anterior');return}run('third',i)}
 music.onended=advance;programs.onended=advancePrograms;third.onended=advanceThird;ads.onended=()=>index.ads+1<activeAdQueue.length?playBreakAd(index.ads+1):finishAds();
 $('play').onclick=()=>{if(playing(music))return;if(playing(programs)){programs.pause();resumeProgram=false}if(playing(third)){third.pause();resumeThird=false}if(playing(ads)){say('Detené la tanda antes de iniciar música');return}if(index.music<0)startMusic(0);else{meter();kind='music';music.play().catch(e=>say(e.message,true))}};
 $('pause').onclick=()=>music.pause();
