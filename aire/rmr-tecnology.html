@@ -487,33 +487,48 @@
 .emission-controls>.mh-ad-footer-status.on-air{border-color:#5fc49a;color:#d6ffeb;background:#143529}
 .emission-controls>.mh-ad-footer-status.on-air .mh-ad-status-dot{background:#6bf2ab;box-shadow:0 0 7px #6bf2ab}
 
-/* Botonera de programas exactamente gemela de la automática: ocho íconos. */
-#musicPanel .playlist-tools.mh-icon-tools,#programsPanel .playlist-tools.mh-icon-tools{
+/* Botonera de ocho iconos SOLO para Playlist para Programas. */
+#programsPanel .playlist-tools.mh-icon-tools{
  display:grid;grid-template-columns:repeat(9,minmax(0,1fr));align-items:stretch;
  grid-auto-rows:30px;gap:4px;padding:7px;
 }
-#musicPanel .mh-icon-tools .mh-transport-icon,#programsPanel .mh-icon-tools .mh-transport-icon{
+#programsPanel .mh-icon-tools .mh-transport-icon{
  display:flex;align-items:center;justify-content:center;min-height:30px;height:30px;
  min-width:0;width:100%;padding:3px;color:#deedf9;
  border:1px solid #668ca4;border-bottom:2px solid #2e5063;border-radius:4px;
  background:linear-gradient(#36566b,#183345);cursor:pointer;
 }
 .mh-icon-tools .mh-transport-icon svg{display:block;width:17px;height:17px;max-width:100%;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.mh-icon-tools #musicListPlay svg,.mh-icon-tools #musicListPause svg,.mh-icon-tools #musicListStop svg,
 .mh-icon-tools #programsListPlay svg,.mh-icon-tools #programsListPause svg,.mh-icon-tools #programsListStop svg{fill:currentColor;stroke-width:1}
-#musicPanel .mh-icon-tools .mh-transport-icon[aria-pressed=true],#programsPanel .mh-icon-tools .mh-transport-icon[aria-pressed=true]{
+#programsPanel .mh-icon-tools .mh-transport-icon[aria-pressed=true]{
  color:#d6ffe7;background:linear-gradient(#2b7354,#19513e);border-color:#8fddb2
 }
-#musicPanel .mh-icon-tools .playlist-playmode,#programsPanel .mh-icon-tools .playlist-playmode{
+#programsPanel .mh-icon-tools .playlist-playmode{
  grid-column:9;display:flex;align-items:stretch;width:100%;margin:0;min-width:0
 }
-#musicPanel .mh-icon-tools .playlist-playmode span,#programsPanel .mh-icon-tools .playlist-playmode span{display:none}
-#musicPanel .mh-icon-tools .playlist-playmode select,#programsPanel .mh-icon-tools .playlist-playmode select{
+#programsPanel .mh-icon-tools .playlist-playmode span{display:none}
+#programsPanel .mh-icon-tools .playlist-playmode select{
  min-width:0;width:100%;max-width:100%;height:30px;padding:2px 1px;text-align:center;
  font-size:9px;border-radius:4px;background:#173748;color:#e1f7ff;border:1px solid #55849c;
 }
-@media(max-width:950px){#musicPanel .mh-icon-tools,#programsPanel .mh-icon-tools{gap:2px!important;padding:5px!important}.mh-icon-tools .mh-transport-icon svg{width:14px;height:14px}}
+@media(max-width:950px){#programsPanel .mh-icon-tools{gap:2px!important;padding:5px!important}.mh-icon-tools .mh-transport-icon svg{width:14px;height:14px}}
 
+
+/* La Playlist Automática no duplica Play/Pausa/Stop/Anterior/Siguiente:
+   esas órdenes se operan exclusivamente en el reproductor de Música Automática superior. */
+#musicPanel .playlist-tools.mh-auto-options{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:center;
+ grid-auto-rows:30px;gap:5px;padding:7px;min-width:0
+}
+#musicPanel .mh-auto-options>button{min-height:30px;height:30px;font-size:9px;padding:3px 5px;min-width:0}
+#musicPanel .mh-auto-options>.playlist-playmode{grid-column:auto;display:flex;align-items:stretch;margin:0;min-width:0}
+#musicPanel .mh-auto-options>.playlist-playmode span{display:none}
+#musicPanel .mh-auto-options>.playlist-playmode select{
+ width:100%;min-width:0;height:30px;padding:3px;
+ font:700 10px Arial,sans-serif;color:#d9edf8;border:1px solid #557e93;border-radius:4px;background:#152b39
+}
+@media(max-width:920px){#musicPanel .playlist-tools.mh-auto-options{gap:3px;padding:5px}
+#musicPanel .mh-auto-options>button{font-size:8px;padding:3px 1px}}
 /* TANDAS: único panel de acciones en visor superior. Sin visor de estado inferior
    ni botonera duplicada en el listado por horarios. */
 .console>.deck[aria-label="Tandas publicitarias"]>.ad-screen{
@@ -626,7 +641,11 @@
 <section class="lists" aria-label="Bibliotecas de emisión">
 <section class="list-panel" id="musicPanel">
   <div class="list-head"><strong>PLAYLIST AUTOMÁTICA</strong><div><button id="addMusic">+ MÚSICA</button><button id="clearMusic">VACIAR</button></div></div>
-  <div class="playlist-tools mh-icon-tools" aria-label="Controles de playlist"><button type="button" id="musicListPrev" class="mh-transport-icon" title="Anterior" aria-label="Anterior" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button type="button" id="musicListPlay" class="mh-transport-icon" title="Reproducir" aria-label="Reproducir" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button type="button" id="musicListPause" class="mh-transport-icon" title="Pausar" aria-label="Pausar" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button type="button" id="musicListStop" class="mh-transport-icon" title="Detener" aria-label="Detener" ><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button type="button" id="musicListNext" class="mh-transport-icon" title="Siguiente" aria-label="Siguiente" ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button type="button" id="musicListShuffle" class="mh-transport-icon" title="Aleatorio" aria-label="Aleatorio" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button type="button" id="musicListRepeat" class="mh-transport-icon" title="Repetir" aria-label="Repetir" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button type="button" id="musicListEndStop" class="mh-transport-icon" title="Parar al final" aria-label="Parar al final" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button><label class="playlist-playmode"><span>MODO</span><select id="musicListMode" title="Modo de reproducción" aria-label="Modo de reproducción de playlist automática"><option value="normal">NORMAL</option><option value="random">ALEATORIA</option></select></label></div>
+  <div class="playlist-tools mh-auto-options" aria-label="Opciones de la playlist automática">
+  <button type="button" id="musicListShuffle" aria-pressed="false" title="Shuffle">⇄ SHUFFLE</button>
+  <button type="button" id="musicListRepeat" aria-pressed="false" title="Repetir lista">↻ REPETIR LISTA</button>
+  <label class="playlist-playmode"><span>MODO</span><select id="musicListMode" title="Modo de reproducción" aria-label="Modo de reproducción de playlist automática"><option value="normal">NORMAL</option><option value="random">ALEATORIA</option></select></label>
+</div>
   <div class="playlist-search-row"><input type="search" id="musicSearch" placeholder="Buscar música, artista o palabra…" aria-label="Buscar en playlist automática" autocomplete="off"><button type="button" id="musicSearchClear" title="Borrar búsqueda">✕</button><span id="musicSearchCount" aria-live="polite"></span></div>
   <div class="programs-current playlist-current" aria-live="polite"><span id="musicListAir">EN ESPERA</span><span class="programs-filename" id="musicListNow" data-i18n-ignore>—</span></div>
   <div class="list" id="musicList"><div class="empty">Arrastrá canciones aquí o pulsá + MÚSICA</div></div>
@@ -1037,8 +1056,6 @@ $('repeat').onclick=()=>setMusicRepeat(!pressed('repeat'));
 $('musicListShuffle').onclick=()=>setMusicShuffle(!pressed('shuffle'));
 $('musicListRepeat').onclick=()=>setMusicRepeat(!pressed('repeat'));
 $('musicListMode').onchange=e=>setMusicShuffle(e.target.value==='random');
-$('musicListPlay').onclick=()=>$('play').click();
-$('musicListStop').onclick=()=>$('stop').click();
 $('programsListShuffle').onclick=()=>setProgramShuffle(!programShuffle);
 $('programsListRepeat').onclick=()=>setProgramRepeat(!programRepeat);
 $('programsListMode').onchange=e=>setProgramShuffle(e.target.value==='random');
@@ -1051,13 +1068,7 @@ $('programsListPlay').onclick=()=>{
 };
 $('programsListStop').onclick=()=>{programs.pause();if(programs.currentTime>0)programs.currentTime=0;resumeProgram=false;afterAdProgramNext=false;syncProgramAir()};
 /* Identical transport panels: prev, play, pause, stop, next, shuffle, repeat, end-stop. */
-$('musicListPrev').onclick=()=>$('prev').click();
-$('musicListPause').onclick=()=>$('pause').click();
-$('musicListNext').onclick=()=>$('next').click();
-function setMusicEndStop(enabled){$('endStop').setAttribute('aria-pressed',String(!!enabled));$('musicListEndStop').setAttribute('aria-pressed',String(!!enabled))}
-$('endStop').onclick=()=>setMusicEndStop(!pressed('endStop'));
-$('musicListEndStop').onclick=()=>setMusicEndStop(!pressed('endStop'));
-setMusicEndStop(pressed('endStop'));
+$('endStop').onclick=()=>$('endStop').setAttribute('aria-pressed',String(!pressed('endStop')));
 $('programsListPrev').onclick=()=>startProgram(Math.max(0,index.programs-1));
 $('programsListPause').onclick=()=>programs.pause();
 $('programsListNext').onclick=()=>{
@@ -1096,7 +1107,7 @@ function configuredTimes(){return [$('adTime').value,...$('extraTimes').value.sp
 function syncConfigControls(){$('startupMode').value=automatic?'automatic':'manual';$('startPolicy').value=exact?'exact':'end';$('startShuffle').checked=pressed('shuffle');$('startRepeat').checked=pressed('repeat');$('startEndStop').checked=pressed('endStop');$('silenceEnabled').checked=pressed('silence')}
 function collectSettings(){return {version:1,volume:Number($('volume').value),output:selectedOutput,mode:$('startupMode').value,policy:$('startPolicy').value,shuffle:$('startShuffle').checked,repeat:$('startRepeat').checked,endStop:$('startEndStop').checked,silence:$('silenceEnabled').checked,threshold:Number($('threshold').value),silenceSeconds:Number($('silenceSeconds').value),breakLabel:$('breakLabel').value,adTime:$('adTime').value,extraTimes:$('extraTimes').value,days:selectedDays(),autoRecovery:$('autoRecoveryEnabled').checked,programShuffle,programRepeat,programEndStop:pressed('programsListEndStop'),thirdShuffle,thirdRepeat}}
 async function routeOutput(id){if(typeof music.setSinkId!=='function'){$('outputStatus').textContent='Este navegador usa la salida elegida en el sistema operativo';return false}try{await Promise.all([music.setSinkId(id||''),ads.setSinkId(id||''),...(typeof programs.setSinkId==='function'?[programs.setSinkId(id||'')]:[]),...(typeof third.setSinkId==='function'?[third.setSinkId(id||'')]:[])]);selectedOutput=id||'';$('outputStatus').textContent='Salida de audio aplicada';return true}catch(error){$('outputStatus').textContent='No se pudo aplicar la salida: '+error.message;return false}}
-function applySettings(s){$('volume').value=Math.max(0,Math.min(100,Number(s.volume??85)));$('volume').oninput();automatic=s.mode!=='manual';$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));policy(s.policy==='exact');for(const [id,key] of [['shuffle','shuffle'],['repeat','repeat'],['endStop','endStop'],['silence','silence']])$(id).setAttribute('aria-pressed',String(!!s[key]));$('threshold').value=Math.max(-65,Math.min(-20,Number(s.threshold??-48)));$('silenceSeconds').value=Math.max(1,Math.min(30,Number(s.silenceSeconds??3)));$('breakLabel').value=s.breakLabel||'Tanda publicitaria';$('adTime').value=s.adTime||'';$('extraTimes').value=s.extraTimes||'';for(const box of dayHost.querySelectorAll('input'))box.checked=(s.days||[0,1,2,3,4,5,6]).includes(Number(box.value));selectedOutput=typeof s.output==='string'?s.output:'';$('autoRecoveryEnabled').checked=!!s.autoRecovery;setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));setProgramShuffle(!!s.programShuffle);setProgramRepeat(!!s.programRepeat);$('programsListEndStop').setAttribute('aria-pressed',String(!!s.programEndStop));setMusicEndStop(pressed('endStop'));setThirdShuffle(!!s.thirdShuffle);setThirdRepeat(!!s.thirdRepeat);syncConfigControls();refreshAdSlotsFromSettings()}
+function applySettings(s){$('volume').value=Math.max(0,Math.min(100,Number(s.volume??85)));$('volume').oninput();automatic=s.mode!=='manual';$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));policy(s.policy==='exact');for(const [id,key] of [['shuffle','shuffle'],['repeat','repeat'],['endStop','endStop'],['silence','silence']])$(id).setAttribute('aria-pressed',String(!!s[key]));$('threshold').value=Math.max(-65,Math.min(-20,Number(s.threshold??-48)));$('silenceSeconds').value=Math.max(1,Math.min(30,Number(s.silenceSeconds??3)));$('breakLabel').value=s.breakLabel||'Tanda publicitaria';$('adTime').value=s.adTime||'';$('extraTimes').value=s.extraTimes||'';for(const box of dayHost.querySelectorAll('input'))box.checked=(s.days||[0,1,2,3,4,5,6]).includes(Number(box.value));selectedOutput=typeof s.output==='string'?s.output:'';$('autoRecoveryEnabled').checked=!!s.autoRecovery;setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));setProgramShuffle(!!s.programShuffle);setProgramRepeat(!!s.programRepeat);$('programsListEndStop').setAttribute('aria-pressed',String(!!s.programEndStop));setThirdShuffle(!!s.thirdShuffle);setThirdRepeat(!!s.thirdRepeat);syncConfigControls();refreshAdSlotsFromSettings()}
 async function deviceList(){const select=$('outputDevice');select.replaceChildren(new Option('Predeterminado del sistema',''));if(!navigator.mediaDevices?.enumerateDevices){$('outputStatus').textContent='La salida se selecciona desde el sistema operativo';return}try{const devices=await navigator.mediaDevices.enumerateDevices();devices.filter(d=>d.kind==='audiooutput'&&d.deviceId!=='default').forEach((d,i)=>select.add(new Option(d.label||'Salida '+(i+1),d.deviceId)));select.value=selectedOutput;if(!select.value&&selectedOutput)select.add(new Option('Salida guardada',selectedOutput));select.value=selectedOutput}catch(error){$('outputStatus').textContent=error.message}}
 $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutput($('outputDevice').value);
 
