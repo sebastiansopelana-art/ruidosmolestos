@@ -621,7 +621,7 @@ $('programsListPlay').onclick=()=>{
  if(playing(ads)){say('Detené la tanda antes de iniciar el programa');return}
  if(playing(programs))return;
  if(index.programs<0){startProgram(0);return}
- music.pause();resumeMusic=false;meter();kind='programs';
+ music.pause();third.pause();resumeMusic=false;resumeThird=false;meter();kind='programs';
  programs.play().catch(e=>say('No se pudo reproducir el programa: '+e.message,true));
 };
 $('programsListStop').onclick=()=>{programs.pause();if(programs.currentTime>0)programs.currentTime=0;resumeProgram=false;afterAdProgramNext=false;syncProgramAir()};
