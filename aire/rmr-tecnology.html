@@ -853,6 +853,35 @@
  .mh-weather-current #mhWeatherTemp{font-size:19px}
  .mh-news-source{display:none}
 }
+
+/* Weather detail modal: readable and usable without changing studio geometry. */
+#mhWeatherDialog{
+ box-sizing:border-box;max-width:min(720px,96vw);width:720px;max-height:88dvh;
+ overflow-y:auto;padding:18px 20px 15px;color:#e4f4ff;background:#0d1e2c;
+ border:1px solid #598cac;border-radius:10px;box-shadow:0 16px 65px #000c
+}
+#mhWeatherDialog::backdrop{background:#020a10d9}
+.mh-weather-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #3a607a;padding-bottom:10px;margin-bottom:12px}
+.mh-weather-dialog-head h2{font-size:15px;font-weight:900;color:#c8efff;letter-spacing:.7px;line-height:1.4;margin:0}
+#mhWeatherClose{flex:0 0 34px;height:32px;border-radius:5px;background:#294a61;border:1px solid #608ead;color:#e7f8ff;font-size:17px}
+.mh-weather-dialog-find{display:grid;grid-template-columns:70px minmax(0,1fr) auto auto;gap:6px;align-items:center}
+.mh-weather-dialog-find label{font-size:11px;font-weight:800;color:#91cfe9}
+.mh-weather-dialog-find input{min-width:0;padding:8px;font-size:12px;color:#e9f6ff;background:#071722;border:1px solid #47728c;border-radius:4px}
+.mh-weather-dialog-find button{padding:7px 8px;background:#20465e;border:1px solid #5a8ba7;border-radius:4px;font-size:10px;font-weight:800;color:#d7f1ff}
+.mh-weather-dlg-place{font-size:13px;font-weight:800;margin:14px 0;color:#9ae0f8}
+.mh-weather-detail-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.mh-weather-detail-item{padding:9px 10px;border:1px solid #335c71;border-radius:5px;background:#112d40}
+.mh-weather-detail-item label{display:block;font-size:10px;font-weight:800;color:#81b8d2;margin-bottom:5px}
+.mh-weather-detail-item strong{font-size:14px;font-weight:850;color:#e1f7ff}
+#mhWeatherDialog h3{font-size:11px;font-weight:900;color:#9ed9f3;margin:15px 0 8px}
+.mh-weather-event-list{max-height:230px;overflow:auto;display:flex;flex-direction:column;gap:6px}
+.mh-weather-event{padding:8px 10px;border:1px solid #45647a;border-radius:5px;background:#162e3e;color:#d2edf9;font-size:12px;line-height:1.45}
+.mh-weather-event.official{border-color:#e28a65;background:#432d25}
+.mh-weather-event.quake{border-color:#d88a70;background:#392932}
+.mh-weather-event a{color:#9cddff}
+.mh-weather-disclaimer{font-size:11px;color:#a7c1ce;line-height:1.5;border-top:1px solid #34556c;padding-top:12px;margin:15px 0 8px}
+.mh-weather-sources{font-size:10px;color:#87aebd}.mh-weather-sources a{color:#8dd7ff}
+@media(max-width:690px){.mh-weather-dialog-find{grid-template-columns:1fr 1fr}.mh-weather-dialog-find>input{grid-column:1/-1;grid-row:2}.mh-weather-dialog-find>label{grid-column:1/-1}.mh-weather-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
@@ -1030,6 +1059,21 @@
   <footer class="config-foot"><span id="settingsSaved" role="status">Los cambios se aplican al guardar.</span><button type="button" class="mh-primary" id="saveConfig">GUARDAR Y CERRAR</button></footer>
 </form>
 </dialog>
+<dialog id="mhWeatherDialog" aria-label="Centro meteorológico MEGAHERTZ">
+ <div class="mh-weather-dialog-head"><h2>ESTACIÓN METEOROLÓGICA · INFORMACIÓN AMPLIADA</h2><button type="button" id="mhWeatherClose" aria-label="Cerrar estación">✕</button></div>
+ <div class="mh-weather-dialog-find">
+  <label for="mhWeatherCityInput">CIUDAD</label>
+  <input id="mhWeatherCityInput" type="search" placeholder="Por ejemplo: Tokio, Japón" autocomplete="off" maxlength="90">
+  <button type="button" id="mhWeatherCitySearch">BUSCAR CIUDAD</button>
+  <button type="button" id="mhWeatherGPS">USAR MI UBICACIÓN</button>
+ </div>
+ <p class="mh-weather-dlg-place" id="mhDetailLocation">Seleccionando ubicación…</p>
+ <div id="mhWeatherDetailContent" class="mh-weather-detail-grid"></div>
+ <h3>INFORMACIÓN DE SEGURIDAD Y FENÓMENOS</h3>
+ <div id="mhWeatherEventList" class="mh-weather-event-list">Consultando servicios meteorológicos y sismológicos…</div>
+ <p class="mh-weather-disclaimer">Los sismos de USGS son eventos ya registrados, NO alertas tempranas ni predicciones. Los riesgos meteorológicos estimados NO sustituyen los avisos oficiales. Cobertura de alertas oficiales limitada según el país; ante emergencias seguí a Protección Civil y a la autoridad meteorológica local.</p>
+ <div class="mh-weather-sources">Fuentes: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · <a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a> · <a href="https://www.weather.gov/" target="_blank" rel="noopener noreferrer">NOAA / NWS</a></div>
+</dialog>
 <input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="programsFiles" accept="audio/*" multiple hidden><input type="file" id="thirdFiles" accept="audio/*" multiple hidden><input type="file" id="adsFiles" accept="audio/*" multiple hidden><audio id="musicAudio" preload="metadata"></audio><audio id="adsAudio" preload="metadata"></audio><audio id="programAudio" preload="metadata"></audio><audio id="thirdAudio" preload="metadata"></audio>
 <script>
 (()=>{
@@ -1200,7 +1244,7 @@ function updateSearchCount(k,shown){
 function resetMusicSelection(k){
  const a=k==='music'?music:programs;
  a.pause();a.removeAttribute('src');a.load();index[k]=-1;
- if(k==='music'){$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';window.megahertzTrackInfo?.clear?.()}
+ if(k==='music'){$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';void 0}
  else $('programsNow').textContent='—';
 }
 function relocateTrack(from,id,to,targetIndex){
@@ -1317,7 +1361,7 @@ async function readDropEntry(entry){if(entry.isFile)return [await new Promise((r
 function collectDrop(transfer){const entries=Array.from(transfer.items||[]).filter(i=>i.kind==='file').map(i=>i.webkitGetAsEntry?.()).filter(Boolean);const fallback=Array.from(transfer.files||[]);return entries.length?Promise.all(entries.map(readDropEntry)).then(batches=>batches.flat()):Promise.resolve(fallback)}
 document.addEventListener('dragover',e=>{if(Array.from(e.dataTransfer?.types||[]).includes('Files'))e.preventDefault()});
 document.addEventListener('drop',e=>{if(Array.from(e.dataTransfer?.types||[]).includes('Files'))e.preventDefault()});
-async function run(k,i){if(k==='ads')return playBreakAd(i);if(!lists[k][i]){say('Primero cargá '+(k==='music'?'canciones':k==='programs'?'audios de programas':k==='third'?'audios de la playlist 3':'avisos'));return false}const a=k==='music'?music:k==='programs'?programs:k==='third'?third:ads;meter();kind=k;index[k]=i;if(k!=='ads')seenTracks[k].add(i);a.src=lists[k][i].url;$(k==='music'?'musicNow':k==='programs'?'programsNow':k==='third'?'thirdNow':'adsNow').textContent=lists[k][i].name;if(k==='music'){$('musicListNow').textContent=lists[k][i].name;window.megahertzTrackInfo?.show?.(lists[k][i])}render(k);try{await a.play();say('En emisión · '+lists[k][i].name);return true}catch(e){say('No se pudo reproducir '+lists[k][i].name+': '+e.message,true);return false}}
+async function run(k,i){if(k==='ads')return playBreakAd(i);if(!lists[k][i]){say('Primero cargá '+(k==='music'?'canciones':k==='programs'?'audios de programas':k==='third'?'audios de la playlist 3':'avisos'));return false}const a=k==='music'?music:k==='programs'?programs:k==='third'?third:ads;meter();kind=k;index[k]=i;if(k!=='ads')seenTracks[k].add(i);a.src=lists[k][i].url;$(k==='music'?'musicNow':k==='programs'?'programsNow':k==='third'?'thirdNow':'adsNow').textContent=lists[k][i].name;if(k==='music'){$('musicListNow').textContent=lists[k][i].name;$('musicNow').textContent=lists[k][i].name.replace(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i,'').replace(/_/g,' ')}render(k);try{await a.play();say('En emisión · '+lists[k][i].name);return true}catch(e){say('No se pudo reproducir '+lists[k][i].name+': '+e.message,true);return false}}
 function startMusic(i){if(playing(ads)){say('Detené la tanda antes de iniciar música');return false}programs.pause();third.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;afterAdMusicNext=false;return run('music',i)}
 function startProgram(i){if(playing(ads)){say('Detené la tanda antes de iniciar el programa');return false}music.pause();third.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('programs',i)}
 function startThird(i){if(playing(ads)){say('Detené la tanda antes de iniciar la playlist 3');return false}music.pause();programs.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('third',i)}
@@ -1393,7 +1437,7 @@ $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUT
 $('clearPending').onclick=()=>{pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
-for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';window.megahertzTrackInfo?.clear?.()}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
+for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';void 0}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
 panel.ondragenter=e=>activatePlaylistDrop(panel,e);
 panel.ondragover=e=>activatePlaylistDrop(panel,e);
 panel.ondragleave=e=>{if(!e.relatedTarget||!panel.contains(e.relatedTarget))panel.classList.remove('drop')};
