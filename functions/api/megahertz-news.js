@@ -62,7 +62,53 @@ const reply=(value,status=200)=>new Response(JSON.stringify(value),{status,heade
  'X-Content-Type-Options':'nosniff'
 }});
 const searchTerm=s=>'"'+clean(s).replace(/["\\]/g,'').slice(0,90)+'"';
-export async function onRequestGet({request}){
+const engineVersion='2026-10-23-worldwide-news-api-v3';
+const gnewsSupported=new Set('AR AU BD BR CA CN CO EG FR DE GR HK IN ID IE IL IT JP MY MX NL NO PK PE PH PT RO RU SA SG ZA KR ES SE CH TW TH TR UA AE GB US VN'.split(' '));
+async function fetchJSON(url,timeoutMs=8000){
+ const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
+ try{
+  const response=await fetch(url,{signal:controller.signal,headers:{Accept:'application/json'}});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  return response.json();
+ }finally{clearTimeout(timer)}
+}
+const verifiedLink=value=>{
+ try{const u=new URL(String(value||''));return u.protocol==='https:'?u.toString():''}catch(_){return''}
+};
+const formatPublished=value=>{
+ const raw=clean(value);
+ if(/^\d{8}T\d{6}Z$/.test(raw))
+  return raw.slice(0,4)+'-'+raw.slice(4,6)+'-'+raw.slice(6,8)+'T'+raw.slice(9,11)+':'+raw.slice(11,13)+':'+raw.slice(13,15)+'Z';
+ return raw&&Number.isFinite(Date.parse(raw))?new Date(raw).toISOString():'';
+};
+async function gnewsHeadlines(country,language,key){
+ // Requires a GNEWS_API_KEY secret configured in Cloudflare, never embedded
+ // in the browser bundle. Free tier is for evaluation only.
+ const query=new URLSearchParams({category:'nation',country:country.toLowerCase(),
+  lang:language.split('-')[0],max:'25',apikey:key});
+ const data=await fetchJSON('https://gnews.io/api/v4/top-headlines?'+query,9000);
+ if(!Array.isArray(data.articles))throw Error('Formato de API no válido');
+ return data.articles.map(a=>({title:clean(a.title).slice(0,220),
+  source:clean(a.source?.name||'GNews').slice(0,90),url:verifiedLink(a.url),
+  published:formatPublished(a.publishedAt),scope:'nacional'})).filter(a=>a.title&&a.url);
+}
+async function gdeltArticles(country,place){
+ // GDELT supports "sourcecountry" to select publishers based in this country.
+ // Use a genuine international API even when no commercial API key is available.
+ const countryEnglish=new Intl.DisplayNames(['en'],{type:'region'}).of(country);
+ if(!countryEnglish||countryEnglish===country)return[];
+ const countryId=countryEnglish.toLowerCase().replace(/[^a-z]/g,'');
+ const query=(place?searchTerm(place)+' ':'')+'sourcecountry:'+countryId;
+ const params=new URLSearchParams({query,mode:'artlist',maxrecords:'35',
+  format:'json',timespan:'3d',sort:'datedesc'});
+ const data=await fetchJSON('https://api.gdeltproject.org/api/v2/doc/doc?'+params,9500);
+ return (Array.isArray(data.articles)?data.articles:[]).map(a=>({
+  title:clean(a.title).slice(0,220),source:clean(a.domain||'GDELT').slice(0,90),
+  url:verifiedLink(a.url),published:formatPublished(a.seendate),
+  scope:place?'provincial':'nacional'
+ })).filter(a=>a.title&&a.url);
+}
+export async function onRequestGet({request,env}){
  const params=new URL(request.url).searchParams,cf=request.cf||{};
  const country=clean(params.get('country')||cf.country||'').toUpperCase();
  const region=clean(params.get('region')||'').slice(0,90);
@@ -113,6 +159,14 @@ export async function onRequestGet({request}){
   '&format=rss&cc='+encodeURIComponent(country.toLowerCase())+
   '&setmkt='+encodeURIComponent(bingLanguage);
  feeds.push({scope:city?'local':region?'provincial':'nacional',kind:'bing',url:backup});
+ // Independent structured APIs: GDELT (keyless global coverage) and
+ // optional GNews (licensed, key stored only as Cloudflare environment secret).
+ feeds.unshift({scope:city?'local':region?'provincial':'nacional',kind:'gdelt',
+  load:()=>gdeltArticles(country,city||region)});
+ const gnewsKey=typeof env?.GNEWS_API_KEY==='string'?env.GNEWS_API_KEY.trim():'';
+ const gnewsEnabled=!!gnewsKey&&gnewsSupported.has(country);
+ if(gnewsEnabled)feeds.unshift({scope:'nacional',kind:'gnews',
+  load:()=>gnewsHeadlines(country,hl,gnewsKey)});
  // Cloudflare Workers allow only a limited number of simultaneous outgoing
  // connections per request. Cap concurrency rather than launching every RSS
  // provider simultaneously and starving the slower sources.
@@ -121,7 +175,8 @@ export async function onRequestGet({request}){
  await Promise.all(Array.from({length:Math.min(5,feeds.length)},async()=>{
   while(pointer<feeds.length){
    const i=pointer++;
-   try{settled[i]={status:'fulfilled',value:await fetchRSS(feeds[i].url,feeds[i].scope)}}
+   try{settled[i]={status:'fulfilled',value:await (feeds[i].load?
+      feeds[i].load():fetchRSS(feeds[i].url,feeds[i].scope))}}
    catch(reason){settled[i]={status:'rejected',reason}}
   }
  }));
@@ -147,6 +202,10 @@ export async function onRequestGet({request}){
  }
  if(city){pushFrom('city-search',5);pushFrom('city-geo',5)}
  if(region){pushFrom('region-search',5);pushFrom('region-geo',5)}
+ // Use configured licensed API first; GDELT supplies articles from local
+ // outlets in the selected country or region, not fixed Argentine sources.
+ pushFrom('gnews',12);
+ pushFrom('gdelt',14);
  // Interleave national topics instead of accepting a few from one search.
  // The user sees a complete editorial wall, not two location keyword matches.
  pushFrom('nation',9);
@@ -166,9 +225,12 @@ export async function onRequestGet({request}){
   country,countryName,region,city,edition:hl,updatedAt:new Date().toISOString(),
   available:result.length>0,items:result,nationalItems:result,
   status,error,failedSources:failures,feedCounts,selectedKinds,returned:result.length,
+  engineVersion,providers:{gnews:gnewsEnabled?'configured':'not-configured',
+    gdelt:failures.includes('gdelt')?'error':'available',
+    google:failures.includes('headlines')?'error':'available'},
   scopes:{local:grouped.local.length,provincial:grouped.provincial.length,
    nacional:grouped.nacional.length},
-  source:'Edición Google News RSS para '+countryName+'; respaldo Bing News RSS',
+  source:'GDELT + Google News RSS por región + Bing News RSS'+(gnewsEnabled?' + GNews API':''),
   publishers:'Medios seleccionados por los agregadores para la zona solicitada'
  });
 }
