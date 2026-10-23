@@ -608,6 +608,22 @@
  grid-template-rows:repeat(3,minmax(0,1fr))!important;
  }
 }
+
+/* Agenda compacta del día; al emitir, la hora destella en rojo como EN EL AIRE. */
+#thirdList .schedule-row{min-height:31px;padding:4px 6px}
+#thirdList .schedule-details{font-size:9px;margin-top:1px}
+#thirdList .schedule-branch>.schedule-row{grid-template-columns:50px minmax(0,1fr) auto}
+#thirdList .schedule-hour.on-air,#thirdList .schedule-row.is-emitting .schedule-hour{
+ color:#fff!important;background:#b21324;border:1px solid #fa6070;border-radius:4px;
+ padding:3px 4px;text-shadow:0 0 6px #fff;animation:mh-ad-hour-live .85s steps(1,end) infinite;
+}
+@keyframes mh-ad-hour-live{
+  0%,49%{background:#df2035;color:#fff;box-shadow:0 0 8px #f63349}
+  50%,100%{background:#52131c;color:#ff8892;box-shadow:none}
+}
+#thirdList .schedule-foot[hidden]{display:none}
+#thirdList .schedule-children{padding-top:3px;padding-bottom:5px}
+@media(prefers-reduced-motion:reduce){#thirdList .schedule-hour.on-air,#thirdList .schedule-row.is-emitting .schedule-hour{animation:none;background:#ba192b!important}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen">
@@ -1316,9 +1332,9 @@ function checkScheduledBreaks(){
 }
 function renderBreakSchedule(){
  const host=$('thirdList');host.replaceChildren();
- const entries=scheduleEntries();
+ const entries=todayScheduleEntries();
  if(!entries.length){
-  const empty=document.createElement('div');empty.className='empty';empty.textContent='Sin tandas programadas. Creá una desde + TANDA.';
+  const empty=document.createElement('div');empty.className='empty';empty.textContent='No quedan tandas por emitir hoy.';
   host.append(empty);$('thirdNow').textContent='Sin tandas programadas';return;
  }
  for(const entry of entries){
@@ -1334,17 +1350,17 @@ function renderBreakSchedule(){
   const name=document.createElement('span');name.className='schedule-name';name.textContent=entry.name;
   const details=document.createElement('span');details.className='schedule-details';
   const dayNames=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
-  details.textContent=(entry.days.length===7?'TODOS LOS DÍAS':entry.days.map(d=>dayNames[d]||'').filter(Boolean).join(' · '))+' · '+(entry.policy==='exact'?'HORA EXACTA':'FIN DE TEMA');
+  details.textContent=(entry.policy==='exact'?'HORA EXACTA':'FIN DE TEMA')+' · '+entry.adIds.length+' AVISOS';
   info.append(name,details);
   const status=document.createElement('span');status.className='schedule-status';
-  if(activeBreak?.key===entry.key&&playing(ads)){status.textContent='AL AIRE';status.classList.add('live')}
+  if(activeBreak?.key===entry.key&&playing(ads)){status.textContent='AL AIRE';status.classList.add('live');hour.classList.add('on-air');hour.setAttribute('aria-label',entry.hour+' · al aire')}
   else if(pendingBreaks.some(x=>x.key===entry.key)){status.textContent='PENDIENTE';status.classList.add('due')}
   else status.textContent=entry.adIds.length+' AVISOS';
   row.append(hour,info,status);
   row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.toggle('selected',r===row))};
   row.ondblclick=()=>emitScheduledBreak(entry);
   row.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();emitScheduledBreak(entry)}};
-  const children=document.createElement('div');children.className='schedule-children';children.hidden=collapsedBreaks.has(entry.key);
+  const children=document.createElement('div');children.className='schedule-children';children.hidden=!expandedBreaks.has(entry.key);
   if(!entry.adIds.length){const empty=document.createElement('div');empty.textContent='↳ Sin avisos en esta tanda';children.append(empty)}
   entry.adIds.forEach((id,i)=>{
    const ad=breakAssets.get(id),child=document.createElement('div');child.className='schedule-child';
@@ -1354,14 +1370,15 @@ function renderBreakSchedule(){
    child.append(label,length);children.append(child);
   });
   const toggle=document.createElement('button');toggle.type='button';toggle.className='schedule-toggle';toggle.title='Mostrar u ocultar avisos';toggle.textContent=children.hidden?'▸':'▾';
-  toggle.onclick=()=>{children.hidden=!children.hidden;toggle.textContent=children.hidden?'▸':'▾';if(children.hidden)collapsedBreaks.add(entry.key);else collapsedBreaks.delete(entry.key)};
+  toggle.onclick=()=>{children.hidden=!children.hidden;toggle.textContent=children.hidden?'▸':'▾';if(children.hidden)expandedBreaks.delete(entry.key);else expandedBreaks.add(entry.key)};
   branch.append(toggle,row);
   const lengths=entry.adIds.map(id=>breakAssets.get(id)?.duration);
   const total=lengths.length&&lengths.every(Number.isFinite)?formatBreakDuration(lengths.reduce((a,b)=>a+b,0)):'--:--';
-  const foot=document.createElement('div');foot.className='schedule-foot';foot.textContent=entry.adIds.length+' avisos · DURACIÓN '+total;
+  const foot=document.createElement('div');foot.className='schedule-foot';foot.textContent=entry.adIds.length+' avisos · DURACIÓN '+total;foot.hidden=children.hidden;
+  toggle.onclick=()=>{children.hidden=!children.hidden;foot.hidden=children.hidden;toggle.textContent=children.hidden?'▸':'▾';if(children.hidden)expandedBreaks.delete(entry.key);else expandedBreaks.add(entry.key)};
   wrap.append(branch,children,foot);host.append(wrap);
  }
- if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salidas · ordenadas por horario';
+ if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salidas pendientes hoy';
 }
 renderBreakSchedule();
 /* Biblioteca de jingles y separadores: misma base local RMR-Mediateca usada en el programa anterior. */
