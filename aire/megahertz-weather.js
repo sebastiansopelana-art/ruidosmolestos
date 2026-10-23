@@ -481,6 +481,8 @@ try{
  }
 }catch(_){}
 updateNewsPicker();
+// A stored selection must work even before GPS or weather services respond.
+if(state.newsOverride)loadNews();
 $('mhNewsPlaceForm')?.addEventListener('submit',async event=>{
  event.preventDefault();
  const field=$('mhNewsPlaceInput'),button=$('mhNewsPlaceSearch');
