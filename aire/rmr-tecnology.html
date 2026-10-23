@@ -882,6 +882,129 @@
 .mh-weather-disclaimer{font-size:11px;color:#a7c1ce;line-height:1.5;border-top:1px solid #34556c;padding-top:12px;margin:15px 0 8px}
 .mh-weather-sources{font-size:10px;color:#87aebd}.mh-weather-sources a{color:#8dd7ff}
 @media(max-width:690px){.mh-weather-dialog-find{grid-template-columns:1fr 1fr}.mh-weather-dialog-find>input{grid-column:1/-1;grid-row:2}.mh-weather-dialog-find>label{grid-column:1/-1}.mh-weather-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* MEGAHERTZ 2026 · estación compacta, reloj protagonista y alertas sobre el borde */
+.console>.deck.mh-weather-deck>h1{justify-content:flex-start!important}
+.console>.deck.mh-weather-deck .mh-weather-screen{
+ grid-template-rows:32px minmax(0,1fr) 20px!important;
+ row-gap:2px!important;
+ padding:5px 8px 2px!important;
+}
+.console>.deck.mh-weather-deck .mh-weather-top{
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+ align-items:center!important;gap:4px!important;
+}
+.console>.deck.mh-weather-deck .mh-place{grid-column:1;grid-row:1;font-size:10px!important}
+.console>.deck.mh-weather-deck .mh-clock{
+ grid-column:2;grid-row:1;justify-self:center!important;
+ font:900 clamp(18px,1.95vw,28px)/1 "SFMono-Regular",Consolas,monospace!important;
+ letter-spacing:.8px!important;color:#83ffff!important;
+ text-shadow:0 0 11px #08c7f794,0 0 3px #dffcff!important;
+}
+.console>.deck.mh-weather-deck .mh-weather-core{align-self:stretch!important;min-height:0}
+.console>.deck.mh-weather-deck .mh-alert-strip{
+ align-self:end!important;height:20px!important;min-height:20px!important;
+ padding:0 6px!important;margin-bottom:0!important;
+ border-bottom-left-radius:4px;border-bottom-right-radius:4px;
+}
+.console>.deck.mh-weather-deck .mh-alert-strip #mhAlertText{font-size:9px!important;line-height:18px!important}
+@media(max-width:900px){
+ .console>.deck.mh-weather-deck .mh-weather-screen{grid-template-rows:29px minmax(0,1fr) 19px!important;padding:4px 5px 2px!important}
+ .console>.deck.mh-weather-deck .mh-clock{font-size:clamp(14px,2vw,21px)!important}
+ .console>.deck.mh-weather-deck .mh-alert-strip{min-height:19px!important;height:19px!important}
+}
+@media(max-width:630px){
+ .console>.deck.mh-weather-deck .mh-weather-screen{grid-template-rows:27px minmax(0,1fr) 19px!important}
+ .console>.deck.mh-weather-deck .mh-clock{font-size:15px!important}
+ .console>.deck.mh-weather-deck .mh-place{font-size:8px!important}
+}
+/* Meteorological setup is an actual part of Configuración > General,
+   not a standalone floating dialog. Details scroll INSIDE configuration. */
+#mhWeatherSettings>.mh-settings-group-body{min-width:0}
+#mhWeatherSettings .mh-weather-dialog-find{
+ display:grid;grid-template-columns:80px minmax(0,1fr) auto auto;align-items:center;gap:6px
+}
+#mhWeatherSettings .mh-weather-dialog-find input{
+ width:100%;min-width:0;padding:8px;
+ background:#091e2c;color:#d9f4ff;border:1px solid #517d9b;border-radius:4px
+}
+#mhWeatherSettings .mh-weather-dialog-find button{min-height:31px;padding:4px 9px}
+#mhWeatherSettings .mh-meteo-options{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;
+ padding:9px;border:1px solid #315672;border-radius:5px;background:#102b3d
+}
+#mhWeatherSettings .mh-meteo-options label{display:flex;align-items:center;gap:6px;min-width:0;font-size:11px}
+#mhWeatherSettings .mh-meteo-options select{
+ min-width:80px;padding:4px;background:#163a51;border:1px solid #4f83a1;color:#e3f6ff
+}
+#mhWeatherSettings .mh-weather-detail-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:850px){
+ #mhWeatherSettings .mh-weather-dialog-find{grid-template-columns:1fr 1fr}
+ #mhWeatherSettings .mh-weather-dialog-find label,#mhWeatherSettings .mh-weather-dialog-find input{grid-column:1/-1}
+ #mhWeatherSettings .mh-meteo-options{grid-template-columns:1fr}
+ #mhWeatherSettings .mh-weather-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+/* Ticker must physically move LEFT. Two identical groups eliminate the pause
+   and empty zone that arose with padding-left:100% on the former one-piece track. */
+.emission-controls .mh-news-viewport{
+ overflow:hidden!important;display:block!important;position:relative;height:24px!important
+}
+.emission-controls .mh-news-flow{
+ box-sizing:content-box;display:flex!important;align-items:center!important;
+ flex-wrap:nowrap!important;gap:0!important;width:max-content!important;
+ min-width:max-content!important;padding:0!important;margin:0!important;
+ animation:mh-news-marquee-left var(--mh-news-seconds,135s) linear infinite!important;
+ animation-play-state:running;
+ will-change:transform;
+}
+.emission-controls .mh-news-flow .mh-news-reel{
+ display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+ gap:30px!important;flex:0 0 auto!important;width:max-content!important;
+ white-space:nowrap!important;padding-right:30px!important;
+}
+.emission-controls .mh-news-flow .mh-news-reel>a,
+.emission-controls .mh-news-flow .mh-news-reel>span{
+ display:inline-block!important;white-space:nowrap!important;
+ font-size:10px!important;font-weight:850!important;
+ line-height:24px!important;letter-spacing:.3px!important;
+ text-transform:uppercase!important;
+}
+@keyframes mh-news-marquee-left{
+ 0%{transform:translate3d(0,0,0)}
+ 100%{transform:translate3d(-50%,0,0)}
+}
+.emission-controls .mh-news-viewport:hover .mh-news-flow{
+ animation-play-state:paused!important
+}
+@media(prefers-reduced-motion:reduce){
+ .emission-controls .mh-news-flow{
+  animation:none!important;transform:none!important
+ }
+}
+/* Vúmetros: turquesa neón del propio logo MEGAHERTZ (#0dd7ff → #83ffff).
+   El pico en +3/+6 mantiene sus marcas rojas, pero el destello de
+   sobrecarga es TURQUESA, también en la aguja y el aro. */
+#mhDualMeters .mh-vu-needle-line{
+ stroke:#83ffff!important;stroke-width:2.35!important;
+ filter:drop-shadow(0 0 2px #0dd7ff) drop-shadow(0 0 4px #18bbff)!important
+}
+#mhDualMeters .mh-vu-pivot{fill:#83ffff!important;filter:drop-shadow(0 0 4px #0dd7ff)!important}
+#mhDualMeters .mh-vu-instrument.peak{
+ border-color:#83ffff!important;
+ animation:mh-vu-turquoise-peak .55s steps(1,end) infinite!important
+}
+#mhDualMeters .mh-vu-instrument.peak .mh-vu-needle-line{
+ stroke:#efffff!important;
+ filter:drop-shadow(0 0 5px #83ffff) drop-shadow(0 0 8px #0dd7ff)!important
+}
+@keyframes mh-vu-turquoise-peak{
+ 0%,49%{box-shadow:inset 0 0 12px #08bfff99,0 0 12px #83ffffc9,0 0 3px #efffff;border-color:#83ffff}
+ 50%,100%{box-shadow:inset 0 0 5px #0dd7ff33,0 0 2px #0dd7ff77;border-color:#126789}
+}
+@media(prefers-reduced-motion:reduce){
+ #mhDualMeters .mh-vu-instrument.peak{animation:none!important;border-color:#83ffff!important}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
