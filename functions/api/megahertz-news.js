@@ -113,7 +113,18 @@ export async function onRequestGet({request}){
   '&format=rss&cc='+encodeURIComponent(country.toLowerCase())+
   '&setmkt='+encodeURIComponent(bingLanguage);
  feeds.push({scope:city?'local':region?'provincial':'nacional',kind:'bing',url:backup});
- const settled=await Promise.allSettled(feeds.map(f=>fetchRSS(f.url,f.scope)));
+ // Cloudflare Workers allow only a limited number of simultaneous outgoing
+ // connections per request. Cap concurrency rather than launching every RSS
+ // provider simultaneously and starving the slower sources.
+ const settled=new Array(feeds.length);
+ let pointer=0;
+ await Promise.all(Array.from({length:Math.min(5,feeds.length)},async()=>{
+  while(pointer<feeds.length){
+   const i=pointer++;
+   try{settled[i]={status:'fulfilled',value:await fetchRSS(feeds[i].url,feeds[i].scope)}}
+   catch(reason){settled[i]={status:'rejected',reason}}
+  }
+ }));
  const failures=[],collected=new Map();
  settled.forEach((s,i)=>{
   if(s.status==='fulfilled')collected.set(feeds[i].kind,s.value);
