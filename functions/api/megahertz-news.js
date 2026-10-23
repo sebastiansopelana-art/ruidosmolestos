@@ -29,7 +29,7 @@ function parseRSS(xml,area){
   if(!raw||!link)continue;
   const withoutOutlet=source&&raw.endsWith(' - '+source)?raw.slice(0,-source.length-3):raw;
   rows.push({title:clean(withoutOutlet).slice(0,210),source:clean(source).slice(0,90),
-    url:link,published:published?new Date(published).toISOString?.()||'':'',scope:area});
+    url:link,published:published&&Number.isFinite(Date.parse(published))?new Date(published).toISOString():'',scope:area});
   if(rows.length>=15)break;
  }
  return rows;
