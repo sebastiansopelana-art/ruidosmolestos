@@ -330,13 +330,25 @@ async function loadNews(){
     Array.isArray(data.items)?data.items.filter(x=>x.scope==='nacional'):[];
   state.news={...data,nationalItems:nation};
   const title=state.newsOverride?.label||data.countryName||location.countryName||country;
-  displayNationalHeadlines(nation,title,nation.length?data.updatedAt:null,data.error);
+  displayNationalHeadlines(nation,title,nation.length?data.updatedAt:null,
+   data.error||'No hay noticias disponibles en esta edición. Se reintentará automáticamente.');
   $('mhNewsRegion').textContent=country;
+  if(!nation.length&&data.status==='unavailable')$('mhNewsUpdated').textContent='SIN FUENTES';
   animateNews(nation.length?nation:[{title:'SIN TITULARES DE ESTA ZONA POR AHORA · REINTENTO AUTOMÁTICO',scope:'nacional'}]);
- }catch(_){
+ }catch(error){
   if(token!==newsSeq)return;
-  state.news=null;displayNationalHeadlines([],headerPlace,null,'Sin conexión con el servicio de noticias. Se reintentará automáticamente.');
-  animateNews([{title:'INFORMACIÓN NACIONAL TEMPORALMENTE NO DISPONIBLE',scope:'nacional'}]);
+  const message=String(error?.message||'Error de red');
+  const noBackend=/Servidor (404|405)/.test(message);
+  const detail=noBackend
+   ?'Error 404: el servicio /api/megahertz-news no está publicado en este sitio. Publicá la rama que contiene las Cloudflare Pages Functions.'
+   :/Servidor 5\d\d/.test(message)
+    ?'El servicio de noticias respondió con error ('+message+'). Comprobá la conexión del servidor con Google News o Bing.'
+    :/abort|timeout/i.test(message)
+     ?'La conexión a noticias agotó el tiempo de espera. Se reintentará automáticamente.'
+     :'No se pudo consultar el servicio de noticias: '+message;
+  state.news=null;displayNationalHeadlines([],headerPlace,null,detail);
+  if($('mhNewsUpdated'))$('mhNewsUpdated').textContent=noBackend?'API 404':'SIN CONEXIÓN';
+  animateNews([{title:detail,scope:'nacional'}]);
  }
 }
 async function deviceLocation(force=false){
