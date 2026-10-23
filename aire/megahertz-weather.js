@@ -72,11 +72,11 @@ function alertState(data){
  const missingAlerts=data?.officialAlerts===null&&data?.location?.country!=='US';
  if(missingAlerts){
   symbol.textContent='◈';
-  line.textContent='DATOS METEO Y SÍSMICOS · Avisos oficiales: cobertura limitada';
+  line.textContent='ALERTAS · COBERTURA OFICIAL PARCIAL';
  }else if(data?.failed?.length){
   symbol.textContent='◈';line.textContent='Datos parciales · Consultá detalles y fuentes';
  }else{
-  symbol.textContent='◈';line.textContent='MONITOREO ACTIVO · Sin eventos destacados en las fuentes consultadas';
+  symbol.textContent='◈';line.textContent='MONITOREO ACTIVO · SIN EVENTOS DESTACADOS';
  }
  strip.title='Los avisos oficiales pueden no estar integrados para esta ubicación';
 }
