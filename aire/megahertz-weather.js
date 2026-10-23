@@ -5,6 +5,7 @@
 'use strict';
 const $=id=>document.getElementById(id);
 const manualPlaceKey='megahertz-weather-chosen-city-v1';
+const newsSpeedKey='megahertz-news-ticker-speed-v1';
 const state={forecast:null,location:null,geoMode:'',citySearch:'',busy:false,news:null,clockTZ:null,lastCoords:null,lastNews:null};
 let weatherSeq=0,newsSeq=0;
 const short=s=>String(s||'').trim().slice(0,160);
@@ -100,7 +101,7 @@ function displayWeather(data){
  $('mhUV').textContent=show(air.uv_index,'',1);
  $('mhAQI').textContent=show(air.us_aqi);
  clock();alertState(data);renderDetails();
- const newsLoc=location.city+'|'+location.country;
+ const newsLoc=[location.city,location.region,location.country].join('|');
  if(state.lastNews!==newsLoc){state.lastNews=newsLoc;loadNews()}
 }
 function rowDetail(key,value){
@@ -174,39 +175,97 @@ async function requestWeather(query){
  state.busy=true;
  try{
   const data=await requestJSON('/api/megahertz-weather'+query,14500);
-  if(token!==weatherSeq)return;
-  if(data.needsLocation){showError(data.error||'Falta ubicación');return}
+  if(token!==weatherSeq)return false;
+  if(data.needsLocation){showError(data.error||'Falta ubicación');return false}
   if(!data?.current)throw Error(data.error||'Sin pronóstico');
   displayWeather(data);
- }catch(error){if(token===weatherSeq)showError(error.message||'No disponible')}
+  return true;
+ }catch(error){if(token===weatherSeq)showError(error.message||'No disponible');return false}
  finally{if(token===weatherSeq)state.busy=false}
+}
+/* Two identical reels travel left as one continuous loop, without blank gaps. */
+function newsSpeed(){
+ const value=$('mhNewsSpeed')?.value;
+ return value==='fast'?'fast':value==='normal'?'normal':'slow';
+}
+function tickerReel(items){
+ const group=document.createElement('div');group.className='mh-news-reel';
+ for(const item of items){
+  try{
+   const url=new URL(item.url);
+   if(url.protocol!=='https:')continue;
+   const link=document.createElement('a');
+   link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';
+   const scope=item.scope==='local'?'LOCAL':item.scope==='provincial'?'PROVINCIA':'NACIONAL';
+   link.textContent=(scope+' · '+short(item.title)+(item.source?' · '+short(item.source):'')).toLocaleUpperCase(lang());
+   group.append(link);
+  }catch(_){}
+ }
+ return group;
+}
+function animateNews(items){
+ const root=$('mhNewsFlow');
+ const content=items&&items.length?items:[{title:'SIN TITULARES DE ESTA REGIÓN POR EL MOMENTO · CONFIGURÁ TU CIUDAD EN GENERAL',scope:'local',source:''}];
+ let first=tickerReel(content);
+ if(!first.children.length){
+  first=document.createElement('div');first.className='mh-news-reel';
+  const fallback=document.createElement('span');fallback.textContent='NO HAY NOTICIAS LOCALES DISPONIBLES';
+  first.append(fallback);
+ }
+ const duplicate=first.cloneNode(true);duplicate.setAttribute('aria-hidden','true');
+ root.replaceChildren(first,duplicate);
+ const chars=content.reduce((total,item)=>total+(item.title?.length||0)+(item.source?.length||0)+18,0);
+ const multiplier=newsSpeed()==='fast'?.16:newsSpeed()==='normal'?.23:.34;
+ const duration=Math.max(55,Math.min(400,Math.ceil(chars*multiplier)));
+ root.style.setProperty('--mh-news-seconds',duration+'s');
+ root.style.animation='none';
+ // Force layout once so changing the city restarts motion from the right edge.
+ void root.offsetWidth;
+ root.style.animation='';
+}
+function countryFromDeviceTimeZone(){
+ const zone=Intl.DateTimeFormat().resolvedOptions().timeZone||'';
+ const zoneKnown=[
+  [/^America\/Argentina\//,'AR'],[/^America\/Buenos_Aires$/,'AR'],
+  [/^America\/Santiago$/,'CL'],[/^America\/Montevideo$/,'UY'],
+  [/^America\/Sao_Paulo$/,'BR'],[/^America\/Mexico_City$/,'MX'],
+  [/^Asia\/Tokyo$/,'JP'],[/^Asia\/Shanghai$/,'CN'],
+  [/^Asia\/Taipei$/,'TW'],[/^Europe\/Paris$/,'FR'],
+  [/^Europe\/Berlin$/,'DE'],[/^Europe\/Madrid$/,'ES'],
+  [/^Europe\/Rome$/,'IT'],[/^Europe\/London$/,'GB']
+ ];
+ return zoneKnown.find(([pattern])=>pattern.test(zone))?.[1]||'';
 }
 async function loadNews(){
  const token=++newsSeq;
- const location=state.location||{};
- const path='/api/megahertz-news?country='+encodeURIComponent(location.country||'')+'&city='+encodeURIComponent(location.city||'');
+ const location=state.location||{},country=(location.country||'').toUpperCase();
+ $('mhNewsRegion').textContent=country||'LOCAL';
+ // On desktop with IP fallback, a VPN can put the IP in Taiwan while the
+ // computer's timezone is Argentina. Do not show that country's headlines.
+ const deviceCountry=countryFromDeviceTimeZone();
+ if(!country||(state.geoMode==='ip'&&deviceCountry&&deviceCountry!==country)){
+  state.news=null;animateNews([{title:'UBICACIÓN SIN CONFIRMAR · CONFIGURÁ TU CIUDAD EN CONFIGURACIÓN GENERAL',scope:'local'}]);
+  $('mhNewsRegion').textContent='UBIC.';
+  return;
+ }
+ const query=new URLSearchParams({
+  country,city:location.city||'',region:location.region||'',
+  countryName:location.countryName||''
+ });
  try{
-  const data=await requestJSON(path,13000);
+  const data=await requestJSON('/api/megahertz-news?'+query.toString(),13000);
   if(token!==newsSeq)return;
-  if(!Array.isArray(data.items)||!data.items.length)throw Error('Noticias no disponibles');
-  state.news=data;
-  const root=$('mhNewsFlow');root.replaceChildren();
-  for(const item of data.items){
-   try{
-    const u=new URL(item.url);
-    if(u.protocol!=='https:')continue;
-    const link=document.createElement('a');link.href=u.href;link.target='_blank';link.rel='noopener noreferrer';
-    link.textContent=(item.scope==='regional'?'LOCAL · ':'')+short(item.title)+(item.source?' · '+short(item.source):'');
-    root.append(link);
-   }catch(_){}
+  if(data.country!==country)throw Error('La edición de noticias no corresponde a la ubicación');
+  if(!Array.isArray(data.items)||!data.items.length){
+   state.news=data;animateNews([{title:'SIN TITULARES VERIFICABLES PARA ESTA REGIÓN · SE REVISARÁ NUEVAMENTE',scope:'local'}]);
+   return;
   }
-  if(!root.children.length)throw Error('No hay noticias disponibles');
-  root.style.setProperty('--mh-news-seconds',Math.max(65,Math.min(220,data.items.map(e=>e.title.length).reduce((a,b)=>a+b,0)*0.18))+'s');
-  $('mhNewsRegion').textContent=location.country||'LOCAL';
- }catch(error){
+  state.news=data;
+  animateNews(data.items);
+ }catch(_){
   if(token!==newsSeq)return;
-  const node=document.createElement('span');node.textContent='Noticias no disponibles por el momento · Consultá la conexión';
-  $('mhNewsFlow').replaceChildren(node);
+  state.news=null;
+  animateNews([{title:'NOTICIAS LOCALES TEMPORALMENTE NO DISPONIBLES',scope:'local'}]);
  }
 }
 async function deviceLocation(force=false){
@@ -245,24 +304,34 @@ async function deviceLocation(force=false){
 }
 async function chosenPlace(value){
  const city=short(value);
- if(city.length<2){$('mhWeatherCityInput').focus();return}
- try{localStorage.setItem(manualPlaceKey,city)}catch(_){}
+ if(city.length<2){$('mhWeatherCityInput').focus();return false}
+ const previousMode=state.geoMode,previousCity=state.citySearch;
  state.geoMode='city';state.citySearch=city;
- await requestWeather('?place='+encodeURIComponent(city));
+ const loaded=await requestWeather('?place='+encodeURIComponent(city));
+ if(loaded){
+  try{localStorage.setItem(manualPlaceKey,city)}catch(_){}
+  $('mhWeatherCityInput').value=city;
+  $('mhDetailLocation').textContent='UBICACIÓN GUARDADA · '+$('mhDetailLocation').textContent;
+  return true;
+ }
+ state.geoMode=previousMode;state.citySearch=previousCity;
+ return false;
 }
-function weatherModal(){
- renderDetails();const dialog=$('mhWeatherDialog');
- if(!dialog.open)dialog.showModal();
-}
-$('mhWeatherMore').onclick=weatherModal;
-$('mhGeoRefresh').onclick=()=>{weatherModal();$('mhWeatherCityInput').focus()};
-$('mhWeatherClose').onclick=()=>$('mhWeatherDialog').close();
 $('mhWeatherCitySearch').onclick=()=>chosenPlace($('mhWeatherCityInput').value);
 $('mhWeatherCityInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();chosenPlace(e.target.value)}});
 $('mhWeatherGPS').onclick=async()=>{
  try{localStorage.removeItem(manualPlaceKey)}catch(_){}
- $('mhWeatherDialog').close();await deviceLocation(true)
+ $('mhWeatherCityInput').value='';
+ await deviceLocation(true);
 };
+$('mhNewsSpeed').onchange=()=>{
+ try{localStorage.setItem(newsSpeedKey,newsSpeed())}catch(_){}
+ if(state.news?.items?.length)animateNews(state.news.items);
+ else animateNews([{title:'SIN TITULARES LOCALES POR EL MOMENTO',scope:'local'}]);
+};
+let configuredNewsSpeed='slow';
+try{configuredNewsSpeed=localStorage.getItem(newsSpeedKey)||'slow'}catch(_){}
+$('mhNewsSpeed').value=['slow','normal','fast'].includes(configuredNewsSpeed)?configuredNewsSpeed:'slow';
 clock();setInterval(clock,1000);
 setInterval(()=>{if(state.geoMode==='city'&&state.citySearch)requestWeather('?place='+encodeURIComponent(state.citySearch));
  else if(state.geoMode==='gps'&&state.location)requestWeather('?lat='+state.location.lat+'&lon='+state.location.lon+'&country='+encodeURIComponent(state.location.country||'')+'&city='+encodeURIComponent(state.location.city||'')+'&region='+encodeURIComponent(state.location.region||''));
@@ -270,7 +339,7 @@ setInterval(()=>{if(state.geoMode==='city'&&state.citySearch)requestWeather('?pl
 setInterval(loadNews,900000);
 let preferred='';
 try{preferred=localStorage.getItem(manualPlaceKey)||''}catch(_){}
-if(preferred){state.geoMode='city';state.citySearch=preferred;requestWeather('?place='+encodeURIComponent(preferred))}
+if(preferred){state.geoMode='city';state.citySearch=preferred;$('mhWeatherCityInput').value=preferred;requestWeather('?place='+encodeURIComponent(preferred))}
 else deviceLocation(false);
 window.megahertzWeather={refresh:()=>deviceLocation(true),searchCity:chosenPlace,getState:()=>({...state})};
 })();
