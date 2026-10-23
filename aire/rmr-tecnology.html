@@ -899,7 +899,7 @@
 </div></section>
 <section class="master" aria-label="Salida de aire compartida"><strong id="air">EN ESPERA</strong><div class="vu" id="vu" role="img" aria-label="Nivel real de la salida de audio"></div><div><input id="seek" aria-label="Progreso del audio en emisión" type="range" min="0" max="1000" value="0" disabled><div class="times"><span id="elapsed">00:00</span><span id="duration">00:00</span></div></div></section>
 <section class="deck mh-weather-deck" aria-label="Estación meteorológica">
- <h1>ESTACIÓN METEOROLÓGICA <button id="mhGeoRefresh" type="button" title="Ubicación actual o cambiar ciudad">⌖ UBICACIÓN</button></h1>
+ <h1>ESTACIÓN METEOROLÓGICA</h1>
  <div class="mh-weather-screen" id="mhWeatherScreen">
    <div class="mh-weather-top"><div class="mh-place" id="mhWeatherPlace">Localizando estación…</div><div class="mh-clock" id="mhLocalClock" role="timer" aria-label="Hora local">--:--:--</div></div>
    <div class="mh-weather-core"><div class="mh-weather-current"><span id="mhWeatherIcon" aria-hidden="true">◌</span><span id="mhWeatherTemp">--°</span><div class="mh-weather-status"><strong id="mhWeatherCondition">Conectando…</strong><small id="mhWeatherUpdated">Pronóstico local en internet</small></div></div>
@@ -911,7 +911,6 @@
     </div>
    </div>
    <div class="mh-alert-strip" id="mhWeatherAlert" role="status" aria-live="polite"><span id="mhAlertSymbol">◈</span><span id="mhAlertText">Comprobando fenómenos y alertas…</span></div>
-   <button id="mhWeatherMore" class="mh-weather-more" title="Ampliar estación meteorológica y alertas" type="button">DETALLES <span aria-hidden="true">↗</span></button>
  </div>
  <div class="mh-visually-hidden"><span id="adsNow" role="status" aria-live="polite">Sin tanda en reproducción</span>
   <div id="adQueueView" aria-label="Orden de avisos de la tanda"></div><span id="adsAir" hidden>EN EL AIRE</span><span id="adsNext">EN ESPERA · Sin avisos cargados</span></div>
@@ -946,11 +945,11 @@
  <div class="mh-ad-controls-under" aria-label="Controles publicitarios debajo de la agenda">
  <div class="mh-ad-pad" role="group" aria-label="Control de tandas publicitarias">
   <button type="button" id="force" title="Emitir inmediatamente la tanda seleccionada">FORZAR TANDA</button>
+  <button type="button" id="adHardStop" title="Detener publicidad sin continuar la reproducción anterior">DETENER</button>
   <button type="button" id="exact" aria-pressed="false" title="Interrumpir música para emitir a la hora exacta">HORA EXACTA</button>
   <button type="button" id="wait" aria-pressed="true" title="Esperar a que finalice el tema">FIN DE TEMA</button>
-  <button type="button" id="clearPending" title="Quitar tandas pendientes de la cola">BORRAR COLA</button>
-  <button type="button" id="adHardStop" title="Detener publicidad sin continuar la reproducción anterior">DETENER</button>
   <button type="button" id="adConfigure" title="Abrir la configuración de publicidad">CONFIGURAR</button>
+  <button type="button" id="clearPending" title="Quitar tandas pendientes de la cola">BORRAR COLA</button>
 </div>
  </div>
 </section>
@@ -997,6 +996,29 @@
         <p>Si la radio permanece en MANUAL durante 10 minutos sin reproducir publicidad, vuelve a AUTOMÁTICO. Requiere que la consola esté abierta y tenga avisos cargados.</p>
         <p id="recoveryStatus" role="status">Retorno automático desactivado.</p>
       </div></details>
+      <details class="mh-settings-group mh-meteo-settings" id="mhWeatherSettings">
+        <summary>ESTACIÓN METEOROLÓGICA · UBICACIÓN, NOTICIAS Y ALERTAS</summary>
+        <div class="mh-settings-group-body">
+          <p>Configurá acá la ciudad de la estación. El clima, el reloj, los avisos y la marquesina de noticias utilizarán esta ubicación en todas las aperturas.</p>
+          <div class="mh-weather-dialog-find">
+            <label for="mhWeatherCityInput">CIUDAD / PAÍS</label>
+            <input id="mhWeatherCityInput" type="search" placeholder="Ej.: San Martín de los Andes, Argentina" autocomplete="off" maxlength="110">
+            <button type="button" id="mhWeatherCitySearch">GUARDAR CIUDAD</button>
+            <button type="button" id="mhWeatherGPS">DETECTAR UBICACIÓN</button>
+          </div>
+          <p class="mh-weather-dlg-place" id="mhDetailLocation" role="status">Localizando estación…</p>
+          <div class="mh-meteo-options">
+            <label><input type="checkbox" id="mhNewsLocalOnly" checked> Titulares exclusivamente regionales y nacionales (sin noticias mundiales no relacionadas)</label>
+            <label>Velocidad de marquesina <select id="mhNewsSpeed"><option value="slow" selected>PAUSADA</option><option value="normal">NORMAL</option><option value="fast">RÁPIDA</option></select></label>
+          </div>
+          <div class="mh-settings-subtitle">DETALLES DE LA ESTACIÓN METEOROLÓGICA</div>
+          <div id="mhWeatherDetailContent" class="mh-weather-detail-grid"></div>
+          <div class="mh-settings-subtitle">SEGURIDAD · ALERTAS Y EVENTOS OBSERVADOS</div>
+          <div id="mhWeatherEventList" class="mh-weather-event-list">Consultando los servicios meteorológicos y sismológicos…</div>
+          <p class="mh-weather-disclaimer">Los sismos de USGS son eventos registrados, NO alertas tempranas ni predicciones. Las condiciones estimadas NO sustituyen avisos oficiales. Ante emergencias, consultá a las autoridades locales.</p>
+          <div class="mh-weather-sources">Fuentes: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · <a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a> · <a href="https://www.weather.gov/" target="_blank" rel="noopener noreferrer">NOAA / NWS</a></div>
+        </div>
+      </details>
     </section>
     <section data-settings-page="ads" hidden>
       <h3>PUBLICIDAD · CONFIGURACIÓN DE TANDAS</h3>
@@ -1059,21 +1081,7 @@
   <footer class="config-foot"><span id="settingsSaved" role="status">Los cambios se aplican al guardar.</span><button type="button" class="mh-primary" id="saveConfig">GUARDAR Y CERRAR</button></footer>
 </form>
 </dialog>
-<dialog id="mhWeatherDialog" aria-label="Centro meteorológico MEGAHERTZ">
- <div class="mh-weather-dialog-head"><h2>ESTACIÓN METEOROLÓGICA · INFORMACIÓN AMPLIADA</h2><button type="button" id="mhWeatherClose" aria-label="Cerrar estación">✕</button></div>
- <div class="mh-weather-dialog-find">
-  <label for="mhWeatherCityInput">CIUDAD</label>
-  <input id="mhWeatherCityInput" type="search" placeholder="Por ejemplo: Tokio, Japón" autocomplete="off" maxlength="90">
-  <button type="button" id="mhWeatherCitySearch">BUSCAR CIUDAD</button>
-  <button type="button" id="mhWeatherGPS">USAR MI UBICACIÓN</button>
- </div>
- <p class="mh-weather-dlg-place" id="mhDetailLocation">Seleccionando ubicación…</p>
- <div id="mhWeatherDetailContent" class="mh-weather-detail-grid"></div>
- <h3>INFORMACIÓN DE SEGURIDAD Y FENÓMENOS</h3>
- <div id="mhWeatherEventList" class="mh-weather-event-list">Consultando servicios meteorológicos y sismológicos…</div>
- <p class="mh-weather-disclaimer">Los sismos de USGS son eventos ya registrados, NO alertas tempranas ni predicciones. Los riesgos meteorológicos estimados NO sustituyen los avisos oficiales. Cobertura de alertas oficiales limitada según el país; ante emergencias seguí a Protección Civil y a la autoridad meteorológica local.</p>
- <div class="mh-weather-sources">Fuentes: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> · <a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer">USGS</a> · <a href="https://www.weather.gov/" target="_blank" rel="noopener noreferrer">NOAA / NWS</a></div>
-</dialog>
+
 <input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="programsFiles" accept="audio/*" multiple hidden><input type="file" id="thirdFiles" accept="audio/*" multiple hidden><input type="file" id="adsFiles" accept="audio/*" multiple hidden><audio id="musicAudio" preload="metadata"></audio><audio id="adsAudio" preload="metadata"></audio><audio id="programAudio" preload="metadata"></audio><audio id="thirdAudio" preload="metadata"></audio>
 <script>
 (()=>{
