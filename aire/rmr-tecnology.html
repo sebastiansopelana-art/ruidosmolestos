@@ -617,6 +617,24 @@
 #thirdList .schedule-foot[hidden]{display:none}
 #thirdList .schedule-children{padding-top:3px;padding-bottom:5px}
 @media(prefers-reduced-motion:reduce){#thirdList .schedule-hour.on-air,#thirdList .schedule-row.is-emitting .schedule-hour{animation:none;background:#ba192b!important}}
+
+/* Playlist de tandas compacta: agenda del día dentro de un visor de altura
+   máxima de 250px. Los horarios no desaparecen: se recorren con scroll. */
+.lists>#thirdPanel{
+ height:250px!important;max-height:250px!important;min-height:0!important;
+ align-self:start!important;display:flex!important;flex-direction:column!important;
+}
+#thirdPanel>.list-head{flex:0 0 44px!important;height:44px!important;min-height:44px!important}
+#thirdPanel>#thirdList{
+ flex:1 1 auto!important;height:auto!important;min-height:0!important;
+ max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;
+ overscroll-behavior:contain;scrollbar-gutter:stable;
+}
+#thirdList::-webkit-scrollbar{width:9px}
+#thirdList::-webkit-scrollbar-track{background:#0e202d}
+#thirdList::-webkit-scrollbar-thumb{background:#497991;border:2px solid #0e202d;border-radius:6px}
+#thirdList{scrollbar-width:thin;scrollbar-color:#497991 #0e202d}
+@media(max-width:680px){.lists>#thirdPanel{height:224px!important;max-height:224px!important}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
