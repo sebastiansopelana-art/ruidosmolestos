@@ -51,9 +51,12 @@ export async function onRequestGet({request,context}){
   lat=finite(cf.latitude,-90,90);lon=finite(cf.longitude,-180,180);
   city=short(cf.city||city);region=short(cf.region||region);placeSource='IP aproximada';
  }else{
-  // Never mislabel an IP-based city as the GPS city if the two are far apart.
+  // Never assign the VPN/IP country (nor its national warnings) to a GPS
+  // position that is far away. Explicit GPS reverse country takes priority.
   const cfLat=finite(cf.latitude,-90,90),cfLon=finite(cf.longitude,-180,180);
-  if(!city&&cfLat!==null&&cfLon!==null&&distanceKm(lat,lon,cfLat,cfLon)<90){
+  const sameArea=cfLat!==null&&cfLon!==null&&distanceKm(lat,lon,cfLat,cfLon)<90;
+  if(!sameArea&&!q.get('country'))country='';
+  if(!city&&sameArea){
     city=short(cf.city||'');region=short(cf.region||'');
   }else if(!city){city=lat.toFixed(2)+'°, '+lon.toFixed(2)+'°'}
  }
