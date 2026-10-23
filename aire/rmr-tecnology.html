@@ -1009,6 +1009,9 @@
 #mhWeatherSettings .mh-meteo-scope{font-size:11px;font-weight:700;color:#97c4db;line-height:1.5;margin:0}
 #mhWeatherSettings .mh-meteo-options{grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)}
 @media(max-width:850px){#mhWeatherSettings .mh-meteo-options{grid-template-columns:1fr}}
+
+#mhDualMeters .mh-vu-needle-halo{stroke:#0dd7ff!important;stroke-width:5px!important;opacity:.24;filter:blur(2px)}
+#mhDualMeters .mh-vu-instrument.peak .mh-vu-needle-halo{opacity:.65;filter:blur(3px)}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
@@ -1269,20 +1272,20 @@ function vuArc(from,to,r){
  return 'M '+a.x.toFixed(2)+' '+a.y.toFixed(2)+' A '+r+' '+r+' 0 0 1 '+b.x.toFixed(2)+' '+b.y.toFixed(2);
 }
 function analogFace(channel){
- const grad='mh-vu-cyan-'+channel,red='mh-vu-red-'+channel;
+ const grad='mh-vu-logo-turquoise-'+channel,red='mh-vu-red-'+channel;
  let ticks='';
  for(let angle=-63;angle<=63;angle+=7){
   const hot=angle>=25;
   const inner=vuPoint(angle,83),outer=vuPoint(angle,90);
-  ticks+='<line x1="'+inner.x.toFixed(2)+'" y1="'+inner.y.toFixed(2)+'" x2="'+outer.x.toFixed(2)+'" y2="'+outer.y.toFixed(2)+'" stroke="'+(hot?'#ff4c60':'#42c7ff')+'" stroke-width="2" opacity=".87"/>';
+  ticks+='<line x1="'+inner.x.toFixed(2)+'" y1="'+inner.y.toFixed(2)+'" x2="'+outer.x.toFixed(2)+'" y2="'+outer.y.toFixed(2)+'" stroke="'+(hot?'#ff4c60':'#0dd7ff')+'" stroke-width="2" opacity=".87"/>';
  }
  for(const item of vuScale){
   const value=item[0],angle=item[1],a=vuPoint(angle,78),b=vuPoint(angle,92),pos=vuPoint(angle,105),hot=value>0;
-  ticks+='<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'" stroke="'+(hot?'#ff5368':'#5be0ff')+'" stroke-width="3.7" stroke-linecap="round"/>';
-  ticks+='<text x="'+pos.x.toFixed(2)+'" y="'+(pos.y+3).toFixed(2)+'" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" font-weight="900" fill="'+(hot?'#ff5867':'#61ccff')+'">'+(value>0?'+'+value:value)+'</text>';
+  ticks+='<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'" stroke="'+(hot?'#ff5368':'#0dd7ff')+'" stroke-width="3.7" stroke-linecap="round"/>';
+  ticks+='<text x="'+pos.x.toFixed(2)+'" y="'+(pos.y+3).toFixed(2)+'" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" font-weight="900" fill="'+(hot?'#ff5867':'#83ffff')+'">'+(value>0?'+'+value:value)+'</text>';
  }
  return '<svg class="mh-analog-svg" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
- '<defs><linearGradient id="'+grad+'" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#127aff"/><stop offset=".5" stop-color="#47e6ff"/><stop offset="1" stop-color="#8af6ff"/></linearGradient>'+
+ '<defs><linearGradient id="'+grad+'" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#08bfff"/><stop offset=".5" stop-color="#0dd7ff"/><stop offset="1" stop-color="#83ffff"/></linearGradient>'+
  '<linearGradient id="'+red+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffab75"/><stop offset=".3" stop-color="#ff435e"/><stop offset="1" stop-color="#f20e4e"/></linearGradient>'+
  '<radialGradient id="mh-vu-back-'+channel+'" cx=".5" cy=".2" r=".95"><stop stop-color="#102a3c"/><stop offset="1" stop-color="#03080e"/></radialGradient></defs>'+
  '<rect x="1.5" y="1.5" width="217" height="157" rx="10" fill="url(#mh-vu-back-'+channel+')" stroke="#1c628c" stroke-width="2"/>'+
@@ -1291,7 +1294,7 @@ function analogFace(channel){
  '<path d="'+vuArc(-56,52,65)+'" fill="none" stroke="#1379dd" stroke-width="2" opacity=".75"/>'+
  ticks+
  '<path d="'+vuArc(-42,40,62)+'" fill="none" stroke="#2d90db" stroke-width="1" opacity=".5"/>'+
- '<g class="mh-vu-needle" transform="rotate(-67 110 127)"><line class="mh-vu-needle-line" x1="110" y1="127" x2="110" y2="39"/></g>'+
+ '<g class="mh-vu-needle" transform="rotate(-67 110 127)"><line class="mh-vu-needle-halo" x1="110" y1="127" x2="110" y2="39" stroke="#0dd7ff" stroke-width="5" opacity=".20"/><line class="mh-vu-needle-line" x1="110" y1="127" x2="110" y2="39"/></g>'+
  '<circle class="mh-vu-pivot" cx="110" cy="127" r="5"/>'+
  '<text x="110" y="151" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="900" letter-spacing="-1" fill="#71ddff">dB</text>'+
  '<text x="187" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" font-weight="900" fill="#688ea7">VU</text>'+
