@@ -6,6 +6,7 @@
 const $=id=>document.getElementById(id);
 const manualPlaceKey='megahertz-weather-chosen-city-v1';
 const state={forecast:null,location:null,geoMode:'',citySearch:'',busy:false,news:null,clockTZ:null,lastCoords:null,lastNews:null};
+let weatherSeq=0,newsSeq=0;
 const short=s=>String(s||'').trim().slice(0,160);
 const n=v=>v===null||v===undefined||!Number.isFinite(Number(v))?null:Number(v);
 const show=(value,suffix='',precision=0)=>{
@@ -169,21 +170,24 @@ function showError(message){
  $('mhWeatherAlert').classList.remove('danger','warning');
 }
 async function requestWeather(query){
- if(state.busy)return;
+ const token=++weatherSeq;
  state.busy=true;
  try{
   const data=await requestJSON('/api/megahertz-weather'+query,14500);
+  if(token!==weatherSeq)return;
   if(data.needsLocation){showError(data.error||'Falta ubicación');return}
   if(!data?.current)throw Error(data.error||'Sin pronóstico');
   displayWeather(data);
- }catch(error){showError(error.message||'No disponible')}
- finally{state.busy=false}
+ }catch(error){if(token===weatherSeq)showError(error.message||'No disponible')}
+ finally{if(token===weatherSeq)state.busy=false}
 }
 async function loadNews(){
+ const token=++newsSeq;
  const location=state.location||{};
  const path='/api/megahertz-news?country='+encodeURIComponent(location.country||'')+'&city='+encodeURIComponent(location.city||'');
  try{
   const data=await requestJSON(path,13000);
+  if(token!==newsSeq)return;
   if(!Array.isArray(data.items)||!data.items.length)throw Error('Noticias no disponibles');
   state.news=data;
   const root=$('mhNewsFlow');root.replaceChildren();
@@ -200,6 +204,7 @@ async function loadNews(){
   root.style.setProperty('--mh-news-seconds',Math.max(65,Math.min(220,data.items.map(e=>e.title.length).reduce((a,b)=>a+b,0)*0.18))+'s');
   $('mhNewsRegion').textContent=location.country||'LOCAL';
  }catch(error){
+  if(token!==newsSeq)return;
   const node=document.createElement('span');node.textContent='Noticias no disponibles por el momento · Consultá la conexión';
   $('mhNewsFlow').replaceChildren(node);
  }
