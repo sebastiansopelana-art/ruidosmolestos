@@ -442,7 +442,8 @@
 #musicList .track-row,#programsList .track-row{display:flex;align-items:stretch;width:100%;min-width:0;border-bottom:1px solid #304553}
 #musicList .track-row .track,#programsList .track-row .track{border-bottom:0;flex:1;min-width:0;cursor:grab}
 #musicList .track-row .track:active,#programsList .track-row .track:active{cursor:grabbing}
-#musicList .track-row .playlist-transfer,#programsList .track-row .playlist-transfer{height:33px;width:32px;min-width:32px;padding:2px;border:0;border-left:1px solid #304553;background:#1c3848;border-radius:0;font-size:14px;color:#b6dded}
+#musicList .track-row .playlist-transfer,#programsList .track-row .playlist-transfer,#musicList .track-row .playlist-shift,#programsList .track-row .playlist-shift{height:33px;width:25px;min-width:25px;padding:2px;border:0;border-left:1px solid #304553;background:#1c3848;border-radius:0;font-size:12px;color:#b6dded}
+#musicList .track-row .playlist-transfer,#programsList .track-row .playlist-transfer{width:30px;min-width:30px}
 #musicList .track-row.drag-over,#programsList .track-row.drag-over{background:#2e5265;outline:2px solid #8ad2ee;outline-offset:-2px}
 #musicList .track-row.is-dragging,#programsList .track-row.is-dragging{opacity:.55}
 #musicList .track-row .track.active,#programsList .track-row .track.active{background:#30576b}
@@ -700,6 +701,8 @@ function render(k){
   if(!item.id)item.id=makeTrackId();
   const row=document.createElement('div');row.className='track-row';row.draggable=true;row.dataset.trackId=item.id;row.title='Arrastrá para ordenar o pasar a la otra playlist. Doble clic para reproducir.';
   const other=k==='music'?'programs':'music';
+  const up=document.createElement('button');up.type='button';up.className='playlist-shift';up.title='Subir un lugar';up.setAttribute('aria-label','Subir '+item.name);up.textContent='↑';up.disabled=i===0;up.onclick=()=>relocateTrack(k,item.id,k,i-1);
+  const down=document.createElement('button');down.type='button';down.className='playlist-shift';down.title='Bajar un lugar';down.setAttribute('aria-label','Bajar '+item.name);down.textContent='↓';down.disabled=i===lists[k].length-1;down.onclick=()=>relocateTrack(k,item.id,k,i+2);
   const transfer=document.createElement('button');transfer.type='button';transfer.className='playlist-transfer';
   transfer.title='Pasar a '+(other==='music'?'Playlist Automática':'Playlist Para Programas');
   transfer.setAttribute('aria-label',transfer.title+' · '+item.name);
@@ -721,7 +724,7 @@ function render(k){
    const dragged={...draggedTrack};clearDraggedState();
    relocateTrack(dragged.from,dragged.id,k,i);
   };
-  row.append(b,transfer);host.append(row);
+  row.append(b,up,down,transfer);host.append(row);
  });
  if(searchable&&!visible&&lists[k].length){const note=document.createElement('div');note.className='list-empty-filter';note.textContent='Sin coincidencias para «'+query+'». Probá otra parte del nombre.';host.append(note)}
  if(searchable){
