@@ -599,7 +599,7 @@ let playlistDB;
 function openPlaylistDB(){if(playlistDB)return playlistDB;playlistDB=new Promise((resolve,reject)=>{const request=indexedDB.open('megahertz-console-v2',1);request.onupgradeneeded=()=>request.result.createObjectStore('playlists');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)});return playlistDB}
 async function savePlaylist(k){const snapshot=lists[k].map(item=>({name:item.name,file:item.file}));try{if(snapshot.some(item=>!item.file))throw Error('Hay archivos sin respaldo');const db=await openPlaylistDB();await new Promise((resolve,reject)=>{const tx=db.transaction('playlists','readwrite');tx.objectStore('playlists').put(snapshot,k);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error)});say('Playlist de '+(k==='music'?'música':k==='programs'?'programas':k==='third'?'playlist 3':'avisos')+' guardada en este navegador')}catch(error){say('No se pudo guardar la playlist: '+error.message,true)}}
 async function restorePlaylists(){try{const db=await openPlaylistDB();for(const k of ['music','ads','programs','third']){const saved=await new Promise((resolve,reject)=>{const request=db.transaction('playlists','readonly').objectStore('playlists').get(k);request.onsuccess=()=>resolve(request.result||[]);request.onerror=()=>reject(request.error)});if(!lists[k].length){lists[k]=saved.filter(item=>item.file instanceof Blob).map(item=>({name:item.name,file:item.file,url:URL.createObjectURL(item.file)}));render(k)}}if(lists.music.length||lists.ads.length||lists.programs.length||lists.third.length)say('Listas recuperadas · '+lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+lists.third.length+' audios de playlist 3 y '+lists.ads.length+' avisos')}catch(error){say('No se pudieron recuperar las listas guardadas: '+error.message,true)}}
-restorePlaylists();
+restorePlaylists().then(()=>migrateLegacyBreaks());
 function add(k,files){let count=0;for(const f of files)if((f.type||'').startsWith('audio/')||/\.(mp3|wav|wave|ogg|opus|m4a|aac|flac|aiff|aif|mp4|webm)$/i.test(f.name)){lists[k].push({name:f.name,url:URL.createObjectURL(f),file:f});count++}render(k);if(count)savePlaylist(k);say(count?count+' audios cargados en '+(k==='music'?'música':k==='programs'?'programas':k==='third'?'playlist 3':'publicidad'):'No se encontraron archivos de audio compatibles',!count);return count}
 async function readDropEntry(entry){if(entry.isFile)return [await new Promise((resolve,reject)=>entry.file(resolve,reject))];if(!entry.isDirectory)return [];const reader=entry.createReader(),files=[];while(true){const batch=await new Promise((resolve,reject)=>reader.readEntries(resolve,reject));if(!batch.length)break;for(const child of batch)files.push(...await readDropEntry(child))}return files}
 function collectDrop(transfer){const entries=Array.from(transfer.items||[]).filter(i=>i.kind==='file').map(i=>i.webkitGetAsEntry?.()).filter(Boolean);const fallback=Array.from(transfer.files||[]);return entries.length?Promise.all(entries.map(readDropEntry)).then(batches=>batches.flat()):Promise.resolve(fallback)}
@@ -678,7 +678,9 @@ $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutpu
 
 /* Configuración RMR recuperada. Conserva los controles originales de música y audio. */
 const breakPresetKey='megahertz-break-presets-v1';
-let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null;
+let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null,editingAdIds=[],previewAdQueue=[];
+const breakAssets=new Map(),collapsedBreaks=new Set();
+let breakAssetsDb=null,breakAssetsPromise=null,breakAssetsLoaded=false;
 try{const parsed=JSON.parse(localStorage.getItem(breakPresetKey)||'[]');if(Array.isArray(parsed))breakPresets=parsed.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.times));}catch(error){$('adPreviewStatus').textContent='No se pudieron leer tandas guardadas.'}
 for(let n=1;n<=12;n++)$('adFrequency').add(new Option(n===1?'1 vez':n+' veces',String(n)));
 function getAdditionalSlots(){return [...$('adSlots').querySelectorAll('input[type="time"]')].map(x=>x.value);}
@@ -690,24 +692,123 @@ $('distributeAdHours').onclick=()=>{if(!$('adTime').value){$('adPreviewStatus').
 function updateAdPolicyButtons(){const isExact=$('startPolicy').value==='exact';$('adPolicyExact').setAttribute('aria-pressed',String(isExact));$('adPolicyWait').setAttribute('aria-pressed',String(!isExact));}
 $('adPolicyExact').onclick=()=>{$('startPolicy').value='exact';updateAdPolicyButtons()};
 $('adPolicyWait').onclick=()=>{$('startPolicy').value='end';updateAdPolicyButtons()};
-function activeAdSnapshot(){syncAdditionalSlots();return {id:editingBreakId||'break-'+Date.now()+'-'+Math.random().toString(36).slice(2),name:$('breakLabel').value.trim(),times:configuredTimes(),days:selectedDays(),policy:$('startPolicy').value};}
+
+/* Audio de cada tanda: IndexedDB conserva el Blob y localStorage el orden de ID. */
+function openBreakAssetsDb(){
+ if(breakAssetsPromise)return breakAssetsPromise;
+ breakAssetsPromise=new Promise((resolve,reject)=>{
+  const request=indexedDB.open('megahertz-break-assets-v1',1);
+  request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('assets'))request.result.createObjectStore('assets',{keyPath:'id'})};
+  request.onsuccess=()=>{breakAssetsDb=request.result;resolve(breakAssetsDb)};
+  request.onerror=()=>reject(request.error);
+ }).catch(e=>{breakAssetsPromise=null;throw e});
+ return breakAssetsPromise;
+}
+function breakAssetTransaction(method,item){
+ return openBreakAssetsDb().then(db=>new Promise((resolve,reject)=>{
+  const tx=db.transaction('assets',method==='getAll'?'readonly':'readwrite');
+  const request=method==='getAll'?tx.objectStore('assets').getAll():tx.objectStore('assets')[method](item);
+  let result;
+  request.onsuccess=()=>result=request.result;
+  tx.oncomplete=()=>resolve(result);
+  tx.onerror=()=>reject(tx.error||request.error);
+  tx.onabort=()=>reject(tx.error||new Error('No se guardó el archivo'));
+ }));
+}
+function loadBreakAsset(row){
+ if(!(row?.file instanceof Blob))return;
+ breakAssets.set(row.id,{...row,url:URL.createObjectURL(row.file)});
+}
+async function initializeBreakAssets(){
+ try{
+  const records=await breakAssetTransaction('getAll');
+  records.forEach(row=>loadBreakAsset(row));
+  breakAssetsLoaded=true;renderBreakSchedule();renderDraftBreakAds();
+ }catch(error){$('adsDropCount').textContent='No se pudieron recuperar los audios: '+error.message;say('Error en la biblioteca de tandas',true)}
+}
+function formatBreakDuration(seconds){
+ if(!Number.isFinite(seconds))return '--:--';
+ return String(Math.floor(seconds/60)).padStart(2,'0')+':'+String(Math.floor(seconds%60)).padStart(2,'0');
+}
+async function detectBreakDuration(url){
+ return new Promise(resolve=>{
+  const media=new Audio();
+  let ended=false;
+  let timer;
+  const done=()=>{if(ended)return;ended=true;clearTimeout(timer);const duration=Number.isFinite(media.duration)?media.duration:null;media.onloadedmetadata=media.onerror=null;media.removeAttribute('src');media.load();resolve(duration)};
+  media.onloadedmetadata=done;media.onerror=done;timer=setTimeout(done,3500);
+  media.preload='metadata';media.src=url;
+ });
+}
+async function saveBreakAudio(file){
+ if(!(file instanceof Blob)||(!file.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|opus|m4a|aac|flac|aiff|webm)$/i.test(file.name||'')))return null;
+ const id='breakaudio-'+Date.now()+'-'+Math.random().toString(36).slice(2);
+ const url=URL.createObjectURL(file);
+ try{
+  const duration=await detectBreakDuration(url);
+  const row={id,name:file.name||'Aviso',file,duration};
+  await breakAssetTransaction('put',row);
+  breakAssets.set(id,{...row,url});return id;
+ }catch(err){URL.revokeObjectURL(url);throw err}
+}
+async function addBreakFiles(files){
+ let count=0;
+ for(const file of files){
+  try{const id=await saveBreakAudio(file);if(id){editingAdIds.push(id);count++}}
+  catch(error){$('adsDropCount').textContent='Error guardando '+(file.name||'audio')+': '+error.message;say('No se pudo guardar un aviso de esta tanda',true);renderDraftBreakAds();return}
+ }
+ renderDraftBreakAds();renderBreakSchedule();
+ if(!count)$('adsDropCount').textContent='No se encontraron audios compatibles.';
+}
+function renderDraftBreakAds(){
+ const host=$('breakAdsEditor');host.replaceChildren();
+ if(!editingAdIds.length){const el=document.createElement('div');el.className='mh-muted';el.textContent='Agregá avisos a esta tanda para construir su secuencia.';host.append(el)}
+ editingAdIds.forEach((id,i)=>{
+  const asset=breakAssets.get(id),row=document.createElement('div');row.className='mh-break-ad';
+  const name=document.createElement('span');name.className='mh-break-name';name.textContent=(i+1)+'. '+(asset?.name||'ARCHIVO NO DISPONIBLE');
+  const duration=document.createElement('span');duration.className='mh-break-duration';duration.textContent=formatBreakDuration(asset?.duration);
+  const up=document.createElement('button');up.type='button';up.textContent='↑';up.title='Subir aviso';up.disabled=i===0;up.onclick=()=>{[editingAdIds[i-1],editingAdIds[i]]=[editingAdIds[i],editingAdIds[i-1]];renderDraftBreakAds()};
+  const down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Bajar aviso';down.disabled=i===editingAdIds.length-1;down.onclick=()=>{[editingAdIds[i+1],editingAdIds[i]]=[editingAdIds[i],editingAdIds[i+1]];renderDraftBreakAds()};
+  const remove=document.createElement('button');remove.type='button';remove.textContent='✕';remove.title='Quitar de la tanda';remove.onclick=()=>{editingAdIds.splice(i,1);renderDraftBreakAds()};
+  row.append(name,duration,up,down,remove);host.append(row);
+ });
+ const lengths=editingAdIds.map(id=>breakAssets.get(id)?.duration);
+ const total=lengths.length&&lengths.every(Number.isFinite)?formatBreakDuration(lengths.reduce((a,b)=>a+b,0)):'--:--';
+ $('adsDropCount').textContent=editingAdIds.length+' aviso(s) · duración total '+total;
+}
+async function migrateLegacyBreaks(){
+ // Las tandas antiguas usaban la lista compartida; asignar sus audios sin alterar los presets.
+ const old=breakPresets.filter(b=>!Array.isArray(b.adIds));
+ if(!old.length||!lists.ads.length)return;
+ try{
+  const ids=[];
+  for(const item of lists.ads){const id=await saveBreakAudio(item.file);if(id)ids.push(id)}
+  if(!ids.length)return;
+  for(const preset of old)preset.adIds=[...ids];
+  persistBreakPresets();showBreakPresets();
+  say('Tandas anteriores recuperadas. Sus avisos se pueden editar independientemente.');
+ }catch(error){say('No se pudieron recuperar tandas anteriores: '+error.message,true)}
+}
+function activeAdSnapshot(){syncAdditionalSlots();return {id:editingBreakId||'break-'+Date.now()+'-'+Math.random().toString(36).slice(2),name:$('breakLabel').value.trim(),times:configuredTimes(),days:selectedDays(),policy:$('startPolicy').value,adIds:[...editingAdIds]};}
 function persistBreakPresets(){localStorage.setItem(breakPresetKey,JSON.stringify(breakPresets));}
 function showBreakPresets(){renderBreakSchedule();const host=$('savedBreaks');host.replaceChildren();if(!breakPresets.length){const empty=document.createElement('div');empty.className='mh-muted';empty.textContent='Todavía no hay tandas guardadas.';host.append(empty);return}
 breakPresets.forEach(b=>{const row=document.createElement('div');row.className='mh-record';const name=document.createElement('div');name.className='mh-record-name';const title=document.createElement('strong');title.textContent=b.name;const details=document.createElement('small');details.textContent=b.times.length+' salida(s) · '+b.times.join(', ')+' · '+(b.policy==='exact'?'HORA EXACTA':'ESPERAR TEMA');name.append(title,details);
-const edit=document.createElement('button');edit.type='button';edit.textContent='EDITAR';edit.onclick=()=>{editingBreakId=b.id;$('breakLabel').value=b.name;$('adTime').value=b.times[0]||'';$('adFrequency').value=String(Math.min(12,Math.max(1,b.times.length)));renderAdditionalSlots(b.times.slice(1));dayHost.querySelectorAll('input').forEach(x=>x.checked=b.days.includes(Number(x.value)));$('startPolicy').value=b.policy;updateAdPolicyButtons();$('adPreviewStatus').textContent='Editando '+b.name+'. Usá GUARDAR TANDA Y HORARIOS para activar y conservar los cambios.'};
-const tryIt=document.createElement('button');tryIt.type='button';tryIt.textContent='▶ PROBAR';tryIt.onclick=()=>previewCurrentAds();
+const edit=document.createElement('button');edit.type='button';edit.textContent='EDITAR';edit.onclick=()=>{editingBreakId=b.id;editingAdIds=[...(b.adIds||[])];renderDraftBreakAds();$('breakLabel').value=b.name;$('adTime').value=b.times[0]||'';$('adFrequency').value=String(Math.min(12,Math.max(1,b.times.length)));renderAdditionalSlots(b.times.slice(1));dayHost.querySelectorAll('input').forEach(x=>x.checked=b.days.includes(Number(x.value)));$('startPolicy').value=b.policy;updateAdPolicyButtons();$('adPreviewStatus').textContent='Editando '+b.name+'. Usá GUARDAR TANDA Y HORARIOS para activar y conservar los cambios.'};
+const tryIt=document.createElement('button');tryIt.type='button';tryIt.textContent='▶ PROBAR';tryIt.onclick=()=>{editingAdIds=[...(b.adIds||[])];renderDraftBreakAds();previewCurrentAds()};
 const del=document.createElement('button');del.type='button';del.textContent='BORRAR';del.onclick=()=>{if(!confirm('¿Borrar los horarios guardados de '+b.name+'?'))return;breakPresets=breakPresets.filter(x=>x.id!==b.id);if(editingBreakId===b.id)editingBreakId=null;try{persistBreakPresets();showBreakPresets();$('adPreviewStatus').textContent='Tanda guardada eliminada. La programación activa de aire no se modificó.'}catch(error){$('adPreviewStatus').textContent='No se pudo borrar: '+error.message}};
 row.append(name,edit,tryIt,del);host.append(row)})}
 function activateBreakSettings(){syncAdditionalSlots();const times=configuredTimes(),label=$('breakLabel').value.trim();if(!label||!times.length||selectedDays().length===0){$('adPreviewStatus').textContent='Completá el nombre, al menos una hora y un día de emisión.';return false}if(times.length!==Number($('adFrequency').value)||new Set(times).size!==times.length){$('adPreviewStatus').textContent='Completá todos los horarios sin repetir horas.';return false}
+if(!editingAdIds.length){$('adPreviewStatus').textContent='Esta tanda debe tener al menos un aviso.';return false}
+if(editingAdIds.some(id=>!breakAssets.get(id)?.file)){$('adPreviewStatus').textContent='Hay avisos sin archivo. Cargalos nuevamente antes de guardar.';return false}
 const snap=activeAdSnapshot();const settings=collectSettings();applySettings(settings);try{localStorage.setItem(settingKey,JSON.stringify(settings));const i=breakPresets.findIndex(x=>x.id===snap.id);if(i>=0)breakPresets[i]=snap;else breakPresets.push(snap);editingBreakId=snap.id;persistBreakPresets();showBreakPresets();$('adPreviewStatus').textContent='Tanda y horarios guardados. Programación activa: '+times.join(', ');return true}catch(error){$('adPreviewStatus').textContent='No se pudo guardar: '+error.message;return false}}
 $('saveAdBreak').onclick=activateBreakSettings;
-function stopAdsPreview(){previewAds.pause();previewAds.removeAttribute('src');previewAds.load();previewAdIndex=0;$('adPreviewStatus').textContent='Preescucha de tanda detenida.'}
-async function previewCurrentAds(){if(!lists.ads.length){$('adPreviewStatus').textContent='Cargá avisos en la lista de Publicidad antes de probar la tanda.';return}stopAdsPreview();previewAdIndex=0;await playPreviewAdNext()}
-async function playPreviewAdNext(){const item=lists.ads[previewAdIndex];if(!item){$('adPreviewStatus').textContent='Terminó la prueba de la tanda.';return}previewAds.src=item.url;previewAds.volume=ads.volume;try{if(selectedOutput&&typeof previewAds.setSinkId==='function')await previewAds.setSinkId(selectedOutput);await previewAds.play();$('adPreviewStatus').textContent='Preescucha independiente: '+item.name}catch(error){$('adPreviewStatus').textContent='No se pudo probar la tanda: '+error.message}}
+function stopAdsPreview(){previewAds.pause();previewAds.removeAttribute('src');previewAds.load();previewAdIndex=0;previewAdQueue=[];$('adPreviewStatus').textContent='Preescucha de tanda detenida.'}
+async function previewCurrentAds(){stopAdsPreview();previewAdQueue=editingAdIds.map(id=>breakAssets.get(id)).filter(asset=>asset?.url);if(!previewAdQueue.length){$('adPreviewStatus').textContent='Esta tanda todavía no tiene avisos para probar.';return}previewAdIndex=0;await playPreviewAdNext()}
+async function playPreviewAdNext(){const item=previewAdQueue[previewAdIndex];if(!item){$('adPreviewStatus').textContent='Terminó la prueba de la tanda.';return}previewAds.src=item.url;previewAds.volume=ads.volume;try{if(selectedOutput&&typeof previewAds.setSinkId==='function')await previewAds.setSinkId(selectedOutput);await previewAds.play();$('adPreviewStatus').textContent='Preescucha independiente: '+item.name}catch(error){$('adPreviewStatus').textContent='No se pudo probar la tanda: '+error.message}}
 previewAds.onended=()=>{previewAdIndex++;playPreviewAdNext()};
 $('previewAdBreak').onclick=previewCurrentAds;$('stopAdPreview').onclick=stopAdsPreview;
-$('newAdBreak').onclick=()=>{editingBreakId=null;$('breakLabel').value='';$('adTime').value='';$('adFrequency').value='1';renderAdditionalSlots([]);dayHost.querySelectorAll('input').forEach(x=>x.checked=true);$('startPolicy').value='end';updateAdPolicyButtons();$('adPreviewStatus').textContent='Nueva tanda. Cargá sus datos y guardá para activarla.'};
-refreshAdSlotsFromSettings();showBreakPresets();
+$('newAdBreak').onclick=()=>{stopAdsPreview();editingBreakId=null;editingAdIds=[];renderDraftBreakAds();$('breakLabel').value='';$('adTime').value='';$('adFrequency').value='1';renderAdditionalSlots([]);dayHost.querySelectorAll('input').forEach(x=>x.checked=true);$('startPolicy').value='end';updateAdPolicyButtons();$('adPreviewStatus').textContent='Nueva tanda. Cargá sus datos y guardá para activarla.'};
+refreshAdSlotsFromSettings();showBreakPresets();renderDraftBreakAds();initializeBreakAssets();
 /* Horarios guardados: cada salida es una fila, ordenada de menor a mayor.
    Por ahora todas las tandas usan la secuencia de avisos compartida existente. */
 function scheduleEntries(){
@@ -792,15 +893,16 @@ setInterval(()=>{if(!$('autoRecoveryEnabled').checked||automatic||!lists.ads.len
 
 /* Publicidad: carga nativa de audios desde configuración, misma playlist y persistencia. */
 $('adsDropSelect').onclick=()=>$('adsDropFiles').click();
-$('adsDropFiles').onchange=e=>{const files=[...e.target.files];const before=lists.ads.length;add('ads',files);$('adsDropCount').textContent=(lists.ads.length-before)+' aviso(s) añadido(s). Total: '+lists.ads.length+'.';e.target.value=''};
+$('adsDropFiles').onchange=async e=>{const files=[...e.target.files];e.target.value='';await addBreakFiles(files)};
 const adsDrop=$('adsConfigDrop');
 adsDrop.onclick=()=>$('adsDropFiles').click();
 adsDrop.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('adsDropFiles').click()}};
 adsDrop.ondragover=e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.add('dragging');e.dataTransfer.dropEffect='copy'};
 adsDrop.ondragenter=e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.add('dragging')};
 adsDrop.ondragleave=e=>{if(!adsDrop.contains(e.relatedTarget))adsDrop.classList.remove('dragging')};
-adsDrop.ondrop=async e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.remove('dragging');try{const files=await collectDrop(e.dataTransfer);const before=lists.ads.length;add('ads',files);$('adsDropCount').textContent=(lists.ads.length-before)+' aviso(s) añadido(s). Total: '+lists.ads.length+'.'}catch(err){$('adsDropCount').textContent='No se pudieron cargar los avisos: '+err.message}};
-$('adsDropCount').textContent=lists.ads.length+' aviso(s) en la playlist publicitaria.';
+adsDrop.ondrop=async e=>{e.preventDefault();e.stopPropagation();adsDrop.classList.remove('dragging');try{await addBreakFiles(await collectDrop(e.dataTransfer))}catch(err){$('adsDropCount').textContent='No se pudieron cargar los avisos: '+err.message}};
+$('copyLibraryAds').onclick=async()=>{if(!lists.ads.length){$('adsDropCount').textContent='La biblioteca de avisos sueltos está vacía.';return}await addBreakFiles(lists.ads.map(x=>x.file).filter(Boolean))};
+
 /* Clic en fondo exterior cierra; el contenido y los campos mantienen sus acciones. */
 $('config').addEventListener('click',e=>{if(e.target!==$('config'))return;const r=$('config').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('config').close()});
 for(const button of document.querySelectorAll('[data-settings-tab]'))button.onclick=()=>{document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!==button.dataset.settingsTab);document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b===button));if(button.dataset.settingsTab==='audio')deviceList()};
