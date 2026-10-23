@@ -111,15 +111,14 @@ export async function onRequestGet({request}){
   else failures.push(feeds[i].kind);
  });
  const now=Date.now(),seen=new Set(),perOutlet=new Map(),out=[];
- function add(list,limit,localOnly=false){
+ function add(list,limit){
   let added=0;
   // Preserve the editorial order returned by the geographically configured feed.
   for(const item of list||[]){
    if(added>=limit||out.length>=14)break;
    const title=normalize(item.title),publisher=normalize(item.source||'medio');
    if(!title||seen.has(title)||(perOutlet.get(publisher)||0)>=4)continue;
-   // Region-only fallbacks must name the locality in the headline or publisher.
-   if(localOnly&&!normalize(item.title+' '+item.source).includes(normalize(region||city)))continue;
+   // RSS search itself establishes locality; do not require it in the title.
    if(item.published&&Date.parse(item.published)>now+3600000)continue;
    seen.add(title);perOutlet.set(publisher,(perOutlet.get(publisher)||0)+1);
    out.push(item);added++;
@@ -132,7 +131,7 @@ export async function onRequestGet({request}){
  }
  if(region){
   add(collected.get('regional-search'),5);
-  add(collected.get('regional-fallback'),2,true);
+  add(collected.get('regional-fallback'),2);
  }
  add(collected.get('national-search'),regional?8:10);
  add(collected.get('country-edition'),14);
