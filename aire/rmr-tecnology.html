@@ -675,9 +675,22 @@ function relocateTrack(from,id,to,targetIndex){
  savePlaylist(from);if(from!==to)savePlaylist(to);
  say((from===to?'Orden actualizado en ':'Tema movido a ')+(to==='music'?'Playlist Automática':'Playlist Para Programas')+': '+track.name);
 }
+function clearPlaylistDropIndicators(){
+ for(const k of ['music','programs','ads'])$(k+'Panel').classList.remove('drop');
+ document.querySelectorAll('#musicList .track-row,#programsList .track-row').forEach(row=>row.classList.remove('is-dragging','drag-over'));
+}
 function clearDraggedState(){
  draggedTrack=null;
- document.querySelectorAll('#musicList .track-row,#programsList .track-row').forEach(row=>row.classList.remove('is-dragging','drag-over'));
+ clearPlaylistDropIndicators();
+}
+function acceptsPlaylistDrop(e){
+ return !!draggedTrack||Array.from(e.dataTransfer?.types||[]).includes('Files');
+}
+function activatePlaylistDrop(panel,e){
+ if(!acceptsPlaylistDrop(e))return;
+ e.preventDefault();
+ for(const k of ['music','programs','ads'])$(k+'Panel').classList.toggle('drop',$(k+'Panel')===panel);
+ if(e.dataTransfer)e.dataTransfer.dropEffect=draggedTrack?'move':'copy';
 }
 function render(k){
  if(k==='third'){renderBreakSchedule();return}
@@ -812,7 +825,28 @@ $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUT
 $('clearPending').onclick=()=>{pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
-for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');let depth=0;panel.ondragenter=e=>{e.preventDefault();depth++;panel.classList.add('drop')};panel.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';panel.classList.add('drop')};panel.ondragleave=()=>{depth=Math.max(0,depth-1);if(!depth)panel.classList.remove('drop')};panel.ondrop=async e=>{e.preventDefault();e.stopPropagation();depth=0;panel.classList.remove('drop');if(draggedTrack){const payload={...draggedTrack};clearDraggedState();if(playlistKey(k))relocateTrack(payload.from,payload.id,k,lists[k].length);return}const task=collectDrop(e.dataTransfer);say('Leyendo los audios arrastrados…');try{add(k,await task)}catch(error){say('No se pudo leer el arrastre: '+error.message,true)}}}
+for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
+panel.ondragenter=e=>activatePlaylistDrop(panel,e);
+panel.ondragover=e=>activatePlaylistDrop(panel,e);
+panel.ondragleave=e=>{if(!e.relatedTarget||!panel.contains(e.relatedTarget))panel.classList.remove('drop')};
+panel.ondrop=async e=>{
+ e.preventDefault();e.stopPropagation();
+ const moving=draggedTrack?{...draggedTrack}:null;
+ clearDraggedState();
+ if(moving){if(playlistKey(k))relocateTrack(moving.from,moving.id,k,lists[k].length);return}
+ if(!Array.from(e.dataTransfer?.types||[]).includes('Files'))return;
+ const task=collectDrop(e.dataTransfer);
+ say('Leyendo los audios arrastrados…');
+ try{add(k,await task)}catch(error){say('No se pudo leer el arrastre: '+error.message,true)}
+}}
+/* El borde de arrastre nunca queda encendido cuando termina o se cancela un movimiento. */
+document.addEventListener('dragend',clearDraggedState);
+document.addEventListener('drop',clearDraggedState);
+document.addEventListener('dragover',e=>{
+ if(!e.target.closest?.('#musicPanel,#programsPanel,#adsPanel'))clearPlaylistDropIndicators();
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')clearDraggedState()});
+window.addEventListener('blur',clearDraggedState);
 for(const a of [music,ads,programs,third])a.onerror=()=>say('El formato de audio no se pudo abrir. Probá otro archivo.',true);
 
 
