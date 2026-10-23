@@ -383,6 +383,22 @@
 #musicPanel .list-head,#programsPanel .list-head{height:44px}
 @media(max-width:1060px){.lists{grid-template-columns:repeat(2,minmax(0,1fr))}.lists>#adsPanel{grid-column:1/-1}}
 @media(max-width:620px){.lists{grid-template-columns:minmax(0,1fr)}.lists>#adsPanel{grid-column:auto}}
+
+/* Tres playlists iguales en una fila. Publicidad conserva su lista en zona separada. */
+.lists{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch}
+.lists>#musicPanel,.lists>#programsPanel,.lists>#thirdPanel{grid-row:1;min-width:0;min-height:0}
+.lists>#adsPanel{grid-column:1/-1;grid-row:2}
+#musicPanel .list-head,#programsPanel .list-head,#thirdPanel .list-head{height:44px;flex-basis:44px}
+.playlist-current #thirdAir{font-weight:800;color:#a9c3d4;flex-shrink:0}
+.playlist-current #thirdAir.on-air{color:#99f9bc;animation:modeGreenFlash 1.6s steps(1,end) infinite;padding:2px 5px;border-radius:3px}
+@media(max-width:1060px){
+ .lists{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .lists>#adsPanel{grid-column:1/-1;grid-row:2}
+}
+@media(max-width:680px){
+ .lists{grid-template-columns:minmax(0,1fr)}
+ .lists>#musicPanel,.lists>#programsPanel,.lists>#thirdPanel,.lists>#adsPanel{grid-column:1;grid-row:auto}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -413,6 +429,18 @@
 </div>
   <div class="programs-current playlist-current" aria-live="polite"><span id="programsAir">EN ESPERA</span><span class="programs-filename" id="programsNow" data-i18n-ignore>—</span></div>
   <div class="list" id="programsList"><div class="empty">Arrastrá aquí los audios del programa o pulsá + AUDIO</div></div>
+</section>
+<section class="list-panel" id="thirdPanel">
+  <div class="list-head"><strong>PLAYLIST 3</strong><div><button id="addThird">+ AUDIO</button><button id="clearThird">VACIAR</button></div></div>
+  <div class="playlist-tools" aria-label="Controles de playlist">
+  <button type="button" id="thirdListPlay" title="Reproducir playlist">▶ REPRODUCIR</button>
+  <button type="button" id="thirdListStop" title="Detener playlist">■ DETENER</button>
+  <button type="button" id="thirdListShuffle" aria-pressed="false" title="Shuffle">⇄ SHUFFLE</button>
+  <button type="button" id="thirdListRepeat" aria-pressed="false" title="Repetir lista">↻ REPETIR LISTA</button>
+  <label class="playlist-playmode"><span>REPRODUCCIÓN</span><select id="thirdListMode" aria-label="Modo de reproducción"><option value="normal">NORMAL</option><option value="random">ALEATORIA</option></select></label>
+</div>
+  <div class="third-current playlist-current" aria-live="polite"><span id="thirdAir">EN ESPERA</span><span class="third-filename" id="thirdNow" data-i18n-ignore>—</span></div>
+  <div class="list" id="thirdList"><div class="empty">Arrastrá audios aquí o pulsá + AUDIO</div></div>
 </section>
 <section class="list-panel" id="adsPanel">
   <div class="list-head"><strong>AVISOS DE LA TANDA</strong><div><button id="addAds">+ AVISOS</button><button id="clearAds">VACIAR</button></div></div>
@@ -517,7 +545,7 @@
   <footer class="config-foot"><span id="settingsSaved" role="status">Los cambios se aplican al guardar.</span><button type="button" class="mh-primary" id="saveConfig">GUARDAR Y CERRAR</button></footer>
 </form>
 </dialog>
-<input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="programsFiles" accept="audio/*" multiple hidden><input type="file" id="adsFiles" accept="audio/*" multiple hidden><audio id="musicAudio" preload="metadata"></audio><audio id="adsAudio" preload="metadata"></audio><audio id="programAudio" preload="metadata"></audio>
+<input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="programsFiles" accept="audio/*" multiple hidden><input type="file" id="thirdFiles" accept="audio/*" multiple hidden><input type="file" id="adsFiles" accept="audio/*" multiple hidden><audio id="musicAudio" preload="metadata"></audio><audio id="adsAudio" preload="metadata"></audio><audio id="programAudio" preload="metadata"></audio><audio id="thirdAudio" preload="metadata"></audio>
 <script>
 (()=>{
 'use strict';const $=id=>document.getElementById(id),music=$('musicAudio'),ads=$('adsAudio'),programs=$('programAudio');
