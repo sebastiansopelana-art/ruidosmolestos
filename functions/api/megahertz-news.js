@@ -94,6 +94,16 @@ export async function onRequestGet({request}){
   feeds.push({scope:'local',kind:'city-fallback',url:base+'/search?q='+
    encodeURIComponent(searchTerm(city)+' when:5d')+'&'+edition});
  }
+ // Independent backup to avoid a silent empty panel if Google RSS is down.
+ // Bing News RSS can be used as a fallback; licensing must be checked before
+ // distributing the news content as part of a paid commercial application.
+ const backupArea=city||region||countryName;
+ const backupQuery=searchTerm(backupArea)+(backupArea===countryName?'':' '+searchTerm(countryName));
+ const bingLanguage=hl.replace('es-419','es-'+country).replace('pt-419','pt-'+country);
+ const backup='https://www.bing.com/news/search?q='+encodeURIComponent(backupQuery)+
+  '&format=RSS&cc='+encodeURIComponent(country.toLowerCase())+
+  '&setlang='+encodeURIComponent(bingLanguage);
+ feeds.push({scope:city?'local':region?'provincial':'nacional',kind:'backup-search',url:backup});
  const settled=await Promise.allSettled(feeds.map(f=>fetchRSS(f.url,f.scope)));
  const failures=[],collected=new Map();
  settled.forEach((s,i)=>{
@@ -126,6 +136,7 @@ export async function onRequestGet({request}){
  }
  add(collected.get('national-search'),regional?8:10);
  add(collected.get('country-edition'),14);
+ add(collected.get('backup-search'),14);
  const result=out.slice(0,12);
  const status=result.length?(failures.length?'partial':'ok'):'unavailable';
  const error=!result.length
@@ -138,7 +149,7 @@ export async function onRequestGet({request}){
   scopes:{local:result.filter(i=>i.scope==='local').length,
    provincial:result.filter(i=>i.scope==='provincial').length,
    nacional:result.filter(i=>i.scope==='nacional').length},
-  source:'Edición Google News RSS para '+countryName,
-  publishers:'Medios seleccionados por la edición geográfica de Google News'
+  source:'Edición Google News RSS para '+countryName+'; respaldo Bing News RSS',
+  publishers:'Medios seleccionados por los agregadores para la zona solicitada'
  });
 }
