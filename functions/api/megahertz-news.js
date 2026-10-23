@@ -73,10 +73,18 @@ export async function onRequestGet({request}){
  const national='"'+localizedCountryName.replace(/["\\]/g,'').slice(0,80)+'"';
  // IMPORTANT: Never use the global top-stories RSS here. It may show Taiwan,
  // US politics etc. even with gl=AR. Search exact local terms instead.
- const [local,province,nation]=await Promise.all([
+ // Argentina: complement the national country query with major Argentine
+ // publishers across different editorial perspectives, not a world feed.
+ // Search stays limited to articles in the chosen country.
+ const localPublisherQueries=country==='AR'?[
+  '"Argentina" (site:infobae.com OR site:clarin.com OR site:lanacion.com.ar)',
+  '"Argentina" (site:pagina12.com.ar OR site:ambito.com OR site:perfil.com)'
+ ]:[];
+ const [local,province,nation,...publishers]=await Promise.all([
   searchRSS(termCity,params,'local').catch(()=>[]),
   searchRSS(termRegion,params,'provincial').catch(()=>[]),
-  searchRSS(national,params,'nacional').catch(()=>[])
+  searchRSS(national,params,'nacional').catch(()=>[]),
+  ...localPublisherQueries.map(term=>searchRSS(term,params,'nacional').catch(()=>[]))
  ]);
  const result=[],seen=new Set();
  const normalize=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
@@ -90,6 +98,22 @@ export async function onRequestGet({request}){
  const cityNews=termCity?local.filter(item=>mentions(item,city)):[];
  const provinceNews=termRegion?province.filter(item=>mentions(item,region)):[];
  const nationalNews=nation.filter(item=>mentions(item,localizedCountryName)||mentions(item,countryName));
+ const trustedArgentinaSources=/infobae|clar[ií]n|la naci[oó]n|p[aá]gina\s*12|[aá]mbito|perfil/i;
+ const publishNews=publishers.flat().filter(item=>
+   country==='AR'&&trustedArgentinaSources.test(item.source));
+ const uniqueNational=[],nationalSeen=new Set();
+ // One source cannot crowd out the rest of the broadcaster's headlines.
+ const perOutlet=new Map();
+ for(const item of [...publishNews,...nationalNews]){
+  const key=normalize(item.title),source=normalize(item.source||'sin medio');
+  if(!key||nationalSeen.has(key)||(perOutlet.get(source)||0)>=3)continue;
+  nationalSeen.add(key);uniqueNational.push(item);
+  perOutlet.set(source,(perOutlet.get(source)||0)+1);
+  if(uniqueNational.length>=10)break;
+ }
+ // Sort by actual publication time where supplied, then stable publisher
+ // order. Do not invent a breaking-news time for undated RSS entries.
+ uniqueNational.sort((a,b)=>(Date.parse(b.published)||0)-(Date.parse(a.published)||0));
  const dedupe=(list,limit)=>{
   let added=0;
   for(const item of list){
@@ -99,10 +123,11 @@ export async function onRequestGet({request}){
    if(added>=limit||result.length>=12)break;
   }
  };
- dedupe(cityNews,5);dedupe(provinceNews,4);dedupe(nationalNews,12);
+ dedupe(cityNews,5);dedupe(provinceNews,4);dedupe(uniqueNational,12);
  return reply({country,countryName,city,region,updatedAt:new Date().toISOString(),
-  items:result,available:result.length>0,
-  edition:hl,source:'RSS de Google Noticias: consultas geográficamente acotadas',
-  scopes:{local:local.length,provincial:province.length,nacional:nation.length}
+  items:result,nationalItems:uniqueNational,available:uniqueNational.length>0,
+  edition:hl,source:'RSS de Google Noticias: país y medios nacionales verificados',
+  scopes:{local:cityNews.length,provincial:provinceNews.length,nacional:uniqueNational.length},
+  publishers:country==='AR'?'Infobae, Clarín, La Nación, Página/12, Ámbito, Perfil y otros medios pertinentes':'Edición nacional'
  });
 }
