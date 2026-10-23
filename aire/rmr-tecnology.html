@@ -951,7 +951,7 @@ async function playBreakAd(i){
 }
 function startAds(i=0,scheduledBreak=null){
  if(playing(ads)){say('Hay una tanda en emisión; detenela antes de iniciar otra.',true);return false}
- const entry=scheduledBreak||nextReadyBreak(true)||scheduleEntries().find(e=>e.key===selectedBreakId)||scheduleEntries()[0];
+ const agenda=todayScheduleEntries();const entry=scheduledBreak||nextReadyBreak(true)||agenda.find(e=>e.key===selectedBreakId)||agenda[0];
  if(!entry){say('Primero creá una tanda con avisos y horarios',true);return false}
  const preset=breakPresets.find(b=>b.id===entry.id),ids=Array.isArray(preset?.adIds)?preset.adIds:[];
  const queue=ids.map(id=>breakAssets.get(id));
@@ -963,7 +963,7 @@ function startAds(i=0,scheduledBreak=null){
  afterAdThirdNext=afterAdThirdNext||wasThird;
  afterAdMusicNext=afterAdMusicNext||wasMusic||(automatic&&!wasProgram&&!wasThird&&lists.music.length>0);
  music.pause();programs.pause();third.pause();
- activeBreak=entry;activeAdQueue=queue.slice();index.ads=-1;
+ activeBreak={...entry,scheduledDate:entry.scheduledDate||localScheduleDate()};activeAdQueue=queue.slice();index.ads=-1;
  const queuedIndex=pendingBreaks.findIndex(x=>x.key===entry.key);
  if(queuedIndex>=0)pendingBreaks.splice(queuedIndex,1);
  pending=pendingBreaks.length>0;selectedBreakId=entry.key;
@@ -973,7 +973,7 @@ function startAds(i=0,scheduledBreak=null){
 function stopBreakPlayback(resume=true){
  if(!activeBreak&&!playing(ads))return;
  ads.pause();ads.removeAttribute('src');ads.load();index.ads=-1;
- activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
+ markBreakPassed(activeBreak);activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
  renderAdQueue();renderBreakSchedule();render('ads');
  if(!resume){afterAdMusicNext=false;afterAdProgramNext=false;afterAdThirdNext=false;resumeMusic=false;resumeProgram=false;resumeThird=false;return}
  if(automatic&&pendingBreaks.length){const next=nextReadyBreak(true);if(next&&startAds(0,next))return}
@@ -1006,7 +1006,7 @@ music.onended=advance;programs.onended=advancePrograms;third.onended=advanceThir
 $('play').onclick=()=>{if(playing(music))return;if(playing(programs)){programs.pause();resumeProgram=false}if(playing(third)){third.pause();resumeThird=false}if(playing(ads)){say('Detené la tanda antes de iniciar música');return}if(index.music<0)startMusic(0);else{meter();kind='music';music.play().catch(e=>say(e.message,true))}};
 $('pause').onclick=()=>music.pause();
 $('stop').onclick=()=>{music.pause();music.currentTime=0};$('prev').onclick=()=>startMusic(Math.max(0,index.music-1));$('next').onclick=()=>startMusic((index.music+1)%Math.max(1,lists.music.length));
-$('force').onclick=()=>startAds(0,scheduleEntries().find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||scheduleEntries()[0]);
+$('force').onclick=()=>startAds(0,todayScheduleEntries().find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||todayScheduleEntries()[0]);
 function policy(v){exact=v;$('exact').setAttribute('aria-pressed',String(v));$('wait').setAttribute('aria-pressed',String(!v))}
 $('exact').onclick=()=>policy(true);$('wait').onclick=()=>policy(false);policy(false);
 $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));if(automatic&&pending&&!playing(ads)){const ready=nextReadyBreak(false);if(ready)startAds(0,ready)}};
@@ -1108,7 +1108,7 @@ $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutpu
 /* Configuración RMR recuperada. Conserva los controles originales de música y audio. */
 const breakPresetKey='megahertz-break-presets-v1';
 let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null,editingAdIds=[],previewAdQueue=[];
-const breakAssets=new Map(),collapsedBreaks=new Set();
+const breakAssets=new Map(),expandedBreaks=new Set();
 let breakAssetsDb=null,breakAssetsPromise=null,breakAssetsLoaded=false;
 try{const parsed=JSON.parse(localStorage.getItem(breakPresetKey)||'[]');if(Array.isArray(parsed))breakPresets=parsed.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.times));}catch(error){$('adPreviewStatus').textContent='No se pudieron leer tandas guardadas.'}
 for(let n=1;n<=12;n++)$('adFrequency').add(new Option(n===1?'1 vez':n+' veces',String(n)));
@@ -1250,6 +1250,34 @@ function scheduleEntries(){
  }
  return entries.sort((a,b)=>a.hour.localeCompare(b.hour)||a.name.localeCompare(b.name,'es'));
 }
+/* Agenda visible: los horarios se conservan, pero solo mostramos las salidas de HOY. */
+const dailyPlayedKey='megahertz-played-today-v1';
+let dailyPlayedDate='',dailyPlayed=new Set(),scheduleRenderedMinute='';
+function localScheduleDate(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
+function dailyPlayedFor(date=new Date()){
+ const dateKey=localScheduleDate(date);
+ if(dateKey!==dailyPlayedDate){dailyPlayedDate=dateKey;dailyPlayed=new Set();
+   try{const previous=JSON.parse(localStorage.getItem(dailyPlayedKey)||'null');if(previous?.date===dateKey&&Array.isArray(previous.keys))dailyPlayed=new Set(previous.keys.filter(key=>typeof key==='string'))}catch(_){}
+ }
+ return dailyPlayed;
+}
+function markBreakPassed(entry){
+ if(!entry)return;
+ const date=entry.scheduledDate||localScheduleDate();
+ if(date!==localScheduleDate())return;
+ dailyPlayedFor().add(entry.key);
+ try{localStorage.setItem(dailyPlayedKey,JSON.stringify({date,keys:[...dailyPlayed]}))}catch(_){}
+}
+function todayScheduleEntries(now=new Date()){
+ const date=localScheduleDate(now),time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ const completed=dailyPlayedFor(now);
+ return scheduleEntries().filter(e=>{
+   if(!e.days.includes(now.getDay()))return false;
+   if(activeBreak?.key===e.key)return true;
+   if(pendingBreaks.some(p=>p.key===e.key&&(!p.scheduledDate||p.scheduledDate===date)))return true;
+   return e.hour>=time&&!completed.has(e.key);
+ });
+}
 function emitScheduledBreak(entry){
  if(playing(ads)){say('Primero detené la tanda que ya está al aire.',true);return}
  selectedBreakId=entry.key;startAds(0,entry);
@@ -1267,15 +1295,21 @@ function checkScheduledBreaks(){
  const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
  const secondStamp=dateKey+':'+time+':'+now.getSeconds();
  if(secondStamp===lastClockCheckSecond)return;lastClockCheckSecond=secondStamp;
- if(dateKey!==seenScheduleDate){seenScheduleDate=dateKey;seenScheduleKeys.clear()}
+ if(dateKey!==seenScheduleDate){
+   seenScheduleDate=dateKey;seenScheduleKeys.clear();
+   for(let i=pendingBreaks.length-1;i>=0;i--)if(pendingBreaks[i].scheduledDate!==localScheduleDate(now))pendingBreaks.splice(i,1);
+   pending=pendingBreaks.length>0;
+ }
+ const todayMinute=dateKey+':'+time;
+ if(todayMinute!==scheduleRenderedMinute){scheduleRenderedMinute=todayMinute;renderBreakSchedule()}
  let changed=false;
  for(const entry of scheduleEntries()){
   if(entry.hour!==time||!entry.days.includes(now.getDay()))continue;
   const key=dateKey+'#'+entry.key;
-  if(seenScheduleKeys.has(key))continue;
+  if(seenScheduleKeys.has(key)||dailyPlayedFor(now).has(entry.key))continue;
   seenScheduleKeys.add(key);
   if(!entry.adIds.length||entry.adIds.some(id=>!breakAssets.get(id)?.file)){say('Tanda '+entry.name+' sin todos sus archivos. Revisá Configuración.',true);continue}
-  pendingBreaks.push(entry);changed=true;
+  pendingBreaks.push({...entry,scheduledDate:localScheduleDate(now)});changed=true;
  }
  if(changed){pending=true;render('ads');renderBreakSchedule()}
  if(automatic&&!playing(ads)){const next=nextReadyBreak(false);if(next)startAds(0,next)}
