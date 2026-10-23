@@ -1,0 +1,263 @@
+/* MEGAHERTZ · METEO 2.0
+   Overrides only the station's weather desk. No changes to deck/list geometry.
+   Motion is decorative, low-frequency, compositor-friendly and respects user preference.
+*/
+.console>.deck.mh-weather-deck .mh-weather-screen{
+ grid-template-rows:39px minmax(0,1fr) 51px!important;
+ gap:5px!important;padding:6px 8px 7px!important;
+ background:
+  radial-gradient(ellipse at 31% 18%,rgba(30,105,150,.22),transparent 56%),
+  linear-gradient(138deg,#0a1b2a 0%,#102c41 59%,#0a1928 100%)!important;
+ border:1px solid #467e9a!important;
+ box-shadow:inset 0 0 18px #0b14225c,inset 0 1px #9dd9fa1b,0 1px 8px #0b517633!important;
+}
+.console>.deck.mh-weather-deck .mh-weather-top{
+ grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+ align-items:center!important;gap:6px!important;
+ min-height:0!important;position:relative;z-index:2;
+}
+.console>.deck.mh-weather-deck .mh-weather-location{
+ grid-column:1;min-width:0;display:flex;align-items:center;gap:5px;
+ padding:4px 4px 4px 2px;
+}
+.console>.deck.mh-weather-deck .mh-place{
+ grid-column:auto!important;grid-row:auto!important;
+ font-size:10px!important;color:#c9ebf9;min-width:0!important
+}
+.mh-weather-live-dot{
+ width:5px;height:5px;flex:0 0 auto;border-radius:50%;
+ background:#8fe5d9;box-shadow:0 0 7px #64e9c4b0;
+ animation:mhMeteoDot 4s ease-in-out infinite;
+}
+.mh-clock-stage{
+ grid-column:2;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:1px;position:relative;
+ min-width:125px;height:38px;padding:3px 12px 2px;
+ border-radius:7px;border:1px solid #39748e;
+ background:linear-gradient(180deg,#0d354a,#091d2f);
+ box-shadow:inset 0 1px 2px #97e9ff22,0 0 9px #1eaccb1e;
+}
+.mh-clock-stage small{
+ font:850 7px/1 Arial,sans-serif;letter-spacing:1.45px;
+ color:#8fc7da;white-space:nowrap
+}
+.console>.deck.mh-weather-deck .mh-clock{
+ grid-column:auto!important;grid-row:auto!important;
+ font:900 clamp(20px,2.15vw,29px)/1 "SFMono-Regular",Consolas,monospace!important;
+ letter-spacing:1.1px!important;color:#abf5ff!important;
+ text-shadow:0 0 13px #21cbe984,0 0 1px #e4fdff!important;
+}
+.mh-clock-stage::after{
+ content:"";position:absolute;bottom:0;left:18%;right:18%;height:1px;
+ background:linear-gradient(90deg,transparent,#78eaf6a9,transparent);
+ animation:mhMeteoDot 7s ease-in-out infinite
+}
+.mh-weather-station-tag{
+ grid-column:3;justify-self:end;max-width:100%;
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ font:850 8px/1 Arial,sans-serif;letter-spacing:.5px;color:#679ebb;
+}
+.mh-weather-station-tag::before{content:"●";color:#66c7d5;margin-right:4px;font-size:6px}
+.console>.deck.mh-weather-deck .mh-weather-core{
+ grid-template-columns:minmax(0,.85fr) minmax(0,1.36fr)!important;
+ gap:6px!important;min-height:0!important;overflow:hidden!important;align-items:stretch!important
+}
+.console>.deck.mh-weather-deck .mh-weather-current{
+ position:relative;isolation:isolate;display:flex!important;align-items:center;justify-content:center;
+ gap:5px!important;min-width:0!important;overflow:hidden;
+ padding:8px 7px 8px 4px;border:1px solid #35657c;border-radius:6px;
+ background:radial-gradient(ellipse at 60% 45%,#1f55702a,transparent 78%),linear-gradient(145deg,#123a4e,#0c2538);
+ box-shadow:inset 0 1px #8ad8ee1a;
+}
+.mh-weather-current>#mhWeatherIcon,.mh-weather-current>#mhWeatherTemp,.mh-weather-current>.mh-weather-status{
+ position:relative;z-index:2
+}
+.console>.deck.mh-weather-deck #mhWeatherIcon{
+ font-size:clamp(26px,2.5vw,39px)!important;line-height:1;
+ transform-origin:center;filter:drop-shadow(0 0 7px #84d9eb60);
+ animation:mhMeteoIcon 6s ease-in-out infinite
+}
+.console>.deck.mh-weather-deck #mhWeatherTemp{
+ font-size:clamp(24px,2.7vw,39px)!important;line-height:1!important;letter-spacing:-1.5px;
+ text-shadow:0 1px 8px #0615208f;
+}
+.console>.deck.mh-weather-deck .mh-weather-status{
+ gap:4px!important;padding-left:0!important;
+ flex:1 1 auto;min-width:0;align-self:center
+}
+.console>.deck.mh-weather-deck .mh-weather-status strong{
+ font-size:10px!important;line-height:1.2!important;color:#e2f7ff;
+ white-space:normal!important;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ line-clamp:2;overflow:hidden
+}
+.console>.deck.mh-weather-deck .mh-weather-status small{
+ font:700 8px/1.25 Arial,sans-serif!important;
+ color:#7baac1;white-space:normal;display:block!important
+}
+/* Sky changes with the REAL WMO weather code received from the forecast. */
+.mh-weather-sky{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.mh-sky-cloud{
+ position:absolute;top:21%;left:12%;width:51px;height:16px;
+ border-radius:40px;background:linear-gradient(180deg,#a1ddf24a,#65b1d525);
+ filter:blur(.6px);opacity:.72;
+ animation:mhCloudFloat 27s ease-in-out infinite alternate;
+}
+.mh-sky-cloud::before,.mh-sky-cloud::after{
+ content:"";position:absolute;border-radius:50%;background:inherit;
+}
+.mh-sky-cloud::before{width:25px;height:25px;bottom:4px;left:9px}
+.mh-sky-cloud::after{width:20px;height:20px;bottom:3px;right:7px}
+.mh-sky-cloud--two{
+ top:64%;left:43%;width:43px;height:13px;opacity:.45;
+ animation-duration:34s;animation-delay:-13s
+}
+.mh-sky-sun{
+ position:absolute;right:17px;top:12px;width:30px;height:30px;border-radius:50%;
+ background:radial-gradient(circle,#ffe5a5b0 0%,#ffc7744f 37%,transparent 72%);
+ box-shadow:0 0 25px #ffd38930;
+ animation:mhSunGlow 9s ease-in-out infinite alternate;
+}
+.mh-weather-screen[data-sky="cloud"] .mh-sky-sun{opacity:.34}
+.mh-weather-screen[data-sky="rain"] .mh-sky-sun,
+.mh-weather-screen[data-sky="storm"] .mh-sky-sun,
+.mh-weather-screen[data-sky="snow"] .mh-sky-sun{opacity:0}
+.mh-weather-screen[data-sky="sun"] .mh-sky-cloud{opacity:.18}
+.mh-weather-screen[data-sky="rain"] .mh-sky-rain,
+.mh-weather-screen[data-sky="storm"] .mh-sky-rain{
+ opacity:.4;background-image:repeating-linear-gradient(113deg,transparent 0,transparent 14px,#7ed6ff70 15px,#7ed6ff70 16px,transparent 17px,transparent 36px)
+}
+.mh-weather-screen[data-sky="snow"] .mh-sky-rain{
+ opacity:.4;background-image:radial-gradient(circle,#eefbffb0 1px,transparent 1.6px);
+ background-size:17px 21px
+}
+.mh-sky-rain{position:absolute;inset:-45%;opacity:0;animation:mhRainMove 16s linear infinite}
+.mh-weather-screen[data-sky="night"] .mh-sky-sun{
+ background:radial-gradient(circle at 37% 44%,#d5efffb0 0%,#9cbede3e 35%,transparent 70%);
+ box-shadow:0 0 26px #d2eaff33
+}
+.mh-weather-screen[data-sky="storm"] .mh-weather-current{
+ background:linear-gradient(145deg,#142f4b,#102034)
+}
+.console>.deck.mh-weather-deck .mh-weather-grid{
+ display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ grid-template-rows:repeat(4,minmax(0,1fr));gap:4px!important;min-height:0;align-items:stretch!important;
+}
+.console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric{
+ box-sizing:border-box;position:relative;display:grid!important;
+ grid-template-columns:16px minmax(0,1fr)!important;
+ grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important;
+ align-items:center!important;justify-content:initial!important;
+ column-gap:4px;row-gap:0;overflow:hidden;min-width:0;
+ padding:3px 4px 3px 5px!important;
+ border:1px solid #2d526b;border-radius:5px;
+ background:linear-gradient(120deg,#15364b,#102739);
+ box-shadow:inset 0 1px #87d8f313;white-space:nowrap
+}
+.mh-metric .mh-metric-icon{
+ grid-column:1;grid-row:1/span 2;justify-self:center;align-self:center;
+ font:900 13px/1 Arial,sans-serif;color:#79cfe6;text-shadow:0 0 6px #4aadd24a
+}
+.mh-weather-grid>.mh-metric .mh-metric-label{
+ grid-column:2;grid-row:1;font:850 8px/1 Arial,sans-serif;
+ color:#84b4c9;letter-spacing:.3px;overflow:hidden;text-overflow:ellipsis
+}
+.console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric strong{
+ grid-column:2;grid-row:2;display:block;max-width:none!important;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left!important;
+ color:#effaff;font:850 clamp(9px,.82vw,12px)/1.2 Arial,sans-serif;
+ font-variant-numeric:tabular-nums
+}
+.mh-metric-wind .mh-metric-icon{
+ transform:rotate(var(--mh-wind-angle,0deg));
+ transition:transform 1.4s cubic-bezier(.22,.8,.25,1)
+}
+.mh-metric-gust .mh-metric-icon{animation:mhMeteoBreeze 5s ease-in-out infinite}
+.mh-metric-rain .mh-metric-icon{animation:mhMeteoBreeze 7s ease-in-out infinite}
+.mh-metric-pressure::after{
+ content:"";position:absolute;left:22px;right:6px;bottom:1px;height:1px;
+ background:linear-gradient(90deg,#407d9f30,#8bd5ec85,#407d9f30)
+}
+.console>.deck.mh-weather-deck .mh-week-strip{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ gap:3px!important;min-height:0!important;padding:3px!important;
+ background:linear-gradient(180deg,#091b2a,#0e2c3c)!important;
+ border:1px solid #36657d!important;border-radius:6px;
+ box-shadow:inset 0 1px #b4edff0d
+}
+.console>.deck.mh-weather-deck .mh-week-day{
+ position:relative;gap:1px!important;border:1px solid transparent!important;
+ border-radius:4px;padding:2px 1px!important;min-width:0;
+ transition:background .3s ease,border-color .3s ease
+}
+.console>.deck.mh-weather-deck .mh-week-day:first-child,
+.console>.deck.mh-weather-deck .mh-week-day[data-today="true"]{
+ background:linear-gradient(#245b77b0,#15425d80);
+ border-color:#5dbad180!important;
+ box-shadow:inset 0 1px #bceaff30
+}
+.console>.deck.mh-weather-deck .mh-week-day .day{
+ font:850 8px/10px Arial,sans-serif!important;color:#a5d7ed
+}
+.console>.deck.mh-weather-deck .mh-week-day .forecast-icon{
+ font-size:16px!important;line-height:16px!important;
+ filter:drop-shadow(0 0 2px #69bfd744)
+}
+.console>.deck.mh-weather-deck .mh-week-day .temps{
+ font:900 9px/11px Arial,sans-serif!important;color:#eefaff
+}
+.console>.deck.mh-weather-deck .mh-week-day .rain{
+ font:750 8px/9px Arial,sans-serif!important;color:#75c9e8
+}
+.console>.deck.mh-weather-deck .mh-week-day:hover{
+ background:#1b455c;border-color:#497f96!important
+}
+@keyframes mhCloudFloat{0%{transform:translate3d(-12px,0,0)}100%{transform:translate3d(29px,-2px,0)}}
+@keyframes mhSunGlow{0%{opacity:.45;transform:scale(.95)}100%{opacity:.85;transform:scale(1.18)}}
+@keyframes mhRainMove{0%{transform:translate3d(-8px,-8px,0)}100%{transform:translate3d(26px,35px,0)}}
+@keyframes mhMeteoIcon{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes mhMeteoBreeze{0%,100%{opacity:.7;transform:translateX(0)}50%{opacity:1;transform:translateX(2px)}}
+@keyframes mhMeteoDot{0%,100%{opacity:.65}50%{opacity:1}}
+@media(max-width:1200px){
+ .mh-clock-stage{min-width:103px;padding-left:6px;padding-right:6px}
+ .console>.deck.mh-weather-deck .mh-clock{font-size:clamp(17px,1.9vw,23px)!important}
+ .console>.deck.mh-weather-deck .mh-weather-current{gap:3px!important;padding:4px 3px}
+ .console>.deck.mh-weather-deck #mhWeatherTemp{font-size:clamp(22px,2.4vw,32px)!important}
+ .console>.deck.mh-weather-deck #mhWeatherIcon{font-size:clamp(22px,2.3vw,31px)!important}
+ .console>.deck.mh-weather-deck .mh-weather-core{grid-template-columns:minmax(0,.84fr) minmax(0,1.5fr)!important;gap:4px!important}
+ .console>.deck.mh-weather-deck .mh-weather-grid{gap:3px!important}
+ .console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric{padding:2px 3px!important;column-gap:2px}
+ .console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric strong{font-size:9px!important}
+ .console>.deck.mh-weather-deck .mh-week-day .forecast-icon{font-size:13px!important;line-height:14px!important}
+ .console>.deck.mh-weather-deck .mh-week-day .temps{font-size:8px!important}
+}
+@media(max-width:900px){
+ .console>.deck.mh-weather-deck .mh-weather-screen{grid-template-rows:34px minmax(0,1fr) 47px!important;padding:4px 5px 5px!important;gap:3px!important}
+ .mh-clock-stage{min-width:90px;height:32px}
+ .console>.deck.mh-weather-deck .mh-clock{font-size:17px!important}
+ .mh-weather-station-tag{display:none}
+ .console>.deck.mh-weather-deck .mh-weather-core{grid-template-columns:minmax(0,.83fr) minmax(0,1.35fr)!important}
+ .console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric{grid-template-columns:12px minmax(0,1fr)!important}
+ .mh-metric .mh-metric-icon{font-size:10px}
+ .console>.deck.mh-weather-deck .mh-weather-status small{display:none!important}
+ .console>.deck.mh-weather-deck .mh-week-day .day{font-size:7px!important}
+ .console>.deck.mh-weather-deck .mh-week-day .rain{font-size:7px!important}
+}
+@media(max-width:630px){
+ .console>.deck.mh-weather-deck .mh-weather-screen{grid-template-rows:32px minmax(0,1fr) 42px!important}
+ .console>.deck.mh-weather-deck .mh-weather-top{grid-template-columns:minmax(0,1fr) auto!important}
+ .mh-clock-stage{grid-column:2;min-width:79px}
+ .console>.deck.mh-weather-deck .mh-weather-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important
+ }
+ .console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric{display:grid!important}
+ .console>.deck.mh-weather-deck .mh-weather-grid>.mh-metric strong{font-size:8px!important}
+ .console>.deck.mh-weather-deck .mh-week-day .forecast-icon{font-size:12px!important}
+ .console>.deck.mh-weather-deck .mh-week-day .temps{font-size:7px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .mh-weather-screen .mh-sky-cloud,.mh-weather-screen .mh-sky-sun,
+ .mh-weather-screen .mh-sky-rain,.mh-weather-screen #mhWeatherIcon,
+ .mh-weather-screen .mh-metric-icon,.mh-weather-live-dot,.mh-clock-stage::after{
+  animation:none!important;transition:none!important
+ }
+}
