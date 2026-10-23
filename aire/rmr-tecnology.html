@@ -1450,7 +1450,7 @@ function nextUpcomingDisplayKey(entries,clock=new Date()){
  for(const entry of entries){
   const minutes=Number(entry.hour.slice(0,2))*60+Number(entry.hour.slice(3,5));
   if(!Array.isArray(entry.days)||!entry.days.length)continue;
-  for(let offset=0;offset<7;offset++){
+  for(let offset=0;offset<=7;offset++){
    if(!entry.days.includes((today+offset)%7))continue;
    const distance=offset*1440+minutes-current;
    if(distance>=0&&distance<closest){closest=distance;selected=entry.key}
