@@ -513,6 +513,19 @@
  font-size:9px;border-radius:4px;background:#173748;color:#e1f7ff;border:1px solid #55849c;
 }
 @media(max-width:950px){#musicPanel .mh-icon-tools,#programsPanel .mh-icon-tools{gap:2px!important;padding:5px!important}.mh-icon-tools .mh-transport-icon svg{width:14px;height:14px}}
+
+/* TANDAS: único panel de acciones en visor superior. Sin visor de estado inferior
+   ni botonera duplicada en el listado por horarios. */
+.console>.deck[aria-label="Tandas publicitarias"]>.ad-screen{
+ display:flex!important;justify-content:flex-start!important;align-items:stretch!important;
+}
+.console>.deck[aria-label="Tandas publicitarias"] #adQueueView{display:none!important}
+#thirdPanel>.list-head{justify-content:flex-start!important}
+#thirdPanel>.list-head strong{width:100%;text-align:center;font-size:11px}
+#thirdPanel>.list{flex:1 1 auto;max-height:none}
+.emission-controls{grid-template-columns:minmax(0,1fr) 360px minmax(0,1fr)}
+@media(max-width:1200px){.emission-controls{grid-template-columns:minmax(0,1fr) 300px minmax(0,1fr)}}
+@media(max-width:750px){.emission-controls{grid-template-columns:minmax(0,1fr) 200px minmax(0,1fr)}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -531,8 +544,8 @@
   <button type="button" id="adHardStop" title="Detener publicidad sin continuar la reproducción anterior">DETENER</button>
   <button type="button" id="adHours" title="Abrir horarios de salida en Configuración">HORARIOS</button>
   <button type="button" id="adConfigure" title="Abrir la configuración de publicidad">CONFIGURAR</button>
-</div><div id="adQueueView" aria-label="Orden de avisos de la tanda"></div><div class="deck-air-row"><span class="deck-air" id="adsAir" role="status" hidden>EN EL AIRE</span></div></div></section>
-<nav class="emission-controls" aria-label="Controles de emisión"><div class="music-controls"><button id="prev" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button id="play" aria-label="Reproducir" title="Reproducir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button id="pause" aria-label="Pausar" title="Pausar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button id="stop" aria-label="Detener" title="Detener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button id="next" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button id="shuffle" aria-pressed="false" aria-label="Aleatorio" title="Aleatorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button id="repeat" aria-pressed="false" aria-label="Repetir" title="Repetir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button id="endStop" aria-pressed="false" aria-label="Parar al final" title="Parar al final"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button></div><div class="center-controls"><button id="mode" aria-pressed="true">AUTOMÁTICO</button><button id="settings">CONFIGURACIÓN</button></div><div class="mh-ad-footer-status" role="status"><span class="mh-ad-status-dot" aria-hidden="true"></span><span class="next" id="adsNext">EN ESPERA · Sin avisos cargados</span></div></nav></section>
+</div><div id="adQueueView" class="mh-visually-hidden" aria-label="Orden de avisos de la tanda" aria-live="polite"></div><div class="mh-visually-hidden" role="status"><span id="adsAir" hidden>EN EL AIRE</span><span id="adsNext">EN ESPERA · Sin avisos cargados</span></div></div></section>
+<nav class="emission-controls" aria-label="Controles de emisión"><div class="music-controls"><button id="prev" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button id="play" aria-label="Reproducir" title="Reproducir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button id="pause" aria-label="Pausar" title="Pausar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button id="stop" aria-label="Detener" title="Detener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button id="next" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button id="shuffle" aria-pressed="false" aria-label="Aleatorio" title="Aleatorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button id="repeat" aria-pressed="false" aria-label="Repetir" title="Repetir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button id="endStop" aria-pressed="false" aria-label="Parar al final" title="Parar al final"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button></div><div class="center-controls"><button id="mode" aria-pressed="true">AUTOMÁTICO</button><button id="settings">CONFIGURACIÓN</button></div></nav></section>
 <section class="lists" aria-label="Bibliotecas de emisión">
 <section class="list-panel" id="musicPanel">
   <div class="list-head"><strong>PLAYLIST AUTOMÁTICA</strong><div><button id="addMusic">+ MÚSICA</button><button id="clearMusic">VACIAR</button></div></div>
@@ -549,15 +562,8 @@
   <div class="list" id="programsList"><div class="empty">Arrastrá aquí los audios del programa o pulsá + AUDIO</div></div>
 </section>
 <section class="list-panel" id="thirdPanel">
-  <div class="list-head"><strong>TANDAS PUBLICITARIAS</strong><div><button type="button" id="thirdEdit">+ TANDA</button><button type="button" id="thirdRefresh">ACTUALIZAR</button></div></div>
-  <div class="playlist-tools" aria-label="Control de tandas por horario">
-    <button type="button" id="thirdListPlay" title="Emitir tanda seleccionada">▶ EMITIR TANDA</button>
-    <button type="button" id="thirdListStop" title="Detener tanda en emisión">■ DETENER</button>
-    <button type="button" id="thirdListShuffle" title="Actualizar horarios">↻ HORARIOS</button>
-    <button type="button" id="thirdListRepeat" title="Editar programación de tandas">⚙ CONFIGURAR</button>
-    <div class="playlist-playmode"><span>ORDEN</span><span>POR HORARIO · DOBLE CLIC PARA EMITIR</span></div>
-  </div>
-  <div class="third-current playlist-current" aria-live="polite"><span id="thirdAir">EN ESPERA</span><span class="programs-filename" id="thirdNow" data-i18n-ignore>Seleccioná una tanda</span></div>
+  <div class="list-head"><strong>TANDAS PUBLICITARIAS</strong></div>
+  <div class="mh-visually-hidden" aria-live="polite"><span id="thirdAir">EN ESPERA</span><span id="thirdNow" data-i18n-ignore>Seleccioná una tanda</span></div>
   <div class="list" id="thirdList"><div class="empty">No hay tandas programadas. Cargalas en Configuración.</div></div>
 </section>
 <section class="list-panel" id="adsPanel">
@@ -981,7 +987,7 @@ function openBreakConfiguration(){syncConfigControls();$('settings').click();doc
 
 /* Panel único de tandas: acciones reales, sin controles duplicados en barra inferior. */
 function selectedAdvertisingEntry(){const entries=scheduleEntries();return entries.find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||entries[0]||null}
-function syncAdvertisingPanel(){const isAiring=playing(ads);const status=document.querySelector('.mh-ad-footer-status');if(status)status.classList.toggle('on-air',isAiring);const dot=document.querySelector('.mh-ad-status-dot');if(dot)dot.title=isAiring?'Tanda al aire':'Publicidad en espera'}
+function syncAdvertisingPanel(){/* El control de tandas se muestra únicamente en los 12 botones superiores. */}
 $('adNewBreak').onclick=()=>{openBreakConfiguration();$('newAdBreak').click();$('breakLabel').focus?.()};
 $('adRefresh').onclick=()=>{renderBreakSchedule();renderAdQueue();render('ads');syncAdvertisingPanel();say('Tandas y horarios actualizados')};
 $('adEmit').onclick=()=>{const entry=selectedAdvertisingEntry();if(!entry){say('No hay tandas guardadas para emitir',true);return}emitScheduledBreak(entry)};
@@ -993,12 +999,6 @@ ads.addEventListener('pause',syncAdvertisingPanel);
 ads.addEventListener('ended',syncAdvertisingPanel);
 syncAdvertisingPanel();
 
-$('thirdListShuffle').onclick=()=>{renderBreakSchedule();say('Horarios de tandas actualizados')};
-$('thirdListRepeat').onclick=openBreakConfiguration;
-$('thirdEdit').onclick=openBreakConfiguration;
-$('thirdRefresh').onclick=()=>renderBreakSchedule();
-$('thirdListPlay').onclick=()=>{const target=scheduleEntries().find(e=>e.key===selectedBreakId)||scheduleEntries()[0];if(!target){say('No hay tandas guardadas para emitir',true);return}emitScheduledBreak(target)};
-$('thirdListStop').onclick=()=>{if(playing(ads))finishAds();else say('No hay una tanda en emisión')};
 setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));
 setProgramShuffle(false);setProgramRepeat(false);setThirdShuffle(false);setThirdRepeat(false);
 
