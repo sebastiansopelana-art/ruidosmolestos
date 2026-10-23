@@ -1272,8 +1272,9 @@ function todayScheduleEntries(now=new Date()){
  const date=localScheduleDate(now),time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
  const completed=dailyPlayedFor(now);
  return scheduleEntries().filter(e=>{
-   if(!e.days.includes(now.getDay()))return false;
+   // A break that crosses midnight remains visible until its final ad ends.
    if(activeBreak?.key===e.key)return true;
+   if(!e.days.includes(now.getDay()))return false;
    if(pendingBreaks.some(p=>p.key===e.key&&(!p.scheduledDate||p.scheduledDate===date)))return true;
    return e.hour>=time&&!completed.has(e.key);
  });
