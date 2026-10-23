@@ -1160,6 +1160,28 @@
  }
  .lists>.mh-ad-news-column{gap:8px}
 }
+
+/* The on-air break tree stays expanded during its entire sequence.
+   Highlight the currently running file, and preserve the compact scroll. */
+#thirdList .schedule-entry.is-airing-tree{
+ border-left:2px solid #51dcae;
+ background:linear-gradient(90deg,#0c302d,#0d2633 55%)
+}
+#thirdList .schedule-entry.is-airing-tree .schedule-toggle{
+ color:#8bf7d7;background:#16443d;border-color:#4ab39a
+}
+#thirdList .schedule-children .schedule-child.is-playing{
+ position:relative;color:#dcffeb!important;
+ background:linear-gradient(90deg,#1d6251,#13372e);
+ border-left:3px solid #74ffd4;padding:3px 5px 3px 7px;
+ box-shadow:inset 0 0 7px #11a57a44;font-weight:900
+}
+#thirdList .schedule-children .schedule-child.is-playing::before{
+ content:"●";font-size:9px;color:#77ffd8;margin-right:3px;
+ animation:mh-ad-tree-pulse 1s step-start infinite
+}
+@keyframes mh-ad-tree-pulse{50%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){#thirdList .schedule-children .schedule-child.is-playing::before{animation:none}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
@@ -1694,13 +1716,22 @@ function startAds(i=0,scheduledBreak=null){
  const queuedIndex=pendingBreaks.findIndex(x=>x.key===entry.key);
  if(queuedIndex>=0)pendingBreaks.splice(queuedIndex,1);
  pending=pendingBreaks.length>0;selectedBreakId=entry.key;
+ // While on air the tree is forced open, independently of manual expansion.
+ // Auto-scroll to the selected break without taking the operator's focus.
+ expandedBreaks.delete(entry.key);
  $('thirdNow').textContent=entry.hour+' · '+entry.name;
- render('ads');renderBreakSchedule();playBreakAd(i);return true;
+ render('ads');renderBreakSchedule();
+ const airingRow=$('thirdList').querySelector('.schedule-row.is-emitting');
+ if(airingRow)airingRow.scrollIntoView({block:'nearest'});
+ playBreakAd(i);return true;
 }
 function stopBreakPlayback(resume=true){
  if(!activeBreak&&!playing(ads))return;
  ads.pause();ads.removeAttribute('src');ads.load();index.ads=-1;
- if(adPlayedOnce)markBreakPassed(activeBreak);adPlayedOnce=false;activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
+ if(adPlayedOnce)markBreakPassed(activeBreak);
+ // On finish/stop the on-air tree closes, even if the user opened it earlier.
+ if(activeBreak)expandedBreaks.delete(activeBreak.key);
+ adPlayedOnce=false;activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
  renderAdQueue();renderBreakSchedule();render('ads');
  if(!resume){afterAdMusicNext=false;afterAdProgramNext=false;afterAdThirdNext=false;resumeMusic=false;resumeProgram=false;resumeThird=false;return}
  if(automatic&&pendingBreaks.length){const next=nextReadyBreak(true);if(next&&startAds(0,next))return}
@@ -2073,7 +2104,10 @@ function renderBreakSchedule(){
   row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.toggle('selected',r===row))};
   row.ondblclick=()=>emitScheduledBreak(entry);
   row.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();emitScheduledBreak(entry)}};
-  const children=document.createElement('div');children.className='schedule-children';children.hidden=!expandedBreaks.has(entry.key);
+  const children=document.createElement('div');children.className='schedule-children';
+  const forcedOpen=activeBreak?.key===entry.key;
+  children.hidden=!(forcedOpen||expandedBreaks.has(entry.key));
+  if(forcedOpen)wrap.classList.add('is-airing-tree');
   if(!entry.adIds.length){const empty=document.createElement('div');empty.textContent='↳ Sin avisos en esta tanda';children.append(empty)}
   entry.adIds.forEach((id,i)=>{
    const ad=breakAssets.get(id),child=document.createElement('div');child.className='schedule-child';
@@ -2082,13 +2116,21 @@ function renderBreakSchedule(){
    const length=document.createElement('span');length.textContent=formatBreakDuration(ad?.duration);
    child.append(label,length);children.append(child);
   });
-  const toggle=document.createElement('button');toggle.type='button';toggle.className='schedule-toggle';toggle.title='Mostrar u ocultar avisos';toggle.textContent=children.hidden?'▸':'▾';
-  toggle.onclick=()=>{children.hidden=!children.hidden;toggle.textContent=children.hidden?'▸':'▾';if(children.hidden)expandedBreaks.delete(entry.key);else expandedBreaks.add(entry.key)};
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='schedule-toggle';
+  toggle.title=forcedOpen?'Árbol al aire: se cierra cuando termina la tanda':'Mostrar u ocultar avisos';
+  toggle.setAttribute('aria-expanded',String(!children.hidden));
+  toggle.textContent=children.hidden?'▸':'▾';
   branch.append(toggle,row);
   const lengths=entry.adIds.map(id=>breakAssets.get(id)?.duration);
   const total=lengths.length&&lengths.every(Number.isFinite)?formatBreakDuration(lengths.reduce((a,b)=>a+b,0)):'--:--';
   const foot=document.createElement('div');foot.className='schedule-foot';foot.textContent=entry.adIds.length+' avisos · DURACIÓN '+total;foot.hidden=children.hidden;
-  toggle.onclick=()=>{children.hidden=!children.hidden;foot.hidden=children.hidden;toggle.textContent=children.hidden?'▸':'▾';if(children.hidden)expandedBreaks.delete(entry.key);else expandedBreaks.add(entry.key)};
+  toggle.onclick=()=>{
+    if(forcedOpen){say('La tanda está al aire: su árbol permanece abierto hasta finalizar.');return}
+    children.hidden=!children.hidden;foot.hidden=children.hidden;
+    toggle.textContent=children.hidden?'▸':'▾';
+    toggle.setAttribute('aria-expanded',String(!children.hidden));
+    if(children.hidden)expandedBreaks.delete(entry.key);else expandedBreaks.add(entry.key);
+   };
   wrap.append(branch,children,foot);host.append(wrap);
  }
  if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salidas pendientes hoy';
