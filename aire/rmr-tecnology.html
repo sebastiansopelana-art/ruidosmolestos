@@ -1107,6 +1107,9 @@ $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutpu
 
 /* Configuración RMR recuperada. Conserva los controles originales de música y audio. */
 const breakPresetKey='megahertz-break-presets-v1';
+const dailyPlayedKey='megahertz-played-today-v1';
+let dailyPlayedDate='',dailyPlayed=new Set(),scheduleRenderedMinute='';
+
 let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null,adPlayedOnce=false,editingAdIds=[],previewAdQueue=[];
 const breakAssets=new Map(),expandedBreaks=new Set();
 let breakAssetsDb=null,breakAssetsPromise=null,breakAssetsLoaded=false;
@@ -1251,8 +1254,6 @@ function scheduleEntries(){
  return entries.sort((a,b)=>a.hour.localeCompare(b.hour)||a.name.localeCompare(b.name,'es'));
 }
 /* Agenda visible: los horarios se conservan, pero solo mostramos las salidas de HOY. */
-const dailyPlayedKey='megahertz-played-today-v1';
-let dailyPlayedDate='',dailyPlayed=new Set(),scheduleRenderedMinute='';
 function localScheduleDate(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
 function dailyPlayedFor(date=new Date()){
  const dateKey=localScheduleDate(date);
