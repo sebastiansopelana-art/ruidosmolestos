@@ -621,7 +621,7 @@
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
-  <div class="now" id="musicNow" data-i18n-ignore>Sin audio en reproducción</div>
+  <div class="now" id="musicNow">Sin audio en reproducción</div>
   <div class="mh-track-meta" id="mhTrackMeta" aria-label="Datos del tema actual">
     <div class="mh-track-line"><strong>AUTOR</strong><span id="mhTrackWriter" data-i18n-ignore>—</span></div>
     <div class="mh-track-line"><strong>DISCO</strong><span id="mhTrackAlbum" data-i18n-ignore>—</span></div>
@@ -820,7 +820,7 @@ function updateSearchCount(k,shown){
 function resetMusicSelection(k){
  const a=k==='music'?music:programs;
  a.pause();a.removeAttribute('src');a.load();index[k]=-1;
- if(k==='music'){$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}
+ if(k==='music'){$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';window.megahertzTrackInfo?.clear?.()}
  else $('programsNow').textContent='—';
 }
 function relocateTrack(from,id,to,targetIndex){
@@ -946,7 +946,7 @@ async function playBreakAd(i){
  meter();kind='ads';index.ads=i;ads.src=item.url;
  $('adsNow').textContent=(activeBreak?.name||'Tanda')+' · '+item.name;
  renderAdQueue();renderBreakSchedule();
- try{await ads.play();say('AL AIRE · '+activeBreak.name+' · '+item.name);return true}
+ try{await ads.play();adPlayedOnce=true;say('AL AIRE · '+activeBreak.name+' · '+item.name);return true}
  catch(err){say('No se pudo emitir '+item.name+': '+err.message,true);stopBreakPlayback(true);return false}
 }
 function startAds(i=0,scheduledBreak=null){
@@ -963,7 +963,7 @@ function startAds(i=0,scheduledBreak=null){
  afterAdThirdNext=afterAdThirdNext||wasThird;
  afterAdMusicNext=afterAdMusicNext||wasMusic||(automatic&&!wasProgram&&!wasThird&&lists.music.length>0);
  music.pause();programs.pause();third.pause();
- activeBreak={...entry,scheduledDate:entry.scheduledDate||localScheduleDate()};activeAdQueue=queue.slice();index.ads=-1;
+ activeBreak={...entry,scheduledDate:entry.scheduledDate||localScheduleDate()};adPlayedOnce=false;activeAdQueue=queue.slice();index.ads=-1;
  const queuedIndex=pendingBreaks.findIndex(x=>x.key===entry.key);
  if(queuedIndex>=0)pendingBreaks.splice(queuedIndex,1);
  pending=pendingBreaks.length>0;selectedBreakId=entry.key;
@@ -973,7 +973,7 @@ function startAds(i=0,scheduledBreak=null){
 function stopBreakPlayback(resume=true){
  if(!activeBreak&&!playing(ads))return;
  ads.pause();ads.removeAttribute('src');ads.load();index.ads=-1;
- markBreakPassed(activeBreak);activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
+ if(adPlayedOnce)markBreakPassed(activeBreak);adPlayedOnce=false;activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
  renderAdQueue();renderBreakSchedule();render('ads');
  if(!resume){afterAdMusicNext=false;afterAdProgramNext=false;afterAdThirdNext=false;resumeMusic=false;resumeProgram=false;resumeThird=false;return}
  if(automatic&&pendingBreaks.length){const next=nextReadyBreak(true);if(next&&startAds(0,next))return}
@@ -1013,7 +1013,7 @@ $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUT
 $('clearPending').onclick=()=>{pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
-for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
+for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';window.megahertzTrackInfo?.clear?.()}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
 panel.ondragenter=e=>activatePlaylistDrop(panel,e);
 panel.ondragover=e=>activatePlaylistDrop(panel,e);
 panel.ondragleave=e=>{if(!e.relatedTarget||!panel.contains(e.relatedTarget))panel.classList.remove('drop')};
@@ -1107,7 +1107,7 @@ $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutpu
 
 /* Configuración RMR recuperada. Conserva los controles originales de música y audio. */
 const breakPresetKey='megahertz-break-presets-v1';
-let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null,editingAdIds=[],previewAdQueue=[];
+let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null,adPlayedOnce=false,editingAdIds=[],previewAdQueue=[];
 const breakAssets=new Map(),expandedBreaks=new Set();
 let breakAssetsDb=null,breakAssetsPromise=null,breakAssetsLoaded=false;
 try{const parsed=JSON.parse(localStorage.getItem(breakPresetKey)||'[]');if(Array.isArray(parsed))breakPresets=parsed.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.times));}catch(error){$('adPreviewStatus').textContent='No se pudieron leer tandas guardadas.'}
@@ -1365,6 +1365,7 @@ function renderBreakSchedule(){
  if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salidas pendientes hoy';
 }
 renderBreakSchedule();
+for(const event of ['playing','pause','ended'])ads.addEventListener(event,renderBreakSchedule);
 /* Biblioteca de jingles y separadores: misma base local RMR-Mediateca usada en el programa anterior. */
 let institutionalDb=null,institutionalItems=[],institutionalPreview=new Audio(),institutionalUrl=null,institutionalDragId=null;
 const instMessage=s=>$('instStatus').textContent=s;
