@@ -836,7 +836,11 @@ function startAds(i=0,scheduledBreak=null){
  const queue=ids.map(id=>breakAssets.get(id));
  if(!queue.length||queue.some(x=>!x?.url||!x?.file)){say('La tanda '+entry.name+' no tiene todos sus audios. Revisá su configuración.',true);return false}
  const wasMusic=playing(music),wasProgram=playing(programs),wasThird=playing(third);
- afterAdMusicNext=afterAdMusicNext||wasMusic;afterAdProgramNext=afterAdProgramNext||wasProgram;afterAdThirdNext=afterAdThirdNext||wasThird;
+ // Preserve the on-air source across chained ad breaks. An idle automatic
+ // station must also return to music when a scheduled ad break finishes.
+ afterAdProgramNext=afterAdProgramNext||wasProgram;
+ afterAdThirdNext=afterAdThirdNext||wasThird;
+ afterAdMusicNext=afterAdMusicNext||wasMusic||(automatic&&!wasProgram&&!wasThird&&lists.music.length>0);
  music.pause();programs.pause();third.pause();
  activeBreak=entry;activeAdQueue=queue.slice();index.ads=-1;
  const queuedIndex=pendingBreaks.findIndex(x=>x.key===entry.key);
@@ -854,14 +858,25 @@ function stopBreakPlayback(resume=true){
  if(automatic&&pendingBreaks.length){const next=nextReadyBreak(true);if(next&&startAds(0,next))return}
  if(afterAdThirdNext){afterAdThirdNext=false;afterAdProgramNext=false;afterAdMusicNext=false;advanceThird();return}
  if(afterAdProgramNext){afterAdProgramNext=false;afterAdMusicNext=false;advancePrograms();return}
- if(afterAdMusicNext){afterAdMusicNext=false;advanceMusicAfterBreak();return}
+ if(afterAdMusicNext){afterAdMusicNext=false;resumeMusic=false;advanceMusicAfterBreak();return}
+ if(automatic&&!playing(music)&&!playing(programs)&&!playing(third)&&lists.music.length){advanceMusicAfterBreak();return}
  if(resumeThird){kind='third';third.play().catch(e=>say(e.message,true))}
  else if(resumeProgram){kind='programs';programs.play().catch(e=>say(e.message,true))}
  else if(resumeMusic){kind='music';music.play().catch(e=>say(e.message,true))}
  resumeMusic=false;resumeProgram=false;resumeThird=false;
 }
 function finishAds(){stopBreakPlayback(true)}
-function advanceMusicAfterBreak(){if(pressed('endStop')){say('Música detenida después de la tanda');return}const next=chooseNextTrack('music');if(next>=0)run('music',next);else say('Fin de playlist automática')}
+function advanceMusicAfterBreak(){
+ // Commercial breaks mark a new musical segment: start a fresh song instead
+ // of resuming a paused song in the middle. Never leave AUTO silent at list end.
+ if(!lists.music.length){say('La tanda terminó, pero no hay música cargada en Playlist Automática',true);return}
+ const next=chooseNextTrack('music');
+ const target=next>=0?next:automatic?0:-1;
+ if(target<0){say('Fin de playlist automática');return}
+ if(next<0&&automatic)seenTracks.music.clear();
+ music.pause();music.currentTime=0;kind='music';
+ run('music',target);
+}
 function chooseNextTrack(k){const n=lists[k].length;if(!n)return -1;const repeat=k==='music'?pressed('repeat'):k==='programs'?programRepeat:thirdRepeat,random=k==='music'?pressed('shuffle'):k==='programs'?programShuffle:thirdShuffle;if(!random){const next=index[k]+1;return next<n?next:repeat?0:-1}let possibilities=Array.from({length:n},(_,i)=>i).filter(i=>!seenTracks[k].has(i));if(!possibilities.length){if(!repeat)return -1;seenTracks[k].clear();possibilities=Array.from({length:n},(_,i)=>i)}if(possibilities.length>1)possibilities=possibilities.filter(i=>i!==index[k]);return possibilities[Math.floor(Math.random()*possibilities.length)]}
 function advance(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdMusicNext=true;return}}if(pressed('endStop')){say('Reproducción detenida al final');return}const i=chooseNextTrack('music');if(i<0){say('Fin de la playlist');return}run('music',i)}
 function advancePrograms(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdProgramNext=true;return}}const i=chooseNextTrack('programs');if(i<0){$('programsAir').textContent='EN ESPERA';say('Fin de la playlist para programas');return}run('programs',i)}
