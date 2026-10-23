@@ -1132,6 +1132,34 @@
 @media(prefers-reduced-motion:reduce){
  #mhNationalNews .mh-news-flow{animation:none!important;max-width:100%;width:100%;overflow-x:auto}
 }
+
+/* Tandas and Noticias share one dedicated right column. Visually they
+   touch across a 9px gap regardless of other playlist heights. */
+.lists{grid-template-columns:repeat(3,minmax(0,1fr))!important;align-items:start!important}
+.lists>.mh-ad-news-column{
+ grid-column:3!important;grid-row:1!important;align-self:start;display:flex!important;
+ flex-direction:column!important;gap:9px;min-width:0;min-height:0
+}
+.lists>.mh-ad-news-column>#thirdPanel,
+.lists>.mh-ad-news-column>#mhNationalNews{
+ box-sizing:border-box;flex:0 0 250px!important;height:250px!important;
+ min-height:250px!important;max-height:250px!important;min-width:0!important;width:100%!important
+}
+.lists>.mh-ad-news-column>#thirdPanel{display:flex;flex-direction:column;overflow:hidden}
+.lists>.mh-ad-news-column>#mhNationalNews{display:flex!important;flex-direction:column!important}
+.lists>#adsPanel{
+ grid-column:1/-1!important;grid-row:2!important;min-width:0!important
+}
+.lists>#musicPanel,.lists>#programsPanel{
+ grid-row:1!important;min-width:0!important;align-self:stretch!important
+}
+@media(max-width:680px){
+ .lists{grid-template-columns:minmax(0,1fr)!important}
+ .lists>.mh-ad-news-column,.lists>#adsPanel,.lists>#musicPanel,.lists>#programsPanel{
+   grid-column:1!important;grid-row:auto!important
+ }
+ .lists>.mh-ad-news-column{gap:8px}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
@@ -1188,6 +1216,7 @@
   <div class="programs-current playlist-current" aria-live="polite"><span id="programsAir">EN ESPERA</span><span class="programs-filename" id="programsNow" data-i18n-ignore>—</span></div>
   <div class="list" id="programsList"><div class="empty">Arrastrá aquí los audios del programa o pulsá + AUDIO</div></div>
 </section>
+<div class="mh-ad-news-column" aria-label="Publicidad y noticias nacionales">
 <section class="list-panel" id="thirdPanel">
   <div class="list-head"><strong>TANDAS PUBLICITARIAS</strong></div>
   <div class="mh-visually-hidden" aria-live="polite"><span id="thirdAir">EN ESPERA</span><span id="thirdNow" data-i18n-ignore>Seleccioná una tanda</span></div>
@@ -1217,6 +1246,7 @@
   <span class="mh-news-source" id="mhNewsRegion">PAÍS</span>
  </div>
 </section>
+</div>
 <section class="list-panel" id="adsPanel">
   <div class="list-head"><strong>BIBLIOTECA DE AVISOS SUELTOS</strong><div><button id="addAds">+ AVISOS</button><button id="clearAds">VACIAR</button></div></div>
   <div class="list" id="adsList"><div class="empty">Arrastrá avisos aquí o pulsá + AVISOS</div></div>
