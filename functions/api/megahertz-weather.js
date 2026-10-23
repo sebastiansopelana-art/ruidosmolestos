@@ -25,12 +25,24 @@ function distanceKm(lat1,lon1,lat2,lon2){
  return 12742*Math.asin(Math.min(1,Math.sqrt(a)));
 }
 async function geocode(city){
+ const parts=short(city).split(',').map(v=>v.trim()).filter(Boolean);
  const address=new URL('https://geocoding-api.open-meteo.com/v1/search');
- address.searchParams.set('name',short(city));address.searchParams.set('count','5');address.searchParams.set('language','es');
+ address.searchParams.set('name',parts[0]||'');
+ address.searchParams.set('count','20');address.searchParams.set('language','es');
  const data=await get(address.toString());
- return (data.results||[]).map(p=>({
-  lat:p.latitude,lon:p.longitude,city:p.name,region:p.admin1||'',country:p.country_code||'',timezone:p.timezone||''
+ const options=(data.results||[]).map(p=>({
+  lat:p.latitude,lon:p.longitude,city:p.name,region:p.admin1||'',
+  country:p.country_code||'',countryName:p.country||'',timezone:p.timezone||''
  })).filter(p=>finite(p.lat,-90,90)!==null&&finite(p.lon,-180,180)!==null);
+ if(parts.length===1)return options;
+ const normalize=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ const requested=normalize(parts.slice(1).join(' '));
+ const matches=options.filter(p=>{
+  const location=normalize([p.region,p.countryName,p.country].join(' '));
+  return parts.slice(1).some(part=>location.includes(normalize(part)))||
+    location.includes(requested);
+ });
+ return matches.length?matches:options;
 }
 function providerError(out,name,p){if(p.status==='rejected')out.push(name+' no disponible')}
 export async function onRequestGet({request,context}){
