@@ -448,6 +448,378 @@
 #musicList .track-row.is-dragging,#programsList .track-row.is-dragging{opacity:.55}
 #musicList .track-row .track.active,#programsList .track-row .track.active{background:#30576b}
 #musicList .list-empty-filter,#programsList .list-empty-filter{padding:18px 10px;text-align:center;color:#a6c1d2;font-size:11px}
+
+/* ======================================================================
+   MEGAHERTZ · BROADCAST INDUSTRIAL PREMIUM — REVISION VISUAL V1
+   1: Luces sólo para estados útiles; 2: controles planos; 3: jerarquía
+   de emisión; 4: playlists limpias; 5: árbol publicitario jerarquizado.
+   No cambia tamaños de columnas, transporte ni lógica de reproducción.
+   ====================================================================== */
+:root{
+ --mh-premium-bg:#101820;
+ --mh-premium-panel:#192b38;
+ --mh-premium-panel-raised:#233746;
+ --mh-premium-control:#294355;
+ --mh-premium-edge:#395667;
+ --mh-premium-edge-soft:#2e4553;
+ --mh-premium-accent:#4a819b;
+ --mh-premium-text:#e1edf3;
+ --mh-premium-muted:#9eb9c8;
+ --mh-premium-live:#42bf86;
+ --mh-premium-warn:#d3a24e;
+}
+body{background:#101820;color:var(--mh-premium-text);-webkit-font-smoothing:antialiased}
+main{background:transparent}
+.console{
+ background:#152531;
+ border:1px solid var(--mh-premium-edge);
+ box-shadow:0 2px 12px #050e1538;
+ border-radius:6px;
+}
+.console>.deck>h1{
+ color:#a9c7d7;
+ font-size:10px;
+ font-weight:800;
+ letter-spacing:1.1px;
+}
+.music-screen,.ad-screen{
+ background:#0d1e29;
+ border-color:#314e60;
+ border-radius:5px;
+ box-shadow:none;
+}
+.music-screen .now,.ad-screen .now{
+ font-size:15px;
+ font-weight:750;
+ color:#eef7fb;
+ line-height:1.35;
+ text-shadow:none;
+}
+.ad-screen .now{font-size:13px}
+.music-screen .next,.ad-screen .next{
+ color:#c0d2dc;
+ font-size:11px;
+ font-weight:600;
+ border-top-color:#345163;
+}
+#adQueueView{color:#a8c4d2}
+#adQueueView>div{padding:1px 5px;border-radius:3px}
+#adQueueView .queue-active{
+ background:#163b31;
+ color:#e0f8e9;
+ border-left:3px solid var(--mh-premium-live);
+}
+.master{border-left-color:#345163;border-right-color:#345163}
+.master #seek{accent-color:#6aaec8}
+.master .times{color:#d0e3ed;font-size:11px;font-weight:700}
+#vu.mh-running .mh-quality-pulse-one{animation:none!important;opacity:0!important}
+#vu .mh-quality-pulse-two{display:none!important}
+.master #vu .mh-metal-logo img.mh-logo-neon{
+ width:91%!important;height:91%!important;max-width:91%!important;
+ filter:brightness(.86) saturate(.82)!important;
+}
+.channel-meter{
+ background:#0b1922;
+ border:1px solid #3a5969;
+ box-shadow:inset 0 2px 5px #02090e55;
+}
+.channel-meter i.lit{box-shadow:none}
+.channel-meter i[data-zone="normal"].lit{background:#52bd90}
+.channel-meter i[data-zone="warm"].lit{background:#d3ad65}
+.channel-meter i[data-zone="peak"].lit{background:#d87874}
+.deck-air-row .deck-air{
+ animation:none!important;
+ background:#173e32;
+ color:#a8efc9;
+ border-color:#3ea87a;
+ box-shadow:none;
+ letter-spacing:.4px;
+ font-weight:800;
+}
+#mode[aria-pressed="true"]{
+ animation:none!important;
+ background:#1d493a!important;
+ color:#c6f3dc;
+ border-color:#479979!important;
+ box-shadow:none!important;
+}
+#mode[aria-pressed="false"]{
+ animation:none!important;
+ background:#552d35!important;
+ color:#ffd5d8;
+ border-color:#ad6470!important;
+ box-shadow:none!important;
+}
+.emission-controls button,
+.emission-controls .center-controls button,
+.emission-controls .center-controls #settings{
+ background:#294354;
+ border:1px solid #476b80;
+ border-bottom:1px solid #476b80;
+ color:#e1edf3;
+ box-shadow:none;
+ border-radius:4px;
+ font-weight:750;
+ letter-spacing:.1px;
+}
+.emission-controls button:hover,
+.emission-controls .center-controls button:hover{
+ background:#35566a;
+ border-color:#6b99af;
+ box-shadow:none;
+}
+.emission-controls button:active{transform:none;background:#214053}
+.emission-controls button[aria-pressed="true"],
+#silence[aria-pressed="true"],#exact[aria-pressed="true"],
+#wait[aria-pressed="true"]{
+ background:#1c4b3e;
+ border-color:#51ae83;
+ color:#c8f5de;
+ box-shadow:none;
+}
+#exact[aria-pressed="false"],#wait[aria-pressed="false"]{
+ background:#294354;
+ border-color:#476b80;
+ color:#a5c0ce;
+ box-shadow:none;
+}
+.emission-controls #stop,.emission-controls #stopAds{color:#f5c2bf}
+.emission-controls #stop svg{fill:#e9817d;stroke:#e9817d}
+.lists{gap:9px}
+.lists>.list-panel{
+ background:var(--mh-premium-panel);
+ border:1px solid #345466;
+ border-radius:5px;
+ box-shadow:none;
+}
+.lists>.list-panel .list-head{
+ background:#213746;
+ border-bottom:1px solid #3b596b;
+}
+.lists>.list-panel .list-head strong{
+ color:#e1edf5;
+ font-size:10px;
+ font-weight:850;
+ letter-spacing:.65px;
+}
+.lists>.list-panel .list-head button,
+.lists>.list-panel .playlist-tools button,
+.lists>.list-panel .playlist-playmode select{
+ background:#2a4657;
+ border:1px solid #4b6e81;
+ border-radius:4px;
+ color:#dceaf2;
+ box-shadow:none;
+ font-weight:750;
+}
+.lists>.list-panel .list-head button:hover,
+.lists>.list-panel .playlist-tools button:hover,
+.lists>.list-panel .playlist-playmode select:hover{
+ background:#36596d;
+ border-color:#759cb2;
+}
+.lists>.list-panel .playlist-tools{
+ background:#182d3b;
+ border-bottom:1px solid #3a5869;
+}
+.lists>.list-panel .playlist-tools button[aria-pressed="true"]{
+ background:#1a493a;
+ border-color:#52a981;
+ color:#c7f4db;
+ box-shadow:none;
+}
+#musicPanel .playlist-tools button,#programsPanel .playlist-tools button,
+#musicPanel .playlist-playmode select,#programsPanel .playlist-playmode select{
+ min-height:32px;height:32px;font-size:9px;
+}
+.playlist-search-row{background:#162c3a;border-bottom:1px solid #355263}
+.playlist-search-row input{
+ background:#0d202d;
+ border:1px solid #425e71;
+ color:#e8f3fa;
+ box-shadow:none;
+}
+.playlist-search-row input:focus{
+ outline:1px solid #78b2cd;
+ outline-offset:0;
+ border-color:#78b2cd;
+}
+.playlist-search-row input::placeholder{color:#90aebc}
+.playlist-search-row button{
+ background:#233e4e;
+ border:1px solid #4b6e80;
+ box-shadow:none;
+ color:#a9c3d1;
+}
+.playlist-search-row span{color:#9bb9c8}
+.lists .playlist-current{
+ background:#142935;
+ color:#acbfcd;
+ border-bottom:1px solid #344f60;
+}
+.lists .playlist-current #musicListAir,
+.lists .playlist-current #programsAir,
+.lists .playlist-current #thirdAir{
+ color:#a8bcc9;
+ font-size:9px;
+ letter-spacing:.5px;
+}
+.lists .playlist-current #musicListAir.on-air,
+.lists .playlist-current #programsAir.on-air,
+.lists .playlist-current #thirdAir.on-air{
+ animation:none!important;
+ background:#173d31;
+ color:#baf5d3;
+ border:1px solid #3d9d71;
+ box-shadow:none;
+}
+#musicList,#programsList,#thirdList{background:#122633}
+#musicList .track-row,#programsList .track-row{border-bottom:1px solid #2b4352;min-height:35px}
+#musicList .track-row:nth-child(even),
+#programsList .track-row:nth-child(even){background:#ffffff04}
+#musicList .track-row:hover,#programsList .track-row:hover{background:#254456}
+#musicList .track-row .track,#programsList .track-row .track{
+ background:transparent;
+ color:#cbdde8;
+ min-height:35px;
+ font-size:11px;
+ line-height:1.2;
+ padding:5px 8px;
+ font-weight:500;
+}
+#musicList .track-row .track.active,#programsList .track-row .track.active{
+ background:#284858;
+ color:#f1fbff;
+ border-left:3px solid #69a9c6;
+ font-weight:750;
+}
+#musicList .track-row .track.is-emitting,
+#programsList .track-row .track.is-emitting{
+ background:#173e32;
+ border-left:3px solid var(--mh-premium-live);
+ color:#d6fae8;
+}
+#musicList .track-row .playlist-shift,
+#programsList .track-row .playlist-shift,
+#musicList .track-row .playlist-transfer,
+#programsList .track-row .playlist-transfer{
+ background:#1c3443;
+ color:#9cbacb;
+ border-left:1px solid #304d5d;
+ box-shadow:none;
+ font-weight:750;
+ opacity:.82;
+}
+#musicList .track-row .playlist-shift:hover,
+#programsList .track-row .playlist-shift:hover,
+#musicList .track-row .playlist-transfer:hover,
+#programsList .track-row .playlist-transfer:hover{
+ background:#345366;
+ color:#f0f7fc;
+ opacity:1;
+}
+#musicList .track-row.drag-over,#programsList .track-row.drag-over{
+ background:#31596c;outline:2px solid #75b6d2;outline-offset:-2px;
+}
+.lists .empty,.lists .list-empty-filter{color:#9eb8c7}
+#thirdList .schedule-entry{
+ background:#152b39;
+ border-bottom:1px solid #355364;
+ padding:0;
+}
+#thirdList .schedule-branch{
+ background:#1e3948;
+ border-bottom:1px solid #2e4c5b;
+}
+#thirdList .schedule-toggle{
+ background:#1b3442;
+ border-right:1px solid #3f5d6c;
+ color:#92b8cb;
+ font-size:12px;
+}
+#thirdList .schedule-toggle:hover{background:#2e4c5d;color:#f3f9fc}
+#thirdList .schedule-row{
+ background:transparent;
+ min-height:41px;
+ padding:6px 8px;
+ border-left:3px solid #4b819b;
+ border-radius:0;
+ gap:6px;
+ color:#dbeaf2;
+}
+#thirdList .schedule-row:hover,#thirdList .schedule-row.selected{
+ background:#2b4a5b;
+ border-left-color:#7db6d1;
+}
+#thirdList .schedule-row.is-emitting{
+ background:#174a38;
+ border-left-color:var(--mh-premium-live);
+}
+#thirdList .schedule-hour{color:#b4d8ea;font-size:11px}
+#thirdList .schedule-name{color:#eef7fb;font-size:11px;font-weight:800}
+#thirdList .schedule-details{color:#a8bfcd;font-size:9px}
+#thirdList .schedule-status{
+ color:#bed2dc;
+ background:#284453;
+ border:1px solid #3e6276;
+ padding:3px 5px;
+ border-radius:3px;
+ font-size:9px;
+ letter-spacing:.2px;
+ text-align:center;
+}
+#thirdList .schedule-status.live{
+ color:#c4f5db;
+ background:#17503c;
+ border-color:#4bad81;
+}
+#thirdList .schedule-status.due{
+ color:#ffe1a3;
+ background:#584328;
+ border-color:#b88b48;
+}
+#thirdList .schedule-status.upcoming{
+ color:#b6dce9;
+ background:#234457;
+ border-color:#6089a0;
+}
+#thirdList .schedule-children{
+ margin-left:14px;
+ border-left:2px solid #426b7e;
+ padding:3px 9px 5px 11px;
+ color:#b8ccda;
+ font-size:10px;
+ line-height:1.65;
+ background:#142938;
+}
+#thirdList .schedule-children .schedule-child{
+ padding:2px 0;
+ border-bottom:1px solid #ffffff0c;
+ gap:8px;
+}
+#thirdList .schedule-children .schedule-child span:first-child{
+ min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+#thirdList .schedule-children .schedule-child span:last-child{
+ flex-shrink:0;color:#8faab9;font-family:monospace;
+}
+#thirdList .schedule-children .schedule-child.is-playing{
+ background:#1c473a;color:#cdf7df;
+}
+#thirdList .schedule-foot{
+ background:#122735;
+ color:#879fad;
+ padding:4px 8px 6px 42px;
+ font-size:9px;
+ letter-spacing:.2px;
+}
+#adsPanel .list{background:#102633}
+.status{color:#aec1cd}
+@media(prefers-reduced-motion:reduce){
+ .lists .playlist-current #musicListAir.on-air,
+ .lists .playlist-current #programsAir.on-air,
+ .lists .playlist-current #thirdAir.on-air{animation:none!important}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -1071,9 +1443,26 @@ function checkScheduledBreaks(){
  if(changed){pending=true;render('ads');renderBreakSchedule()}
  if(automatic&&!playing(ads)){const next=nextReadyBreak(false);if(next)startAds(0,next)}
 }
+/* Sólo indicador visual: la próxima salida no modifica la agenda ni el motor. */
+function nextUpcomingDisplayKey(entries,clock=new Date()){
+ const today=clock.getDay(),current=clock.getHours()*60+clock.getMinutes();
+ let selected=null,closest=Infinity;
+ for(const entry of entries){
+  const minutes=Number(entry.hour.slice(0,2))*60+Number(entry.hour.slice(3,5));
+  if(!Array.isArray(entry.days)||!entry.days.length)continue;
+  for(let offset=0;offset<7;offset++){
+   if(!entry.days.includes((today+offset)%7))continue;
+   const distance=offset*1440+minutes-current;
+   if(distance>=0&&distance<closest){closest=distance;selected=entry.key}
+   if(distance>=0)break;
+  }
+ }
+ return selected;
+}
 function renderBreakSchedule(){
  const host=$('thirdList');host.replaceChildren();
  const entries=scheduleEntries();
+ const upcomingKey=nextUpcomingDisplayKey(entries);
  if(!entries.length){
   const empty=document.createElement('div');empty.className='empty';empty.textContent='Sin tandas programadas. Creá una desde + TANDA.';
   host.append(empty);$('thirdNow').textContent='Sin tandas programadas';return;
@@ -1096,6 +1485,7 @@ function renderBreakSchedule(){
   const status=document.createElement('span');status.className='schedule-status';
   if(activeBreak?.key===entry.key&&playing(ads)){status.textContent='AL AIRE';status.classList.add('live')}
   else if(pendingBreaks.some(x=>x.key===entry.key)){status.textContent='PENDIENTE';status.classList.add('due')}
+  else if(entry.key===upcomingKey){status.textContent='PRÓXIMA';status.classList.add('upcoming')}
   else status.textContent=entry.adIds.length+' AVISOS';
   row.append(hour,info,status);
   row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.toggle('selected',r===row))};
