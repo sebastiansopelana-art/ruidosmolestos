@@ -399,6 +399,18 @@
  .lists{grid-template-columns:minmax(0,1fr)}
  .lists>#musicPanel,.lists>#programsPanel,.lists>#thirdPanel,.lists>#adsPanel{grid-column:1;grid-row:auto}
 }
+/* Árbol de tandas con el mismo ancho y altura que las otras playlists. */
+#thirdList .schedule-entry{border-bottom:1px solid #304553}
+#thirdList .schedule-row{display:grid;grid-template-columns:47px minmax(0,1fr);gap:7px;width:100%;min-height:37px;height:auto;text-align:left;padding:5px 8px;background:transparent;border:0;border-left:3px solid transparent;border-radius:0;align-items:center;font-size:11px;font-weight:normal}
+#thirdList .schedule-row:hover,#thirdList .schedule-row.selected{background:#284657;border-left-color:#8ccbea}
+#thirdList .schedule-row.is-emitting{background:#285542;border-left-color:#79d49c}
+#thirdList .schedule-hour{font:800 12px monospace;color:#9dd9f1;white-space:nowrap}
+#thirdList .schedule-name{display:block;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#thirdList .schedule-details{display:block;font-size:9px;color:#9db9ca;margin-top:2px}
+#thirdList .schedule-children{padding:0 8px 6px 58px;color:#a9c3d1;font-size:10px;line-height:1.55}
+#thirdList .schedule-children div{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#thirdList .schedule-note{padding:8px 10px;color:#a9c3d1;font-size:10px}
+#thirdPanel .playlist-playmode span:last-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:9px;font-weight:600}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -431,16 +443,16 @@
   <div class="list" id="programsList"><div class="empty">Arrastrá aquí los audios del programa o pulsá + AUDIO</div></div>
 </section>
 <section class="list-panel" id="thirdPanel">
-  <div class="list-head"><strong>PLAYLIST 3</strong><div><button id="addThird">+ AUDIO</button><button id="clearThird">VACIAR</button></div></div>
-  <div class="playlist-tools" aria-label="Controles de playlist">
-  <button type="button" id="thirdListPlay" title="Reproducir playlist">▶ REPRODUCIR</button>
-  <button type="button" id="thirdListStop" title="Detener playlist">■ DETENER</button>
-  <button type="button" id="thirdListShuffle" aria-pressed="false" title="Shuffle">⇄ SHUFFLE</button>
-  <button type="button" id="thirdListRepeat" aria-pressed="false" title="Repetir lista">↻ REPETIR LISTA</button>
-  <label class="playlist-playmode"><span>REPRODUCCIÓN</span><select id="thirdListMode" aria-label="Modo de reproducción"><option value="normal">NORMAL</option><option value="random">ALEATORIA</option></select></label>
-</div>
-  <div class="third-current playlist-current" aria-live="polite"><span id="thirdAir">EN ESPERA</span><span class="programs-filename" id="thirdNow" data-i18n-ignore>—</span></div>
-  <div class="list" id="thirdList"><div class="empty">Arrastrá audios aquí o pulsá + AUDIO</div></div>
+  <div class="list-head"><strong>TANDAS PUBLICITARIAS</strong><div><button type="button" id="thirdEdit">+ TANDA</button><button type="button" id="thirdRefresh">ACTUALIZAR</button></div></div>
+  <div class="playlist-tools" aria-label="Control de tandas por horario">
+    <button type="button" id="thirdListPlay" title="Emitir tanda seleccionada">▶ EMITIR TANDA</button>
+    <button type="button" id="thirdListStop" title="Detener tanda en emisión">■ DETENER</button>
+    <button type="button" id="thirdListShuffle" title="Actualizar horarios">↻ HORARIOS</button>
+    <button type="button" id="thirdListRepeat" title="Editar programación de tandas">⚙ CONFIGURAR</button>
+    <div class="playlist-playmode"><span>ORDEN</span><span>POR HORARIO · DOBLE CLIC PARA EMITIR</span></div>
+  </div>
+  <div class="third-current playlist-current" aria-live="polite"><span id="thirdAir">EN ESPERA</span><span class="programs-filename" id="thirdNow" data-i18n-ignore>Seleccioná una tanda</span></div>
+  <div class="list" id="thirdList"><div class="empty">No hay tandas programadas. Cargalas en Configuración.</div></div>
 </section>
 <section class="list-panel" id="adsPanel">
   <div class="list-head"><strong>AVISOS DE LA TANDA</strong><div><button id="addAds">+ AVISOS</button><button id="clearAds">VACIAR</button></div></div>
@@ -555,7 +567,7 @@ const playing=a=>!a.paused&&!a.ended;const active=()=>playing(ads)?ads:playing(t
 function meter(){if(!context){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;context=new AC();analyser=context.createAnalyser();analyser.fftSize=256;buffer=new Uint8Array(analyser.frequencyBinCount);for(const a of [music,ads,programs,third]){const source=context.createMediaElementSource(a);const channel=context.createAnalyser();channel.fftSize=256;source.connect(channel);channel.connect(analyser);independentMeters.set(a,{analyser:channel,samples:new Float32Array(channel.fftSize)})}analyser.connect(context.destination)}if(context.state==='suspended')context.resume().catch(()=>say('No se pudo activar la salida de audio',true))}
 const independentMeters=new Map(),vu=$('vu');vu.replaceChildren();vu.setAttribute('aria-label','MEGAHERTZ · Marca animada');
 vu.innerHTML='<div class="mh-metal-logo"><img class="mh-logo-neon" src="/aire/megahertz-neon-animado.svg" alt="MEGAHERTZ — RADIO AUTOMATION" /></div>';;
-function syncDeckAir(){for(const [key,audio] of [['music',music],['ads',ads]]){const on=playing(audio),badge=$(key+'Air');badge.hidden=!on;badge.closest('.deck').classList.toggle('is-on-air',on);$(key+'List').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')))}}function syncProgramAir(){const musicOn=playing(music);$('musicListAir').textContent=musicOn?'EN EL AIRE':'EN ESPERA';$('musicListAir').classList.toggle('on-air',musicOn);const on=playing(programs);$('programsAir').textContent=on?'EN EL AIRE':'EN ESPERA';$('programsAir').classList.toggle('on-air',on);$('programsList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')));const thirdOn=playing(third);$('thirdAir').textContent=thirdOn?'EN EL AIRE':'EN ESPERA';$('thirdAir').classList.toggle('on-air',thirdOn);$('thirdList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',thirdOn&&row.classList.contains('active')))}
+function syncDeckAir(){for(const [key,audio] of [['music',music],['ads',ads]]){const on=playing(audio),badge=$(key+'Air');badge.hidden=!on;badge.closest('.deck').classList.toggle('is-on-air',on);$(key+'List').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')))}}function syncProgramAir(){const musicOn=playing(music);$('musicListAir').textContent=musicOn?'EN EL AIRE':'EN ESPERA';$('musicListAir').classList.toggle('on-air',musicOn);const on=playing(programs);$('programsAir').textContent=on?'EN EL AIRE':'EN ESPERA';$('programsAir').classList.toggle('on-air',on);$('programsList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')));const thirdOn=playing(ads)&&!!activeBreak;$('thirdAir').textContent=thirdOn?'EN EL AIRE':'EN ESPERA';$('thirdAir').classList.toggle('on-air',thirdOn);$('thirdList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',thirdOn&&row.classList.contains('active')))}
 function syncLogoHeartbeat(){syncProgramAir();vu.classList.toggle('mh-running',playing(music)||playing(ads)||playing(programs)||playing(third));syncDeckAir()}for(const audio of [music,ads,programs,third])for(const event of ['playing','pause','ended','emptied'])audio.addEventListener(event,syncLogoHeartbeat);
 const meterBars={};for(const k of ['music','ads']){const deck=document.querySelector(k==='music'?'.deck[aria-label="Música automática"]':'.deck[aria-label="Tandas publicitarias"]');const host=document.createElement('div');host.className='channel-meter '+k+'-meter';host.setAttribute('role','img');host.setAttribute('aria-label','Nivel de salida de aire compartida');for(let i=0;i<18;i++){const segment=document.createElement('i');segment.dataset.zone=i>14?'peak':i>11?'warm':'normal';host.append(segment)}deck.append(host);meterBars[k]=host.children}
 function drawWord(){let sum=0;if(analyser){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);for(const x of samples)sum+=x*x;sum=Math.sqrt(sum/samples.length)}const on=playing(music)||playing(ads)||playing(programs)||playing(third);const db=20*Math.log10(Math.max(sum,1e-8)),level=on?Math.max(0,Math.min(1,(db+54)/54)):0;for(const k of ['music','ads'])for(let i=0;i<18;i++)meterBars[k][i].classList.toggle('lit',i/18<level)}
@@ -563,7 +575,7 @@ function drawWord(){let sum=0;if(analyser){const samples=new Float32Array(analys
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
 for(const id of ['shuffle','repeat','endStop','silence'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
-function render(k){renderAdQueue();const host=$(k+'List');host.replaceChildren();if(!lists[k].length){const empty=document.createElement('div');empty.className='empty';empty.textContent=k==='music'?'Arrastrá canciones aquí o pulsá + MÚSICA':k==='programs'?'Arrastrá aquí los audios del programa o pulsá + AUDIO':k==='third'?'Arrastrá audios aquí o pulsá + AUDIO':'Arrastrá avisos aquí o pulsá + AVISOS';host.append(empty)}lists[k].forEach((item,i)=>{const b=document.createElement('button');b.className='track'+(index[k]===i?' active':'');const s=document.createElement('span');s.textContent=String(i+1).padStart(2,'0')+' · '+item.name;b.append(s);b.ondblclick=()=>k==='music'?startMusic(i):k==='programs'?startProgram(i):k==='third'?startThird(i):startAds(i);host.append(b)});$('musicNext').textContent='PRÓXIMO · '+(lists.music[index.music+1]?.name||'Fin de lista');$('adsNext').textContent=(pending?'TANDA PENDIENTE · ':'EN ESPERA · ')+lists.ads.length+' avisos'}
+function render(k){if(k==='third'){renderBreakSchedule();return}renderAdQueue();if(k==='ads')renderBreakSchedule();const host=$(k+'List');host.replaceChildren();if(!lists[k].length){const empty=document.createElement('div');empty.className='empty';empty.textContent=k==='music'?'Arrastrá canciones aquí o pulsá + MÚSICA':k==='programs'?'Arrastrá aquí los audios del programa o pulsá + AUDIO':k==='third'?'Arrastrá audios aquí o pulsá + AUDIO':'Arrastrá avisos aquí o pulsá + AVISOS';host.append(empty)}lists[k].forEach((item,i)=>{const b=document.createElement('button');b.className='track'+(index[k]===i?' active':'');const s=document.createElement('span');s.textContent=String(i+1).padStart(2,'0')+' · '+item.name;b.append(s);b.ondblclick=()=>k==='music'?startMusic(i):k==='programs'?startProgram(i):k==='third'?startThird(i):startAds(i);host.append(b)});$('musicNext').textContent='PRÓXIMO · '+(lists.music[index.music+1]?.name||'Fin de lista');$('adsNext').textContent=(pending?'TANDA PENDIENTE · ':'EN ESPERA · ')+lists.ads.length+' avisos'}
 function renderAdQueue(){const host=$('adQueueView');host.replaceChildren();if(!lists.ads.length){host.textContent='Sin avisos cargados';return}lists.ads.forEach((item,i)=>{const row=document.createElement('div');row.textContent=String(i+1).padStart(2,'0')+' · '+item.name;row.className=i===index.ads?'queue-active':'';host.append(row)})}
 let playlistDB;
 function openPlaylistDB(){if(playlistDB)return playlistDB;playlistDB=new Promise((resolve,reject)=>{const request=indexedDB.open('megahertz-console-v2',1);request.onupgradeneeded=()=>request.result.createObjectStore('playlists');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)});return playlistDB}
@@ -579,12 +591,12 @@ async function run(k,i){if(!lists[k][i]){say('Primero cargá '+(k==='music'?'can
 function startMusic(i){ads.pause();programs.pause();third.pause();pending=false;resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('music',i)}
 function startProgram(i){if(playing(ads)){say('Detené la tanda antes de iniciar el programa');return false}music.pause();third.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('programs',i)}
 function startThird(i){if(playing(ads)){say('Detené la tanda antes de iniciar la playlist 3');return false}music.pause();programs.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('third',i)}
-function startAds(i=0){if(!lists.ads.length){say('Primero cargá los avisos de la tanda');return}resumeMusic=playing(music);resumeProgram=playing(programs);resumeThird=playing(third);music.pause();programs.pause();third.pause();pending=false;render('ads');run('ads',i)}
-function finishAds(){ads.pause();ads.currentTime=0;$('adsNow').textContent='Tanda finalizada';if(afterAdThirdNext){afterAdThirdNext=false;resumeThird=false;resumeProgram=false;resumeMusic=false;advanceThird();return}if(afterAdProgramNext){afterAdProgramNext=false;resumeThird=false;resumeProgram=false;resumeMusic=false;advancePrograms();return}if(resumeThird){kind='third';third.play().catch(e=>say(e.message,true))}else if(resumeProgram){kind='programs';programs.play().catch(e=>say(e.message,true))}else if(resumeMusic){kind='music';music.play().catch(e=>say(e.message,true))}resumeMusic=false;resumeProgram=false;resumeThird=false}
+function startAds(i=0,scheduledBreak=null){if(!lists.ads.length){say('Primero cargá los avisos de la tanda');return}if(playing(ads)){say('Ya hay una tanda en emisión. Detenela antes de lanzar otra.');return}activeBreak=scheduledBreak;renderBreakSchedule();resumeMusic=playing(music);resumeProgram=playing(programs);resumeThird=playing(third);music.pause();programs.pause();third.pause();pending=false;render('ads');run('ads',i)}
+function finishAds(){ads.pause();ads.currentTime=0;activeBreak=null;renderBreakSchedule();$('adsNow').textContent='Tanda finalizada';if(afterAdThirdNext){afterAdThirdNext=false;resumeThird=false;resumeProgram=false;resumeMusic=false;advanceThird();return}if(afterAdProgramNext){afterAdProgramNext=false;resumeThird=false;resumeProgram=false;resumeMusic=false;advancePrograms();return}if(resumeThird){kind='third';third.play().catch(e=>say(e.message,true))}else if(resumeProgram){kind='programs';programs.play().catch(e=>say(e.message,true))}else if(resumeMusic){kind='music';music.play().catch(e=>say(e.message,true))}resumeMusic=false;resumeProgram=false;resumeThird=false}
 function chooseNextTrack(k){const n=lists[k].length;if(!n)return -1;const repeat=k==='music'?pressed('repeat'):k==='programs'?programRepeat:thirdRepeat,random=k==='music'?pressed('shuffle'):k==='programs'?programShuffle:thirdShuffle;if(!random){const next=index[k]+1;return next<n?next:repeat?0:-1}let possibilities=Array.from({length:n},(_,i)=>i).filter(i=>!seenTracks[k].has(i));if(!possibilities.length){if(!repeat)return -1;seenTracks[k].clear();possibilities=Array.from({length:n},(_,i)=>i)}if(possibilities.length>1)possibilities=possibilities.filter(i=>i!==index[k]);return possibilities[Math.floor(Math.random()*possibilities.length)]}
 function advance(){if(pending&&automatic){resumeMusic=true;startAds();resumeMusic=true;return}if(pressed('endStop')){say('Reproducción detenida al final');return}const i=chooseNextTrack('music');if(i<0){say('Fin de la playlist');return}run('music',i)}
 function advancePrograms(){if(pending&&automatic){startAds();afterAdProgramNext=true;return}const i=chooseNextTrack('programs');if(i<0){$('programsAir').textContent='EN ESPERA';say('Fin de la playlist para programas');return}run('programs',i)}
-function advanceThird(){if(pending&&automatic){startAds();afterAdThirdNext=true;return}const i=chooseNextTrack('third');if(i<0){$('thirdAir').textContent='EN ESPERA';say('Fin de la playlist 3');return}run('third',i)}
+function advanceThird(){if(pending&&automatic){startAds();afterAdThirdNext=true;return}const i=chooseNextTrack('third');if(i<0){$('thirdAir').textContent='EN ESPERA';say('Fin de la playlist auxiliar anterior');return}run('third',i)}
 music.onended=advance;programs.onended=advancePrograms;third.onended=advanceThird;ads.onended=()=>index.ads+1<lists.ads.length?run('ads',index.ads+1):finishAds();
 $('play').onclick=()=>{if(playing(music))return;if(playing(programs)){programs.pause();resumeProgram=false}if(playing(third)){third.pause();resumeThird=false}if(playing(ads)){say('Detené la tanda antes de iniciar música');return}if(index.music<0)startMusic(0);else{meter();kind='music';music.play().catch(e=>say(e.message,true))}};
 $('pause').onclick=()=>music.pause();
@@ -593,10 +605,10 @@ $('force').onclick=()=>startAds();$('stopAds').onclick=finishAds;
 function policy(v){exact=v;$('exact').setAttribute('aria-pressed',String(v));$('wait').setAttribute('aria-pressed',String(!v))}
 $('exact').onclick=()=>policy(true);$('wait').onclick=()=>policy(false);policy(false);
 $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));if(automatic&&pending&&!playing(ads)){if(exact||(!playing(music)&&!playing(programs)&&!playing(third)))startAds()}};
-$('clearPending').onclick=()=>{pending=false;render('ads');say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+lists.third.length+' audios en playlist 3 y '+lists.ads.length+' avisos guardados';$('config').showModal()};
+$('clearPending').onclick=()=>{pending=false;render('ads');say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
-for(const k of ['music','ads','programs','third']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');let depth=0;panel.ondragenter=e=>{e.preventDefault();depth++;panel.classList.add('drop')};panel.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';panel.classList.add('drop')};panel.ondragleave=()=>{depth=Math.max(0,depth-1);if(!depth)panel.classList.remove('drop')};panel.ondrop=async e=>{e.preventDefault();e.stopPropagation();depth=0;panel.classList.remove('drop');const task=collectDrop(e.dataTransfer);say('Leyendo los audios arrastrados…');try{add(k,await task)}catch(error){say('No se pudo leer el arrastre: '+error.message,true)}}}
+for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—'}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');let depth=0;panel.ondragenter=e=>{e.preventDefault();depth++;panel.classList.add('drop')};panel.ondragover=e=>{e.preventDefault();e.dataTransfer.dropEffect='copy';panel.classList.add('drop')};panel.ondragleave=()=>{depth=Math.max(0,depth-1);if(!depth)panel.classList.remove('drop')};panel.ondrop=async e=>{e.preventDefault();e.stopPropagation();depth=0;panel.classList.remove('drop');const task=collectDrop(e.dataTransfer);say('Leyendo los audios arrastrados…');try{add(k,await task)}catch(error){say('No se pudo leer el arrastre: '+error.message,true)}}}
 for(const a of [music,ads,programs,third])a.onerror=()=>say('El formato de audio no se pudo abrir. Probá otro archivo.',true);
 
 
@@ -605,8 +617,8 @@ function setMusicShuffle(on){$('shuffle').setAttribute('aria-pressed',String(!!o
 function setMusicRepeat(on){$('repeat').setAttribute('aria-pressed',String(!!on));$('musicListRepeat').setAttribute('aria-pressed',String(!!on))}
 function setProgramShuffle(on){programShuffle=!!on;$('programsListShuffle').setAttribute('aria-pressed',String(programShuffle));$('programsListMode').value=programShuffle?'random':'normal';seenTracks.programs.clear();if(index.programs>=0)seenTracks.programs.add(index.programs)}
 function setProgramRepeat(on){programRepeat=!!on;$('programsListRepeat').setAttribute('aria-pressed',String(programRepeat))}
-function setThirdShuffle(on){thirdShuffle=!!on;$('thirdListShuffle').setAttribute('aria-pressed',String(thirdShuffle));$('thirdListMode').value=thirdShuffle?'random':'normal';seenTracks.third.clear();if(index.third>=0)seenTracks.third.add(index.third)}
-function setThirdRepeat(on){thirdRepeat=!!on;$('thirdListRepeat').setAttribute('aria-pressed',String(thirdRepeat))}
+function setThirdShuffle(on){thirdShuffle=false;seenTracks.third.clear()}
+function setThirdRepeat(on){thirdRepeat=false}
 $('shuffle').onclick=()=>setMusicShuffle(!pressed('shuffle'));
 $('repeat').onclick=()=>setMusicRepeat(!pressed('repeat'));
 $('musicListShuffle').onclick=()=>setMusicShuffle(!pressed('shuffle'));
@@ -625,17 +637,13 @@ $('programsListPlay').onclick=()=>{
  programs.play().catch(e=>say('No se pudo reproducir el programa: '+e.message,true));
 };
 $('programsListStop').onclick=()=>{programs.pause();if(programs.currentTime>0)programs.currentTime=0;resumeProgram=false;afterAdProgramNext=false;syncProgramAir()};
-$('thirdListShuffle').onclick=()=>setThirdShuffle(!thirdShuffle);
-$('thirdListRepeat').onclick=()=>setThirdRepeat(!thirdRepeat);
-$('thirdListMode').onchange=e=>setThirdShuffle(e.target.value==='random');
-$('thirdListPlay').onclick=()=>{
- if(playing(ads)){say('Detené la tanda antes de iniciar la playlist 3');return}
- if(playing(third))return;
- if(index.third<0){startThird(0);return}
- music.pause();programs.pause();resumeMusic=false;resumeProgram=false;meter();kind='third';
- third.play().catch(e=>say('No se pudo reproducir la playlist 3: '+e.message,true));
-};
-$('thirdListStop').onclick=()=>{third.pause();if(third.currentTime>0)third.currentTime=0;resumeThird=false;afterAdThirdNext=false;syncProgramAir()};
+function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.settingsTab==='ads'))}
+$('thirdListShuffle').onclick=()=>{renderBreakSchedule();say('Horarios de tandas actualizados')};
+$('thirdListRepeat').onclick=openBreakConfiguration;
+$('thirdEdit').onclick=openBreakConfiguration;
+$('thirdRefresh').onclick=()=>renderBreakSchedule();
+$('thirdListPlay').onclick=()=>{const target=scheduleEntries().find(e=>e.key===selectedBreakId)||scheduleEntries()[0];if(!target){say('No hay tandas guardadas para emitir',true);return}emitScheduledBreak(target)};
+$('thirdListStop').onclick=()=>{if(playing(ads))finishAds();else say('No hay una tanda en emisión')};
 setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));
 setProgramShuffle(false);setProgramRepeat(false);setThirdShuffle(false);setThirdRepeat(false);
 
@@ -652,7 +660,7 @@ $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutpu
 
 /* Configuración RMR recuperada. Conserva los controles originales de música y audio. */
 const breakPresetKey='megahertz-break-presets-v1';
-let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0;
+let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null;
 try{const parsed=JSON.parse(localStorage.getItem(breakPresetKey)||'[]');if(Array.isArray(parsed))breakPresets=parsed.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.times));}catch(error){$('adPreviewStatus').textContent='No se pudieron leer tandas guardadas.'}
 for(let n=1;n<=12;n++)$('adFrequency').add(new Option(n===1?'1 vez':n+' veces',String(n)));
 function getAdditionalSlots(){return [...$('adSlots').querySelectorAll('input[type="time"]')].map(x=>x.value);}
@@ -666,7 +674,7 @@ $('adPolicyExact').onclick=()=>{$('startPolicy').value='exact';updateAdPolicyBut
 $('adPolicyWait').onclick=()=>{$('startPolicy').value='end';updateAdPolicyButtons()};
 function activeAdSnapshot(){syncAdditionalSlots();return {id:editingBreakId||'break-'+Date.now()+'-'+Math.random().toString(36).slice(2),name:$('breakLabel').value.trim(),times:configuredTimes(),days:selectedDays(),policy:$('startPolicy').value};}
 function persistBreakPresets(){localStorage.setItem(breakPresetKey,JSON.stringify(breakPresets));}
-function showBreakPresets(){const host=$('savedBreaks');host.replaceChildren();if(!breakPresets.length){const empty=document.createElement('div');empty.className='mh-muted';empty.textContent='Todavía no hay tandas guardadas.';host.append(empty);return}
+function showBreakPresets(){renderBreakSchedule();const host=$('savedBreaks');host.replaceChildren();if(!breakPresets.length){const empty=document.createElement('div');empty.className='mh-muted';empty.textContent='Todavía no hay tandas guardadas.';host.append(empty);return}
 breakPresets.forEach(b=>{const row=document.createElement('div');row.className='mh-record';const name=document.createElement('div');name.className='mh-record-name';const title=document.createElement('strong');title.textContent=b.name;const details=document.createElement('small');details.textContent=b.times.length+' salida(s) · '+b.times.join(', ')+' · '+(b.policy==='exact'?'HORA EXACTA':'ESPERAR TEMA');name.append(title,details);
 const edit=document.createElement('button');edit.type='button';edit.textContent='EDITAR';edit.onclick=()=>{editingBreakId=b.id;$('breakLabel').value=b.name;$('adTime').value=b.times[0]||'';$('adFrequency').value=String(Math.min(12,Math.max(1,b.times.length)));renderAdditionalSlots(b.times.slice(1));dayHost.querySelectorAll('input').forEach(x=>x.checked=b.days.includes(Number(x.value)));$('startPolicy').value=b.policy;updateAdPolicyButtons();$('adPreviewStatus').textContent='Editando '+b.name+'. Usá GUARDAR TANDA Y HORARIOS para activar y conservar los cambios.'};
 const tryIt=document.createElement('button');tryIt.type='button';tryIt.textContent='▶ PROBAR';tryIt.onclick=()=>previewCurrentAds();
@@ -682,6 +690,60 @@ previewAds.onended=()=>{previewAdIndex++;playPreviewAdNext()};
 $('previewAdBreak').onclick=previewCurrentAds;$('stopAdPreview').onclick=stopAdsPreview;
 $('newAdBreak').onclick=()=>{editingBreakId=null;$('breakLabel').value='';$('adTime').value='';$('adFrequency').value='1';renderAdditionalSlots([]);dayHost.querySelectorAll('input').forEach(x=>x.checked=true);$('startPolicy').value='end';updateAdPolicyButtons();$('adPreviewStatus').textContent='Nueva tanda. Cargá sus datos y guardá para activarla.'};
 refreshAdSlotsFromSettings();showBreakPresets();
+/* Horarios guardados: cada salida es una fila, ordenada de menor a mayor.
+   Por ahora todas las tandas usan la secuencia de avisos compartida existente. */
+function scheduleEntries(){
+ const presets=breakPresets.length?breakPresets:[];
+ const entries=[];
+ for(const preset of presets){
+   if(!Array.isArray(preset.times))continue;
+   for(const hour of preset.times){
+     if(!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(hour))continue;
+     entries.push({key:preset.id+'@'+hour,id:preset.id,name:preset.name,hour,days:Array.isArray(preset.days)?preset.days:[],policy:preset.policy==='exact'?'exact':'end'});
+   }
+ }
+ return entries.sort((a,b)=>a.hour.localeCompare(b.hour)||a.name.localeCompare(b.name,'es'));
+}
+function emitScheduledBreak(entry){
+ if(playing(ads)){say('Primero detené la tanda que está en emisión.',true);return}
+ selectedBreakId=entry.key;
+ $('thirdNow').textContent=entry.hour+' · '+entry.name;
+ if(!lists.ads.length){say('La tanda '+entry.name+' no tiene avisos cargados. Cargalos en AVISOS DE LA TANDA.',true);renderBreakSchedule();return}
+ startAds(0,entry);
+}
+function renderBreakSchedule(){
+ const host=$('thirdList');host.replaceChildren();
+ const entries=scheduleEntries();
+ if(!entries.length){
+   const empty=document.createElement('div');empty.className='empty';
+   empty.textContent='No hay tandas guardadas. Creá una desde CONFIGURAR.';
+   host.append(empty);$('thirdNow').textContent='Sin tandas programadas';return;
+ }
+ for(const entry of entries){
+   const wrap=document.createElement('div');wrap.className='schedule-entry';
+   const row=document.createElement('button');row.type='button';row.className='schedule-row';
+   if(selectedBreakId===entry.key)row.classList.add('selected');
+   if(playing(ads)&&activeBreak?.key===entry.key)row.classList.add('is-emitting');
+   row.title='Doble clic para emitir '+entry.name+' a las '+entry.hour;
+   row.setAttribute('aria-label',entry.hour+' · '+entry.name+'. Doble clic para emitir.');
+   const hour=document.createElement('span');hour.className='schedule-hour';hour.textContent=entry.hour;
+   const info=document.createElement('span');
+   const name=document.createElement('span');name.className='schedule-name';name.textContent=entry.name;
+   const details=document.createElement('span');details.className='schedule-details';
+   const dayNames=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
+   const days=entry.days.length===7?'TODOS LOS DÍAS':entry.days.map(d=>dayNames[d]||'').filter(Boolean).join(' · ');
+   details.textContent=(days||'SIN DÍAS')+' · '+(entry.policy==='exact'?'HORA EXACTA':'FIN DE TEMA');
+   info.append(name,details);row.append(hour,info);
+   row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.remove('selected'));row.classList.add('selected')};
+   row.ondblclick=()=>emitScheduledBreak(entry);
+   const children=document.createElement('div');children.className='schedule-children';
+   if(!lists.ads.length){const note=document.createElement('div');note.textContent='↳ Sin avisos cargados';children.append(note)}
+   else lists.ads.forEach((ad,i)=>{const item=document.createElement('div');item.textContent='↳ '+String(i+1).padStart(2,'0')+' · '+ad.name;children.append(item)});
+   wrap.append(row,children);host.append(wrap);
+ }
+ if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salida(s) · ordenadas por horario';
+}
+renderBreakSchedule();
 /* Biblioteca de jingles y separadores: misma base local RMR-Mediateca usada en el programa anterior. */
 let institutionalDb=null,institutionalItems=[],institutionalPreview=new Audio(),institutionalUrl=null,institutionalDragId=null;
 const instMessage=s=>$('instStatus').textContent=s;
@@ -730,7 +792,7 @@ $('importConfig').onclick=()=>$('configFile').click();$('configFile').onchange=a
 try{const saved=localStorage.getItem(settingKey);if(saved)applySettings(JSON.parse(saved));else syncConfigControls();showRecoveryStatus()}catch(error){say('No se pudo recuperar la configuración: '+error.message,true)}
 for(const a of [music,ads,programs,third])a.addEventListener('play',()=>{if(selectedOutput&&typeof a.setSinkId==='function')a.setSinkId(selectedOutput).catch(()=>say('Salida guardada no disponible; revisá Configuración',true))});
 function fmt(s){return Number.isFinite(s)?String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0'):'00:00'}
-setInterval(()=>{const a=active(),on=playing(a);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · PLAYLIST 3':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
+setInterval(()=>{const a=active(),on=playing(a);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
 if(analyser){analyser.getByteFrequencyData(buffer);drawWord(on);if(pressed('silence')&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
 const date=new Date(),day=date.toLocaleDateString('en-CA'),time=String(date.getHours()).padStart(2,'0')+':'+String(date.getMinutes()).padStart(2,'0'),key=day+' '+time;if(configuredTimes().includes(time)&&selectedDays().includes(date.getDay())&&lastSchedule!==key&&lists.ads.length){lastSchedule=key;pending=true;render('ads');if(automatic&&!playing(ads)&&(exact||(!playing(music)&&!playing(programs)&&!playing(third))))startAds()}
 },100);
