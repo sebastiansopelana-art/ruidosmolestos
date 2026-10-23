@@ -1824,7 +1824,7 @@ function startAds(i=0,scheduledBreak=null){
  expandedBreaks.delete(entry.key);
  $('thirdNow').textContent=entry.hour+' · '+entry.name;
  render('ads');renderBreakSchedule();
- const airingRow=$('thirdList').querySelector('.schedule-row.is-emitting');
+ const airingRow=$('thirdList').querySelector('.schedule-row.selected');
  if(airingRow)airingRow.scrollIntoView({block:'nearest'});
  playBreakAd(i);return true;
 }
@@ -2178,7 +2178,7 @@ function checkScheduledBreaks(){
  if(automatic&&!playing(ads)){const next=nextReadyBreak(false);if(next)startAds(0,next)}
 }
 function renderBreakSchedule(){
- const host=$('thirdList');host.replaceChildren();
+ const host=$('thirdList');const oldScroll=host.scrollTop||0;host.replaceChildren();
  const entries=todayScheduleEntries();
  if(!entries.length){
   const empty=document.createElement('div');empty.className='empty';empty.textContent='No quedan tandas por emitir hoy.';
@@ -2236,6 +2236,11 @@ function renderBreakSchedule(){
    };
   wrap.append(branch,children,foot);host.append(wrap);
  }
+ host.scrollTop=oldScroll;
+ // When the active spot has more files than the compact list can display,
+ // follow the currently audible advertisement without affecting its playback.
+ const audible=host.querySelector('.is-airing-tree .schedule-child.is-playing');
+ if(audible)audible.scrollIntoView({block:'nearest'});
  if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salidas pendientes hoy';
 }
 renderBreakSchedule();
