@@ -789,7 +789,7 @@ function drawWord(){let sum=0;if(analyser){const samples=new Float32Array(analys
 
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
-for(const id of ['shuffle','repeat','endStop','silence'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
+for(const id of ['shuffle','repeat','endStop'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
 
 /* Buscadores predictivos e intercambio por arrastre entre las dos playlists.
    No modificamos la programación del árbol publicitario. */
@@ -1006,7 +1006,7 @@ music.onended=advance;programs.onended=advancePrograms;third.onended=advanceThir
 $('play').onclick=()=>{if(playing(music))return;if(playing(programs)){programs.pause();resumeProgram=false}if(playing(third)){third.pause();resumeThird=false}if(playing(ads)){say('Detené la tanda antes de iniciar música');return}if(index.music<0)startMusic(0);else{meter();kind='music';music.play().catch(e=>say(e.message,true))}};
 $('pause').onclick=()=>music.pause();
 $('stop').onclick=()=>{music.pause();music.currentTime=0};$('prev').onclick=()=>startMusic(Math.max(0,index.music-1));$('next').onclick=()=>startMusic((index.music+1)%Math.max(1,lists.music.length));
-$('force').onclick=()=>startAds(0,scheduleEntries().find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||scheduleEntries()[0]);$('stopAds').onclick=finishAds;
+$('force').onclick=()=>startAds(0,scheduleEntries().find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||scheduleEntries()[0]);
 function policy(v){exact=v;$('exact').setAttribute('aria-pressed',String(v));$('wait').setAttribute('aria-pressed',String(!v))}
 $('exact').onclick=()=>policy(true);$('wait').onclick=()=>policy(false);policy(false);
 $('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));if(automatic&&pending&&!playing(ads)){const ready=nextReadyBreak(false);if(ready)startAds(0,ready)}};
@@ -1078,13 +1078,13 @@ $('programsListEndStop').onclick=()=>{
 function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.settingsTab==='ads'))}
 
 /* Panel único de tandas: acciones reales, sin controles duplicados en barra inferior. */
-function selectedAdvertisingEntry(){const entries=scheduleEntries();return entries.find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||entries[0]||null}
+
 function syncAdvertisingPanel(){/* El control de tandas se muestra únicamente en los 12 botones superiores. */}
-$('adNewBreak').onclick=()=>{openBreakConfiguration();$('newAdBreak').click();$('breakLabel').focus?.()};
-$('adRefresh').onclick=()=>{renderBreakSchedule();renderAdQueue();render('ads');syncAdvertisingPanel();say('Tandas y horarios actualizados')};
-$('adEmit').onclick=()=>{const entry=selectedAdvertisingEntry();if(!entry){say('No hay tandas guardadas para emitir',true);return}emitScheduledBreak(entry)};
+
+
+
 $('adHardStop').onclick=()=>{if(!playing(ads)&&!activeBreak){say('No hay una tanda para detener');return}stopBreakPlayback(false);say('Publicidad detenida manualmente; la programación anterior permanece pausada')};
-$('adHours').onclick=()=>{openBreakConfiguration();$('adSlots').scrollIntoView?.({block:'center'})};
+
 $('adConfigure').onclick=openBreakConfiguration;
 ads.addEventListener('playing',syncAdvertisingPanel);
 ads.addEventListener('pause',syncAdvertisingPanel);
@@ -1098,10 +1098,10 @@ const settingKey='megahertz-settings-v1';let selectedOutput='';
 const dayHost=$('scheduleDays');['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'].forEach((name,i)=>{const label=document.createElement('label'),box=document.createElement('input');box.type='checkbox';box.value=i;box.checked=true;label.append(box,document.createTextNode(name));dayHost.append(label)});
 function selectedDays(){return [...dayHost.querySelectorAll('input:checked')].map(e=>Number(e.value))}
 function configuredTimes(){return [$('adTime').value,...$('extraTimes').value.split(',').map(s=>s.trim())].filter(s=>/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(s))}
-function syncConfigControls(){$('startupMode').value=automatic?'automatic':'manual';$('startPolicy').value=exact?'exact':'end';$('startShuffle').checked=pressed('shuffle');$('startRepeat').checked=pressed('repeat');$('startEndStop').checked=pressed('endStop');$('silenceEnabled').checked=pressed('silence')}
+function syncConfigControls(){$('startupMode').value=automatic?'automatic':'manual';$('startPolicy').value=exact?'exact':'end';$('startShuffle').checked=pressed('shuffle');$('startRepeat').checked=pressed('repeat');$('startEndStop').checked=pressed('endStop');/* Detector controlado exclusivamente desde Configuración */}
 function collectSettings(){return {version:1,volume:Number($('volume').value),output:selectedOutput,mode:$('startupMode').value,policy:$('startPolicy').value,shuffle:$('startShuffle').checked,repeat:$('startRepeat').checked,endStop:$('startEndStop').checked,silence:$('silenceEnabled').checked,threshold:Number($('threshold').value),silenceSeconds:Number($('silenceSeconds').value),breakLabel:$('breakLabel').value,adTime:$('adTime').value,extraTimes:$('extraTimes').value,days:selectedDays(),autoRecovery:$('autoRecoveryEnabled').checked,programShuffle,programRepeat,programEndStop:pressed('programsListEndStop'),thirdShuffle,thirdRepeat}}
 async function routeOutput(id){if(typeof music.setSinkId!=='function'){$('outputStatus').textContent='Este navegador usa la salida elegida en el sistema operativo';return false}try{await Promise.all([music.setSinkId(id||''),ads.setSinkId(id||''),...(typeof programs.setSinkId==='function'?[programs.setSinkId(id||'')]:[]),...(typeof third.setSinkId==='function'?[third.setSinkId(id||'')]:[])]);selectedOutput=id||'';$('outputStatus').textContent='Salida de audio aplicada';return true}catch(error){$('outputStatus').textContent='No se pudo aplicar la salida: '+error.message;return false}}
-function applySettings(s){$('volume').value=Math.max(0,Math.min(100,Number(s.volume??85)));$('volume').oninput();automatic=s.mode!=='manual';$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));policy(s.policy==='exact');for(const [id,key] of [['shuffle','shuffle'],['repeat','repeat'],['endStop','endStop'],['silence','silence']])$(id).setAttribute('aria-pressed',String(!!s[key]));$('threshold').value=Math.max(-65,Math.min(-20,Number(s.threshold??-48)));$('silenceSeconds').value=Math.max(1,Math.min(30,Number(s.silenceSeconds??3)));$('breakLabel').value=s.breakLabel||'Tanda publicitaria';$('adTime').value=s.adTime||'';$('extraTimes').value=s.extraTimes||'';for(const box of dayHost.querySelectorAll('input'))box.checked=(s.days||[0,1,2,3,4,5,6]).includes(Number(box.value));selectedOutput=typeof s.output==='string'?s.output:'';$('autoRecoveryEnabled').checked=!!s.autoRecovery;setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));setProgramShuffle(!!s.programShuffle);setProgramRepeat(!!s.programRepeat);$('programsListEndStop').setAttribute('aria-pressed',String(!!s.programEndStop));setThirdShuffle(!!s.thirdShuffle);setThirdRepeat(!!s.thirdRepeat);syncConfigControls();refreshAdSlotsFromSettings()}
+function applySettings(s){$('volume').value=Math.max(0,Math.min(100,Number(s.volume??85)));$('volume').oninput();automatic=s.mode!=='manual';$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));policy(s.policy==='exact');for(const [id,key] of [['shuffle','shuffle'],['repeat','repeat'],['endStop','endStop']])$(id).setAttribute('aria-pressed',String(!!s[key]));$('silenceEnabled').checked=!!s.silence;$('threshold').value=Math.max(-65,Math.min(-20,Number(s.threshold??-48)));$('silenceSeconds').value=Math.max(1,Math.min(30,Number(s.silenceSeconds??3)));$('breakLabel').value=s.breakLabel||'Tanda publicitaria';$('adTime').value=s.adTime||'';$('extraTimes').value=s.extraTimes||'';for(const box of dayHost.querySelectorAll('input'))box.checked=(s.days||[0,1,2,3,4,5,6]).includes(Number(box.value));selectedOutput=typeof s.output==='string'?s.output:'';$('autoRecoveryEnabled').checked=!!s.autoRecovery;setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));setProgramShuffle(!!s.programShuffle);setProgramRepeat(!!s.programRepeat);$('programsListEndStop').setAttribute('aria-pressed',String(!!s.programEndStop));setThirdShuffle(!!s.thirdShuffle);setThirdRepeat(!!s.thirdRepeat);syncConfigControls();refreshAdSlotsFromSettings()}
 async function deviceList(){const select=$('outputDevice');select.replaceChildren(new Option('Predeterminado del sistema',''));if(!navigator.mediaDevices?.enumerateDevices){$('outputStatus').textContent='La salida se selecciona desde el sistema operativo';return}try{const devices=await navigator.mediaDevices.enumerateDevices();devices.filter(d=>d.kind==='audiooutput'&&d.deviceId!=='default').forEach((d,i)=>select.add(new Option(d.label||'Salida '+(i+1),d.deviceId)));select.value=selectedOutput;if(!select.value&&selectedOutput)select.add(new Option('Salida guardada',selectedOutput));select.value=selectedOutput}catch(error){$('outputStatus').textContent=error.message}}
 $('refreshDevices').onclick=deviceList;$('outputDevice').onchange=()=>routeOutput($('outputDevice').value);
 
@@ -1380,7 +1380,7 @@ try{const saved=localStorage.getItem(settingKey);if(saved)applySettings(JSON.par
 for(const a of [music,ads,programs,third])a.addEventListener('play',()=>{if(selectedOutput&&typeof a.setSinkId==='function')a.setSinkId(selectedOutput).catch(()=>say('Salida guardada no disponible; revisá Configuración',true))});
 function fmt(s){return Number.isFinite(s)?String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0'):'00:00'}
 setInterval(()=>{const a=active(),on=playing(a);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
-if(analyser){analyser.getByteFrequencyData(buffer);drawWord(on);if(pressed('silence')&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
+if(analyser){analyser.getByteFrequencyData(buffer);drawWord(on);if($('silenceEnabled').checked&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
 checkScheduledBreaks()
 },100);
 })();
