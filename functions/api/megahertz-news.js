@@ -44,7 +44,7 @@ function parseRSS(xml,scope){
   if(published&&Date.now()-Date.parse(published)>8*86400000)continue;
   const title=source&&raw.endsWith(' - '+source)?raw.slice(0,-source.length-3):raw;
   items.push({title:title.slice(0,220),source:source.slice(0,90),url,published,scope});
-  if(items.length>=25)break;
+  if(items.length>=65)break;
  }
  return items;
 }
@@ -78,76 +78,85 @@ export async function onRequestGet({request}){
   '&ceid='+encodeURIComponent(country+':'+ceidLang);
  const base='https://news.google.com/rss';
  const feeds=[];
- // An edition (and its domestic publishers) is determined by country, NEVER by a fixed AR source list.
- feeds.push({scope:'nacional',kind:'national-search',url:base+'/search?q='+
-  encodeURIComponent(searchTerm(countryName)+' when:4d')+'&'+edition});
- feeds.push({scope:'nacional',kind:'country-edition',url:base+'?'+edition});
- if(region&&normalize(region)!==normalize(city)){
-  feeds.push({scope:'provincial',kind:'regional-search',url:base+'/search?q='+
-   encodeURIComponent(searchTerm(region)+' '+searchTerm(countryName)+' when:5d')+'&'+edition});
-  feeds.push({scope:'provincial',kind:'regional-fallback',url:base+'/search?q='+
-   encodeURIComponent(searchTerm(region)+' when:5d')+'&'+edition});
- }
+ const rssSearch=(phrase,scope,kind)=>feeds.push({
+  scope,kind,url:base+'/search?q='+encodeURIComponent(phrase)+'&'+edition
+ });
+ // The country edition's own domestic sections give a MUCH broader picture
+ // than requiring the literal country name in every headline.
+ const rssTopic=(topic,kind)=>feeds.push({
+  scope:'nacional',kind,url:base+'/headlines/section/topic/'+topic+'?'+edition
+ });
+ const rssGeo=(place,scope,kind)=>feeds.push({
+  scope,kind,url:base+'/headlines/section/geo/'+encodeURIComponent(place)+'?'+edition
+ });
  if(city){
-  feeds.push({scope:'local',kind:'city-search',url:base+'/search?q='+
-   encodeURIComponent(searchTerm(city)+' '+searchTerm(countryName)+' when:5d')+'&'+edition});
-  feeds.push({scope:'local',kind:'city-fallback',url:base+'/search?q='+
-   encodeURIComponent(searchTerm(city)+' when:5d')+'&'+edition});
+  rssSearch(searchTerm(city)+' '+searchTerm(countryName)+' when:7d','local','city-search');
+  rssGeo(city,'local','city-geo');
  }
- // Independent backup to avoid a silent empty panel if Google RSS is down.
- // Bing News RSS can be used as a fallback; licensing must be checked before
- // distributing the news content as part of a paid commercial application.
+ if(region&&normalize(region)!==normalize(city)){
+  rssSearch(searchTerm(region)+' '+searchTerm(countryName)+' when:7d','provincial','region-search');
+  rssGeo(region,'provincial','region-geo');
+ }
+ rssTopic('NATION','nation');
+ rssSearch(searchTerm(countryName)+' when:7d','nacional','country-search');
+ rssTopic('BUSINESS','business');
+ rssTopic('SPORTS','sports');
+ rssTopic('TECHNOLOGY','technology');
+ // National edition top stories supplement national topics, but do not
+ // substitute for regional feeds or switch the country chosen by the user.
+ feeds.push({scope:'nacional',kind:'headlines',url:base+'?'+edition});
+ // Separate aggregator fallback, selected for the SAME country/region.
  const backupArea=city||region||countryName;
  const backupQuery=searchTerm(backupArea)+(backupArea===countryName?'':' '+searchTerm(countryName));
  const bingLanguage=hl.replace('es-419','es-'+country).replace('pt-419','pt-'+country);
  const backup='https://www.bing.com/news/search?q='+encodeURIComponent(backupQuery)+
-  '&format=RSS&cc='+encodeURIComponent(country.toLowerCase())+
-  '&setlang='+encodeURIComponent(bingLanguage);
- feeds.push({scope:city?'local':region?'provincial':'nacional',kind:'backup-search',url:backup});
+  '&format=rss&cc='+encodeURIComponent(country.toLowerCase())+
+  '&setmkt='+encodeURIComponent(bingLanguage);
+ feeds.push({scope:city?'local':region?'provincial':'nacional',kind:'bing',url:backup});
  const settled=await Promise.allSettled(feeds.map(f=>fetchRSS(f.url,f.scope)));
  const failures=[],collected=new Map();
  settled.forEach((s,i)=>{
   if(s.status==='fulfilled')collected.set(feeds[i].kind,s.value);
   else failures.push(feeds[i].kind);
  });
- const now=Date.now(),seen=new Set(),perOutlet=new Map(),out=[];
- function add(list,limit){
+ const now=Date.now(),seen=new Set(),perOutlet=new Map(),out=[],limit=30;
+ const grouped={local:[],provincial:[],nacional:[]};
+ const selectedKinds=[];
+ function pushFrom(kind,maxItems){
   let added=0;
-  // Preserve the editorial order returned by the geographically configured feed.
-  for(const item of list||[]){
-   if(added>=limit||out.length>=14)break;
+  for(const item of collected.get(kind)||[]){
+   if(added>=maxItems||out.length>=limit)break;
    const title=normalize(item.title),publisher=normalize(item.source||'medio');
-   if(!title||seen.has(title)||(perOutlet.get(publisher)||0)>=4)continue;
-   // RSS search itself establishes locality; do not require it in the title.
+   if(!title||seen.has(title)||(perOutlet.get(publisher)||0)>=7)continue;
    if(item.published&&Date.parse(item.published)>now+3600000)continue;
    seen.add(title);perOutlet.set(publisher,(perOutlet.get(publisher)||0)+1);
-   out.push(item);added++;
+   out.push(item);grouped[item.scope]?.push(item);added++;
   }
+  if(added)selectedKinds.push(kind);
  }
- const regional=Boolean(region||city);
- if(city){
-  add(collected.get('city-search'),4);
-  add(collected.get('city-fallback'),2);
- }
- if(region){
-  add(collected.get('regional-search'),5);
-  add(collected.get('regional-fallback'),2);
- }
- add(collected.get('national-search'),regional?8:10);
- add(collected.get('country-edition'),14);
- add(collected.get('backup-search'),14);
- const result=out.slice(0,12);
+ if(city){pushFrom('city-search',5);pushFrom('city-geo',5)}
+ if(region){pushFrom('region-search',5);pushFrom('region-geo',5)}
+ // Interleave national topics instead of accepting a few from one search.
+ // The user sees a complete editorial wall, not two location keyword matches.
+ pushFrom('nation',9);
+ pushFrom('country-search',7);
+ pushFrom('business',5);
+ pushFrom('sports',4);
+ pushFrom('technology',3);
+ pushFrom('headlines',limit);
+ pushFrom('bing',limit);
+ const result=out.slice(0,limit);
+ const feedCounts=Object.fromEntries(feeds.map(f=>[f.kind,(collected.get(f.kind)||[]).length]));
  const status=result.length?(failures.length?'partial':'ok'):'unavailable';
  const error=!result.length
-  ?'No se recibieron noticias para la zona seleccionada. Revisá la conexión o probá con otro país o región.'
+  ?'No se recibieron titulares de esta zona. La consulta a las fuentes puede estar bloqueada o sin respuesta.'
   :undefined;
  return reply({
   country,countryName,region,city,edition:hl,updatedAt:new Date().toISOString(),
   available:result.length>0,items:result,nationalItems:result,
-  status,error,failedSources:failures,
-  scopes:{local:result.filter(i=>i.scope==='local').length,
-   provincial:result.filter(i=>i.scope==='provincial').length,
-   nacional:result.filter(i=>i.scope==='nacional').length},
+  status,error,failedSources:failures,feedCounts,selectedKinds,returned:result.length,
+  scopes:{local:grouped.local.length,provincial:grouped.provincial.length,
+   nacional:grouped.nacional.length},
   source:'Edición Google News RSS para '+countryName+'; respaldo Bing News RSS',
   publishers:'Medios seleccionados por los agregadores para la zona solicitada'
  });
