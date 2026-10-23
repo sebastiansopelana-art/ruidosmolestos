@@ -79,6 +79,17 @@ export async function onRequestGet({request}){
   searchRSS(national,params,'nacional').catch(()=>[])
  ]);
  const result=[],seen=new Set();
+ const normalize=t=>String(t||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+ const mentions=(item,place)=>{
+  const expected=normalize(place.replace(/"/g,''));
+  return !!expected&&normalize(item.title+' '+item.source).includes(expected);
+ };
+ // Geographic searches can still return foreign headlines whose body mentions
+ // the city. Require that the displayed headline or publisher actually identify
+ // the requested place. Better an empty ticker than an unrelated disaster.
+ const cityNews=termCity?local.filter(item=>mentions(item,city)):[];
+ const provinceNews=termRegion?province.filter(item=>mentions(item,region)):[];
+ const nationalNews=nation.filter(item=>mentions(item,localizedCountryName)||mentions(item,countryName));
  const dedupe=(list,limit)=>{
   let added=0;
   for(const item of list){
@@ -88,7 +99,7 @@ export async function onRequestGet({request}){
    if(added>=limit||result.length>=12)break;
   }
  };
- dedupe(local,5);dedupe(province,4);dedupe(nation,12);
+ dedupe(cityNews,5);dedupe(provinceNews,4);dedupe(nationalNews,12);
  return reply({country,countryName,city,region,updatedAt:new Date().toISOString(),
   items:result,available:result.length>0,
   edition:hl,source:'RSS de Google Noticias: consultas geográficamente acotadas',
