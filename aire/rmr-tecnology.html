@@ -483,6 +483,9 @@
  .console{height:278px;grid-template-rows:minmax(0,1fr) 62px}
  .emission-controls>.mh-ad-footer-status{margin-left:0}
 }
+
+.emission-controls>.mh-ad-footer-status.on-air{border-color:#5fc49a;color:#d6ffeb;background:#143529}
+.emission-controls>.mh-ad-footer-status.on-air .mh-ad-status-dot{background:#6bf2ab;box-shadow:0 0 7px #6bf2ab}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen"><div class="now" id="musicNow">Sin audio en reproducción</div><div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div><div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
@@ -925,6 +928,21 @@ $('programsListPlay').onclick=()=>{
 };
 $('programsListStop').onclick=()=>{programs.pause();if(programs.currentTime>0)programs.currentTime=0;resumeProgram=false;afterAdProgramNext=false;syncProgramAir()};
 function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.settingsTab==='ads'))}
+
+/* Panel único de tandas: acciones reales, sin controles duplicados en barra inferior. */
+function selectedAdvertisingEntry(){const entries=scheduleEntries();return entries.find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||entries[0]||null}
+function syncAdvertisingPanel(){const isAiring=playing(ads);const status=document.querySelector('.mh-ad-footer-status');if(status)status.classList.toggle('on-air',isAiring);const dot=document.querySelector('.mh-ad-status-dot');if(dot)dot.title=isAiring?'Tanda al aire':'Publicidad en espera'}
+$('adNewBreak').onclick=()=>{openBreakConfiguration();$('newAdBreak').click();$('breakLabel').focus?.()};
+$('adRefresh').onclick=()=>{renderBreakSchedule();renderAdQueue();render('ads');syncAdvertisingPanel();say('Tandas y horarios actualizados')};
+$('adEmit').onclick=()=>{const entry=selectedAdvertisingEntry();if(!entry){say('No hay tandas guardadas para emitir',true);return}emitScheduledBreak(entry)};
+$('adHardStop').onclick=()=>{if(!playing(ads)&&!activeBreak){say('No hay una tanda para detener');return}stopBreakPlayback(false);say('Publicidad detenida manualmente; la programación anterior permanece pausada')};
+$('adHours').onclick=()=>{openBreakConfiguration();$('adSlots').scrollIntoView?.({block:'center'})};
+$('adConfigure').onclick=openBreakConfiguration;
+ads.addEventListener('playing',syncAdvertisingPanel);
+ads.addEventListener('pause',syncAdvertisingPanel);
+ads.addEventListener('ended',syncAdvertisingPanel);
+syncAdvertisingPanel();
+
 $('thirdListShuffle').onclick=()=>{renderBreakSchedule();say('Horarios de tandas actualizados')};
 $('thirdListRepeat').onclick=openBreakConfiguration;
 $('thirdEdit').onclick=openBreakConfiguration;
