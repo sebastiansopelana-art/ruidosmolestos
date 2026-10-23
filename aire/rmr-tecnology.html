@@ -1012,6 +1012,126 @@
 
 #mhDualMeters .mh-vu-needle-halo{stroke:#0dd7ff!important;stroke-width:5px!important;opacity:.24;filter:blur(2px)}
 #mhDualMeters .mh-vu-instrument.peak .mh-vu-needle-halo{opacity:.65;filter:blur(3px)}
+
+/* 2026: Radio production news wall. Equal width and height to public-break
+   schedule + its controls, directly beneath that module. */
+.lists>#mhNationalNews{
+ grid-column:3!important;grid-row:2!important;
+ display:flex!important;flex-direction:column!important;
+ align-self:start;min-width:0!important;
+ height:250px!important;max-height:250px!important;min-height:0!important;
+ border-color:#476d84;overflow:hidden;
+ background:linear-gradient(180deg,#142d40,#0b1d2b)
+}
+.lists>#adsPanel{grid-column:1 / span 2!important;grid-row:2!important;min-width:0}
+#mhNationalNews>.mh-news-panel-head{
+ box-sizing:border-box;flex:0 0 44px!important;min-height:44px;height:44px;
+ border-bottom-color:#41718e;
+ background:linear-gradient(#1b455e,#113247)
+}
+#mhNationalNews>.mh-news-panel-head strong{font:900 11px Arial,sans-serif;letter-spacing:.65px;color:#b2e8ff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#mhNationalNews .mh-news-led{display:inline-block;width:7px;height:7px;margin-right:3px;border-radius:50%;background:#48cddd;box-shadow:0 0 7px #0dd7ff}
+#mhNationalNews .mh-news-update{font-size:8px;font-weight:800;color:#83b1cd;white-space:nowrap;flex:0 0 auto}
+#mhNationalNews .mh-news-headlines{
+ box-sizing:border-box;flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;
+ min-height:0;padding:5px 7px;scrollbar-width:thin;scrollbar-color:#416b82 #0c2534
+}
+#mhNationalNews .mh-news-headline{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;
+ text-decoration:none;align-items:center;min-height:31px;
+ padding:5px 6px;border-left:2px solid transparent;border-bottom:1px solid #23475d;
+ color:#e2f4fd;background:transparent;transition:background .15s ease
+}
+#mhNationalNews .mh-news-headline:hover{background:#244b64;border-left-color:#73dfff}
+#mhNationalNews .mh-news-headline>span:first-child{
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;
+ overflow:hidden;font:800 10px/1.25 Arial,sans-serif;letter-spacing:.16px;
+ text-transform:uppercase;overflow-wrap:anywhere
+}
+#mhNationalNews .mh-news-headline-source{color:#79aac8;font-size:8px;font-weight:850;text-transform:uppercase;max-width:86px;text-align:right;line-height:1.1}
+#mhNationalNews .mh-news-empty{color:#8db2c9;font-size:11px;line-height:1.5;padding:14px;text-align:center}
+#mhNationalNews .mh-news-ticker{
+ box-sizing:border-box;display:flex!important;align-items:center!important;
+ min-width:0;width:100%;height:37px!important;max-height:37px!important;
+ flex:0 0 37px;gap:6px;padding:0 8px;
+ border-top:1px solid #467792;background:linear-gradient(180deg,#0f2c42,#081926)
+}
+#mhNationalNews .mh-news-tag{color:#83eaff;font-size:9px;font-weight:900;padding-right:6px;white-space:nowrap;border-right:1px solid #396884}
+#mhNationalNews .mh-news-viewport{height:30px!important;display:block;overflow:hidden;flex:1;min-width:0}
+#mhNationalNews .mh-news-flow{
+ display:flex;align-items:center;flex-wrap:nowrap;width:max-content;min-width:max-content;
+ gap:0!important;padding:0!important;margin:0!important;
+ animation:mh-news-wall-move var(--mh-news-seconds,105s) linear infinite!important;
+ will-change:transform
+}
+#mhNationalNews .mh-news-reel{display:flex;align-items:center;gap:25px;flex-shrink:0;white-space:nowrap;padding-right:25px}
+#mhNationalNews .mh-news-reel a,#mhNationalNews .mh-news-reel span{font-size:10px;line-height:30px;text-transform:uppercase}
+#mhNationalNews .mh-news-source{color:#8cb4cd;white-space:nowrap;font-size:9px;font-weight:800;flex-shrink:0}
+@keyframes mh-news-wall-move{from{transform:translate3d(0,0,0)}to{transform:translate3d(-50%,0,0)}}
+#mhNationalNews .mh-news-viewport:hover .mh-news-flow{animation-play-state:paused!important}
+/* Mode button in Programs uses exactly the same 30px geometry as transports. */
+#programsPanel .playlist-tools.mh-icon-tools{
+ display:grid;grid-template-columns:repeat(9,minmax(0,1fr));align-items:center!important;
+ grid-auto-rows:30px;gap:4px;min-width:0
+}
+#programsPanel .playlist-tools.mh-icon-tools>.playlist-playmode{
+ box-sizing:border-box!important;grid-column:9!important;display:flex!important;
+ height:30px!important;min-height:30px!important;align-items:center!important;
+ justify-content:center!important;padding:0!important;margin:0!important;
+ border:0!important;min-width:0!important;max-width:100%!important
+}
+#programsPanel .mh-icon-tools .playlist-playmode select{
+ appearance:none;-webkit-appearance:none;box-sizing:border-box!important;
+ display:block!important;width:100%!important;height:30px!important;min-height:30px!important;
+ max-height:30px!important;line-height:28px!important;
+ margin:0!important;padding:0 1px!important;border-radius:4px!important;
+ text-align:center!important;text-align-last:center!important;
+ font:800 9px/28px Arial,sans-serif!important;
+ background:linear-gradient(#36566b,#183345)!important;
+ border:1px solid #668ca4!important;border-bottom:2px solid #2e5063!important;
+ color:#e9f7ff!important;cursor:pointer
+}
+#programsPanel .mh-icon-tools .playlist-playmode select:focus-visible{outline:2px solid #6de4ff;outline-offset:1px}
+@media(max-width:1180px){#programsPanel .mh-icon-tools .playlist-playmode select{font-size:8px!important}}
+/* Quiet branding, not an extra advertising element. */
+.mh-brand-signature{text-align:right;padding:2px 9px 8px;font:700 9px/1.5 Arial,sans-serif;letter-spacing:1px;color:#577f95}
+.mh-brand-signature strong{color:#8bc5dd;font-weight:900}
+/* Seven-day forecast is part of the SAME small weather desk. */
+.console>.deck.mh-weather-deck .mh-weather-screen{
+ grid-template-rows:29px minmax(0,1fr) 36px 19px!important;
+ gap:2px!important;padding:4px 7px 2px!important
+}
+.console>.deck.mh-weather-deck .mh-weather-top{min-height:0}
+.console>.deck.mh-weather-deck .mh-weather-core{min-height:0;overflow:hidden}
+.console>.deck.mh-weather-deck .mh-week-strip{
+ box-sizing:border-box;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+ align-items:stretch;gap:2px;min-width:0;min-height:0;
+ padding:3px 2px 1px;background:#081e2c;border:1px solid #28526a;border-radius:4px;
+ overflow:hidden
+}
+.mh-week-day{
+ min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;
+ gap:1px;white-space:nowrap;border-right:1px solid #20465b;text-align:center
+}
+.mh-week-day:last-child{border-right:0}
+.mh-week-day .day{font:850 8px/10px Arial,sans-serif;color:#86c2df;letter-spacing:.25px}
+.mh-week-day .temps{font:850 8px/10px Arial,sans-serif;color:#ebf8ff}
+.mh-week-day .forecast-icon{font-size:10px;line-height:11px}
+.mh-week-day .rain{font:700 7px/9px Arial,sans-serif;color:#68c5e7}
+.mh-week-loading{grid-column:1/-1;display:flex;align-items:center;justify-content:center;font-size:9px;color:#86b3c9}
+@media(max-width:1100px){
+ .console>.deck.mh-weather-deck .mh-weather-screen{grid-template-rows:26px minmax(0,1fr) 32px 19px!important;gap:1px!important}
+ .mh-week-day .day,.mh-week-day .temps{font-size:7px}
+ .mh-week-day .forecast-icon{font-size:9px}
+}
+@media(max-width:680px){
+ .lists>#mhNationalNews,.lists>#adsPanel{grid-column:1!important;grid-row:auto!important}
+ .lists>#mhNationalNews{height:250px!important;max-height:250px!important}
+ .console>.deck.mh-weather-deck .mh-weather-screen{grid-template-rows:25px minmax(0,1fr) 32px 19px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #mhNationalNews .mh-news-flow{animation:none!important;max-width:100%;width:100%;overflow-x:auto}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
@@ -1040,15 +1160,15 @@
      <span>UV <strong id="mhUV">--</strong></span><span>AIRE <strong id="mhAQI">--</strong></span>
     </div>
    </div>
+   <div id="mhWeekStrip" class="mh-week-strip" aria-label="Pronóstico de los próximos siete días">
+     <span class="mh-week-loading">SEMANA · Conectando pronóstico…</span>
+   </div>
    <div class="mh-alert-strip" id="mhWeatherAlert" role="status" aria-live="polite"><span id="mhAlertSymbol">◈</span><span id="mhAlertText">Comprobando fenómenos y alertas…</span></div>
  </div>
  <div class="mh-visually-hidden"><span id="adsNow" role="status" aria-live="polite">Sin tanda en reproducción</span>
   <div id="adQueueView" aria-label="Orden de avisos de la tanda"></div><span id="adsAir" hidden>EN EL AIRE</span><span id="adsNext">EN ESPERA · Sin avisos cargados</span></div>
 </section>
-<nav class="emission-controls" aria-label="Controles de emisión"><div class="music-controls"><button id="prev" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button id="play" aria-label="Reproducir" title="Reproducir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button id="pause" aria-label="Pausar" title="Pausar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button id="stop" aria-label="Detener" title="Detener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button id="next" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button id="shuffle" aria-pressed="false" aria-label="Aleatorio" title="Aleatorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button id="repeat" aria-pressed="false" aria-label="Repetir" title="Repetir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button id="endStop" aria-pressed="false" aria-label="Parar al final" title="Parar al final"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button></div><div class="center-controls"><button id="mode" aria-pressed="true">AUTOMÁTICO</button><button id="settings">CONFIGURACIÓN</button></div><div class="mh-news-ticker" id="mhNewsTicker" role="region" aria-label="Noticias importantes de la región">
- <span class="mh-news-tag">NOTICIAS</span><div class="mh-news-viewport"><div class="mh-news-flow" id="mhNewsFlow"><span>Conectando noticias locales y nacionales…</span></div></div>
- <span class="mh-news-source" id="mhNewsRegion">LOCAL</span>
- </div></nav></section>
+<nav class="emission-controls" aria-label="Controles de emisión"><div class="music-controls"><button id="prev" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button id="play" aria-label="Reproducir" title="Reproducir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button id="pause" aria-label="Pausar" title="Pausar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button id="stop" aria-label="Detener" title="Detener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button id="next" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button id="shuffle" aria-pressed="false" aria-label="Aleatorio" title="Aleatorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button id="repeat" aria-pressed="false" aria-label="Repetir" title="Repetir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button id="endStop" aria-pressed="false" aria-label="Parar al final" title="Parar al final"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button></div><div class="center-controls"><button id="mode" aria-pressed="true">AUTOMÁTICO</button><button id="settings">CONFIGURACIÓN</button></div></nav></section>
 <section class="lists" aria-label="Bibliotecas de emisión">
 <section class="list-panel" id="musicPanel">
   <div class="list-head"><strong>PLAYLIST AUTOMÁTICA</strong><div><button id="addMusic">+ MÚSICA</button><button id="clearMusic">VACIAR</button></div></div>
@@ -1083,11 +1203,26 @@
 </div>
  </div>
 </section>
+<section class="list-panel mh-national-news" id="mhNationalNews" aria-label="Centro informativo nacional">
+ <div class="list-head mh-news-panel-head">
+   <strong><span class="mh-news-led" aria-hidden="true"></span> CENTRO INFORMATIVO · <span id="mhNewsCountry">PAÍS</span></strong>
+   <span id="mhNewsUpdated" class="mh-news-update" role="status">CONECTANDO…</span>
+ </div>
+ <div id="mhNewsHeadlines" class="mh-news-headlines" aria-live="polite">
+  <div class="mh-news-empty">Consultando los principales titulares nacionales…</div>
+ </div>
+ <div class="mh-news-ticker" id="mhNewsTicker" role="region" aria-label="Titulares nacionales desplazándose a la izquierda">
+  <span class="mh-news-tag">ÚLTIMAS</span>
+  <div class="mh-news-viewport"><div class="mh-news-flow" id="mhNewsFlow"><span>CONECTANDO NOTICIAS DEL PAÍS…</span></div></div>
+  <span class="mh-news-source" id="mhNewsRegion">PAÍS</span>
+ </div>
+</section>
 <section class="list-panel" id="adsPanel">
   <div class="list-head"><strong>BIBLIOTECA DE AVISOS SUELTOS</strong><div><button id="addAds">+ AVISOS</button><button id="clearAds">VACIAR</button></div></div>
   <div class="list" id="adsList"><div class="empty">Arrastrá avisos aquí o pulsá + AVISOS</div></div>
 </section></section>
 <div id="status" class="status" role="status">Consola nueva · Cargá música o avisos para probar la reproducción.</div>
+<div class="mh-brand-signature" aria-label="Firma del software">POWERED BY <strong>SEBASTIÁN SOPELANA</strong></div>
 
 <dialog id="config" aria-label="Configuración MEGAHERTZ">
 <form method="dialog" id="configForm">
