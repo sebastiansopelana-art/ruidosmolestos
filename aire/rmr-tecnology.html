@@ -635,19 +635,67 @@
 #thirdList::-webkit-scrollbar-thumb{background:#497991;border:2px solid #0e202d;border-radius:6px}
 #thirdList{scrollbar-width:thin;scrollbar-color:#497991 #0e202d}
 @media(max-width:680px){.lists>#thirdPanel{height:224px!important;max-height:224px!important}}
+
+/* Reubicar ambos vúmetros lado a lado DENTRO del visor musical: el ancho
+   de la consola y la altura de reproducción se mantienen sin cambios. */
+.console>.deck[aria-label="Música automática"]{padding-right:0!important}
+.console>.deck[aria-label="Tandas publicitarias"]{padding-left:0!important}
+.console>.deck[aria-label="Música automática"]>.music-screen.mh-simple-track{
+ display:grid!important;grid-template-columns:minmax(0,1fr) 70px!important;
+ gap:8px!important;align-items:stretch!important;padding:8px 9px!important;
+ overflow:hidden!important;min-height:0!important
+}
+.mh-simple-track .mh-song-data{
+ display:flex;flex-direction:column;min-width:0;min-height:0;
+ justify-content:center;gap:8px;overflow:hidden
+}
+#mhDualMeters{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px;
+ height:100%;min-height:0;max-height:100%;width:70px;
+ padding:3px 2px;border-left:1px solid #34556c;background:#0b1b27;
+ border-radius:3px
+}
+#mhDualMeters .mh-meter-unit{display:flex;flex-direction:column;align-items:stretch;min-width:0;min-height:0;gap:3px}
+#mhDualMeters .mh-meter-label{color:#a7d4ec;font-size:8px;font-weight:900;letter-spacing:.1px;text-align:center;line-height:10px;flex:0 0 10px}
+#mhDualMeters .mh-meter-well{display:flex;flex:1 1 auto;min-height:0;align-items:stretch}
+#mhDualMeters .channel-meter{
+ position:relative!important;top:auto!important;bottom:auto!important;
+ left:auto!important;right:auto!important;
+ width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;
+ margin:0!important;padding:3px!important;gap:2px!important;
+ display:flex!important;flex-direction:column-reverse!important;align-items:stretch!important;
+ background:linear-gradient(90deg,#040c13,#142733,#040c13);
+ border:1px solid #567b8c;border-radius:3px;
+ box-shadow:inset 0 1px 6px #000c,0 0 0 1px #10202a;
+}
+#mhDualMeters .channel-meter i{min-height:0!important;flex:1 1 0!important;border-radius:1px}
+#mhDualMeters .channel-meter i.lit{filter:brightness(1.28);box-shadow:0 0 5px currentColor}
+#mhDualMeters .music-meter{border-color:#589a85}
+#mhDualMeters .ads-meter{border-color:#b79b6a}
+@media(max-width:850px){
+ .console>.deck[aria-label="Música automática"]>.music-screen.mh-simple-track{grid-template-columns:minmax(0,1fr) 60px!important;gap:5px!important;padding:6px!important}
+ #mhDualMeters{width:60px;gap:3px}
+ #mhDualMeters .mh-meter-label{font-size:7px}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
-  <div class="now" id="musicNow">Sin audio en reproducción</div>
-  <div class="mh-track-meta" id="mhTrackMeta" aria-label="Datos del tema actual">
-    <div class="mh-track-line"><strong>AUTOR</strong><span id="mhTrackWriter" data-i18n-ignore>—</span></div>
-    <div class="mh-track-line"><strong>DISCO</strong><span id="mhTrackAlbum" data-i18n-ignore>—</span></div>
-    <div class="mh-track-line"><strong>AÑO</strong><span id="mhTrackYear" data-i18n-ignore>—</span></div>
+  <div class="mh-song-data">
+    <div class="now" id="musicNow">Sin audio en reproducción</div>
+    <div class="mh-track-meta" id="mhTrackMeta" aria-label="Datos del tema actual">
+      <div class="mh-track-line"><strong>AUTOR</strong><span id="mhTrackWriter" data-i18n-ignore>—</span></div>
+      <div class="mh-track-line"><strong>DISCO</strong><span id="mhTrackAlbum" data-i18n-ignore>—</span></div>
+      <div class="mh-track-line"><strong>AÑO</strong><span id="mhTrackYear" data-i18n-ignore>—</span></div>
+    </div>
+    <span id="mhTrackStatus" class="mh-visually-hidden" role="status">La información se busca automáticamente al reproducir</span>
+    <div class="mh-visually-hidden"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div>
+    <div class="mh-visually-hidden" id="musicNext">PRÓXIMO · Sin canciones</div>
   </div>
-  <span id="mhTrackStatus" class="mh-visually-hidden" role="status">La información se busca automáticamente al reproducir</span>
-  <div class="mh-visually-hidden"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div>
-  <div class="mh-visually-hidden" id="musicNext">PRÓXIMO · Sin canciones</div>
+  <aside class="mh-dual-meters" id="mhDualMeters" aria-label="Dos vúmetros independientes de música y publicidad">
+    <div class="mh-meter-unit" title="Nivel de música y programas"><span class="mh-meter-label">MÚS</span><div id="mhMeterMusic" class="mh-meter-well" aria-label="Medición de música"></div></div>
+    <div class="mh-meter-unit" title="Nivel de publicidad"><span class="mh-meter-label">PUB</span><div id="mhMeterAds" class="mh-meter-well" aria-label="Medición de publicidad"></div></div>
+  </aside>
 </div></section>
 <section class="master" aria-label="Salida de aire compartida"><strong id="air">EN ESPERA</strong><div class="vu" id="vu" role="img" aria-label="Nivel real de la salida de audio"></div><div><input id="seek" aria-label="Progreso del audio en emisión" type="range" min="0" max="1000" value="0" disabled><div class="times"><span id="elapsed">00:00</span><span id="duration">00:00</span></div></div></section>
 <section class="deck" aria-label="Tandas publicitarias"><h1>TANDAS PUBLICITARIAS</h1><div class="ad-screen"><span id="adsNow" class="mh-visually-hidden" role="status" aria-live="polite">Sin tanda en reproducción</span>
@@ -802,8 +850,30 @@ const independentMeters=new Map(),vu=$('vu');vu.replaceChildren();vu.setAttribut
 vu.innerHTML='<div class="mh-metal-logo"><img class="mh-logo-neon" src="/aire/megahertz-neon-animado.svg" alt="MEGAHERTZ — RADIO AUTOMATION" /></div>';;
 function syncDeckAir(){for(const [key,audio] of [['music',music],['ads',ads]]){const on=playing(audio),badge=$(key+'Air');badge.hidden=!on;badge.closest('.deck').classList.toggle('is-on-air',on);if(key==='music')$(key+'List').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')))}}function syncProgramAir(){const musicOn=playing(music);$('musicListAir').textContent=musicOn?'EN EL AIRE':'EN ESPERA';$('musicListAir').classList.toggle('on-air',musicOn);const on=playing(programs);$('programsAir').textContent=on?'EN EL AIRE':'EN ESPERA';$('programsAir').classList.toggle('on-air',on);$('programsList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')));const thirdOn=playing(ads)&&!!activeBreak;$('thirdAir').textContent=thirdOn?'EN EL AIRE':'EN ESPERA';$('thirdAir').classList.toggle('on-air',thirdOn);$('thirdList').querySelectorAll('.schedule-row').forEach(row=>row.classList.toggle('is-emitting',thirdOn&&row.dataset.key===activeBreak?.key))}
 function syncLogoHeartbeat(){syncProgramAir();vu.classList.toggle('mh-running',playing(music)||playing(ads)||playing(programs)||playing(third));syncDeckAir()}for(const audio of [music,ads,programs,third])for(const event of ['playing','pause','ended','emptied'])audio.addEventListener(event,syncLogoHeartbeat);
-const meterBars={};for(const k of ['music','ads']){const deck=document.querySelector(k==='music'?'.deck[aria-label="Música automática"]':'.deck[aria-label="Tandas publicitarias"]');const host=document.createElement('div');host.className='channel-meter '+k+'-meter';host.setAttribute('role','img');host.setAttribute('aria-label','Nivel de salida de aire compartida');for(let i=0;i<18;i++){const segment=document.createElement('i');segment.dataset.zone=i>14?'peak':i>11?'warm':'normal';host.append(segment)}deck.append(host);meterBars[k]=host.children}
-function drawWord(){let sum=0;if(analyser){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);for(const x of samples)sum+=x*x;sum=Math.sqrt(sum/samples.length)}const on=playing(music)||playing(ads)||playing(programs)||playing(third);const db=20*Math.log10(Math.max(sum,1e-8)),level=on?Math.max(0,Math.min(1,(db+54)/54)):0;for(const k of ['music','ads'])for(let i=0;i<18;i++)meterBars[k][i].classList.toggle('lit',i/18<level)}
+const meterBars={};for(const k of ['music','ads']){
+ const host=document.createElement('div');host.className='channel-meter '+k+'-meter';
+ host.setAttribute('role','img');host.setAttribute('aria-label',k==='music'?'Nivel real de música y programas':'Nivel real de publicidad');
+ for(let i=0;i<18;i++){const segment=document.createElement('i');segment.dataset.zone=i>14?'peak':i>11?'warm':'normal';host.append(segment)}
+ $(k==='music'?'mhMeterMusic':'mhMeterAds').append(host);meterBars[k]=host.children;
+}
+function drawWord(){
+ // Each bar reads its own analyser, not the mixed master signal.
+ for(const k of ['music','ads']){
+   const players=k==='music'?[music,programs,third]:[ads];
+   let rmsSquare=0,anyPlaying=false;
+   for(const audio of players){
+     if(!playing(audio))continue;anyPlaying=true;
+     const channel=independentMeters.get(audio);
+     if(!channel)continue;
+     channel.analyser.getFloatTimeDomainData(channel.samples);
+     let power=0;for(const sample of channel.samples)power+=sample*sample;
+     rmsSquare+=power/channel.samples.length;
+   }
+   const db=20*Math.log10(Math.max(1e-8,Math.sqrt(rmsSquare)));
+   const level=anyPlaying&&rmsSquare>0?Math.max(0,Math.min(1,(db+54)/54)):0;
+   for(let i=0;i<18;i++)meterBars[k][i].classList.toggle('lit',i/18<level);
+ }
+}
 
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
