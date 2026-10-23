@@ -697,6 +697,162 @@
  #mhDualMeters .mh-vu-side{font-size:7px;border:0;background:transparent}
 }
 @media(prefers-reduced-motion:reduce){#mhDualMeters .mh-vu-needle-line{filter:none}}
+
+/* ==============================================================
+   MEGAHERTZ · Centro de emisión: tiempo + noticias + tanda.
+   Preserva la altura/ancho total de la consola y sus reproductores.
+   ============================================================== */
+.console>.deck.mh-weather-deck{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+ grid-template-rows:15px minmax(0,1fr)!important;gap:4px!important;
+ min-width:0;min-height:0;padding-left:0!important
+}
+.mh-weather-deck>h1{
+ min-width:0;display:flex;align-items:center;justify-content:space-between;gap:6px;
+ font-size:10px;color:#a7daef;white-space:nowrap;overflow:hidden
+}
+.mh-weather-deck #mhGeoRefresh{
+ flex:0 0 auto;width:auto;height:16px;min-height:16px;
+ padding:1px 5px;font-size:8px;font-weight:750;letter-spacing:.5px;
+ color:#d9effe;background:#183c51;border:1px solid #427997;border-radius:3px
+}
+.mh-weather-screen{
+ display:grid;grid-template-rows:23px minmax(0,1fr) 25px 14px;
+ box-sizing:border-box;position:relative;min-height:0;min-width:0;height:100%;
+ padding:7px 9px 5px;gap:4px;
+ background:linear-gradient(127deg,#0b1b27 0%,#0c2639 47%,#111e31 100%);
+ border:1px solid #3e6d8a;border-radius:5px;
+ box-shadow:inset 0 1px 10px #0007,0 0 8px #4a98d020;
+ overflow:hidden
+}
+.mh-weather-screen::before{
+ content:"";position:absolute;top:0;left:0;right:0;height:2px;pointer-events:none;
+ background:linear-gradient(90deg,#2c7fba,#70d8f4 50%,#246990)
+}
+.mh-weather-top{display:flex;align-items:center;justify-content:space-between;gap:6px;min-width:0;min-height:0}
+.mh-place{font-size:11px;font-weight:900;color:#d2f1ff;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;letter-spacing:.15px}
+.mh-clock{font:800 clamp(12px,1.1vw,18px)/1 "SFMono-Regular",Consolas,monospace;
+ color:#9beaff;text-shadow:0 0 10px #5addff5c;white-space:nowrap;flex-shrink:0;letter-spacing:.5px;font-variant-numeric:tabular-nums}
+.mh-weather-core{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.15fr);gap:8px;min-width:0;min-height:0;align-items:center}
+.mh-weather-current{display:flex;align-items:center;gap:4px;min-width:0;overflow:hidden}
+#mhWeatherIcon{font-size:25px;line-height:1;color:#8bdfff;text-shadow:0 0 9px #69cbff4a;flex-shrink:0}
+#mhWeatherTemp{font-size:clamp(21px,2.3vw,36px);font-weight:900;letter-spacing:-1.5px;line-height:1;white-space:nowrap;color:#f0faff}
+.mh-weather-status{display:flex;flex-direction:column;min-width:0;gap:3px;padding-left:3px}
+.mh-weather-status strong{font-size:9px;line-height:1.25;font-weight:850;color:#d4eeff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mh-weather-status small{font-size:8px;color:#81abc2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mh-weather-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 7px;align-items:center;min-width:0;min-height:0}
+.mh-weather-grid>span{
+ display:flex;align-items:baseline;justify-content:space-between;gap:3px;
+ font-size:8px;font-weight:750;letter-spacing:.2px;color:#83a9be;
+ min-width:0;white-space:nowrap;overflow:hidden
+}
+.mh-weather-grid strong{font-size:10px;font-weight:850;color:#dceef9;max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.mh-alert-strip{
+ display:flex;align-items:center;gap:5px;min-width:0;min-height:25px;
+ padding:2px 7px;border-radius:3px;
+ color:#a1dace;background:#123d40;border:1px solid #376f70
+}
+.mh-alert-strip #mhAlertSymbol{font-size:13px;color:#73e7c7;flex-shrink:0}
+.mh-alert-strip #mhAlertText{font-size:10px;font-weight:850;min-width:0;white-space:nowrap;text-overflow:hidden;text-overflow:ellipsis}
+.mh-alert-strip.warning{color:#fbe7b7;background:#493716;border-color:#b98b3c}
+.mh-alert-strip.warning #mhAlertSymbol{color:#ffc35c}
+.mh-alert-strip.danger{
+ color:#fff0ee;background:#691a27;border-color:#ef6375;
+ animation:mh-alert-flash 1.2s ease-in-out infinite
+}
+.mh-alert-strip.danger #mhAlertSymbol{color:#ffb9c0}
+@keyframes mh-alert-flash{0%,100%{box-shadow:none}50%{box-shadow:inset 0 0 12px #f51c526b,0 0 10px #dd395c66}}
+.mh-weather-more{justify-self:end;align-self:end;min-height:14px!important;height:14px!important;
+ border:none!important;background:transparent!important;box-shadow:none!important;
+ color:#89cbf4!important;font-size:8px!important;padding:0 2px!important;text-decoration:underline;font-weight:800}
+.mh-weather-more:hover{color:#c6f3ff!important}
+@media(prefers-reduced-motion:reduce){.mh-alert-strip.danger{animation:none}}
+/* News ticker fills the right third of the same emission row as AUTO + SETTINGS */
+.emission-controls{min-width:0}
+.emission-controls>.mh-news-ticker{
+ grid-column:3;grid-row:1;align-self:center;
+ box-sizing:border-box;min-width:0;height:28px;max-height:28px;
+ display:flex;align-items:center;gap:5px;
+ padding:0 7px;overflow:hidden;
+ border:1px solid #4d7895;border-radius:4px;
+ background:linear-gradient(180deg,#18364a,#091f2f);
+ box-shadow:inset 0 1px 1px #9cdeff17
+}
+.mh-news-tag{flex-shrink:0;font-size:9px;font-weight:900;letter-spacing:.35px;color:#9de1ff;padding-right:6px;border-right:1px solid #446b83}
+.mh-news-viewport{flex:1 1 auto;min-width:0;height:24px;overflow:hidden;display:flex;align-items:center;position:relative;
+ mask-image:linear-gradient(90deg,transparent 0%,black 5%,black 95%,transparent 100%)}
+.mh-news-flow{flex-shrink:0;display:flex;align-items:center;gap:30px;white-space:nowrap;
+ animation:mh-news-move var(--mh-news-seconds,65s) linear infinite;padding-left:100%;
+ will-change:transform}
+.mh-news-flow a,.mh-news-flow span{font:700 10px/20px Arial,sans-serif;text-decoration:none;color:#deedf9}
+.mh-news-flow a:hover{color:#79d7ff;text-decoration:underline}
+.mh-news-flow a::before{content:"● ";font-size:7px;color:#55c3ec}
+.mh-news-viewport:hover .mh-news-flow{animation-play-state:paused}
+.mh-news-source{flex-shrink:0;max-width:55px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+ color:#6e9eba;font:800 8px Arial,sans-serif}
+@keyframes mh-news-move{from{transform:translateX(0)}to{transform:translateX(-100%)}}
+@media(prefers-reduced-motion:reduce){.mh-news-flow{animation:none;padding-left:0;overflow:auto;max-width:100%}}
+/* Advertising controls live BELOW the day's scrollable schedule, not in the weather desk. */
+.lists>#thirdPanel{height:250px!important;max-height:250px!important}
+#thirdPanel>.mh-ad-controls-under{
+ box-sizing:border-box;flex:0 0 65px!important;min-height:65px!important;max-height:65px!important;
+ border-top:1px solid #466a82;
+ padding:5px 7px;background:linear-gradient(180deg,#142c3d,#102331)
+}
+#thirdPanel .mh-ad-controls-under .mh-ad-pad{
+ width:100%!important;height:100%!important;
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ grid-template-rows:repeat(2,minmax(0,1fr))!important;gap:4px!important
+}
+#thirdPanel .mh-ad-controls-under .mh-ad-pad>button{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;height:100%!important;min-height:0!important;min-width:0!important;
+ font:850 clamp(8px,.72vw,10px)/1.1 Arial,sans-serif!important;letter-spacing:.05px!important;
+ padding:2px 3px!important;text-align:center!important;white-space:normal!important;
+ color:#daefff!important;border:1px solid #547e99!important;border-bottom:2px solid #2d546b!important;
+ border-radius:4px!important;background:linear-gradient(180deg,#31546b,#172f42)!important;
+ box-shadow:inset 0 1px #ffffff19!important
+}
+#thirdPanel .mh-ad-controls-under .mh-ad-pad>button:hover{background:linear-gradient(#427793,#23516d)!important;border-color:#8bd4ff!important}
+#thirdPanel .mh-ad-controls-under .mh-ad-pad>button[aria-pressed=true]{
+ border-color:#75dbab!important;color:#effff5!important;background:linear-gradient(#287457,#1a4c3c)!important
+}
+#thirdPanel .mh-ad-controls-under #adHardStop{border-color:#a66d78!important}
+#thirdPanel .mh-ad-controls-under #force{border-color:#84c0e4!important}
+#thirdPanel>#thirdList{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important}
+.mh-on-air-compact{align-items:start!important;justify-content:center!important;gap:9px!important}
+.mh-onair-kicker{font-size:10px;font-weight:900;color:#75bae5;letter-spacing:1.3px}
+.mh-on-air-compact #musicNow{
+ max-height:80px!important;font-size:clamp(16px,1.55vw,23px)!important;line-height:1.3!important;
+ font-weight:900;color:#f2fbff;white-space:normal!important;overflow:hidden;text-overflow:ellipsis;
+ border:0!important;padding:0!important
+}
+.mh-onair-note{font-size:9px;color:#618da8;line-height:1.3;max-height:27px;overflow:hidden}
+@media(max-width:1200px){
+ .mh-weather-screen{padding:5px;gap:3px}
+ .mh-weather-core{gap:4px;grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr)}
+ .mh-weather-grid{gap:3px}
+ .mh-weather-status small{display:none}
+ .mh-news-flow a,.mh-news-flow span{font-size:9px}
+ #thirdPanel .mh-ad-controls-under .mh-ad-pad>button{font-size:8px!important}
+}
+@media(max-width:850px){
+ .mh-weather-screen{grid-template-rows:22px minmax(0,1fr) 25px 14px}
+ .mh-weather-core{grid-template-columns:minmax(0,1fr)}
+ .mh-weather-current{align-self:center;justify-content:center}
+ .mh-weather-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .mh-weather-grid>span{flex-direction:column;align-items:center;font-size:7px;gap:1px}
+ .mh-weather-grid strong{font-size:9px;max-width:100%}
+ .mh-news-tag{font-size:8px;padding-right:3px}
+}
+@media(max-width:630px){
+ .mh-weather-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .mh-weather-grid>span:nth-child(n+5){display:none}
+ .mh-weather-screen{grid-template-rows:19px minmax(0,1fr) 25px 14px}
+ .mh-clock{font-size:12px}
+ .mh-weather-current #mhWeatherTemp{font-size:19px}
+ .mh-news-source{display:none}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
