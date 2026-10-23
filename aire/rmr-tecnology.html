@@ -573,7 +573,7 @@
 @media(max-width:850px){.console{height:276px}}
 @media(max-width:650px){.console{height:336px}.music-screen #musicNow{font-size:14px!important}}
 
-/* Sin caja/visor adicional: los 12 botones ocupan íntegramente el área superior
+/* Sin caja/visor adicional: los 6 botones ocupan íntegramente el área superior
    del reproductor publicitario, de borde a borde y con filas iguales. */
 .console>.deck[aria-label="Tandas publicitarias"]>.ad-screen{
  box-sizing:border-box!important;border:0!important;background:transparent!important;
@@ -581,7 +581,7 @@
 }
 .console>.deck[aria-label="Tandas publicitarias"] .mh-ad-pad{
  box-sizing:border-box!important;width:100%!important;height:100%!important;
- display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
  grid-template-rows:repeat(2,minmax(0,1fr))!important;grid-auto-rows:minmax(0,1fr)!important;
  align-items:stretch!important;justify-items:stretch!important;gap:4px!important;
 }
@@ -592,20 +592,20 @@
 }
 @media(max-width:1200px){
  .console>.deck[aria-label="Tandas publicitarias"] .mh-ad-pad{
- grid-template-columns:repeat(4,minmax(0,1fr))!important;
- grid-template-rows:repeat(3,minmax(0,1fr))!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ grid-template-rows:repeat(2,minmax(0,1fr))!important;
  }
 }
 @media(max-width:850px){
  .console>.deck[aria-label="Tandas publicitarias"] .mh-ad-pad{
- grid-template-columns:repeat(3,minmax(0,1fr))!important;
- grid-template-rows:repeat(4,minmax(0,1fr))!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ grid-template-rows:repeat(3,minmax(0,1fr))!important;
  }
 }
 @media(max-width:650px){
  .console>.deck[aria-label="Tandas publicitarias"] .mh-ad-pad{
  grid-template-columns:repeat(2,minmax(0,1fr))!important;
- grid-template-rows:repeat(6,minmax(0,1fr))!important;
+ grid-template-rows:repeat(3,minmax(0,1fr))!important;
  }
 }
 </style></head><body><main>
