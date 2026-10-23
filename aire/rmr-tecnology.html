@@ -850,58 +850,96 @@ previewAds.onended=()=>{previewAdIndex++;playPreviewAdNext()};
 $('previewAdBreak').onclick=previewCurrentAds;$('stopAdPreview').onclick=stopAdsPreview;
 $('newAdBreak').onclick=()=>{stopAdsPreview();editingBreakId=null;editingAdIds=[];renderDraftBreakAds();$('breakLabel').value='';$('adTime').value='';$('adFrequency').value='1';renderAdditionalSlots([]);dayHost.querySelectorAll('input').forEach(x=>x.checked=true);$('startPolicy').value='end';updateAdPolicyButtons();$('adPreviewStatus').textContent='Nueva tanda. Cargá sus datos y guardá para activarla.'};
 refreshAdSlotsFromSettings();showBreakPresets();renderDraftBreakAds();initializeBreakAssets();
-/* Horarios guardados: cada salida es una fila, ordenada de menor a mayor.
-   Por ahora todas las tandas usan la secuencia de avisos compartida existente. */
+/* ÁRBOL DE TANDAS · Cada fila es una salida; cada hija es un aviso propio de esa tanda. */
 function scheduleEntries(){
- const presets=breakPresets.length?breakPresets:[];
  const entries=[];
- for(const preset of presets){
-   if(!Array.isArray(preset.times))continue;
-   for(const hour of preset.times){
-     if(!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(hour))continue;
-     entries.push({key:preset.id+'@'+hour,id:preset.id,name:preset.name,hour,days:Array.isArray(preset.days)?preset.days:[],policy:preset.policy==='exact'?'exact':'end'});
-   }
+ for(const b of breakPresets){
+  if(!Array.isArray(b.times))continue;
+  for(const hour of b.times){
+   if(!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(hour))continue;
+   entries.push({key:b.id+'@'+hour,id:b.id,name:b.name,hour,days:Array.isArray(b.days)?b.days:[],policy:b.policy==='exact'?'exact':'end',adIds:[...(b.adIds||[])]});
+  }
  }
  return entries.sort((a,b)=>a.hour.localeCompare(b.hour)||a.name.localeCompare(b.name,'es'));
 }
 function emitScheduledBreak(entry){
- if(playing(ads)){say('Primero detené la tanda que está en emisión.',true);return}
- selectedBreakId=entry.key;
- $('thirdNow').textContent=entry.hour+' · '+entry.name;
- if(!lists.ads.length){say('La tanda '+entry.name+' no tiene avisos cargados. Cargalos en AVISOS DE LA TANDA.',true);renderBreakSchedule();return}
- startAds(0,entry);
+ if(playing(ads)){say('Primero detené la tanda que ya está al aire.',true);return}
+ selectedBreakId=entry.key;startAds(0,entry);
+}
+function nextReadyBreak(force){
+ if(!pendingBreaks.length)return null;
+ if(force)return pendingBreaks[0];
+ const immediate=pendingBreaks.find(e=>e.policy==='exact');
+ if(immediate)return immediate;
+ if(!playing(music)&&!playing(programs)&&!playing(third))return pendingBreaks[0];
+ return null;
+}
+function checkScheduledBreaks(){
+ const now=new Date(),dateKey=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+ const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ const secondStamp=dateKey+':'+time+':'+now.getSeconds();
+ if(secondStamp===lastClockCheckSecond)return;lastClockCheckSecond=secondStamp;
+ if(dateKey!==seenScheduleDate){seenScheduleDate=dateKey;seenScheduleKeys.clear()}
+ let changed=false;
+ for(const entry of scheduleEntries()){
+  if(entry.hour!==time||!entry.days.includes(now.getDay()))continue;
+  const key=dateKey+'#'+entry.key;
+  if(seenScheduleKeys.has(key))continue;
+  seenScheduleKeys.add(key);
+  if(!entry.adIds.length||entry.adIds.some(id=>!breakAssets.has(id))){say('Tanda '+entry.name+' sin todos sus archivos. Revisá Configuración.',true);continue}
+  pendingBreaks.push(entry);changed=true;
+ }
+ if(changed){pending=true;render('ads');renderBreakSchedule()}
+ if(automatic&&!playing(ads)){const next=nextReadyBreak(false);if(next)startAds(0,next)}
 }
 function renderBreakSchedule(){
  const host=$('thirdList');host.replaceChildren();
  const entries=scheduleEntries();
  if(!entries.length){
-   const empty=document.createElement('div');empty.className='empty';
-   empty.textContent='No hay tandas guardadas. Creá una desde CONFIGURAR.';
-   host.append(empty);$('thirdNow').textContent='Sin tandas programadas';return;
+  const empty=document.createElement('div');empty.className='empty';empty.textContent='Sin tandas programadas. Creá una desde + TANDA.';
+  host.append(empty);$('thirdNow').textContent='Sin tandas programadas';return;
  }
  for(const entry of entries){
-   const wrap=document.createElement('div');wrap.className='schedule-entry';
-   const row=document.createElement('button');row.type='button';row.className='schedule-row';
-   if(selectedBreakId===entry.key)row.classList.add('selected');
-   if(playing(ads)&&activeBreak?.key===entry.key)row.classList.add('is-emitting');
-   row.title='Doble clic para emitir '+entry.name+' a las '+entry.hour;
-   row.setAttribute('aria-label',entry.hour+' · '+entry.name+'. Doble clic para emitir.');
-   const hour=document.createElement('span');hour.className='schedule-hour';hour.textContent=entry.hour;
-   const info=document.createElement('span');
-   const name=document.createElement('span');name.className='schedule-name';name.textContent=entry.name;
-   const details=document.createElement('span');details.className='schedule-details';
-   const dayNames=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
-   const days=entry.days.length===7?'TODOS LOS DÍAS':entry.days.map(d=>dayNames[d]||'').filter(Boolean).join(' · ');
-   details.textContent=(days||'SIN DÍAS')+' · '+(entry.policy==='exact'?'HORA EXACTA':'FIN DE TEMA');
-   info.append(name,details);row.append(hour,info);
-   row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.remove('selected'));row.classList.add('selected')};
-   row.ondblclick=()=>emitScheduledBreak(entry);
-   const children=document.createElement('div');children.className='schedule-children';
-   if(!lists.ads.length){const note=document.createElement('div');note.textContent='↳ Sin avisos cargados';children.append(note)}
-   else lists.ads.forEach((ad,i)=>{const item=document.createElement('div');item.textContent='↳ '+String(i+1).padStart(2,'0')+' · '+ad.name;children.append(item)});
-   wrap.append(row,children);host.append(wrap);
+  const wrap=document.createElement('div');wrap.className='schedule-entry';
+  const branch=document.createElement('div');branch.className='schedule-branch';
+  const row=document.createElement('button');row.type='button';row.className='schedule-row';row.dataset.key=entry.key;
+  row.classList.toggle('selected',selectedBreakId===entry.key);
+  row.classList.toggle('is-emitting',playing(ads)&&activeBreak?.key===entry.key);
+  row.title='Doble clic para emitir '+entry.name+' ('+entry.hour+'). Enter también emite.';
+  row.setAttribute('aria-label',entry.hour+' '+entry.name+'. Doble clic para emitir.');
+  const hour=document.createElement('span');hour.className='schedule-hour';hour.textContent=entry.hour;
+  const info=document.createElement('span');
+  const name=document.createElement('span');name.className='schedule-name';name.textContent=entry.name;
+  const details=document.createElement('span');details.className='schedule-details';
+  const dayNames=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];
+  details.textContent=(entry.days.length===7?'TODOS LOS DÍAS':entry.days.map(d=>dayNames[d]||'').filter(Boolean).join(' · '))+' · '+(entry.policy==='exact'?'HORA EXACTA':'FIN DE TEMA');
+  info.append(name,details);
+  const status=document.createElement('span');status.className='schedule-status';
+  if(activeBreak?.key===entry.key&&playing(ads)){status.textContent='AL AIRE';status.classList.add('live')}
+  else if(pendingBreaks.some(x=>x.key===entry.key)){status.textContent='PENDIENTE';status.classList.add('due')}
+  else status.textContent=entry.adIds.length+' AVISOS';
+  row.append(hour,info,status);
+  row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.toggle('selected',r===row))};
+  row.ondblclick=()=>emitScheduledBreak(entry);
+  row.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();emitScheduledBreak(entry)}};
+  const children=document.createElement('div');children.className='schedule-children';children.hidden=collapsedBreaks.has(entry.key);
+  if(!entry.adIds.length){const empty=document.createElement('div');empty.textContent='↳ Sin avisos en esta tanda';children.append(empty)}
+  entry.adIds.forEach((id,i)=>{
+   const ad=breakAssets.get(id),child=document.createElement('div');child.className='schedule-child';
+   if(activeBreak?.key===entry.key&&playing(ads)&&index.ads===i)child.classList.add('is-playing');
+   const label=document.createElement('span');label.textContent='↳ '+String(i+1).padStart(2,'0')+' · '+(ad?.name||'ARCHIVO NO DISPONIBLE');
+   const length=document.createElement('span');length.textContent=formatBreakDuration(ad?.duration);
+   child.append(label,length);children.append(child);
+  });
+  const toggle=document.createElement('button');toggle.type='button';toggle.className='schedule-toggle';toggle.title='Mostrar u ocultar avisos';toggle.textContent=children.hidden?'▸':'▾';
+  toggle.onclick=()=>{children.hidden=!children.hidden;toggle.textContent=children.hidden?'▸':'▾';if(children.hidden)collapsedBreaks.add(entry.key);else collapsedBreaks.delete(entry.key)};
+  branch.append(toggle,row);
+  const lengths=entry.adIds.map(id=>breakAssets.get(id)?.duration);
+  const total=lengths.length&&lengths.every(Number.isFinite)?formatBreakDuration(lengths.reduce((a,b)=>a+b,0)):'--:--';
+  const foot=document.createElement('div');foot.className='schedule-foot';foot.textContent=entry.adIds.length+' avisos · DURACIÓN '+total;
+  wrap.append(branch,children,foot);host.append(wrap);
  }
- if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salida(s) · ordenadas por horario';
+ if(!selectedBreakId||!entries.some(e=>e.key===selectedBreakId))$('thirdNow').textContent=entries.length+' salidas · ordenadas por horario';
 }
 renderBreakSchedule();
 /* Biblioteca de jingles y separadores: misma base local RMR-Mediateca usada en el programa anterior. */
