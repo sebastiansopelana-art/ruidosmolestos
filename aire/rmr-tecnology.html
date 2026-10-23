@@ -542,36 +542,29 @@
 @media(max-width:1200px){.emission-controls{grid-template-columns:minmax(0,1fr) 300px minmax(0,1fr)}}
 @media(max-width:750px){.emission-controls{grid-template-columns:minmax(0,1fr) 200px minmax(0,1fr)}}
 
-/* Ficha técnica de la canción en aire: texto legible sin ocupar toda la consola. */
+
+/* Visor de aire simple: canción (incluye intérprete), autor, disco y año. */
 .console{height:206px}
-.console>.deck[aria-label="Música automática"]>.music-screen{gap:3px;display:flex;flex-direction:column;padding:6px 9px}
-.music-screen #musicNow{flex:0 0 auto!important;min-height:25px!important;max-height:39px!important;
- display:block!important;overflow:hidden;text-overflow:ellipsis;white-space:normal!important;
- font-size:17px!important;font-weight:900;line-height:19px;color:#eef9ff;padding:2px 0 1px!important;
- text-shadow:0 1px 6px #51bce842}
-.mh-track-meta{display:grid;grid-template-columns:minmax(0,1fr) 67px;gap:2px 6px;min-height:0;flex:1 1 auto;align-content:center}
-.mh-track-data{display:flex;align-items:center;gap:6px;min-width:0;line-height:14px}
-.mh-track-data strong{color:#78bddf;font-size:9px;letter-spacing:.3px;flex:0 0 auto}
-.mh-track-data span{font-size:11px;font-weight:600;color:#deeffa;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mh-track-data.mh-full{grid-column:1/-1}
-.mh-track-data.mh-year{justify-content:flex-end}
-.mh-track-actions{display:flex;align-items:center;gap:5px;flex:0 0 18px;min-width:0}
-.mh-track-actions button{height:19px;min-height:19px;flex:0 0 auto;padding:1px 7px;border:1px solid #467e9b;border-radius:3px;color:#b7edff;background:#163a50;font-weight:700;font-size:9px}
-.mh-track-actions button:hover{background:#255877}
-.mh-track-actions #mhTrackStatus{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#81aac0;min-width:0}
-.music-screen .deck-air-row{flex:0 0 13px;min-height:13px}
-.music-screen .next{flex:0 0 14px;font-size:10px;line-height:13px;padding-top:1px}
-#mhTrackEditor{width:min(470px,94vw);max-width:94vw;max-height:90vh;overflow-y:auto;border:1px solid #537b94;border-radius:9px;background:#102331;color:#e7f5fa;box-shadow:0 12px 50px #000a;padding:18px}
-#mhTrackEditor::backdrop{background:#0009}
-#mhTrackEditor h3{font-size:16px;margin:0 0 14px;color:#c6eeff}
-#mhTrackEditor label{display:flex;flex-direction:column;gap:4px;font-size:11px;margin:10px 0;color:#add2e5;font-weight:800}
-#mhTrackEditor input{height:34px;padding:7px;border-radius:4px;background:#081924;border:1px solid #547c93;color:#fff;font-size:12px}
-#mhTrackEditor .mh-meta-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:15px}
-#mhTrackEditor .mh-meta-actions button{min-height:39px;height:auto;padding:5px;border:1px solid #639fbe;background:#18415a;color:#fff;border-radius:4px;font-size:10px}
-#mhTrackEditor #mhMetaHint{font-size:10px;color:#9fc0cf;line-height:1.5;margin:11px 0 0}
-@media(max-width:1200px){.console{height:240px}.music-screen #musicNow{font-size:15px!important;line-height:17px}}
+.console>.deck[aria-label="Música automática"]>.music-screen.mh-simple-track{
+ display:flex;flex-direction:column;justify-content:center;align-items:stretch;
+ gap:9px;padding:9px 12px;background:#0b1923;overflow:hidden;min-height:0
+}
+.mh-simple-track #musicNow{
+ flex:0 0 auto!important;display:block!important;min-height:0!important;max-height:56px!important;
+ white-space:normal!important;overflow:hidden;text-overflow:ellipsis;
+ padding:0 0 5px!important;margin:0;line-height:1.24!important;
+ color:#f4fbff;font-size:clamp(16px,1.4vw,20px)!important;font-weight:900;
+ border-bottom:1px solid #26475c;text-shadow:none
+}
+.mh-simple-track .mh-track-meta{
+ flex:0 0 auto;display:flex;flex-direction:column;align-items:stretch;gap:6px;min-height:0;margin:0
+}
+.mh-simple-track .mh-track-line{display:grid;grid-template-columns:53px minmax(0,1fr);align-items:baseline;gap:7px;min-width:0}
+.mh-simple-track .mh-track-line strong{font-size:10px;font-weight:800;color:#8bbfdc;letter-spacing:.5px}
+.mh-simple-track .mh-track-line span{font-size:12px;font-weight:600;color:#e8f4ff;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:1200px){.console{height:240px}.mh-simple-track #musicNow{font-size:17px!important}}
 @media(max-width:850px){.console{height:276px}}
-@media(max-width:650px){.console{height:336px}.music-screen #musicNow{font-size:14px!important}}
+@media(max-width:650px){.console{height:336px}.mh-simple-track #musicNow{font-size:16px!important}}
 
 /* Sin caja/visor adicional: los 6 botones ocupan íntegramente el área superior
    del reproductor publicitario, de borde a borde y con filas iguales. */
@@ -626,17 +619,18 @@
 @media(prefers-reduced-motion:reduce){#thirdList .schedule-hour.on-air,#thirdList .schedule-row.is-emitting .schedule-hour{animation:none;background:#ba192b!important}}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
-<section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1><div class="music-screen">
-<div class="now" id="musicNow">Sin audio en reproducción</div>
-<div class="mh-track-meta" id="mhTrackMeta" aria-label="Ficha del tema actual">
-  <div class="mh-track-data"><strong>DISCO</strong><span id="mhTrackAlbum" data-i18n-ignore>—</span></div>
-  <div class="mh-track-data mh-year"><strong>AÑO</strong><span id="mhTrackYear" data-i18n-ignore>—</span></div>
-  <div class="mh-track-data mh-full"><strong>AUTORES</strong><span id="mhTrackWriter" data-i18n-ignore>—</span></div>
-  <div class="mh-track-data mh-full"><strong>GRABACIÓN</strong><span id="mhTrackArtist" data-i18n-ignore>—</span></div>
-</div>
-<div class="mh-track-actions"><button type="button" id="mhTrackLookup" title="Buscar disco, año y autores del tema">⌕ FICHA</button><button type="button" id="mhTrackEdit" title="Editar información del tema">✎</button><span id="mhTrackStatus" role="status">Cargá música para ver información del tema</span></div>
-<div class="deck-air-row"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div>
-<div class="next" id="musicNext">PRÓXIMO · Sin canciones</div></div></section>
+<section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
+<div class="music-screen mh-simple-track">
+  <div class="now" id="musicNow" data-i18n-ignore>Sin audio en reproducción</div>
+  <div class="mh-track-meta" id="mhTrackMeta" aria-label="Datos del tema actual">
+    <div class="mh-track-line"><strong>AUTOR</strong><span id="mhTrackWriter" data-i18n-ignore>—</span></div>
+    <div class="mh-track-line"><strong>DISCO</strong><span id="mhTrackAlbum" data-i18n-ignore>—</span></div>
+    <div class="mh-track-line"><strong>AÑO</strong><span id="mhTrackYear" data-i18n-ignore>—</span></div>
+  </div>
+  <span id="mhTrackStatus" class="mh-visually-hidden" role="status">La información se busca automáticamente al reproducir</span>
+  <div class="mh-visually-hidden"><span class="deck-air" id="musicAir" role="status" hidden>EN EL AIRE</span></div>
+  <div class="mh-visually-hidden" id="musicNext">PRÓXIMO · Sin canciones</div>
+</div></section>
 <section class="master" aria-label="Salida de aire compartida"><strong id="air">EN ESPERA</strong><div class="vu" id="vu" role="img" aria-label="Nivel real de la salida de audio"></div><div><input id="seek" aria-label="Progreso del audio en emisión" type="range" min="0" max="1000" value="0" disabled><div class="times"><span id="elapsed">00:00</span><span id="duration">00:00</span></div></div></section>
 <section class="deck" aria-label="Tandas publicitarias"><h1>TANDAS PUBLICITARIAS</h1><div class="ad-screen"><span id="adsNow" class="mh-visually-hidden" role="status" aria-live="polite">Sin tanda en reproducción</span>
 <div class="mh-ad-pad" role="group" aria-label="Control de tandas publicitarias">
@@ -777,16 +771,6 @@
   <footer class="config-foot"><span id="settingsSaved" role="status">Los cambios se aplican al guardar.</span><button type="button" class="mh-primary" id="saveConfig">GUARDAR Y CERRAR</button></footer>
 </form>
 </dialog>
-<dialog id="mhTrackEditor" aria-label="Editar información del tema">
-<form method="dialog" id="mhTrackEditForm"><h3>FICHA DEL TEMA</h3>
-<label>ARTISTA / GRABACIÓN<input type="text" id="mhMetaArtist" maxlength="180"></label>
-<label>TEMA<input type="text" id="mhMetaTitle" maxlength="180"></label>
-<label>DISCO<input type="text" id="mhMetaAlbum" maxlength="180"></label>
-<label>AÑO<input type="text" id="mhMetaYear" maxlength="12" placeholder="1991"></label>
-<label>AUTORES / COMPOSITORES<input type="text" id="mhMetaWriter" maxlength="300"></label>
-<div class="mh-meta-actions"><button type="button" id="mhMetaFind">BUSCAR EN INTERNET</button><button type="button" id="mhMetaSave">GUARDAR FICHA</button><button type="button" id="mhMetaCancel">CERRAR</button></div>
-<p id="mhMetaHint">La ficha se guarda en este navegador. Los campos faltantes se muestran como «—», sin inventar datos.</p>
-</form></dialog>
 <input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="programsFiles" accept="audio/*" multiple hidden><input type="file" id="thirdFiles" accept="audio/*" multiple hidden><input type="file" id="adsFiles" accept="audio/*" multiple hidden><audio id="musicAudio" preload="metadata"></audio><audio id="adsAudio" preload="metadata"></audio><audio id="programAudio" preload="metadata"></audio><audio id="thirdAudio" preload="metadata"></audio>
 <script>
 (()=>{
