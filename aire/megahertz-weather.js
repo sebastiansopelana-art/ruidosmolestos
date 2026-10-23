@@ -80,6 +80,36 @@ function alertState(data){
  }
  strip.title='Los avisos oficiales pueden no estar integrados para esta ubicación';
 }
+/* Compact seven-day outlook belongs inside the existing station display.
+   Dates and numbers come exclusively from the forecast API (no invented values). */
+function renderWeek(week){
+ const host=$('mhWeekStrip');
+ if(!host)return;
+ host.replaceChildren();
+ const days=Array.isArray(week)?week.slice(0,7).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x.date||'')):[];
+ if(days.length===0){
+  const empty=document.createElement('span');empty.className='mh-week-loading';
+  empty.textContent='SEMANA · Pronóstico no disponible';host.append(empty);return;
+ }
+ for(let i=0;i<days.length;i++){
+  const day=days[i],element=document.createElement('div');element.className='mh-week-day';
+  const date=new Date(day.date+'T12:00:00');
+  let name='--';try{
+   name=new Intl.DateTimeFormat(lang(),{weekday:'short'}).format(date).replace('.','').toUpperCase();
+  }catch(_){}
+  const ico=weatherCode(day.weather_code);
+  const row1=document.createElement('span');row1.className='day';row1.textContent=i===0?'HOY':name.slice(0,3);
+  const row2=document.createElement('span');row2.className='forecast-icon';row2.textContent=ico[1];
+  const row3=document.createElement('span');row3.className='temps';
+  row3.textContent=show(day.max,'°')+' / '+show(day.min,'°');
+  const row4=document.createElement('span');row4.className='rain';
+  row4.textContent=day.precipitation_probability===null||day.precipitation_probability===undefined?'':('☂ '+show(day.precipitation_probability,'%'));
+  element.title=day.date+' · '+ico[0]+' · Máx '+show(day.max,'°')+' · Mín '+show(day.min,'°')+
+    ' · Probabilidad de lluvia '+show(day.precipitation_probability,'%');
+  element.setAttribute('aria-label',element.title);
+  element.append(row1,row2,row3,row4);host.append(element);
+ }
+}
 function displayWeather(data){
  if(!data?.current)return;
  state.forecast=data;state.location=data.location;state.clockTZ=safeZone(data.location?.timezone);
@@ -100,7 +130,7 @@ function displayWeather(data){
  $('mhRain').textContent=show(c.precipitation,' mm',1);
  $('mhUV').textContent=show(air.uv_index,'',1);
  $('mhAQI').textContent=show(air.us_aqi);
- clock();alertState(data);renderDetails();
+ clock();alertState(data);renderWeek(data.week);renderDetails();
  const newsLoc=[location.city,location.region,location.country].join('|');
  if(state.lastNews!==newsLoc){state.lastNews=newsLoc;loadNews()}
 }
@@ -241,15 +271,47 @@ function countryFromDeviceTimeZone(){
  ];
  return zoneKnown.find(([pattern])=>pattern.test(zone))?.[1]||'';
 }
+function displayNationalHeadlines(items,label,updatedAt){
+ const host=$('mhNewsHeadlines'),name=$('mhNewsCountry'),update=$('mhNewsUpdated');
+ if(name)name.textContent=(label||'PAÍS').toLocaleUpperCase(lang()).slice(0,25);
+ host.replaceChildren();
+ if(update){
+  let time='';
+  if(updatedAt){try{time=new Intl.DateTimeFormat(lang(),{timeZone:state.clockTZ||undefined,hour:'2-digit',minute:'2-digit'}).format(new Date(updatedAt))}catch(_){}}
+  update.textContent=time?'ACT. '+time:'SIN DATOS';
+ }
+ if(!Array.isArray(items)||items.length===0){
+  const empty=document.createElement('div');empty.className='mh-news-empty';
+  empty.textContent='Todavía no hay titulares nacionales verificables para esta ubicación.';
+  host.append(empty);return;
+ }
+ for(const item of items.slice(0,9)){
+  try{
+   const target=new URL(item.url);if(target.protocol!=='https:')continue;
+   const a=document.createElement('a');a.className='mh-news-headline';
+   a.href=target.href;a.target='_blank';a.rel='noopener noreferrer';
+   const title=document.createElement('span');
+   title.textContent=short(item.title).toLocaleUpperCase(lang());
+   const outlet=document.createElement('span');outlet.className='mh-news-headline-source';
+   outlet.textContent=(item.source||'MEDIO').toLocaleUpperCase(lang());
+   a.append(title,outlet);host.append(a);
+  }catch(_){}
+ }
+ if(!host.children.length){
+  const empty=document.createElement('div');empty.className='mh-news-empty';
+  empty.textContent='No se encontraron titulares con enlaces verificables.';
+  host.append(empty);
+ }
+}
 async function loadNews(){
  const token=++newsSeq;
  const location=state.location||{},country=(location.country||'').toUpperCase();
- $('mhNewsRegion').textContent=country||'LOCAL';
- // On desktop with IP fallback, a VPN can put the IP in Taiwan while the
- // computer's timezone is Argentina. Do not show that country's headlines.
+ $('mhNewsRegion').textContent=country||'PAÍS';
  const deviceCountry=countryFromDeviceTimeZone();
  if(!country||(state.geoMode==='ip'&&deviceCountry&&deviceCountry!==country)){
-  state.news=null;animateNews([{title:'UBICACIÓN SIN CONFIRMAR · CONFIGURÁ TU CIUDAD EN CONFIGURACIÓN GENERAL',scope:'local'}]);
+  state.news=null;
+  displayNationalHeadlines([], 'UBICACIÓN', null);
+  animateNews([{title:'CONFIRMÁ EL PAÍS Y LA CIUDAD EN CONFIGURACIÓN GENERAL',scope:'nacional'}]);
   $('mhNewsRegion').textContent='UBIC.';
   return;
  }
@@ -261,16 +323,15 @@ async function loadNews(){
   const data=await requestJSON('/api/megahertz-news?'+query.toString(),13000);
   if(token!==newsSeq)return;
   if(data.country!==country)throw Error('La edición de noticias no corresponde a la ubicación');
-  if(!Array.isArray(data.items)||!data.items.length){
-   state.news=data;animateNews([{title:'SIN TITULARES VERIFICABLES PARA ESTA REGIÓN · SE REVISARÁ NUEVAMENTE',scope:'local'}]);
-   return;
-  }
-  state.news=data;
-  animateNews(data.items);
+  const nation=Array.isArray(data.nationalItems)?data.nationalItems:
+    Array.isArray(data.items)?data.items.filter(x=>x.scope==='nacional'):[];
+  state.news={...data,nationalItems:nation};
+  displayNationalHeadlines(nation,data.countryName||location.countryName||country,data.updatedAt);
+  animateNews(nation.length?nation:[{title:'SIN TITULARES NACIONALES POR AHORA · REINTENTO AUTOMÁTICO',scope:'nacional'}]);
  }catch(_){
   if(token!==newsSeq)return;
-  state.news=null;
-  animateNews([{title:'NOTICIAS LOCALES TEMPORALMENTE NO DISPONIBLES',scope:'local'}]);
+  state.news=null;displayNationalHeadlines([],location.countryName||country,null);
+  animateNews([{title:'INFORMACIÓN NACIONAL TEMPORALMENTE NO DISPONIBLE',scope:'nacional'}]);
  }
 }
 async function deviceLocation(force=false){
@@ -331,13 +392,13 @@ $('mhWeatherGPS').onclick=async()=>{
 };
 $('mhNewsSpeed').onchange=()=>{
  try{localStorage.setItem(newsSpeedKey,newsSpeed())}catch(_){}
- if(state.news?.items?.length)animateNews(state.news.items);
- else animateNews([{title:'SIN TITULARES LOCALES POR EL MOMENTO',scope:'local'}]);
+ if(state.news?.nationalItems?.length)animateNews(state.news.nationalItems);
+ else animateNews([{title:'SIN TITULARES NACIONALES POR EL MOMENTO',scope:'nacional'}]);
 };
 let configuredNewsSpeed='slow';
 try{configuredNewsSpeed=localStorage.getItem(newsSpeedKey)||'slow'}catch(_){}
 $('mhNewsSpeed').value=['slow','normal','fast'].includes(configuredNewsSpeed)?configuredNewsSpeed:'slow';
-animateNews([{title:'CONECTANDO TITULARES DE TU REGIÓN…',scope:'local'}]);
+animateNews([{title:'CONECTANDO TITULARES DEL PAÍS…',scope:'nacional'}]);
 clock();setInterval(clock,1000);
 setInterval(()=>{if(state.geoMode==='city'&&state.citySearch)requestWeather('?place='+encodeURIComponent(state.citySearch));
  else if(state.geoMode==='gps'&&state.location)requestWeather('?lat='+state.location.lat+'&lon='+state.location.lon+'&country='+encodeURIComponent(state.location.country||'')+'&city='+encodeURIComponent(state.location.city||'')+'&region='+encodeURIComponent(state.location.region||''));
