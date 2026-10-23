@@ -1257,6 +1257,44 @@
  #mhNationalNews .mh-news-picker label{font-size:7px}
  #mhNationalNews .mh-news-picker button{font-size:8px!important;padding:0 4px!important}
 }
+
+/* MEGAHERTZ COMMERCIAL IDENTITY — SKIN ONLY; no layout or playback changes.
+   Matching palette: graphite #080e16, petrol #111e2a, lime #baff59, cyan #63d2dc. */
+:root{--mh-brand-bg:#080e16;--mh-brand-surface:#111e2a;--mh-brand-panel:#172735;--mh-brand-line:#365267;--mh-brand-lime:#baff59;--mh-brand-cyan:#63d2dc;--mh-brand-text:#f4f9fc;--mh-brand-muted:#adbece}
+body{background:radial-gradient(ellipse at 75% 0%,#173846 0%,transparent 37%),#080e16!important;color:var(--mh-brand-text)}
+.console{background:linear-gradient(145deg,#192d3a,#0f1c29)!important;border-color:#4a6878!important;box-shadow:0 8px 35px #0006,inset 0 1px #ffffff0b}
+.deck h1,.list-head strong,.screen-title{color:#e7f4fb!important;text-shadow:0 0 12px #7cc9cc22}
+.now{background:#0c1a26!important;border-color:#3c576b!important;color:#f4f9fc!important}
+.next,.status,.empty{color:var(--mh-brand-muted)!important}
+.master{border-color:#375363!important}
+.vu{background:#081723!important;border-color:#3c5b67!important}
+.vu i{background:linear-gradient(180deg,#c3ff76,#63bfa0)!important}
+.list-panel,.mh-ad-news-column>.list-panel{background:linear-gradient(145deg,#172735,#0d1925)!important;border-color:#365267!important;box-shadow:0 10px 28px #0003}
+.list-head{background:linear-gradient(90deg,#213e45,#172a3b)!important;border-bottom-color:#365267!important}
+.list{background:#0d1b28!important}
+.track{color:#e7f3fa!important;border-bottom-color:#2a4153!important}
+.track.active,.track-row.active,.track-row.is-playing{background:#244334!important;border-left-color:#baff59!important}
+button{background:linear-gradient(180deg,#294658,#203546)!important;border-color:#4b6978!important;color:#f0f8fc!important}
+button:hover{background:linear-gradient(180deg,#345c68,#284954)!important;border-color:#80b7a8!important}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #baff59!important;outline-offset:2px}
+button[aria-pressed=true]{background:#2d5139!important;border-color:#a6e65d!important;color:#dfffba!important}
+input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea{background-color:#132938;color:#eaf7ff;border-color:#486778}
+input[type=range]{accent-color:#baff59}
+.live{color:#baff59!important;text-shadow:0 0 12px #baff5950}
+.mh-running{filter:drop-shadow(0 0 5px #baff5926)}
+#mhNationalNews,#adsPanel,#musicPanel,#programsPanel,#thirdPanel{border-color:#365267!important}
+#mhNationalNews .mh-news-picker{background:#102432!important;border-top-color:#365267!important}
+#mhNationalNews .mh-news-picker label{color:#b0e5dd!important}
+#mhNationalNews .mh-news-picker input{background:#132e3e!important;border-color:#476b7b!important;color:#f4f9fc!important}
+#mhNationalNews .mh-news-picker button{background:#294758!important;border-color:#527987!important}
+.mh-track-context-menu{background:linear-gradient(180deg,#264454,#122633)!important;border-color:#77af9a!important;box-shadow:0 12px 26px #020b12e0,0 0 10px #baff5920!important}
+.mh-track-context-menu button:hover{background:#355d50!important;outline-color:#baff59!important}
+#musicList .track-row.marked-next,#programsList .track-row.marked-next{background:#203d38!important;border-left-color:#baff59!important}
+#musicList .mh-next-badge,#programsList .mh-next-badge{background:#294936!important;border-color:#a9e763!important;color:#e3ffc3!important}
+/* Keep emergency/warning colors and control state distinct from the brand accent. */
+.error,[data-status=error],.danger,.warning{color:#ffada6}
+@media(prefers-reduced-motion:reduce){.console,.list-panel{box-shadow:none!important}}
+
 </style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
