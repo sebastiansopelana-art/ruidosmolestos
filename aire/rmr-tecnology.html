@@ -1213,6 +1213,19 @@
  font:900 8px/1 Arial,sans-serif;letter-spacing:.25px
 }
 #musicList .marked-next>.track>span:first-child,#programsList .marked-next>.track>span:first-child{flex:1;min-width:0}
+
+/* NORMAL / ALEATORIA: wider ninth segment, label hidden to prevent the
+   text from pushing the selector sideways on compact radio monitors. */
+#programsPanel .playlist-tools.mh-icon-tools{
+ grid-template-columns:repeat(8,minmax(0,1fr)) minmax(60px,2.5fr)!important
+}
+#programsPanel .playlist-tools.mh-icon-tools>.playlist-playmode>span{
+ display:none!important
+}
+#programsPanel .playlist-tools.mh-icon-tools>.playlist-playmode>select{
+ flex:1 1 100%!important;min-width:0!important;max-width:100%!important;
+ font-size:9px!important;text-align:center!important;text-align-last:center!important
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
