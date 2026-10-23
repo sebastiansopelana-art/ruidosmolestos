@@ -283,9 +283,9 @@
 .console>.emission-controls>.music-controls{grid-column:1!important;grid-row:1!important}
 .console>.emission-controls>.center-controls{grid-column:2!important;grid-row:1!important}
 .console>.deck.mh-weather-deck .mh-weather-screen{
- grid-template-rows:39px minmax(0,1fr) 56px!important;
- gap:5px!important;
- padding:6px 8px 7px!important;
+ grid-template-rows:32px minmax(0,1fr) 51px!important;
+ gap:3px!important;
+ padding:4px 7px 4px!important;
  min-height:0!important;
 }
 .console>.deck.mh-weather-deck .mh-weather-core{
@@ -319,7 +319,13 @@
  max-width:100%!important;text-align:right!important
 }
 .console>.deck.mh-weather-deck .mh-week-day{
- gap:2px!important;padding:3px 2px!important
+ gap:0!important;padding:1px 2px!important
+}
+.console>.deck.mh-weather-deck .mh-clock-stage{
+ height:32px!important;padding:2px 8px 1px!important
+}
+.console>.deck.mh-weather-deck .mh-clock{
+ font-size:clamp(20px,1.95vw,26px)!important
 }
 @media(max-width:1200px){
  .console>.deck.mh-weather-deck .mh-weather-core{gap:5px!important}
