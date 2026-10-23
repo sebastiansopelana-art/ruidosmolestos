@@ -191,14 +191,18 @@ function newsSpeed(){
 function tickerReel(items){
  const group=document.createElement('div');group.className='mh-news-reel';
  for(const item of items){
+  const scope=item.scope==='local'?'LOCAL':item.scope==='provincial'?'PROVINCIA':'NACIONAL';
+  const text=(scope+' · '+short(item.title)+(item.source?' · '+short(item.source):'')).toLocaleUpperCase(lang());
   try{
-   const url=new URL(item.url);
-   if(url.protocol!=='https:')continue;
-   const link=document.createElement('a');
-   link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';
-   const scope=item.scope==='local'?'LOCAL':item.scope==='provincial'?'PROVINCIA':'NACIONAL';
-   link.textContent=(scope+' · '+short(item.title)+(item.source?' · '+short(item.source):'')).toLocaleUpperCase(lang());
-   group.append(link);
+   if(item.url){
+    const url=new URL(item.url);
+    if(url.protocol!=='https:')continue;
+    const link=document.createElement('a');
+    link.href=url.href;link.target='_blank';link.rel='noopener noreferrer';
+    link.textContent=text;group.append(link);
+   }else{
+    const label=document.createElement('span');label.textContent=text;group.append(label);
+   }
   }catch(_){}
  }
  return group;
@@ -213,6 +217,7 @@ function animateNews(items){
   first.append(fallback);
  }
  const duplicate=first.cloneNode(true);duplicate.setAttribute('aria-hidden','true');
+ for(const link of duplicate.querySelectorAll('a'))link.tabIndex=-1;
  root.replaceChildren(first,duplicate);
  const chars=content.reduce((total,item)=>total+(item.title?.length||0)+(item.source?.length||0)+18,0);
  const multiplier=newsSpeed()==='fast'?.16:newsSpeed()==='normal'?.23:.34;
@@ -270,7 +275,7 @@ async function loadNews(){
 }
 async function deviceLocation(force=false){
  const geo=navigator.geolocation;
- if(!geo){await requestWeather('');return}
+ if(!geo){state.geoMode='ip';await requestWeather('');return}
  const coords=await new Promise(resolve=>{
   let settled=false;
   const done=x=>{if(!settled){settled=true;resolve(x)}};
