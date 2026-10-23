@@ -325,7 +325,7 @@ async function loadNews(){
  const headerPlace=state.newsOverride?.label||location.countryName||country;
  if($('mhNewsUpdated'))$('mhNewsUpdated').textContent='BUSCANDO…';
  try{
-  const data=await requestJSON('/api/megahertz-news?'+query.toString(),13000);
+  const data=await requestJSON('/api/megahertz-news?'+query.toString(),26000);
   if(token!==newsSeq)return;
   if(data.country!==country)throw Error('La edición de noticias no corresponde a la ubicación');
   const nation=Array.isArray(data.nationalItems)?data.nationalItems:
