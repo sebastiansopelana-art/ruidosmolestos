@@ -282,7 +282,7 @@ async function loadNews(){
  }
  const query=new URLSearchParams({
   country,city:location.city||'',region:location.region||'',
-  countryName:location.countryName||''
+  countryName:location.countryName||'',rev:'news-v3'
  });
  const headerPlace=state.newsOverride?.label||location.countryName||country;
  if($('mhNewsUpdated'))$('mhNewsUpdated').textContent='BUSCANDO…';
@@ -296,6 +296,14 @@ async function loadNews(){
   const title=state.newsOverride?.label||data.countryName||location.countryName||country;
   displayNationalHeadlines(nation,title,nation.length?data.updatedAt:null,
    data.error||'No hay noticias disponibles en esta edición. Se reintentará automáticamente.');
+  // The version is visible: a stale deployment cannot silently masquerade as the updated engine.
+  const isV3=String(data.engineVersion||'').includes('news-api-v3');
+  const status=$('mhNewsUpdated');
+  if(status&&nation.length){
+   status.textContent=(isV3?'V3':'ANT.')+' · '+nation.length+' NOT.';
+   status.title=(isV3?'Motor mundial actualizado':'Respuesta de un motor anterior')+
+    ' · '+(data.source||'')+' · '+(data.updatedAt||'');
+  }
   $('mhNewsRegion').textContent=country;
   if(!nation.length&&data.status==='unavailable')$('mhNewsUpdated').textContent='SIN FUENTES';
   const diag=$('mhNewsHeadlines');
