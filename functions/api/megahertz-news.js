@@ -65,10 +65,12 @@ export async function onRequestGet({request}){
  if(!/^[A-Z]{2}$/.test(country)||!countryName||country==='XX')return reply({
   available:false,items:[],country:'',city,region,error:'Configurá una ciudad y un país para recibir noticias locales.'});
  const [hl,lang]=(editions[country]||['en','en']);
+ let localizedCountryName=countryName;
+ try{localizedCountryName=new Intl.DisplayNames([hl.split('-')[0]],{type:'region'}).of(country)||countryName}catch(_){}
  const params='hl='+encodeURIComponent(hl)+'&gl='+encodeURIComponent(country)+'&ceid='+encodeURIComponent(country+':'+lang);
  const termCity=city&&!/^-?\d+(?:\.\d+)?°?,/.test(city)?'"'+city.replace(/["\\]/g,'').slice(0,80)+'"':'';
  const termRegion=region&&region.toLowerCase()!==city.toLowerCase()?'"'+region.replace(/["\\]/g,'').slice(0,80)+'"':'';
- const national='"'+countryName.replace(/["\\]/g,'').slice(0,80)+'"';
+ const national='"'+localizedCountryName.replace(/["\\]/g,'').slice(0,80)+'"';
  // IMPORTANT: Never use the global top-stories RSS here. It may show Taiwan,
  // US politics etc. even with gl=AR. Search exact local terms instead.
  const [local,province,nation]=await Promise.all([
