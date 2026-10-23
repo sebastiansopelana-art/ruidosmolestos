@@ -1,15 +1,12 @@
-/* MEGAHERTZ · Ficha técnica del tema al aire.
-   Primero etiquetas ID3 del archivo, luego caché editable, y opcionalmente
-   catálogo MusicBrainz. Nunca inventar discografía ni créditos desconocidos.
-   MusicBrainz: <= 1 pedido por segundo. Uso comercial requiere acuerdo. */
+/* MEGAHERTZ · Datos del tema: título, autor, disco y año.
+   Etiquetas ID3 locales + búsqueda automática MusicBrainz, sin controles de ficha. */
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
-const storageKey='megahertz-track-metadata-v1';
 const api='https://musicbrainz.org/ws/2/';
-const fields=['title','artist','album','year','writer'];
-let cache={},track=null,trackKey='',meta={},serial=0,lastRequest=0;
-try{const raw=JSON.parse(localStorage.getItem(storageKey)||'{}');if(raw&&typeof raw==='object'&&!Array.isArray(raw))cache=raw}catch(_){}
+const storageKey='megahertz-track-metadata-v1';
+let cache={},current={},fileName='',generation=0,lastApiAt=0,apiQueue=Promise.resolve();
+try{const data=JSON.parse(localStorage.getItem(storageKey)||'{}');if(data&&typeof data==='object'&&!Array.isArray(data))cache=data}catch(_){}
 const clean=s=>String(s||'').replace(/\0/g,'').replace(/\s+/g,' ').trim();
 const normalized=s=>clean(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
 function filenameData(filename){
@@ -64,175 +61,123 @@ async function readId3(file){
    };
  }catch(_){return {}}
 }
-const getEditor=()=>Object.fromEntries(fields.map(f=>[f,clean($('mhMeta'+f[0].toUpperCase()+f.slice(1))?.value)]));
-function setEditor(data){
- for(const f of fields){const el=$('mhMeta'+f[0].toUpperCase()+f.slice(1));if(el)el.value=data[f]||''}
+
+function creditName(credits){
+ if(!Array.isArray(credits))return '';
+ return clean(credits.map(x=>typeof x==='string'?x:(x.name||x.artist?.name||'')+(x.joinphrase||'')).join(''));
 }
-function render(data,status){
- const d=data||{};
- $('mhTrackAlbum').textContent=d.album||'—';
- $('mhTrackYear').textContent=d.year||'—';
- $('mhTrackWriter').textContent=d.writer||'—';
- $('mhTrackArtist').textContent=d.artist||'—';
- const original=track?.name||'Sin audio en reproducción';
- $('musicNow').textContent=d.title?(d.artist?d.artist+' · ':'')+d.title:original;
- $('mhTrackStatus').textContent=status||d.source||'Datos incompletos · podés editar la ficha';
- $('mhTrackAlbum').title=d.album||'';
- $('mhTrackWriter').title=d.writer||'';
- $('mhTrackArtist').title=d.artist||'';
+function present(status){
+ const title=clean(current.title)||'Sin audio en reproducción';
+ $('musicNow').textContent=(current.artist?current.artist+' — ':'')+title;
+ $('mhTrackWriter').textContent=current.writer||'—';
+ $('mhTrackAlbum').textContent=current.album||'—';
+ $('mhTrackYear').textContent=current.year||'—';
+ $('mhTrackStatus').textContent=status||'Datos de la canción';
+ for(const [id,value] of [['mhTrackWriter',current.writer],['mhTrackAlbum',current.album],['mhTrackYear',current.year]])$(id).title=value||'Dato no disponible';
 }
-function save(data){
- if(!trackKey)return;
- cache[trackKey]={...data,updated:Date.now()};
- try{localStorage.setItem(storageKey,JSON.stringify(cache))}catch(_){}
-}
-function artistCredit(credit){
- if(!Array.isArray(credit))return '';
- return clean(credit.map(x=>typeof x==='string'?x:(x.name||x.artist?.name||'')+(x.joinphrase||'')).join(''));
-}
-function catalogEntry(recording){
- const releaseList=Array.isArray(recording.releases)?recording.releases:[];
- const sorted=releaseList.slice().sort((a,b)=>
-   Number(b['release-group']?.['primary-type']==='Album')-Number(a['release-group']?.['primary-type']==='Album'));
- const release=sorted[0]||{},album=release['release-group']?.title||release.title||'';
- const year=clean(recording['first-release-date']||release.date||'').slice(0,4);
- return {title:clean(recording.title),artist:artistCredit(recording['artist-credit']),
-   album:clean(album),year:/^\d{4}$/.test(year)?year:'',writer:'',source:'MusicBrainz'};
-}
-function sourceIsStrong(x){return !!(x?.manual||x?.source==='Créditos verificados')}
-function hydrated(d){return ['title','artist','album','year','writer'].filter(f=>!!clean(d[f])).length}
-function matchCatalog(candidates,query){
- if(!candidates?.length)return null;
- const a=normalized(query.artist),t=normalized(query.title);
- const scores=candidates.filter(r=>{
-   const b=normalized(artistCredit(r['artist-credit'])),title=normalized(r.title);
-   return (!a||b===a||b.includes(a)||a.includes(b)) &&
-     (!t||title===t||title.includes(t)||t.includes(title));
- }).map(r=>{
-   const b=normalized(artistCredit(r['artist-credit'])),s=normalized(r.title);
-   let score=Number(r.score)||0;
-   if(t&&s===t)score+=45;else if(t&&s.includes(t))score+=15;else score-=40;
-   if(a&&b===a)score+=45;else if(a&&b.includes(a))score+=12;else if(a)score-=45;
-   return {r,score};
- }).sort((x,y)=>y.score-x.score);
- const best=scores[0];return best&&best.score>=70?best.r:null;
-}
-async function rateLimitedJSON(path){
- const elapsed=Date.now()-lastRequest;
- if(elapsed<1100)await new Promise(r=>setTimeout(r,1100-elapsed));
- lastRequest=Date.now();
- const ctl=typeof AbortController==='function'?new AbortController():null;
- const timer=ctl?setTimeout(()=>ctl.abort(),9500):null;
- try{
-   const response=await fetch(api+path,{headers:{Accept:'application/json'},signal:ctl?.signal});
-   if(!response.ok)throw Error('Catálogo no disponible ('+response.status+')');
-   return await response.json();
- }finally{if(timer)clearTimeout(timer)}
-}
-function writersFromRelations(recording){
- const names=new Set(),rels=Array.isArray(recording.relations)?recording.relations:[];
- const add=relation=>{
-   if(!['composer','lyricist','writer','librettist'].includes(relation.type))return;
-   const name=clean(relation.artist?.name||relation.artist?.['sort-name']||'');
-   if(name)names.add(name);
- };
- for(const rel of rels){
-   if(rel['target-type']==='artist')add(rel);
-   if(rel['target-type']==='work'||rel.work)
-     for(const workRel of rel.work?.relations||[])if(workRel['target-type']==='artist'||workRel.artist)add(workRel);
+function persist(){if(!fileName)return;cache[fileName]={...current,updated:Date.now()};try{localStorage.setItem(storageKey,JSON.stringify(cache))}catch(_){}}
+function clear(){generation++;fileName='';current={};$('musicNow').textContent='Sin audio en reproducción';for(const id of ['mhTrackWriter','mhTrackAlbum','mhTrackYear'])$(id).textContent='—';$('mhTrackStatus').textContent='Esperando audio'}
+function chooseCandidate(list,query){
+ const artist=normalized(query.artist),title=normalized(query.title);
+ const matched=(Array.isArray(list)?list:[]).filter(r=>{
+   const n=normalized(r.title),a=normalized(creditName(r['artist-credit']));
+   if(!title||n!==title)return false;
+   if(artist&&(!a||(!a.includes(artist)&&!artist.includes(a))))return false;
+   return true;
+ }).sort((a,b)=>(Number(b.score)||0)-(Number(a.score)||0));
+ if(!matched.length)return null;
+ if(!artist){
+   if(Number(matched[0].score||0)<95)return null;
+   const first=normalized(creditName(matched[0]['artist-credit']));
+   if(matched.some(r=>normalized(creditName(r['artist-credit']))!==first))return null;
  }
- return [...names].join(', ');
+ return matched[0];
 }
-let lookupInProgress=false;
-async function lookup(query,force=false){
- const token=serial;
- if(!clean(query.title)||!clean(query.artist)){
-   render(meta,'Completá artista y título en ✎ para buscar en internet');
-   return;
+function albumData(recording){
+ const releases=Array.isArray(recording.releases)?recording.releases:[];
+ const albumReleases=releases.filter(r=>r['release-group']?.['primary-type']==='Album');
+ const candidates=(albumReleases.length?albumReleases:releases).slice().sort((a,b)=>clean(a.date||'9999').localeCompare(clean(b.date||'9999')));
+ const release=candidates[0]||{};
+ const first=clean(recording['first-release-date']||release.date||'').slice(0,4);
+ return {album:clean(release['release-group']?.title||release.title||''),year:/^\d{4}$/.test(first)?first:''};
+}
+function writersFrom(relations){
+ const writers=new Set();
+ for(const r of Array.isArray(relations)?relations:[]){
+   if(!['composer','lyricist','writer','librettist'].includes(r.type))continue;
+   const name=clean(r.artist?.name||r.artist?.['sort-name']);
+   if(name)writers.add(name);
  }
- if(lookupInProgress&&!force)return;
- lookupInProgress=true;
- render(meta,'Buscando datos del tema…');
- try{
-   const safe=t=>clean(t).replace(/["\\]/g,'').slice(0,100);
-   const lucene='recording:"'+safe(query.title)+'" AND artist:"'+safe(query.artist)+'"';
-   const searched=await rateLimitedJSON('recording?fmt=json&limit=6&query='+encodeURIComponent(lucene));
-   if(serial!==token)return;
-   const candidate=matchCatalog(searched.recordings,query);
-   if(!candidate){render(meta,'Sin coincidencia fiable; editá la ficha si hace falta');return}
-   const result=catalogEntry(candidate);
-   let enriched={...meta};
-   for(const key of fields)if(result[key]&&(force||!enriched[key]))enriched[key]=result[key];
+ return [...writers].join(', ');
+}
+function apiGet(relative,token){
+ const task=apiQueue.catch(()=>{}).then(async()=>{
+   const delay=Math.max(0,lastApiAt+1200-Date.now());
+   if(delay)await new Promise(resolve=>setTimeout(resolve,delay));
+   if(token!==generation)throw Error('Canción anterior');
+   lastApiAt=Date.now();
+   const abort=typeof AbortController==='function'?new AbortController():null;
+   const timeout=abort?setTimeout(()=>abort.abort(),9500):null;
    try{
-     // Recording -> work -> artist credits, when available.
-     if(!enriched.writer&&candidate.id){
-       const details=await rateLimitedJSON('recording/'+encodeURIComponent(candidate.id)+'?fmt=json&inc=work-rels+work-level-rels+artist-rels+releases');
-       if(serial!==token)return;
-       enriched.writer=writersFromRelations(details)||'';
-     }
-   }catch(_){ /* Credits not available: do not guess authors. */ }
-   if(serial!==token)return;
-   enriched.source='MusicBrainz';
-   meta=enriched;
-   save(meta);render(meta,'Ficha consultada · MusicBrainz');
- }catch(e){
-   if(serial!==token)return;
-   render(meta,'Sin conexión con el catálogo; editá si falta información');
- }finally{lookupInProgress=false}
+     const response=await fetch(api+relative,{headers:{Accept:'application/json'},signal:abort?.signal});
+     if(!response.ok)throw Error('Servicio no disponible ('+response.status+')');
+     return await response.json();
+   }finally{if(timeout!==null)clearTimeout(timeout)}
+ });
+ apiQueue=task.catch(()=>{});
+ return task;
 }
-const known={
- 'divididos|ala delta':{
-   title:'Ala delta',artist:'Divididos',album:'Acariciando lo áspero',year:'1991',
-   writer:'Ricardo Mollo, Diego Arnedo, Federico Gil Solá',source:'Créditos verificados'
- }
-};
-function curated(data){
- const title=normalized(data.title).replace(/^a la delta$/,'ala delta');
- return known[normalized(data.artist)+'|'+title]||null;
+async function lookup(token){
+ if(!current.title||navigator.onLine===false)return;
+ const previous=cache[fileName];
+ if(previous?.lookupAt&&Date.now()-previous.lookupAt<7*86400000)return;
+ present('Buscando información del tema en internet…');
+ try{
+   const escape=t=>clean(t).replace(/["\\]/g,'').slice(0,100);
+   const query='recording:"'+escape(current.title)+'"'+(current.artist?' AND artist:"'+escape(current.artist)+'"':'');
+   const results=await apiGet('recording?fmt=json&limit=12&query='+encodeURIComponent(query),token);
+   if(token!==generation)return;
+   const choice=chooseCandidate(results.recordings,current);
+   if(!choice){present('Sin coincidencia fiable');return}
+   const album=albumData(choice);
+   if(!current.artist)current.artist=creditName(choice['artist-credit']);
+   if(!current.album&&album.album)current.album=album.album;
+   if(!current.year&&album.year)current.year=album.year;
+   if(!current.writer&&choice.id){
+     try{
+       const rec=await apiGet('recording/'+encodeURIComponent(choice.id)+'?fmt=json&inc=work-rels+artist-rels+releases',token);
+       if(token!==generation)return;
+       current.writer=writersFrom(rec.relations);
+       if(!current.album)current.album=albumData(rec).album;
+       if(!current.year)current.year=albumData(rec).year;
+       if(!current.writer){
+         const workRel=(rec.relations||[]).find(r=>r['target-type']==='work'&&r.work?.id);
+         if(workRel?.work?.id){
+           const work=await apiGet('work/'+encodeURIComponent(workRel.work.id)+'?fmt=json&inc=artist-rels',token);
+           if(token!==generation)return;
+           current.writer=writersFrom(work.relations);
+         }
+       }
+     }catch(e){if(token!==generation)return}
+   }
+   if(token!==generation)return;
+   current.lookupAt=Date.now();current.source='MusicBrainz';persist();
+   present('Información musical recuperada');
+ }catch(e){if(token===generation)present('Sin conexión al catálogo; se usan datos del archivo')}
 }
 async function show(item){
- const token=++serial;track=item||null;trackKey=clean(item?.name||'');
- const base=filenameData(trackKey);
- meta={...base,album:'',year:'',writer:'',source:'Nombre de archivo'};
- const previous=cache[trackKey];
- if(previous){meta={...meta,...previous};render(meta,previous.manual?'Ficha guardada manualmente':'Ficha guardada')}
- else render(meta,'Leyendo datos del archivo…');
- const embedded=await readId3(item?.file);
- if(serial!==token)return;
- if(!sourceIsStrong(previous)){
-   for(const f of fields)if(embedded[f])meta[f]=embedded[f];
-   if(hydrated(embedded)>0)meta.source='Etiquetas ID3';
-   const verified=curated(meta);
-   if(verified&&!previous)meta={...meta,...verified};
-   if(!previous||hydrated(embedded)>0||verified)save(meta);
- }
- render(meta,meta.source||'Ficha disponible');
- if(!sourceIsStrong(meta)&&meta.source!=='MusicBrainz'&&!meta.writer&&meta.artist&&meta.title&&navigator.onLine!==false)
-   lookup({title:meta.title,artist:meta.artist});
+ const token=++generation;
+ fileName=clean(item?.name);
+ const base=filenameData(fileName),previous=cache[fileName]||{};
+ current={title:base.title||'',artist:base.artist||'',album:'',writer:'',year:'',...previous};
+ present('Leyendo etiquetas de audio…');
+ if(previous.manual)return; // Respect previously entered manual corrections.
+ const tags=await readId3(item?.file);
+ if(token!==generation)return;
+ for(const field of ['title','artist','album','year','writer'])if(tags[field])current[field]=tags[field];
+ present('Información del archivo disponible');
+ await lookup(token);
+ if(token===generation){persist();present('Información del tema disponible')}
 }
-$('mhTrackLookup').onclick=()=>{
- if(!track){render(meta,'Primero reproducí una canción');return}
- if(!meta.artist||!meta.title){$('mhTrackEdit').click();return}
- lookup(meta,true);
-};
-$('mhTrackEdit').onclick=()=>{
- if(!track){$('mhTrackStatus').textContent='Primero reproducí un tema';return}
- setEditor(meta);$('mhTrackEditor').showModal();
-};
-$('mhMetaCancel').onclick=()=>$('mhTrackEditor').close();
-$('mhMetaSave').onclick=()=>{
- if(!track)return;
- const data=getEditor();
- if(!data.title){$('mhMetaHint').textContent='Completá como mínimo el título.';return}
- meta={...data,source:'Ficha manual',manual:true};
- save(meta);render(meta,'Ficha guardada manualmente');$('mhTrackEditor').close();
-};
-$('mhMetaFind').onclick=async()=>{
- const search=getEditor();if(!search.artist||!search.title){$('mhMetaHint').textContent='Escribí artista y título para buscar.';return}
- $('mhTrackEditor').close();meta={...meta,title:search.title,artist:search.artist};
- await lookup(search,true);
- setEditor(meta);
- $('mhTrackEditor').showModal();
-};
-window.megahertzTrackInfo={show,lookup,getCurrent:()=>({...meta})};
+window.megahertzTrackInfo={show,clear,getCurrent:()=>({...current})};
 })();
