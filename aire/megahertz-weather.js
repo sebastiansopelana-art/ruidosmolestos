@@ -6,7 +6,8 @@
 const $=id=>document.getElementById(id);
 const manualPlaceKey='megahertz-weather-chosen-city-v1';
 const newsSpeedKey='megahertz-news-ticker-speed-v1';
-const state={forecast:null,location:null,geoMode:'',citySearch:'',busy:false,news:null,clockTZ:null,lastCoords:null,lastNews:null};
+const newsPlaceKey='megahertz-news-selected-location-v1';
+const state={forecast:null,location:null,geoMode:'',citySearch:'',busy:false,news:null,clockTZ:null,lastCoords:null,lastNews:null,newsOverride:null};
 let weatherSeq=0,newsSeq=0;
 const short=s=>String(s||'').trim().slice(0,160);
 const n=v=>v===null||v===undefined||!Number.isFinite(Number(v))?null:Number(v);
@@ -271,7 +272,7 @@ function countryFromDeviceTimeZone(){
  ];
  return zoneKnown.find(([pattern])=>pattern.test(zone))?.[1]||'';
 }
-function displayNationalHeadlines(items,label,updatedAt){
+function displayNationalHeadlines(items,label,updatedAt,emptyMessage){
  const host=$('mhNewsHeadlines'),name=$('mhNewsCountry'),update=$('mhNewsUpdated');
  if(name)name.textContent=(label||'PAÍS').toLocaleUpperCase(lang()).slice(0,25);
  host.replaceChildren();
@@ -282,7 +283,7 @@ function displayNationalHeadlines(items,label,updatedAt){
  }
  if(!Array.isArray(items)||items.length===0){
   const empty=document.createElement('div');empty.className='mh-news-empty';
-  empty.textContent='Todavía no hay titulares nacionales verificables para esta ubicación.';
+  empty.textContent=emptyMessage||'Todavía no hay titulares disponibles para la ubicación seleccionada.';
   host.append(empty);return;
  }
  for(const item of items.slice(0,9)){
@@ -305,12 +306,12 @@ function displayNationalHeadlines(items,label,updatedAt){
 }
 async function loadNews(){
  const token=++newsSeq;
- const location=state.location||{},country=(location.country||'').toUpperCase();
+ const location=state.newsOverride||state.location||{},country=(location.country||'').toUpperCase();
  $('mhNewsRegion').textContent=country||'PAÍS';
  const deviceCountry=countryFromDeviceTimeZone();
- if(!country||(state.geoMode==='ip'&&deviceCountry&&deviceCountry!==country)){
+ if(!country||(!state.newsOverride&&state.geoMode==='ip'&&deviceCountry&&deviceCountry!==country)){
   state.news=null;
-  displayNationalHeadlines([], 'UBICACIÓN', null);
+  displayNationalHeadlines([], 'UBICACIÓN', null,'Seleccioná un país en la barra de búsqueda del noticiero.');
   animateNews([{title:'CONFIRMÁ EL PAÍS Y LA CIUDAD EN CONFIGURACIÓN GENERAL',scope:'nacional'}]);
   $('mhNewsRegion').textContent='UBIC.';
   return;
@@ -319,6 +320,8 @@ async function loadNews(){
   country,city:location.city||'',region:location.region||'',
   countryName:location.countryName||''
  });
+ const headerPlace=state.newsOverride?.label||location.countryName||country;
+ if($('mhNewsUpdated'))$('mhNewsUpdated').textContent='BUSCANDO…';
  try{
   const data=await requestJSON('/api/megahertz-news?'+query.toString(),13000);
   if(token!==newsSeq)return;
@@ -326,11 +329,13 @@ async function loadNews(){
   const nation=Array.isArray(data.nationalItems)?data.nationalItems:
     Array.isArray(data.items)?data.items.filter(x=>x.scope==='nacional'):[];
   state.news={...data,nationalItems:nation};
-  displayNationalHeadlines(nation,data.countryName||location.countryName||country,data.updatedAt);
-  animateNews(nation.length?nation:[{title:'SIN TITULARES NACIONALES POR AHORA · REINTENTO AUTOMÁTICO',scope:'nacional'}]);
+  const title=state.newsOverride?.label||data.countryName||location.countryName||country;
+  displayNationalHeadlines(nation,title,nation.length?data.updatedAt:null,data.error);
+  $('mhNewsRegion').textContent=country;
+  animateNews(nation.length?nation:[{title:'SIN TITULARES DE ESTA ZONA POR AHORA · REINTENTO AUTOMÁTICO',scope:'nacional'}]);
  }catch(_){
   if(token!==newsSeq)return;
-  state.news=null;displayNationalHeadlines([],location.countryName||country,null);
+  state.news=null;displayNationalHeadlines([],headerPlace,null,'Sin conexión con el servicio de noticias. Se reintentará automáticamente.');
   animateNews([{title:'INFORMACIÓN NACIONAL TEMPORALMENTE NO DISPONIBLE',scope:'nacional'}]);
  }
 }
@@ -395,6 +400,105 @@ $('mhNewsSpeed').onchange=()=>{
  if(state.news?.nationalItems?.length)animateNews(state.news.nationalItems);
  else animateNews([{title:'SIN TITULARES NACIONALES POR EL MOMENTO',scope:'nacional'}]);
 };
+
+// Country or region selector belongs to news, not to the weather location.
+// Country names are resolved via built-in CLDR names in many languages, so
+// nothing in this selector hardcodes Argentine portals or restricts countries.
+const newsNormalize=value=>String(value||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^\p{L}\p{N}]+/gu,' ').trim();
+const newsCountries=(()=>{
+ const names=[],seen=new Set(),locales=['es','en','pt','fr','de','it'];
+ const formatter=locales.map(l=>{try{return new Intl.DisplayNames([l],{type:'region'})}catch(_){return null}});
+ const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+ for(const a of alphabet)for(const b of alphabet){
+  const code=a+b,display=formatter.map(f=>{try{return f?.of(code)||''}catch(_){return''}});
+  if(display[0]===code||['EU','UN','EZ','QO','XA','XB','ZZ'].includes(code))continue;
+  const key=newsNormalize(display[0]);
+  if(!key||seen.has(code))continue;
+  seen.add(code);names.push({country:code,name:display[0],names:display});
+ }
+ return names.sort((a,b)=>a.name.localeCompare(b.name,'es'));
+})();
+function newsCountryMatch(value){
+ const query=newsNormalize(value);if(!query)return null;
+ const synonyms={usa:'US',eeuu:'US','estados unidos':'US',uk:'GB','reino unido':'GB',
+  'brasil':'BR','brazil':'BR','corea del sur':'KR','corea del norte':'KP',
+  'paises bajos':'NL','países bajos':'NL','republica checa':'CZ','republica dominicana':'DO'};
+ const alias=synonyms[query];
+ return newsCountries.find(c=>c.country.toLowerCase()===query||c.country===alias||
+  c.names.some(name=>newsNormalize(name)===query))||null;
+}
+async function resolveNewsPlace(value){
+ const input=short(value),chunks=input.split(',').map(s=>s.trim()).filter(Boolean);
+ if(!input)throw Error('Escribí un país o una región.');
+ const matching=newsCountryMatch(input);
+ if(matching)return {country:matching.country,countryName:matching.name,region:'',city:'',label:matching.name};
+ const suffix=chunks.length>1?newsCountryMatch(chunks[chunks.length-1]):null;
+ if(suffix){
+  const region=chunks.slice(0,-1).join(', ');
+  return {country:suffix.country,countryName:suffix.name,region,city:'',
+   label:region+' · '+suffix.name};
+ }
+ // A region without country is resolved using a real geocoder. Prefer the
+ // broadcaster's currently selected country when more than one town matches.
+ const address='https://geocoding-api.open-meteo.com/v1/search?'+new URLSearchParams({
+  name:chunks[0],count:'30',language:'es',format:'json'
+ });
+ const response=await requestJSON(address,9500);
+ const found=(response.results||[]).filter(p=>/^[A-Z]{2}$/.test(p.country_code||''));
+ if(!found.length)throw Error('No encontramos esa región. Probá “Región, País”.');
+ const wantedCountry=state.newsOverride?.country||state.location?.country;
+ const place=found.find(p=>p.country_code===wantedCountry&&newsNormalize(p.name)===newsNormalize(chunks[0]))||
+  found.find(p=>newsNormalize(p.name)===newsNormalize(chunks[0]))||found[0];
+ const country=newsCountryMatch(place.country_code);
+ const countryName=country?.name||place.country||place.country_code;
+ return {country:place.country_code,countryName,region:place.admin1||place.name||'',
+  city:place.name||'',label:(place.name||place.admin1)+' · '+countryName};
+}
+function updateNewsPicker(){
+ const field=$('mhNewsPlaceInput');
+ if(!field)return;
+ field.value=state.newsOverride?.label||'';
+ field.title=state.newsOverride?'Edición seleccionada: '+state.newsOverride.label:
+  'Automático: se usa la ubicación del clima';
+}
+function newsPickerMessage(message){
+ const el=$('mhNewsUpdated');if(el)el.textContent=short(message);
+}
+const countrySuggestions=$('mhNewsCountries');
+if(countrySuggestions){
+ const fragment=document.createDocumentFragment();
+ for(const country of newsCountries){
+  const option=document.createElement('option');option.value=country.name;
+  option.label=country.country;fragment.append(option);
+ }
+ countrySuggestions.replaceChildren(fragment);
+}
+try{
+ const selected=JSON.parse(localStorage.getItem(newsPlaceKey)||'null');
+ if(selected&&/^[A-Z]{2}$/.test(selected.country||'')&&selected.label){
+  state.newsOverride={country:selected.country,countryName:short(selected.countryName),
+   city:short(selected.city),region:short(selected.region),label:short(selected.label)};
+ }
+}catch(_){}
+updateNewsPicker();
+$('mhNewsPlaceForm')?.addEventListener('submit',async event=>{
+ event.preventDefault();
+ const field=$('mhNewsPlaceInput'),button=$('mhNewsPlaceSearch');
+ if(!field||!button)return;
+ button.disabled=true;newsPickerMessage('BUSCANDO ZONA…');
+ try{
+  const place=await resolveNewsPlace(field.value);
+  state.newsOverride=place;
+  localStorage.setItem(newsPlaceKey,JSON.stringify(place));
+  updateNewsPicker();await loadNews();
+ }catch(error){newsPickerMessage(error.message||'Ubicación no encontrada')}
+ finally{button.disabled=false}
+});
+$('mhNewsPlaceAuto')?.addEventListener('click',()=>{
+ state.newsOverride=null;try{localStorage.removeItem(newsPlaceKey)}catch(_){}
+ updateNewsPicker();loadNews();
+});
+
 let configuredNewsSpeed='slow';
 try{configuredNewsSpeed=localStorage.getItem(newsSpeedKey)||'slow'}catch(_){}
 $('mhNewsSpeed').value=['slow','normal','fast'].includes(configuredNewsSpeed)?configuredNewsSpeed:'slow';
