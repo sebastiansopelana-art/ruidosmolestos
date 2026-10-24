@@ -37,15 +37,22 @@
  <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.05;.43;.5;1" dur="6.5s" repeatCount="indefinite"/>
 </path>
 <g aria-label="Powered by Sebastián Sopelana">
- <text x="905" y="402" font-family="Segoe Script,Brush Script MT,cursive" font-style="italic" font-size="44" font-weight="600" letter-spacing=".4" textLength="685" lengthAdjust="spacingAndGlyphs"
-       fill="#2de7ff" opacity=".24" filter="url(#shadow)">Powered by Sebastián Sopelana</text>
- <text x="905" y="402" font-family="Segoe Script,Brush Script MT,cursive" font-style="italic" font-size="44" font-weight="600" letter-spacing=".4" textLength="685" lengthAdjust="spacingAndGlyphs"
-       fill="#7dffff" stroke="#90f7ff" stroke-width=".5" paint-order="stroke" opacity=".32">Powered by Sebastián Sopelana</text>
- <clipPath id="signatureReveal"><rect x="902" y="348" width="0" height="67">
-  <animate attributeName="width" values="0;0;685;685;0" keyTimes="0;.44;.85;.96;1" dur="6.5s" repeatCount="indefinite"/>
+ <!-- Clean technical wordmark: sharp, high-contrast, no handwritten font dependencies -->
+ <rect x="882" y="349" width="730" height="64" rx="9" fill="#061c2d" fill-opacity=".92" stroke="#42cbdc" stroke-opacity=".65" stroke-width="1.5"/>
+ <path d="M897 361H1595 M897 401H1595" stroke="#4beaff" stroke-opacity=".36" stroke-width="1.5"/>
+ <rect x="899" y="369" width="5" height="26" rx="2.5" fill="#91fff2">
+  <animate attributeName="opacity" values=".4;1;.4" dur="2s" repeatCount="indefinite"/>
+ </rect>
+ <text x="924" y="389" fill="#c2f8ff" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" letter-spacing="1.5">POWERED BY</text>
+ <text x="1147" y="392" fill="#ecffff" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="800" textLength="430" lengthAdjust="spacingAndGlyphs">SEBASTIÁN SOPELANA</text>
+ <clipPath id="signatureReveal"><rect x="893" y="348" width="0" height="66">
+  <animate attributeName="width" values="0;0;715;715;0" keyTimes="0;.43;.8;.97;1" dur="6.5s" repeatCount="indefinite"/>
  </rect></clipPath>
- <text x="905" y="402" font-family="Segoe Script,Brush Script MT,cursive" font-style="italic" font-size="44" font-weight="600" letter-spacing=".4" textLength="685" lengthAdjust="spacingAndGlyphs"
-       fill="#eaffff" stroke="#7cffff" stroke-width="1" paint-order="stroke" clip-path="url(#signatureReveal)" filter="url(#bright)">Powered by Sebastián Sopelana</text>
+ <g clip-path="url(#signatureReveal)">
+  <path d="M897 405H1594" stroke="#75fff3" stroke-width="3" filter="url(#bright)"/>
+  <text x="924" y="389" fill="#f0ffff" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="800" letter-spacing="1.5">POWERED BY</text>
+  <text x="1147" y="392" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="900" textLength="430" lengthAdjust="spacingAndGlyphs">SEBASTIÁN SOPELANA</text>
+ </g>
 </g>
 
 <style>@media(prefers-reduced-motion:reduce){animate{display:none}}</style>
