@@ -1401,13 +1401,22 @@ input[type="range"]{accent-color:var(--mh-neon-turquoise)}
  0%,46%,100%{opacity:.23;filter:brightness(.7)}
  47%,94%{opacity:1;filter:brightness(1.7)}
 }
-/* Respect explicit OS reduce-motion requests while retaining a clearly lit
-   state LED and distinct green/red mode colors. */
+/* Operational blinking is specifically requested; under reduced-motion use
+   a slower, low-intensity two-state flash (no scaling or moving buttons). */
 @media(prefers-reduced-motion:reduce){
- .emission-controls>.center-controls>#mode::before,
- .emission-controls>.center-controls>#mode::after{animation:none!important;opacity:1!important}
- .emission-controls>.center-controls>#mode::before{box-shadow:none!important;opacity:.38!important}
+ .emission-controls>.center-controls>#mode::before{
+  animation:mh-operation-pulse 2.4s steps(1,end) infinite!important;
+  box-shadow:none!important
+ }
+ .emission-controls>.center-controls>#mode::after{
+  animation:mh-operation-led 2.4s steps(1,end) infinite!important
+ }
 }
+/* Preserve legibility of seven-day forecast in its very compact home.
+   Rain chance remains in every day's accessible tooltip. */
+.console>.deck.mh-weather-deck .mh-week-day .rain{display:none!important}
+.console>.deck.mh-weather-deck .mh-week-day{gap:0!important}
+
 @media(max-width:850px){
  .emission-controls>.center-controls{gap:5px!important;padding:0 2px!important}
  .emission-controls>.center-controls>#mode,
