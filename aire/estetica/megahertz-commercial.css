@@ -1,0 +1,11 @@
+/* MegaHertz commercial palette. Appearance only; transport and storage unchanged. */
+:root{--mh-brand-bg:#080e16;--mh-brand-surface:#111e2a;--mh-brand-line:#294052;--mh-brand-lime:#baff59;--mh-brand-cyan:#63d2dc}
+body{background:radial-gradient(ellipse at 85% 0%,#132b35 0%,transparent 42%),#080e16!important}
+.console{background:linear-gradient(145deg,#15222d,#0b131d)!important;border-color:#294052!important}
+.list-panel,.mh-ad-news-column>.list-panel{background:linear-gradient(145deg,#111e2a,#0c151f)!important;border-color:#294052!important}
+.list-head{background:linear-gradient(90deg,#182a32,#111e2a)!important;border-bottom-color:#294052!important}
+.list{background:#0b151f!important}.now{background:#09141e!important;border-color:#294052!important}
+button:not([aria-pressed=true]):not(#mode):not(#stop):not(#adHardStop):not(#programsListStop){background:linear-gradient(180deg,#203340,#15242f);border-color:#3b5261;color:#f4f9fc}
+button:hover{border-color:#baff59}input[type=range]{accent-color:#baff59}
+.track-row.active,.track-row.is-playing{background:#1e352b!important;border-left-color:#baff59!important}
+#config{background:#0c151f;color:#f4f9fc;border-color:#294052}.config-head{background:#111e2a}
