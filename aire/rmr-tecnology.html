@@ -1226,6 +1226,110 @@
  flex:1 1 100%!important;min-width:0!important;max-width:100%!important;
  font-size:9px!important;text-align:center!important;text-align-last:center!important
 }
+
+/* ================= MEGAHERTZ · identidad turquesa =================
+   Identidad visual compartida con la M, EGAHERTZ y ambos VU analógicos.
+   ÚNICA EXCEPCIÓN DE ESTADO: Automático/Manual mantiene verde/rojo.
+   El rojo de alarmas, hora AL AIRE y errores también se conserva como
+   indicación operativa, no como selección de controles. */
+:root{
+ --mh-neon-turquoise:#0dd7ff;
+ --mh-neon-turquoise-bright:#83ffff;
+ --mh-neon-turquoise-deep:#087e9f;
+ --mh-turquoise-bg:#075060;
+ --mh-turquoise-border:#37ddee;
+}
+button[aria-pressed="true"]:not(#mode),
+#config .config-tabs button.selected,
+#config button.selected:not(#mode),
+#config .mh-policy-buttons button[aria-pressed="true"],
+#thirdPanel .mh-ad-controls-under .mh-ad-pad>button[aria-pressed="true"],
+#programsPanel .mh-icon-tools .mh-transport-icon[aria-pressed="true"],
+.music-extra button[aria-pressed="true"],
+.music-screen .music-controls button[aria-pressed="true"],
+.playlist-tools button[aria-pressed="true"],
+#exact[aria-pressed="true"],#wait[aria-pressed="true"]{
+ background:linear-gradient(180deg,#147c89 0%,#0b687b 54%,#074756 100%)!important;
+ color:#efffff!important;
+ border-color:#5ceaf0!important;
+ border-bottom-color:#087e9f!important;
+ box-shadow:inset 0 1px 0 #cfffff66,inset 0 -1px 0 #013f50,0 0 9px #0dd7ff77!important;
+ text-shadow:0 0 5px #83ffff5c!important;
+}
+button[aria-pressed="true"]:not(#mode):hover,
+#config .config-tabs button.selected:hover{
+ background:linear-gradient(180deg,#1da1ae,#0e7487)!important;
+ box-shadow:inset 0 1px 0 #eaffff65,0 0 13px #0dd7ff88!important
+}
+#config input[type="checkbox"],
+#config input[type="radio"],
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"]{accent-color:var(--mh-neon-turquoise)}
+#config .config-tabs button.selected{box-shadow:inset 3px 0 #83ffff,0 0 8px #0dd7ff55!important}
+#thirdList .schedule-row.selected,
+#musicList .track-row.selected,
+#programsList .track-row.selected{
+ background:#125464!important;border-left-color:#0dd7ff!important
+}
+#thirdList .schedule-row.is-emitting{
+ background:linear-gradient(90deg,#094d62,#0d283b)!important;
+ border-left-color:#83ffff!important
+}
+#thirdList .schedule-status.live{color:#83ffff!important;text-shadow:0 0 5px #0dd7ff55}
+#thirdList .schedule-entry.is-airing-tree{
+ border-left-color:#0dd7ff!important;
+ background:linear-gradient(90deg,#0b4153,#0d2633 55%)!important
+}
+#thirdList .schedule-entry.is-airing-tree .schedule-toggle{
+ color:#d0ffff!important;background:#126078!important;border-color:#0dd7ff!important
+}
+#thirdList .schedule-children .schedule-child.is-playing{
+ color:#efffff!important;background:linear-gradient(90deg,#075e71,#104154)!important;
+ border-left-color:#83ffff!important;
+ box-shadow:inset 0 0 8px #0dd7ff55!important
+}
+#thirdList .schedule-children .schedule-child.is-playing::before{color:#83ffff!important}
+#adQueueView .queue-active{
+ background:#10546a!important;color:#e9ffff!important;border-left-color:#83ffff!important
+}
+.playlist-current #programsAir.on-air,
+.playlist-current #musicListAir.on-air,
+.playlist-current #thirdAir.on-air{
+ color:#e2ffff!important;
+ animation:mhTurquoiseOnAirPulse 1.55s steps(1,end) infinite!important;
+ border:1px solid #5be9ee!important
+}
+.emission-controls>.mh-ad-footer-status.on-air{
+ border-color:#48d9e3!important;color:#e9ffff!important;background:#113d4d!important
+}
+.emission-controls>.mh-ad-footer-status.on-air .mh-ad-status-dot{
+ background:#83ffff!important;box-shadow:0 0 8px #0dd7ff!important
+}
+#vu .vu-pixel{background:#0d5b66}
+#vu .mh-quality-pulse{filter:drop-shadow(0 0 8px #0dd7ff)!important}
+@keyframes mhTurquoiseOnAirPulse{
+ 0%,49%{background:#0c4557;box-shadow:inset 0 0 3px #0dd7ff22,0 0 2px #0dd7ff88}
+ 50%,100%{background:#138598;box-shadow:inset 0 0 9px #0dd7ff55,0 0 10px #83ffff99}
+}
+/* Critical-mode exception: never overwrite automatic GREEN/manual RED. */
+#mode[aria-pressed="true"]{
+ animation:modeGreenFlash 1.4s steps(1,end) infinite!important;
+ color:#e8ffe9!important
+}
+#mode[aria-pressed="false"]{
+ animation:modeRedFlash 1.4s steps(1,end) infinite!important;
+ color:#fff0f0!important
+}
+@media(prefers-reduced-motion:reduce){
+ .playlist-current #programsAir.on-air,
+ .playlist-current #musicListAir.on-air,
+ .playlist-current #thirdAir.on-air{
+  animation:none!important;background:#0b6074!important;
+ }
+ #mode[aria-pressed="true"]{animation:none!important;background:#20563d!important;border-color:#75c997!important}
+ #mode[aria-pressed="false"]{animation:none!important;background:#712b30!important;border-color:#ed8288!important}
+}
 </style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
