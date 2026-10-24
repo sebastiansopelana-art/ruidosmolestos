@@ -1295,7 +1295,7 @@ input[type=range]{accent-color:#baff59}
 .error,[data-status=error],.danger,.warning{color:#ffada6}
 @media(prefers-reduced-motion:reduce){.console,.list-panel{box-shadow:none!important}}
 
-</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024beta5weather"><style>.showcase-banner{display:flex;gap:20px;justify-content:space-between;padding:14px 20px;background:#baff59;color:#10180b;font:800 12px system-ui}.showcase-banner span{font-weight:500}.showcase-banner a{color:inherit}@media(max-width:700px){.showcase-banner{flex-wrap:wrap}.showcase-banner span{display:none}}</style></head><body><div class="showcase-banner">MEGAHERTZ · DEMOSTRACIÓN INTERACTIVA <span>Audios originales de muestra · listas independientes de tu consola</span><a href="/">VOLVER AL SITIO ↗</a></div><main>
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024beta5weather"><style>.showcase-banner{display:flex;gap:20px;justify-content:space-between;padding:14px 20px;background:#baff59;color:#10180b;font:800 12px system-ui}.showcase-banner span{font-weight:500}.showcase-banner a{color:inherit}@media(max-width:700px){.showcase-banner{flex-wrap:wrap}.showcase-banner span{display:none}}</style><link rel="stylesheet" href="/aire/estetica/megahertz-timeline-compact.css?v=20261024c"></head><body><div class="showcase-banner">MEGAHERTZ · DEMOSTRACIÓN INTERACTIVA <span>Audios originales de muestra · listas independientes de tu consola</span><a href="/">VOLVER AL SITIO ↗</a></div><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
@@ -2440,4 +2440,4 @@ for(const [id,text] of Object.entries(example)){const el=document.getElementById
 document.getElementById('mhWeekStrip').innerHTML=['HOY','SÁB','DOM','LUN','MAR','MIÉ','JUE'].map((day,i)=>'<div class="mh-week-day"><b>'+day+'</b><span>☀</span><strong>'+(16+i%3)+'° / '+(4+i%3)+'°</strong></div>').join('');
 document.getElementById('mhNewsHeadlines').innerHTML='<div class="mh-news-empty">CENTRO INFORMATIVO · Titulares y región elegidos por el operador. Vista de demostración.</div>';
 setInterval(()=>document.getElementById('mhLocalClock').textContent=new Date().toLocaleTimeString('es-AR',{hour12:false}),1000);
-</script></main></body></html>
+</script></main><script defer src="/aire/megahertz-timeline-compact.js?v=20261024c"></script></body></html>
