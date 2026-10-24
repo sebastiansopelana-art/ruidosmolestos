@@ -19,13 +19,13 @@
 <text x="379" y="307" textLength="1201" lengthAdjust="spacingAndGlyphs" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="202" font-weight="900" fill="#0dd7ff" stroke="#079cbd" stroke-width="10" opacity=".6" filter="url(#shadow)">EGAHERTZ</text>
 <text x="379" y="307" textLength="1201" lengthAdjust="spacingAndGlyphs" font-family="Arial Black,Arial,Helvetica,sans-serif" font-size="202" font-weight="900" fill="url(#metal)" stroke="#0dd7ff" stroke-width="3" paint-order="stroke fill">EGAHERTZ</text>
 <!-- Electric pulse travels from the M through the E, without animating entire logo -->
-<path id="ray" d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570" stroke="#0dd7ff" stroke-width="11" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity=".46" filter="url(#shadow)"/>
-<path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570" stroke="url(#bolt)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
-<path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570" stroke="#e1ffff" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" fill="none" stroke-dasharray="46 870" opacity="0" filter="url(#bright)">
+<path id="ray" d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570L610 190L650 246L692 216H1580" stroke="#0dd7ff" stroke-width="11" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity=".46" filter="url(#shadow)"/>
+<path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570L610 190L650 246L692 216H1580" stroke="url(#bolt)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+<path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570L610 190L650 246L692 216H1580" stroke="#e1ffff" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" fill="none" stroke-dasharray="46 870" opacity="0" filter="url(#bright)">
   <animate attributeName="stroke-dashoffset" values="155;-810;-810" keyTimes="0;.62;1" dur="2.9s" repeatCount="indefinite"/>
   <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.5;.67;1" dur="2.9s" repeatCount="indefinite"/>
 </path>
-<path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570" stroke="#86efff" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="56 870" opacity="0">
+<path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570L610 190L650 246L692 216H1580" stroke="#86efff" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke-dasharray="56 870" opacity="0">
   <animate attributeName="stroke-dashoffset" values="155;-810;-810" keyTimes="0;.62;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
   <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.5;.67;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
 </path>
