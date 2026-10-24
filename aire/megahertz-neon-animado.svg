@@ -29,7 +29,7 @@
   <animate attributeName="stroke-dashoffset" values="155;-810;-810" keyTimes="0;.62;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
   <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.5;.67;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
 </path>
-<!-- The same electric pulse descends from the Z and writes the signature. -->
+<!-- The pulse descends from Z and CHARGES the signature from right to left. -->
 <path d="M1580 216 L1620 245 L1620 355 Q1620 372 1594 372 H870" fill="none" stroke="#0dd7ff" stroke-width="7" opacity=".37" filter="url(#shadow)"/>
 <path d="M1580 216 L1620 245 L1620 355 Q1620 372 1594 372 H870" fill="none" stroke="#69f6ff" stroke-width="2.8" opacity=".73"/>
 <path d="M1580 216 L1620 245 L1620 355 Q1620 372 1594 372 H870" fill="none" stroke="#e1ffff" stroke-width="8" stroke-linecap="round" stroke-dasharray="38 3000" filter="url(#bright)">
@@ -45,9 +45,15 @@
  </rect>
  <text x="924" y="389" fill="#c2f8ff" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" letter-spacing="1.5">POWERED BY</text>
  <text x="1147" y="392" fill="#ecffff" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="800" textLength="430" lengthAdjust="spacingAndGlyphs">SEBASTIÁN SOPELANA</text>
- <clipPath id="signatureReveal"><rect x="893" y="348" width="0" height="66">
-  <animate attributeName="width" values="0;0;715;715;0" keyTimes="0;.43;.8;.97;1" dur="6.5s" repeatCount="indefinite"/>
+ <clipPath id="signatureReveal"><rect x="1596" y="348" width="0" height="66">
+  <animate attributeName="x" values="1596;1596;893;893;1596" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
+  <animate attributeName="width" values="0;0;703;703;0" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
  </rect></clipPath>
+ <!-- Traveling energy front follows the charged portion of the signature. -->
+ <rect x="1591" y="353" width="5" height="54" rx="2.5" fill="#eaffff" filter="url(#bright)" opacity="0">
+  <animate attributeName="x" values="1591;1591;888;888;1591" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0;0;1;.35;0" keyTimes="0;.43;.48;.83;1" dur="6.5s" repeatCount="indefinite"/>
+ </rect>
  <g clip-path="url(#signatureReveal)">
   <path d="M897 405H1594" stroke="#75fff3" stroke-width="3" filter="url(#bright)"/>
   <text x="924" y="389" fill="#f0ffff" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="800" letter-spacing="1.5">POWERED BY</text>
