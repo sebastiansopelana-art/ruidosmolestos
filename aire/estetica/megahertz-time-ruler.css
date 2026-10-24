@@ -15,3 +15,16 @@
 .master .mh-timeline .times{display:flex!important;justify-content:space-between!important;margin-top:5px!important;font:800 10px Consolas,monospace!important;color:#d8f4f5!important}
 .master .mh-timeline .times span{font-size:10px!important;color:#d8f4f5!important}
 @media(max-width:1050px){.master .mh-timeline{padding:6px 5px}.master .mh-scale{font-size:8px}.master .mh-timeline-head{font-size:7px}}
+
+
+/* 2026-10-24: visible time scale layout (replaces cramped previous wrapper) */
+.console{height:auto!important;min-height:245px!important;grid-template-rows:minmax(245px,auto)!important}
+.console>.master{min-height:220px!important;height:auto!important;display:flex!important;flex-direction:column!important;justify-content:flex-start!important;gap:7px!important;overflow:visible!important;padding:5px 8px!important}
+.console>.master>.vu{flex:0 0 auto!important;max-height:35px!important}
+.console>.master>.mh-timeline{position:relative!important;flex:0 0 auto!important;width:100%!important;margin:10px 0 0!important;min-height:100px!important;padding:9px 10px 8px!important;overflow:visible!important}
+.console>.master .mh-timeline-head{font-size:9px!important;line-height:13px!important;margin-bottom:10px!important}
+.console>.master .mh-scale{height:22px!important;margin-bottom:10px!important;font-size:9px!important;overflow:visible!important}
+.console>.master .mh-ruler-seek{padding-top:5px!important}
+.console>.master .mh-ruler-seek #seek{width:100%!important;height:12px!important;min-height:12px!important;display:block!important;margin:0!important}
+.console>.master .mh-timeline .times{margin-top:9px!important}
+@media(max-width:1000px){.console{min-height:255px!important}.console>.master{min-height:235px!important;padding:4px!important}.console>.master>.mh-timeline{padding:7px 5px!important}.console>.master .mh-timeline-head{font-size:8px!important}}
