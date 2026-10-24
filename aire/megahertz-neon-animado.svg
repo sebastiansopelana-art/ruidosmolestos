@@ -49,16 +49,30 @@
   <animate attributeName="x" values="1596;1596;893;893;1596" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
   <animate attributeName="width" values="0;0;703;703;0" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
  </rect></clipPath>
+ <!-- Energy front: a soft halo, a precise bright tracer, and brief sparks. -->
+ <ellipse cx="1591" cy="380" rx="26" ry="28" fill="#49f9ee" opacity="0" filter="url(#shadow)">
+  <animate attributeName="cx" values="1591;1591;897;897;1591" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0;0;.65;.25;0" keyTimes="0;.43;.54;.83;1" dur="6.5s" repeatCount="indefinite"/>
+ </ellipse>
+ <path d="M1594 360l-6 11 7 7-7 13" stroke="#ecffff" stroke-width="2.5" fill="none" opacity="0" filter="url(#bright)">
+  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-695 0;-695 0;0 0" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0;0;1;.5;0" keyTimes="0;.43;.48;.83;1" dur="6.5s" repeatCount="indefinite"/>
+ </path>
  <!-- Traveling energy front follows the charged portion of the signature. -->
  <rect x="1591" y="353" width="5" height="54" rx="2.5" fill="#eaffff" filter="url(#bright)" opacity="0">
   <animate attributeName="x" values="1591;1591;888;888;1591" keyTimes="0;.43;.83;.96;1" dur="6.5s" repeatCount="indefinite"/>
   <animate attributeName="opacity" values="0;0;1;.35;0" keyTimes="0;.43;.48;.83;1" dur="6.5s" repeatCount="indefinite"/>
  </rect>
  <g clip-path="url(#signatureReveal)">
+  <rect x="897" y="355" width="695" height="51" rx="5" fill="#43f9e8" opacity=".11" filter="url(#shadow)"/>
+  <path d="M899 357H1590 M899 406H1590" fill="none" stroke="#7cfff3" stroke-width="2" opacity=".85"/>
   <path d="M897 405H1594" stroke="#75fff3" stroke-width="3" filter="url(#bright)"/>
   <text x="924" y="389" fill="#f0ffff" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="800" letter-spacing="1.5">POWERED BY</text>
   <text x="1147" y="392" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="900" textLength="430" lengthAdjust="spacingAndGlyphs">SEBASTIÁN SOPELANA</text>
  </g>
+ <path d="M900 409H1592" stroke="#81ffee" stroke-width="2" opacity="0" filter="url(#bright)">
+  <animate attributeName="opacity" values="0;0;0;.8;.24;0" keyTimes="0;.80;.83;.87;.95;1" dur="6.5s" repeatCount="indefinite"/>
+ </path>
 </g>
 
 <style>@media(prefers-reduced-motion:reduce){animate{display:none}}</style>
