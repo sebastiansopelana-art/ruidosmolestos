@@ -211,3 +211,80 @@ input[type="range"]{accent-color:var(--mh-neon-turquoise)}
   animation:mh-mode-led-compact 2.5s steps(1,end) infinite!important
  }
 }
+
+
+/* MEGAHERTZ THREE-WAY CLOCK · 24 OCT 2026
+   A symmetrical, enclosed control cluster. Preserve flashing Auto/Manual
+   behavior, color states and original on-air button actions. */
+.emission-controls>.center-controls.mh-emission-trio{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ grid-template-rows:27px!important;
+ grid-auto-flow:row!important;
+ align-items:center!important;justify-items:stretch!important;
+ justify-content:stretch!important;
+ box-sizing:border-box!important;min-width:0!important;max-width:100%!important;
+ width:100%!important;height:35px!important;min-height:35px!important;
+ padding:3px 4px!important;margin:0!important;gap:5px!important;
+ border:1px solid #436e84!important;border-radius:6px!important;
+ background:linear-gradient(180deg,#203c4c,#112737)!important;
+ box-shadow:inset 0 1px #c3fcff22,0 2px 6px #020c17a1!important
+}
+.emission-controls>.center-controls.mh-emission-trio>#mode,
+.emission-controls>.center-controls.mh-emission-trio>#settings,
+.emission-controls>.center-controls.mh-emission-trio>#mhLocalClock{
+ box-sizing:border-box!important;display:flex!important;
+ align-items:center!important;justify-content:center!important;
+ flex:none!important;flex-basis:auto!important;
+ width:100%!important;max-width:100%!important;min-width:0!important;
+ height:27px!important;min-height:27px!important;max-height:27px!important;
+ padding:2px 3px!important;margin:0!important;
+ border-radius:4px!important;text-align:center!important;white-space:nowrap!important
+}
+.emission-controls>.center-controls.mh-emission-trio>#mode,
+.emission-controls>.center-controls.mh-emission-trio>#settings{
+ font:850 clamp(8px,.82vw,10px)/1.1 Arial,sans-serif!important;
+ letter-spacing:0!important;
+}
+.emission-controls>.center-controls.mh-emission-trio>#mode{
+ overflow:visible!important;isolation:isolate!important;position:relative!important;
+}
+/* The clock is not a button; its face has the same 27px dimensions and
+   occupies the exact center third of the control group. */
+.emission-controls>.center-controls.mh-emission-trio>#mhLocalClock{
+ color:#83ffff!important;cursor:default!important;overflow:hidden!important;
+ border:1px solid #518a9b!important;border-bottom:2px solid #35687c!important;
+ background:linear-gradient(180deg,#092a3b,#071924)!important;
+ box-shadow:inset 0 1px #92eaff22,0 0 7px #0dd7ff1a!important;
+ font:900 clamp(9px,1vw,14px)/1.1 "SFMono-Regular",Consolas,monospace!important;
+ letter-spacing:-.45px!important;font-variant-numeric:tabular-nums!important;
+ text-shadow:0 0 8px #0dd7ffb0!important
+}
+/* Reclaim the clock's slot in the weather deck while preserving its
+   meteorological visuals, weekly forecast and location indicators. */
+.console>.deck.mh-weather-deck .mh-weather-top{
+ grid-template-columns:minmax(0,1fr) auto!important;
+ gap:8px!important;justify-items:stretch!important
+}
+.console>.deck.mh-weather-deck .mh-weather-top>.mh-weather-location{
+ grid-column:1!important;grid-row:1!important;min-width:0!important
+}
+.console>.deck.mh-weather-deck .mh-weather-top>.mh-weather-station-tag{
+ grid-column:2!important;grid-row:1!important;justify-self:end!important
+}
+@media(max-width:1150px){
+ .emission-controls>.center-controls.mh-emission-trio{gap:3px!important;padding:3px 2px!important}
+ .emission-controls>.center-controls.mh-emission-trio>#mode,
+ .emission-controls>.center-controls.mh-emission-trio>#settings{font-size:8px!important;letter-spacing:-.2px!important}
+ .emission-controls>.center-controls.mh-emission-trio>#mhLocalClock{font-size:11px!important}
+}
+@media(max-width:750px){
+ .emission-controls>.center-controls.mh-emission-trio{gap:2px!important;padding:3px 2px!important}
+ .emission-controls>.center-controls.mh-emission-trio>#mode,
+ .emission-controls>.center-controls.mh-emission-trio>#settings{
+  font-size:7px!important;letter-spacing:-.5px!important;padding:1px!important
+ }
+ .emission-controls>.center-controls.mh-emission-trio>#mhLocalClock{
+  font-size:9px!important;letter-spacing:-.7px!important;padding:1px!important
+ }
+}
