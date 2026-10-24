@@ -17,3 +17,6 @@
 .console .master .mh-logo-timeline #seek::-moz-range-thumb{height:12px!important;width:12px!important;border-radius:50%!important;background:#b4fff0!important;border:2px solid #2dc8bd!important}
 .console .master .times{display:flex!important;justify-content:space-between!important;flex:0 0 11px!important;height:11px!important;margin:0!important;font:800 9px/11px Consolas,monospace!important;color:#d7f7f5!important}
 .console .master .times span{font-size:9px!important;line-height:11px!important}
+
+/* Ocultar solo los dos tiempos inferiores: elapsed y duration. Mantener escala superior y seek. */
+.console .master .times #elapsed,.console .master .times #duration{visibility:hidden!important}
