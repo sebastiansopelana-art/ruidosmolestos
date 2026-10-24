@@ -29,43 +29,37 @@
   <animate attributeName="stroke-dashoffset" values="155;-810;-810" keyTimes="0;.62;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
   <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.5;.67;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
 </path>
-<!-- The pulse reaches Z, drops, charges the signature, then holds it legibly. -->
+<!-- The pulse becomes a light pen: it draws one continuous signature. -->
 <defs>
- <linearGradient id="signatureEnergy" x1="1" y1="0" x2="0" y2="0">
-  <stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#a8fff3"/><stop offset="1" stop-color="#45cbd7"/>
- </linearGradient>
- <clipPath id="signatureCharge">
-  <rect x="1594" y="346" width="0" height="69">
-   <animate attributeName="x" values="1594;1594;888;888;1594" keyTimes="0;.25;.7;.98;1" dur="7s" repeatCount="indefinite"/>
-   <animate attributeName="width" values="0;0;706;706;0" keyTimes="0;.25;.7;.98;1" dur="7s" repeatCount="indefinite"/>
-  </rect>
- </clipPath>
+  <linearGradient id="inkLight" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f3ffff"/><stop offset=".55" stop-color="#83fff6"/><stop offset="1" stop-color="#16aacb"/></linearGradient>
 </defs>
-<path id="signatureWire" d="M1580 216L1618 244V348Q1618 365 1595 365H896" fill="none" stroke="#17677c" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
-<path d="M1580 216L1618 244V348Q1618 365 1595 365H896" fill="none" stroke="#89ffed" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="44 1500" filter="url(#bright)">
- <animate attributeName="stroke-dashoffset" values="0;-780;-780" keyTimes="0;.25;1" dur="7s" repeatCount="indefinite"/>
- <animate attributeName="opacity" values="0;1;1;.15;0" keyTimes="0;.02;.24;.7;1" dur="7s" repeatCount="indefinite"/>
+<!-- Connection from Z to pen's starting point on the right. -->
+<path d="M1580 216L1623 250V339Q1623 352 1600 352" fill="none" stroke="#117c99" stroke-width="5" stroke-linecap="round"/>
+<path d="M1580 216L1623 250V339Q1623 352 1600 352" fill="none" stroke="#dfffff" stroke-width="5" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390" filter="url(#bright)">
+ <animate attributeName="stroke-dashoffset" values="390;0;0;390" keyTimes="0;.2;.94;1" dur="8s" repeatCount="indefinite"/>
 </path>
+<!-- Signature guide path: illuminated pen travels from right to left on a flourish, then writes forward. -->
+<path id="penGuide" d="M1600 352 Q1562 331 1532 365 C1485 409 1400 350 1347 382 S1232 400 1187 375 S1085 359 1048 382 S955 396 916 372" fill="none" stroke="#14677c" stroke-width="1.7" opacity=".42"/>
+<!-- A thin pen stroke paints the signature. The glowing name appears exactly behind its tip. -->
 <g aria-label="Powered by Sebastián Sopelana">
- <rect x="882" y="346" width="730" height="67" rx="8" fill="#061c2d" fill-opacity=".82" stroke="#2c8795" stroke-width="1"/>
- <path d="M898 404H1595" fill="none" stroke="#175b69" stroke-width="2"/>
- <!-- Dim legible resting state. -->
- <text x="919" y="391" fill="#82cbd3" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" letter-spacing="1.1">POWERED BY</text>
- <text x="1145" y="392" fill="#a4dbe2" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="800" textLength="443" lengthAdjust="spacingAndGlyphs">SEBASTIÁN SOPELANA</text>
- <!-- Charged letters remain on after the moving energy reaches them. -->
- <g clip-path="url(#signatureCharge)">
-  <path d="M897 405H1594" fill="none" stroke="#79ffed" stroke-width="3" filter="url(#bright)"/>
-  <text x="919" y="391" fill="#f2ffff" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="800" letter-spacing="1.1">POWERED BY</text>
-  <text x="1145" y="392" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="35" font-weight="900" textLength="443" lengthAdjust="spacingAndGlyphs">SEBASTIÁN SOPELANA</text>
+ <text x="905" y="403" font-family="Georgia,Times New Roman,serif" font-size="42" font-weight="700" font-style="italic" textLength="686" lengthAdjust="spacingAndGlyphs" fill="#5da7b3" opacity=".42">Powered by Sebastián Sopelana</text>
+ <clipPath id="inkReveal"><rect x="1593" y="357" width="0" height="58">
+  <animate attributeName="x" values="1593;1593;905;905;1593" keyTimes="0;.22;.73;.96;1" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="width" values="0;0;688;688;0" keyTimes="0;.22;.73;.96;1" dur="8s" repeatCount="indefinite"/>
+ </rect></clipPath>
+ <g clip-path="url(#inkReveal)">
+  <text x="905" y="403" font-family="Georgia,Times New Roman,serif" font-size="42" font-weight="700" font-style="italic" textLength="686" lengthAdjust="spacingAndGlyphs" fill="url(#inkLight)" stroke="#b6ffff" stroke-width=".55" paint-order="stroke">Powered by Sebastián Sopelana</text>
+  <path d="M920 409 Q1230 416 1586 409" fill="none" stroke="#6ffff1" stroke-width="1.6" opacity=".8"/>
  </g>
- <!-- The charging head moves left as the signature lights up. -->
- <g opacity="0" filter="url(#bright)">
-  <ellipse cx="1594" cy="378" rx="8" ry="24" fill="#aafff1"/>
-  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-706 0;-706 0;0 0" keyTimes="0;.25;.7;.98;1" dur="7s" repeatCount="indefinite"/>
-  <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.25;.29;.71;1" dur="7s" repeatCount="indefinite"/>
+ <!-- The tip stays attached to the reveal's moving edge. -->
+ <g opacity="0">
+  <circle cx="1592" cy="378" r="7" fill="#ffffff" filter="url(#bright)"/>
+  <circle cx="1592" cy="378" r="3.5" fill="#ecffff"/>
+  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-688 0;-688 0;0 0" keyTimes="0;.22;.73;.96;1" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.22;.26;.74;1" dur="8s" repeatCount="indefinite"/>
  </g>
- <path d="M891 410H1594" stroke="#bafff6" stroke-width="3" opacity="0" filter="url(#bright)">
-  <animate attributeName="opacity" values="0;0;0;.8;.22;0" keyTimes="0;.69;.72;.75;.95;1" dur="7s" repeatCount="indefinite"/>
+ <path d="M904 412Q1234 418 1591 412" fill="none" stroke="#d5ffff" stroke-width="2" opacity="0" filter="url(#bright)">
+   <animate attributeName="opacity" values="0;0;0;.85;.16;0" keyTimes="0;.72;.74;.78;.94;1" dur="8s" repeatCount="indefinite"/>
  </path>
 </g>
 <style>@media(prefers-reduced-motion:reduce){animate{display:none}}</style>
