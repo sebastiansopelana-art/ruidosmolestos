@@ -1295,7 +1295,7 @@ input[type=range]{accent-color:#baff59}
 .error,[data-status=error],.danger,.warning{color:#ffada6}
 @media(prefers-reduced-motion:reduce){.console,.list-panel{box-shadow:none!important}}
 
-</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024b"><style>.showcase-banner{display:flex;gap:20px;justify-content:space-between;padding:14px 20px;background:#baff59;color:#10180b;font:800 12px system-ui}.showcase-banner span{font-weight:500}.showcase-banner a{color:inherit}@media(max-width:700px){.showcase-banner{flex-wrap:wrap}.showcase-banner span{display:none}}</style></head><body><div class="showcase-banner">MEGAHERTZ · DEMOSTRACIÓN INTERACTIVA <span>Audios originales de muestra · listas independientes de tu consola</span><a href="/">VOLVER AL SITIO ↗</a></div><main>
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024c"><style>.showcase-banner{display:flex;gap:20px;justify-content:space-between;padding:14px 20px;background:#baff59;color:#10180b;font:800 12px system-ui}.showcase-banner span{font-weight:500}.showcase-banner a{color:inherit}@media(max-width:700px){.showcase-banner{flex-wrap:wrap}.showcase-banner span{display:none}}</style></head><body><div class="showcase-banner">MEGAHERTZ · DEMOSTRACIÓN INTERACTIVA <span>Audios originales de muestra · listas independientes de tu consola</span><a href="/">VOLVER AL SITIO ↗</a></div><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
@@ -1605,7 +1605,7 @@ function analogFace(channel){
   ticks+='<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'" stroke="'+(hot?'#ff5368':'#0dd7ff')+'" stroke-width="3.7" stroke-linecap="round"/>';
   ticks+='<text x="'+pos.x.toFixed(2)+'" y="'+(pos.y+3).toFixed(2)+'" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" font-weight="900" fill="'+(hot?'#ff5867':'#83ffff')+'">'+(value>0?'+'+value:value)+'</text>';
  }
- return '<svg class="mh-analog-svg" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
+ return '<svg class="mh-analog-svg" width="220" height="160" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
  '<defs><linearGradient id="'+grad+'" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#08bfff"/><stop offset=".5" stop-color="#0dd7ff"/><stop offset="1" stop-color="#83ffff"/></linearGradient>'+
  '<linearGradient id="'+red+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffab75"/><stop offset=".3" stop-color="#ff435e"/><stop offset="1" stop-color="#f20e4e"/></linearGradient>'+
  '<radialGradient id="mh-vu-back-'+channel+'" cx=".5" cy=".2" r=".95"><stop stop-color="#102a3c"/><stop offset="1" stop-color="#03080e"/></radialGradient></defs>'+
