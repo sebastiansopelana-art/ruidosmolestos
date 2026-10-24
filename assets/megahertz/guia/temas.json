@@ -1,0 +1,155 @@
+[
+  {
+    "id": "musica",
+    "title": "Cargá música y empezá a emitir",
+    "short": "Música al aire",
+    "image": "musica",
+    "intro": "La playlist automática es la secuencia musical de la radio. Primero preparás la lista y después elegís cuándo reproducir.",
+    "steps": [
+      "En PLAYLIST AUTOMÁTICA, pulsá + MÚSICA y seleccioná los audios, o arrastralos desde una carpeta a la lista.",
+      "Ordená las pistas arrastrándolas o con las flechas de cada fila. Podés pasar audios a la playlist para programas con la flecha de transferencia.",
+      "Hacé doble clic sobre la canción elegida o usá Reproducir en los controles principales.",
+      "Comprobá el título del visor, el estado EN EL AIRE y el avance del contador. Pausar conserva la posición; Detener corta la reproducción.",
+      "Elegí NORMAL o ALEATORIA. Activá REPETIR LISTA si querés que la secuencia vuelva a empezar."
+    ],
+    "expected": "Vas a ver el nombre del audio activo, la barra de progreso y los vúmetros respondiendo a la señal.",
+    "note": "PARAR AL FINAL permite terminar el audio actual antes de frenar. No es lo mismo que DETENER.",
+    "try": "En la demo: reproducí “Ruta del sur” y probá pausa y reproducción."
+  },
+  {
+    "id": "busqueda",
+    "title": "Encontrá un audio sin recorrer toda la lista",
+    "short": "Buscar y elegir",
+    "image": "busqueda",
+    "intro": "La búsqueda filtra por una parte del nombre del archivo. No hace falta escribir el título completo.",
+    "steps": [
+      "Ubicá el buscador debajo de las opciones de la playlist automática o de programas.",
+      "Escribí una parte del nombre. En la demo, probá con “ruta”.",
+      "Leé el contador: 1/6 significa que se muestra una coincidencia de seis audios cargados.",
+      "Pulsá la X del buscador para volver a ver la lista completa. El filtro no borra los archivos.",
+      "Para elegir un próximo tema, hacé clic derecho sobre la pista y usá MARCAR COMO SIGUIENTE."
+    ],
+    "expected": "La captura muestra “ruta” y una única coincidencia, conservando los seis audios de la lista.",
+    "note": "La búsqueda usa el nombre del archivo: si ese nombre incluye artista o programa, también lo podés encontrar por esas palabras.",
+    "try": "En la demo: buscá “ruta”, borrá el filtro y después buscá “cortina” en programas."
+  },
+  {
+    "id": "agenda",
+    "title": "Leé la agenda y revisá los avisos",
+    "short": "Agenda de tandas",
+    "image": "agenda",
+    "intro": "La agenda reúne las salidas publicitarias del día. Cada tanda tiene sus propios avisos y una política de emisión.",
+    "steps": [
+      "Buscá TANDAS PUBLICITARIAS a la derecha de las playlists.",
+      "Leé el horario y la regla de cada salida: HORA EXACTA o FIN DE TEMA.",
+      "Pulsá el triángulo junto a una tanda para desplegar sus avisos y su duración total.",
+      "Seleccioná la tanda que necesitás. FORZAR TANDA permite lanzarla inmediatamente; el doble clic sobre la fila también la emite.",
+      "Usá DETENER si necesitás interrumpir la publicidad. Después elegí qué audio continuar desde su reproductor."
+    ],
+    "expected": "Con la tanda desplegada, ves los tres avisos de ejemplo en su orden y una duración total de 00:54.",
+    "note": "FORZAR TANDA emite publicidad. En cambio, PROBAR TANDA dentro de configuración es una preescucha independiente. DETENER publicidad deja pausada la programación anterior.",
+    "try": "En la demo: desplegá una tanda con el triángulo. Para escucharla sin emisión, usá PROBAR desde configuración."
+  },
+  {
+    "id": "tanda",
+    "title": "Armá una tanda desde cero",
+    "short": "Crear una tanda",
+    "image": "tanda-horarios",
+    "intro": "Los avisos de una tanda se cargan dentro de su configuración. La biblioteca de avisos sueltos y las tandas son espacios distintos.",
+    "steps": [
+      "Abrí CONFIGURACIÓN → PUBLICIDAD. Para una tanda nueva, pulsá + NUEVA TANDA.",
+      "Escribí un nombre, elegí la cantidad de salidas por día e indicá el primer horario. Completá los horarios adicionales si corresponde.",
+      "Pulsá + AGREGAR AVISOS o arrastrá archivos a AVISOS DE ESTA TANDA. COPIAR DE BIBLIOTECA incorpora audios de la biblioteca de avisos sueltos.",
+      "Ordená los avisos con las flechas. Revisá la duración de cada audio y el total.",
+      "Elegí los días de emisión y la regla. Pulsá GUARDAR TANDA Y HORARIOS para activar esa programación."
+    ],
+    "expected": "La tanda aparece en TANDAS GUARDADAS y sus salidas del día se muestran en la agenda.",
+    "note": "Cerrar la ventana no reemplaza GUARDAR TANDA Y HORARIOS. Para modificar una tanda existente, usá EDITAR sobre esa tanda.",
+    "try": "En la demo: abrí PUBLICIDAD y EDITAR sobre una tanda de muestra para recorrer sus campos."
+  },
+  {
+    "id": "regla",
+    "title": "Elegí cómo sale la publicidad",
+    "short": "Hora exacta o fin de tema",
+    "image": "config-tanda",
+    "intro": "La regla define qué pasa si llega la hora de una tanda mientras está sonando una canción.",
+    "steps": [
+      "Abrí CONFIGURACIÓN → PUBLICIDAD y EDITAR en la tanda que querés ajustar.",
+      "Elegí HORA EXACTA si necesitás que la tanda interrumpa el tema al llegar el horario.",
+      "Elegí ESPERAR FIN DEL TEMA si preferís que termine la canción antes de lanzar los avisos.",
+      "Usá PROBAR TANDA para revisar sus audios. DETENER PRUEBA corta esa preescucha, sin intervenir sobre el aire.",
+      "Guardá la tanda. Revisá que el modo general sea el adecuado: en MANUAL las tandas pendientes no se lanzan automáticamente."
+    ],
+    "expected": "La regla elegida queda indicada en la configuración y en la fila de la agenda.",
+    "note": "En AUTOMÁTICO se aplica la programación. Al volver desde MANUAL, la consola puede recuperar tandas pendientes: revisá la cola antes de cambiar de modo.",
+    "try": "Compará las dos reglas en la captura y probá la preescucha en la demo."
+  },
+  {
+    "id": "programas",
+    "title": "Operá un programa con su propia playlist",
+    "short": "Programa independiente",
+    "image": "programas",
+    "intro": "La playlist para programas tiene sus propios controles. Sirve para preparar aperturas, entrevistas, bloques y cortinas.",
+    "steps": [
+      "En PLAYLIST PARA PROGRAMAS, pulsá + AUDIO o arrastrá los archivos que vas a usar.",
+      "Ordená los bloques y buscá por palabras cuando necesites encontrar un audio rápidamente.",
+      "Hacé doble clic sobre el audio o usá Reproducir dentro de ese panel.",
+      "Seguí el nombre y el estado EN EL AIRE de la playlist del programa. Sus botones de pausa, detener y siguiente son independientes.",
+      "Cuando termines, detené el programa y retomá la playlist automática desde sus controles."
+    ],
+    "expected": "En la captura, “Apertura — Programa DEMO.wav” aparece en reproducción dentro del panel del programa.",
+    "note": "Al iniciar un programa se pausa la música automática. La publicidad usa la salida común; las listas son independientes, pero se coordinan en la emisión.",
+    "try": "En la demo: iniciá música y después reproducí la apertura del programa para ver el cambio de fuente."
+  },
+  {
+    "id": "audio",
+    "title": "Revisá la salida y el detector de silencio",
+    "short": "Audio y continuidad",
+    "image": "audio",
+    "intro": "Estos ajustes están en GENERAL. La salida de audio depende de los dispositivos que el navegador tenga disponibles.",
+    "steps": [
+      "Abrí CONFIGURACIÓN → GENERAL y desplegá SALIDAS DE AUDIO · PLACA DE SONIDO.",
+      "Revisá el volumen. Si el navegador lo permite, usá DETECTAR SALIDAS DE AUDIO y elegí el dispositivo que necesitás.",
+      "Desplegá DETECTOR DE SILENCIO. Ahí están la activación, el umbral y el tiempo de espera.",
+      "Probá el detector con audios representativos antes de usarlo al aire: una introducción suave o una pausa también puede quedar por debajo del umbral.",
+      "Pulsá GUARDAR Y CERRAR para conservar los ajustes que modificaste."
+    ],
+    "expected": "La configuración muestra el dispositivo elegido y los parámetros de continuidad.",
+    "note": "Si no aparece la selección de dispositivo, el navegador usa la salida configurada en el sistema operativo. El detector necesita audio reproduciéndose para evaluar la señal.",
+    "try": "En la demo: recorré estos ajustes sin guardar cambios; observá primero cómo están organizados."
+  },
+  {
+    "id": "institucionales",
+    "title": "Organizá jingles y separadores",
+    "short": "Institucionales",
+    "image": "institucionales",
+    "intro": "La biblioteca de institucionales permite guardar material de identidad de la radio y escucharlo de manera independiente.",
+    "steps": [
+      "Abrí CONFIGURACIÓN → INSTITUCIONALES.",
+      "Elegí el tipo de material: JINGLES o SEPARADORES.",
+      "Usá + CARGAR INSTITUCIONALES o arrastrá los archivos al área indicada.",
+      "Revisá los archivos de la biblioteca y escuchalos con sus controles de preescucha.",
+      "Usá DETENER PREESCUCHA cuando termines de revisarlos."
+    ],
+    "expected": "Los archivos quedan en la biblioteca local del navegador y disponibles para revisión.",
+    "note": "Cargar institucionales no los emite al aire. En esta versión, su disparo automático por horarios todavía no está conectado al motor; la biblioteca lo aclara expresamente.",
+    "try": "En la demo: abrí esta sección para reconocer los tipos de material y la zona de carga."
+  },
+  {
+    "id": "respaldos",
+    "title": "Guardá tus ajustes y entendé qué incluye el respaldo",
+    "short": "Respaldos y guardado",
+    "image": "respaldos",
+    "intro": "La exportación de configuración y el almacenamiento de los archivos de audio son cosas distintas.",
+    "steps": [
+      "Abrí CONFIGURACIÓN → RESPALDOS.",
+      "Pulsá EXPORTAR CONFIGURACIÓN y conservá el archivo descargado.",
+      "El archivo incluye ajustes, tandas, horarios y orden de avisos. Guardá los audios originales por separado.",
+      "Para recuperar ajustes, usá IMPORTAR CONFIGURACIÓN, elegí el archivo y revisá lo importado.",
+      "Pulsá GUARDAR Y CERRAR para conservar la configuración importada. En otro equipo también necesitás los audios y revisar sus asociaciones."
+    ],
+    "expected": "Vas a tener un archivo de configuración y, por separado, una copia de los audios que usás.",
+    "note": "El respaldo JSON no contiene música ni avisos. Las listas y los archivos se conservan en ese navegador y equipo; no borres sus datos esperando que el JSON recupere el audio.",
+    "try": "En la demo: abrí RESPALDOS y leé el aviso que distingue configuración de archivos de audio."
+  }
+]
