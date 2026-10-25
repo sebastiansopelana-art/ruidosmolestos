@@ -29,37 +29,37 @@
   <animate attributeName="stroke-dashoffset" values="155;-810;-810" keyTimes="0;.62;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
   <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.08;.5;.67;1" dur="2.9s" begin=".22s" repeatCount="indefinite"/>
 </path>
-<!-- The pulse becomes a light pen: it draws one continuous signature. -->
+<!-- Electric ink: a traveling nib follows an organic writing baseline. -->
 <defs>
-  <linearGradient id="inkLight" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f3ffff"/><stop offset=".55" stop-color="#83fff6"/><stop offset="1" stop-color="#16aacb"/></linearGradient>
-</defs>
-<!-- Connection from Z to pen's starting point on the right. -->
-<path d="M1580 216L1623 250V339Q1623 352 1600 352" fill="none" stroke="#117c99" stroke-width="5" stroke-linecap="round"/>
-<path d="M1580 216L1623 250V339Q1623 352 1600 352" fill="none" stroke="#dfffff" stroke-width="5" stroke-linecap="round" stroke-dasharray="390" stroke-dashoffset="390" filter="url(#bright)">
- <animate attributeName="stroke-dashoffset" values="390;0;0;390" keyTimes="0;.2;.94;1" dur="8s" repeatCount="indefinite"/>
-</path>
-<!-- Signature guide path: illuminated pen travels from right to left on a flourish, then writes forward. -->
-<path id="penGuide" d="M1600 352 Q1562 331 1532 365 C1485 409 1400 350 1347 382 S1232 400 1187 375 S1085 359 1048 382 S955 396 916 372" fill="none" stroke="#14677c" stroke-width="1.7" opacity=".42"/>
-<!-- A thin pen stroke paints the signature. The glowing name appears exactly behind its tip. -->
-<g aria-label="Powered by Sebastián Sopelana">
- <text x="905" y="403" font-family="Georgia,Times New Roman,serif" font-size="42" font-weight="700" font-style="italic" textLength="686" lengthAdjust="spacingAndGlyphs" fill="#5da7b3" opacity=".42">Powered by Sebastián Sopelana</text>
- <clipPath id="inkReveal"><rect x="1593" y="357" width="0" height="58">
-  <animate attributeName="x" values="1593;1593;905;905;1593" keyTimes="0;.22;.73;.96;1" dur="8s" repeatCount="indefinite"/>
-  <animate attributeName="width" values="0;0;688;688;0" keyTimes="0;.22;.73;.96;1" dur="8s" repeatCount="indefinite"/>
+ <linearGradient id="signatureInk" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset=".45" stop-color="#bcfff9"/><stop offset="1" stop-color="#36dce5"/></linearGradient>
+ <clipPath id="signatureWriting"><rect x="896" y="350" width="0" height="65">
+  <animate attributeName="width" values="0;0;690;690;690" keyTimes="0;.28;.78;.96;1" dur="8s" repeatCount="indefinite"/>
  </rect></clipPath>
- <g clip-path="url(#inkReveal)">
-  <text x="905" y="403" font-family="Georgia,Times New Roman,serif" font-size="42" font-weight="700" font-style="italic" textLength="686" lengthAdjust="spacingAndGlyphs" fill="url(#inkLight)" stroke="#b6ffff" stroke-width=".55" paint-order="stroke">Powered by Sebastián Sopelana</text>
-  <path d="M920 409 Q1230 416 1586 409" fill="none" stroke="#6ffff1" stroke-width="1.6" opacity=".8"/>
+</defs>
+<!-- Pulse drops from Z then approaches the left-hand starting position of the autograph. -->
+<path id="signatureFeeder" d="M1580 216L1620 247V341Q1620 351 1600 351H900" stroke="#1b6882" stroke-width="4" stroke-linejoin="round" fill="none"/>
+<path d="M1580 216L1620 247V341Q1620 351 1600 351H900" stroke="#bafffb" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" fill="none" stroke-dasharray="1080" stroke-dashoffset="1080" filter="url(#bright)">
+ <animate attributeName="stroke-dashoffset" values="1080;1080;0;0;1080" keyTimes="0;.02;.28;.95;1" dur="8s" repeatCount="indefinite"/>
+</path>
+<g aria-label="Powered by Sebastián Sopelana">
+ <!-- Legible, quiet typography remains underneath the illuminated writing. -->
+ <text x="900" y="405" font-family="Brush Script MT,Segoe Script,Georgia,serif" font-weight="600" font-style="italic" font-size="47" textLength="688" lengthAdjust="spacingAndGlyphs" fill="#568a9f" opacity=".38">Powered by Sebastián Sopelana</text>
+ <g clip-path="url(#signatureWriting)">
+  <text x="900" y="405" font-family="Brush Script MT,Segoe Script,Georgia,serif" font-weight="600" font-style="italic" font-size="47" textLength="688" lengthAdjust="spacingAndGlyphs" fill="url(#signatureInk)" stroke="#b8fffb" stroke-width=".8" paint-order="stroke">Powered by Sebastián Sopelana</text>
+  <text x="900" y="405" font-family="Brush Script MT,Segoe Script,Georgia,serif" font-weight="600" font-style="italic" font-size="47" textLength="688" lengthAdjust="spacingAndGlyphs" fill="none" stroke="#eaffff" stroke-width="1.5" opacity=".7" filter="url(#bright)">Powered by Sebastián Sopelana</text>
  </g>
- <!-- The tip stays attached to the reveal's moving edge. -->
+ <!-- Pen tip travels left-to-right along a flowing, handwritten trajectory. -->
  <g opacity="0">
-  <circle cx="1592" cy="378" r="7" fill="#ffffff" filter="url(#bright)"/>
-  <circle cx="1592" cy="378" r="3.5" fill="#ecffff"/>
-  <animateTransform attributeName="transform" type="translate" values="0 0;0 0;-688 0;-688 0;0 0" keyTimes="0;.22;.73;.96;1" dur="8s" repeatCount="indefinite"/>
-  <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;.22;.26;.74;1" dur="8s" repeatCount="indefinite"/>
+  <ellipse rx="12" ry="9" fill="#61eaff" opacity=".65" filter="url(#shadow)"/>
+  <circle r="4.5" fill="#fff" filter="url(#bright)"/>
+  <circle r="2.4" fill="#fff"/>
+  <animateMotion dur="8s" repeatCount="indefinite" keyTimes="0;.28;.78;1" keyPoints="0;0;1;1" calcMode="linear" path="M900 391C942 371 973 402 1010 387S1080 380 1123 396S1202 370 1251 386S1328 404 1377 384S1483 369 1531 391S1571 392 1588 384"/>
+  <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.27;.3;.76;.8;1" dur="8s" repeatCount="indefinite"/>
  </g>
- <path d="M904 412Q1234 418 1591 412" fill="none" stroke="#d5ffff" stroke-width="2" opacity="0" filter="url(#bright)">
-   <animate attributeName="opacity" values="0;0;0;.85;.16;0" keyTimes="0;.72;.74;.78;.94;1" dur="8s" repeatCount="indefinite"/>
+ <!-- A fine underline is completed after the signature is written. -->
+ <path d="M928 415Q1220 421 1585 411" fill="none" stroke="#b6ffff" stroke-width="1.8" stroke-linecap="round" opacity="0" stroke-dasharray="700" stroke-dashoffset="700">
+  <animate attributeName="stroke-dashoffset" values="700;700;700;0;0" keyTimes="0;.75;.79;.88;1" dur="8s" repeatCount="indefinite"/>
+  <animate attributeName="opacity" values="0;0;.85;.48;0" keyTimes="0;.75;.8;.94;1" dur="8s" repeatCount="indefinite"/>
  </path>
 </g>
 <style>@media(prefers-reduced-motion:reduce){animate{display:none}}</style>
