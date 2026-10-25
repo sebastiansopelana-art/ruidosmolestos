@@ -1,0 +1,16 @@
+#config .studio-days{display:flex;flex-wrap:wrap;gap:10px;margin:10px 0}
+#config .studio-days label{display:flex;gap:4px;margin:0;font-size:11px}
+#config .studio-row{display:flex;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px solid #304c5d;min-width:0;font-size:11px}
+#config .studio-row>span{flex:1;min-width:0;overflow-wrap:anywhere;line-height:1.5}
+#config .studio-row button{height:26px;font-size:9px;flex-shrink:0}
+#config .studio-log-rows{max-height:42vh;overflow:auto;margin-top:12px}
+#config .studio-status{font-size:10px;color:#adcbd9;line-height:1.5}
+#config #studioOwnerState,#config #studioRoleState{padding:9px;background:#0a1a25;border:1px solid #36576a;color:#a8deec;border-radius:4px;font-size:11px;line-height:1.5}
+#config input:disabled,#config select:disabled{opacity:.55}
+#config .studio-note{font-size:11px;color:#a8c6d7}
+#config .studio-backup-progress{font:11px/1.6 Arial;color:#9cdbd4}
+.console>.deck>h1{position:relative;padding-right:70px}
+#studioDuck{position:absolute;right:0;top:-3px;height:20px;min-height:20px;padding:1px 7px;font:600 9px Arial;letter-spacing:.3px;background:#193643;border:1px solid #42677a;border-radius:3px;color:#cce8f3}
+#studioDuck[aria-pressed=true]{background:#2c684e;border-color:#70c398;color:#e5fff1}
+#studioInstanceNotice{font:11px/1.5 Arial;color:#efc983;padding:8px 10px;border:1px solid #756143;background:#302a1d;margin-bottom:8px;border-radius:4px}
+#studioInstanceNotice[hidden]{display:none}

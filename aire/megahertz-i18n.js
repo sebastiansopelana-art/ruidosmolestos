@@ -105,7 +105,7 @@ function setLanguage(next){
 }
 function setup(){
  const top=document.getElementById('mhLanguage'),inside=document.getElementById('mhLanguageConfig');
- for(const input of [top,inside])if(input)input.addEventListener('change',e=>setLanguage(e.target.value));
+ for(const input of [top,inside])if(input)input.addEventListener('change',e=>{if(window.MHStudio?.station?.draft){window.MHStudio.station.draft.languagePending=e.target.value;return}setLanguage(e.target.value)});
  const observer=new MutationObserver(records=>{
    for(const r of records){
      if(r.type==='characterData')visitText(r.target);

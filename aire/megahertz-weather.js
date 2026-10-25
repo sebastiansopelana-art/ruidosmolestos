@@ -54,7 +54,7 @@ const windCardinal=degrees=>{
 function clock(){
  const clockElement=$('mhLocalClock');
  if(!clockElement)return;
- const zone=state.clockTZ||Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
+ const zone=window.MHStudio?.station?.options?.timezone||state.clockTZ||Intl.DateTimeFormat().resolvedOptions().timeZone||'UTC';
  try{clockElement.textContent=new Intl.DateTimeFormat(lang(),{timeZone:zone,
   hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date())}
  catch(_){clockElement.textContent='--:--:--'}
@@ -380,6 +380,7 @@ async function deviceLocation(force=false){
 async function chosenPlace(value){
  const city=short(value);
  if(city.length<2){$('mhWeatherCityInput').focus();return false}
+ const draft=window.MHStudio?.station?.draft;if(draft){try{const data=await requestJSON('/api/megahertz-weather?place='+encodeURIComponent(city),14500);if(!data?.current)throw Error(data.error||'No se encontró la ciudad');draft.weather={city,data};$('mhDetailLocation').textContent='CIUDAD PREPARADA · '+city+' · Pulsá GUARDAR Y CERRAR';return true}catch(e){$('mhDetailLocation').textContent=e.message;return false}}
  const previousMode=state.geoMode,previousCity=state.citySearch;
  state.geoMode='city';state.citySearch=city;
  const loaded=await requestWeather('?place='+encodeURIComponent(city));
@@ -394,7 +395,8 @@ async function chosenPlace(value){
 }
 $('mhWeatherCitySearch').onclick=()=>chosenPlace($('mhWeatherCityInput').value);
 $('mhWeatherCityInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();chosenPlace(e.target.value)}});
-$('mhWeatherGPS').onclick=async()=>{
+$('mhWeatherGPS').onclick=async()=>{const draft=window.MHStudio?.station?.draft;if(draft){try{const data=await requestJSON('/api/megahertz-weather',14500);if(!data?.current)throw Error(data.error||'No se pudo detectar la ubicación');draft.weather={city:'',data};$('mhDetailLocation').textContent='UBICACIÓN IP PREPARADA · Pulsá GUARDAR Y CERRAR'}catch(e){$('mhDetailLocation').textContent=e.message}return}
+
  try{localStorage.removeItem(manualPlaceKey)}catch(_){}
  $('mhWeatherCityInput').value='';
  await deviceLocation(true);
@@ -510,6 +512,7 @@ $('mhNewsPlaceAuto')?.addEventListener('click',()=>{
  updateNewsPicker();loadNews();
 });
 
+window.megahertzWeather={commit:action=>{if(!action)return;state.geoMode=action.city?'city':'ip';state.citySearch=action.city||'';if(action.city)localStorage.setItem(manualPlaceKey,action.city);else localStorage.removeItem(manualPlaceKey);$('mhWeatherCityInput').value=action.city||'';displayWeather(action.data)}};
 let configuredNewsSpeed='slow';
 try{configuredNewsSpeed=localStorage.getItem(newsSpeedKey)||'slow'}catch(_){}
 if($('mhNewsSpeed'))$('mhNewsSpeed').value=['slow','normal','fast'].includes(configuredNewsSpeed)?configuredNewsSpeed:'slow';
