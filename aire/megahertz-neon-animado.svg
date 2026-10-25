@@ -30,7 +30,7 @@
  <animate attributeName="stroke-dashoffset" values="5529.80122;0;0" keyTimes="0;0.916217639;1" dur="11.338902s" repeatCount="indefinite"/>
 </use>
 <use href="#electricRoute" fill="none" stroke="#e1ffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="46 5629.80122" stroke-dashoffset="46" filter="url(#bright)" opacity="0">
- <animate attributeName="stroke-dashoffset" values="46;-5529.80122;-5529.80122" keyTimes="0;0.916217639;1" dur="11.338902s" repeatCount="indefinite"/>
+ <animate attributeName="stroke-dashoffset" values="46;-5483.80122;-5483.80122" keyTimes="0;0.916217639;1" dur="11.338902s" repeatCount="indefinite"/>
  <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.012;0.916217639;0.925036835;1" dur="11.338902s" repeatCount="indefinite"/>
 </use>
 <!-- Nib is the leading edge of that same pulse, on that same centreline. -->
