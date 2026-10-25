@@ -1,48 +1,82 @@
 # MEGAHERTZ — ESTADO GUARDADO / CONTINUIDAD
-Fecha: 25 de octubre de 2026 (Argentina).
 
-## Fuente de verdad y recuperación
+Actualizado el 25 de octubre de 2026 (Argentina). Este registro reemplaza el estado preliminar anterior; sus versiones quedan conservadas en GitHub.
+
+## Fuente de verdad y punto de recuperación
+
 - Repositorio: `sebastiansopelana-art/ruidosmolestos`.
-- Rama de trabajo / despliegue: `taller-megahertz`. **No confundir con `main`**.
-- Web: https://megahertz.com.ar/
-- Consola: https://megahertz.com.ar/aire/rmr-tecnology.html
-- Demostración: https://megahertz.com.ar/demo.html
-- La rama contiene el código comprometido en GitHub; la publicación efectiva en Cloudflare se debe comprobar aparte.
+- Rama de trabajo y publicación: **`taller-megahertz`**, no `main`.
+- Último commit funcional y comprobado online antes de guardar esta bitácora: **`e27a4a2fbb813a0b6aa8771a8e406fd09638cbea`**.
+- Consola pública comprobada: https://www.megahertz.com.ar/aire/rmr-tecnology?v=pisadores-e27a4a2
+- Archivo principal: `aire/rmr-tecnology.html`.
+- Mantener el origen con **www**: los audios, ajustes y registros del navegador se almacenan por origen. El repositorio no contiene los audios locales del usuario.
+- El código está comprometido en GitHub y la última versión funcional se verificó en el sitio público. Las modificaciones futuras deben comprobar también el despliegue efectivo.
 
-## Estado comprobado en GitHub al preparar este registro
-- `aire/megahertz-neon-animado.svg` — blob SHA `60e4326c5f5cc5ac16c16fdacbdf21fd173494d4`, 84.002 caracteres.
-- `aire/rmr-tecnology.html` — blob SHA `3289a1c66211d4dc7a9edaf4ba93c53f60bf8ca1`, 212.853 caracteres.
-- `demo.html` — blob SHA `33e721b27c84c452626b75abf96223e73c1b9570`, 207.672 caracteres.
+## Identidad y diseño aprobados
 
-Estos hashes identifican versiones exactas y permiten comparar cambios futuros. No son commits ni prueban que Cloudflare haya desplegado.
+- MEGAHERTZ — **AUTOMATIC RADIO SYSTEM**.
+- Firma: **Powered by Sebastián Sopelana**, respetando apellido y acento.
+- Logo `aire/megahertz-neon-animado.svg`: un pulso eléctrico comienza en M, recorre MEGAHERTZ hasta Z, desciende y escribe la firma con punta luminosa. Firma cian intensa y legible; se esfuma al terminar. Conservar la animación unificada aprobada.
+- Mantener geometría, colores y funciones aprobados; no rediseñar la consola para corregir detalles.
+- Vúmetros digitales L/R de la salida real, retención de pico y aviso de clip.
+- Visor profesional del reproductor: archivo actual, estado, posición, tiempo transcurrido, restante y siguiente audio.
+- Meteorología con pronóstico semanal y Centro Informativo debajo de los controles publicitarios. Las noticias usan RSS directos y caché de servidor; se comprobaron 30 titulares en producción.
 
-## Decisiones de identidad visual aprobadas
-- Marca: MEGAHERTZ.
-- Descriptor: **AUTOMATIC RADIO SYSTEM** (no «RADIO AUTOMATION»).
-- Firma: **Powered by Sebastián Sopelana** (escritura correcta, con acento).
-- Ubicación: firma debajo del logo, alineada a la derecha.
-- Un solo pulso eléctrico desde la **M** hasta la **Z** y, sin interrupción visual, hacia la firma.
-- La firma debe aparecer como escrita por una **punta luminosa**, no como placa rectangular ni simple aparición de texto.
-- Misma calidad, velocidad, color y comportamiento eléctrico en todo el recorrido.
-- Legibilidad elevada: firma reconocible incluso al tamaño real en consola; mantener visible la firma terminada por un momento.
-- Respetar dimensiones y geometría existentes de la consola y reproductores.
+## Funciones de Studio incorporadas
 
-## Estado actual del logo
-El archivo SVG verificado al guardar contiene `#electricRoute`, `#pulseMask`, `#autographInk` y una `animateMotion` vinculada al mismo recorrido. Esto reemplaza implementaciones anteriores con animaciones independientes. **Conservar esta versión como punto de partida**; revisar en navegador si el recorrido y la firma se ven bien antes de nuevos cambios.
+Commit base de esta integración: `ece512fd23de425e481e3110767c05ea5e684855`.
 
-## Alcance funcional existente del proyecto
-- MegaHertz es un software de automatización radial con reproductores, playlists, programación de tandas, controles de operación manual/automática, paneles informativos y meteorología.
-- Mantener drag & drop, controles de reproducción, tandas, ajustes, y simetría visual. No rehacer el diseño general para corregir detalles.
-- El usuario quiere modificaciones en el repositorio real y su publicación, con enlace de comprobación; no maquetas ni imágenes cuando pide cambiar el software.
-- Para respaldar nuevas versiones, crear commits pequeños y documentar archivos afectados.
+1. **Aire y preescucha:** AIR usa una única salida Web Audio. CUE usa elementos separados y requiere otra salida física. Si falta la salida o corresponde al mismo dispositivo, la preescucha se bloquea, sin caer sobre AIR.
+2. **Contabilización:** registros separados por aviso y tanda; distinguir completos, interrumpidos y fallidos. Un aviso saltado, silenciado o cortado no cuenta como completo. Las preescuchas no se contabilizan.
+3. **Eventos e institucionales:** horarios, días, fechas de vigencia, prioridad, hora exacta/fin de audio y espera máxima. Pendientes persistentes; un evento que estaba ejecutándose al recargar se recupera como interrumpido. Los vencidos requieren reemisión explícita. Zona de emisión predeterminada: `America/Argentina/Buenos_Aires`.
+4. **Registro e informes:** IndexedDB persistente, filtros y exportación CSV detallada y publicitaria, con completos, interrumpidos, fallidos y segundos registrados/completos.
+5. **Audio:** fundidos, solapamiento musical, pisador manual, institucional sobre música con atenuación, ataque/recuperación, AGC RMS, ganancia general y compresión de picos. No es limitación true peak ni certificación de loudness.
+6. **Configuración:** borrador común con Guardar/Cancelar para ajustes, tandas, institucionales, eventos, idioma y selección meteorológica. Los errores de escritura intentan restaurar bibliotecas y preferencias anteriores.
+7. **Permisos locales:** administrador/operador con verificador PBKDF2 y sal. No hay contraseña predefinida. El dueño establece su clave en Configuración → Permisos. Esto protege controles de ese navegador, no constituye autenticación de usuarios en servidor.
+8. **Respaldos completos `.mhbackup`:** configuración guardada, playlists, audios, tandas, institucionales, eventos, estado y registro. Deduplicación y SHA-256 para integridad. Restauración preparada hasta Guardar, con emisión detenida y reversión ante fallas; conserva la contraseña actual. Se admite importar JSON de configuración anterior.
+9. Web Locks limita la emisión y programación a una pestaña por origen en navegadores compatibles. La consola debe permanecer abierta; no hay motor de eventos ejecutándose en servidor.
 
-## Pendientes de validación
-1. Abrir la consola y demo publicadas y comparar el SVG mostrado con el guardado.
-2. Confirmar que el rayo empieza en M, pasa por Z y continúa hasta la firma en **una sola animación**.
-3. Confirmar que la firma y el texto superior son legibles y que el brillo no se ve borroso.
-4. Confirmar que las dimensiones originales no se alteraron.
-5. Verificar publicación efectiva en Cloudflare y que la caché sirva la última versión.
-6. Antes de una nueva intervención, conservar una referencia exacta al commit/base y evitar sobrescribir la versión unificada actual.
+## Pisadores — última versión aprobada
 
-## Criterio de trabajo
-Los avances **ya guardados** viven en el historial de GitHub de `taller-megahertz`. Este archivo es una bitácora de continuidad, **no un ZIP ni un respaldo completo de los datos externos o de Cloudflare**. Para recuperación del proyecto, usar la rama y su historial de commits. No declarar un despliegue verificado sin probarlo.
+Historial: `5664df2` → `307f10e` → **`e27a4a2`**.
+
+- Fila entre la consola superior y las playlists, desde el borde de Música Automática hasta el borde final de Meteorología.
+- Mostrar tantos botones como entren en una sola fila. En el ancho verificado entran **11**; la cantidad se ajusta al espacio disponible.
+- **Todos del mismo ancho y de punta a punta**: se reparten el ancho sobrante por igual, sin huecos en los extremos; quedan únicamente los bordes de 1 px. Separación uniforme de 6 px entre botones. No volver a usar `space-between` ni anchos fijos que dejen márgenes vacíos.
+- Mantener siempre el rótulo visible **PISADOR 1, PISADOR 2, etc.**, incluso después de cargar un archivo.
+- El nombre original completo del audio aparece al apoyar el mouse (`title`); no reemplaza el rótulo del botón.
+- Arrastrar un audio sobre un botón **lo guarda automáticamente**. Soltar otro sobre el mismo botón **lo reemplaza y guarda**. Se recuperan al volver a abrir ese navegador.
+- Un clic reproduce; otro clic en el mismo botón detiene. Disparar otro pisador detiene el anterior. Atajos numéricos 1–9, sin interceptar escritura ni diálogos.
+- Mientras realmente suena, el botón usa la misma capa luminosa y LED que AUTOMÁTICO: `mh-mode-flash-compact` / `mh-mode-led-compact`, 1,35 s, `steps(1,end)`; movimiento reducido: 2,5 s.
+- Los pisadores salen por AIR, con atenuación de la música y registro tipo `cart`. No son preescucha y no alteran las playlists.
+- Cargar/reemplazar requiere administrador. Operadores pueden disparar audios ya cargados.
+- Los archivos de los pisadores se guardan en `megahertz-studio-v3`, tabla `meta`, clave **`cart-pads-v1`**, como un arreglo de objetos `{name,file}`. Esta tabla ya forma parte del respaldo completo. Conservar las posiciones existentes al ampliar o modificar la fila.
+- El conjunto conserva posiciones hasta 64; sólo se muestran las que caben en el ancho actual.
+
+## Archivos relevantes
+
+- `aire/rmr-tecnology.html`: consola, transporte e integración.
+- `aire/megahertz-studio-core.js` y `aire/estetica/megahertz-studio-core.css`: servicios de Studio y configuración.
+- `aire/megahertz-pisadores.js` y `aire/estetica/megahertz-pisadores.css`: carga, persistencia, emisión y presentación de los pisadores.
+- `aire/megahertz-weather.js`, `aire/megahertz-i18n.js`: integración de zona horaria y configuración por borrador.
+- `functions/api/megahertz-news.js`, `aire/estetica/megahertz-news-editorial.css`: noticias RSS/caché y presentación.
+- `tests/megahertz-studio-core.test.cjs`, `tests/megahertz-pisadores.test.cjs`, `tests/MEGAHERTZ-STUDIO.md`: pruebas y notas técnicas.
+
+## Validaciones realizadas
+
+- Diez pruebas automatizadas del núcleo: zona horaria, recuperación, vencimiento, prioridades, CUE bloqueado ante alias de AIR, cómputo publicitario, contraseñas, integridad/corrupción de respaldos, grafo de audio y avisos saltados/silenciados.
+- Prueba de pisadores mediante su manejador de drop: guardar, reemplazar, recuperar al reabrir, mantener etiqueta/título, rechazar cambios de operador y conservar audio anterior ante error de almacenamiento.
+- Navegador con WAV de ensayo: reproducción, visor, pisador manual con **12 dB** de atenuación medidos, tanda completa y tanda interrumpida, CSV publicitario e institucional programado.
+- Respaldo online descargado con audio incluido, SHA-256 verificado y restaurado desde la propia consola; audio restaurado reproducido.
+- Pisador cargado y recuperado tras recarga; reproducción y detención comprobadas. Etiqueta fija y título de archivo verificados.
+- Animación del pisador en emisión comprobada por estilo calculado: mismo nombre y duración de animación que AUTOMÁTICO.
+- Última fila publicada medida: 11 botones de aproximadamente 115,45 px; hueco izquierdo y derecho de **1 px**, correspondiente al borde. Sin espacios laterales interiores.
+- La separación física entre dos salidas requiere hardware con dos dispositivos y debe probarse en la estación real; el entorno remoto verificó el bloqueo seguro y las reglas de enrutamiento.
+
+## Criterio para continuar
+
+- Conservar lo aprobado; cambios concretos en la rama real, publicación y enlace directo al terminar.
+- No presentar maquetas cuando se pide modificar el software.
+- Antes de escribir, revisar el HEAD remoto para preservar cambios concurrentes.
+- Verificar en navegador la versión desplegada, no sólo el commit de GitHub.
+- El historial de Git guarda el código y esta bitácora. Los audios y datos locales del usuario se respaldan desde Configuración → Respaldos en su propio navegador; no confundir ambos respaldos.
