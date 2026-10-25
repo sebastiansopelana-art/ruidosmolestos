@@ -30,7 +30,7 @@ const entities=s=>String(s||'').replace(/&#(x[0-9a-f]+|\d+);|&(amp|lt|gt|quot|ap
 });
 function extract(xml,tag){
  const found=xml.match(new RegExp('<'+tag+'(?:\\s[^>]*)?>([\\s\\S]*?)<\\/'+tag+'>','i'));
- return found?found[1].replace(/^<!\[CDATA\[([\s\S]*)\]\]>$/,'$1').trim():'';
+ return found?found[1].trim().replace(/^<!\[CDATA\[([\s\S]*)\]\]>$/,'$1').trim():'';
 }
 function parseRSS(xml,scope){
  const items=[];
@@ -48,12 +48,12 @@ function parseRSS(xml,scope){
  }
  return items;
 }
-async function fetchRSS(url,scope){
- const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),8000);
+async function fetchRSS(url,scope,publisher='',timeoutMs=6000){
+ const abort=new AbortController(),timeout=setTimeout(()=>abort.abort(),timeoutMs);
  try{
   const response=await fetch(url,{headers:{Accept:'application/rss+xml, application/xml, text/xml'},signal:abort.signal});
   if(!response.ok)throw Error('HTTP '+response.status);
-  return parseRSS(await response.text(),scope);
+  return parseRSS(await response.text(),scope).map(item=>({...item,source:item.source||publisher}));
  }finally{clearTimeout(timeout)}
 }
 const reply=(value,status=200)=>new Response(JSON.stringify(value),{status,headers:{
@@ -62,7 +62,7 @@ const reply=(value,status=200)=>new Response(JSON.stringify(value),{status,heade
  'X-Content-Type-Options':'nosniff'
 }});
 const searchTerm=s=>'"'+clean(s).replace(/["\\]/g,'').slice(0,90)+'"';
-const engineVersion='2026-10-23-worldwide-news-api-v3';
+const engineVersion='2026-10-24-direct-rss-news-api-v4';
 const gnewsSupported=new Set('AR AU BD BR CA CN CO EG FR DE GR HK IN ID IE IL IT JP MY MX NL NO PK PE PH PT RO RU SA SG ZA KR ES SE CH TW TH TR UA AE GB US VN'.split(' '));
 async function fetchJSON(url,timeoutMs=8000){
  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),timeoutMs);
@@ -108,6 +108,62 @@ async function gdeltArticles(country,place){
   scope:place?'provincial':'nacional'
  })).filter(a=>a.title&&a.url);
 }
+// Successful editions are shared across the www and bare-domain entrances.
+// Never cache an empty/provider-error response as if it were a valid edition.
+async function storedEdition(country,region,city){
+ const key=new Request('https://megahertz.com.ar/__news_edition_v4?'+new URLSearchParams({country,region,city}));
+ let cache=null,value=null;
+ try{
+  cache=typeof caches!=='undefined'?caches.default:null;
+  const response=cache?await cache.match(key):null;
+  if(response){const data=await response.json(),age=Date.now()-Date.parse(data.updatedAt||'');
+   if(data.country===country&&data.available&&Array.isArray(data.items)&&data.items.length&&age>=0&&age<6*3600000)value={data,age};}
+ }catch(_){}
+ return {key,cache,value};
+}
+async function saveEdition(store,data){
+ if(!store.cache||!data.available||!data.items?.length)return;
+ try{
+  const response=reply(data);response.headers.set('Cache-Control','public, max-age=21600');
+  await store.cache.put(store.key,response);
+ }catch(_){}
+}
+async function directArgentina(countryName,hl,region,city){
+ const feeds=[
+  {kind:'la-nacion',source:'La Nación',scope:'nacional',url:'https://www.lanacion.com.ar/arc/outboundfeeds/rss/'},
+  {kind:'pagina12',source:'Página|12',scope:'nacional',url:'https://www.pagina12.com.ar/arc/outboundfeeds/rss/secciones/el-pais/notas'},
+  {kind:'clarin',source:'Clarín',scope:'nacional',url:'https://www.clarin.com/rss/politica/'},
+  {kind:'ambito',source:'Ámbito',scope:'nacional',url:'https://www.ambito.com/rss/pages/ultimas-noticias.xml'}
+ ];
+ if(city||region){
+  const phrase=searchTerm(city||region)+' '+searchTerm(countryName)+' when:2d';
+  feeds.push({kind:'region',source:'',scope:city?'local':'provincial',url:'https://news.google.com/rss/search?'+new URLSearchParams({q:phrase,hl,gl:'AR',ceid:'AR:es-419'})});
+ }
+ const results=await Promise.allSettled(feeds.map(feed=>fetchRSS(feed.url,feed.scope,feed.source,5500)));
+ const seen=new Set(),items=[],counts={},failedSources=[];
+ // Round-robin makes a successful first outlet unable to fill the whole desk.
+ const queues=results.map((result,i)=>{
+  if(result.status==='rejected')failedSources.push(feeds[i].kind);
+  const rows=result.status==='fulfilled'?result.value:[];
+  counts[feeds[i].kind]=rows.length;
+  return rows.filter(item=>!item.published||Date.parse(item.published)>=Date.now()-3*86400000)
+   .sort((a,b)=>(Date.parse(b.published)||0)-(Date.parse(a.published)||0));
+ });
+ for(let row=0;row<15&&items.length<30;row++){
+  for(let i=0;i<queues.length&&items.length<30;i++){
+   const item=queues[i][row];if(!item)continue;
+   const title=normalize(item.title);if(!title||seen.has(title))continue;
+   if(item.published&&Date.parse(item.published)>Date.now()+3600000)continue;
+   seen.add(title);items.push(item);
+  }
+ }
+ if(!items.length)return null;
+ return {country:'AR',countryName,region,city,edition:hl,updatedAt:new Date().toISOString(),
+  available:true,items,nationalItems:items,status:failedSources.length?'partial':'ok',
+  failedSources,feedCounts:counts,selectedKinds:feeds.filter((_,i)=>queues[i].length).map(feed=>feed.kind),
+  returned:items.length,engineVersion,source:'RSS directos de los medios; respaldo regional de Google News',
+  scopes:{local:items.filter(item=>item.scope==='local').length,provincial:items.filter(item=>item.scope==='provincial').length,nacional:items.filter(item=>item.scope==='nacional').length}};
+}
 export async function onRequestGet({request,env}){
  const params=new URL(request.url).searchParams,cf=request.cf||{};
  const country=clean(params.get('country')||cf.country||'').toUpperCase();
@@ -120,6 +176,13 @@ export async function onRequestGet({request,env}){
  let countryName='';
  try{countryName=new Intl.DisplayNames([hl],{type:'region'}).of(country)||''}catch(_){}
  if(!countryName||countryName===country)countryName=clean(params.get('countryName')||country);
+ const store=await storedEdition(country,region,city);
+ if(store.value&&store.value.age<180000)return reply({...store.value.data,fromServerCache:true});
+ if(country==='AR'){
+  const direct=await directArgentina(countryName,hl,region,city);
+  if(direct){await saveEdition(store,direct);return reply(direct)}
+ }
+
  const edition='hl='+encodeURIComponent(hl)+'&gl='+encodeURIComponent(country)+
   '&ceid='+encodeURIComponent(country+':'+ceidLang);
  const base='https://news.google.com/rss';
@@ -221,7 +284,7 @@ export async function onRequestGet({request,env}){
  const error=!result.length
   ?'No se recibieron titulares de esta zona. La consulta a las fuentes puede estar bloqueada o sin respuesta.'
   :undefined;
- return reply({
+ const responseData={
   country,countryName,region,city,edition:hl,updatedAt:new Date().toISOString(),
   available:result.length>0,items:result,nationalItems:result,
   status,error,failedSources:failures,feedCounts,selectedKinds,returned:result.length,
@@ -232,5 +295,8 @@ export async function onRequestGet({request,env}){
    nacional:grouped.nacional.length},
   source:'GDELT + Google News RSS por región + Bing News RSS'+(gnewsEnabled?' + GNews API':''),
   publishers:'Medios seleccionados por los agregadores para la zona solicitada'
- });
+ };
+ if(result.length){await saveEdition(store,responseData);return reply(responseData)}
+ if(store.value)return reply({...store.value.data,status:'stale',stale:true,fromServerCache:true});
+ return reply(responseData,503);
 }
