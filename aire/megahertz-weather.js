@@ -238,7 +238,7 @@ function countryFromDeviceTimeZone(){
 }
 function newsTime(value){
  if(!value||!Number.isFinite(Date.parse(value)))return '';
- try{return new Intl.DateTimeFormat(lang(),{timeZone:state.clockTZ||undefined,day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(value))}catch(_){return ''}
+ try{return new Intl.DateTimeFormat(lang(),{timeZone:newsLocation().country==='AR'?'America/Argentina/Buenos_Aires':state.clockTZ||undefined,day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date(value))}catch(_){return ''}
 }
 function newsLocation(){
  if(state.newsOverride)return state.newsOverride;
