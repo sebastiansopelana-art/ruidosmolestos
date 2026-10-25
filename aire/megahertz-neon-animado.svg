@@ -39,14 +39,15 @@ Windell H. Oskay / Evil Mad Scientist Laboratories. Smoothed for this artwork.
 <path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570L610 190L650 246L692 216H1580" stroke="#0dd7ff" stroke-width="11" stroke-linejoin="round" stroke-linecap="round" fill="none" opacity=".46" filter="url(#shadow)"/>
 <path d="M14 228H113L137 194L158 249L182 215H353L381 188L407 245L440 214H570L610 190L650 246L692 216H1580" stroke="url(#bolt)" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
 <!-- Revealed ink follows the very same path and clock as the electrical head. -->
-<g filter="url(#signatureLight)">
+<!-- Finished autograph holds briefly, then ink and cyan halo dissolve together. -->
+<g id="signatureFade" filter="url(#signatureLight)">
+ <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.82245966;0.95772849;1" calcMode="spline" keySplines="0 0 1 1;.4 0 .6 1;0 0 1 1" dur="17.7424466s" repeatCount="indefinite"/>
 <g mask="url(#writingMask)" aria-label="Powered by Sebastián Sopelana" fill="none" stroke-linecap="round" stroke-linejoin="round">
  <g id="autographInk" stroke-dasharray="7590.35648 7590.35648" stroke-dashoffset="7590.35648">
   <use href="#electricRoute" stroke="#0dd7ff" stroke-width="3.2" opacity="0" filter="url(#inkGlow)"/>
   <use href="#electricRoute" stroke="#0dd7ff" stroke-width="3.7"/>
   <use href="#electricRoute" stroke="#eaffff" stroke-width="3.2" opacity="1"/>
   <animate attributeName="stroke-dashoffset" values="7590.35648;0;0" keyTimes="0;0.7970968;1" dur="17.7424466s" repeatCount="indefinite"/>
-  <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.9492742;.99;1" dur="17.7424466s" repeatCount="indefinite"/>
  </g>
 </g>
 </g>
