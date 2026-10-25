@@ -1,6 +1,6 @@
 /* Full-width cart strip: use the measured AUTO button width, keep one row. */
-#mhPisadores{box-sizing:border-box;display:flex;justify-content:center;align-items:center;gap:6px;width:100%;min-width:0;margin:8px 0 0;padding:7px 8px;border:1px solid #365568;border-radius:5px;background:linear-gradient(180deg,#142b39,#0b1d29);overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#3e6376 #0b1d29}
-#mhPisadores .mh-pad{position:relative;box-sizing:border-box;flex:0 0 clamp(84px,var(--pad-width,110px),160px);width:clamp(84px,var(--pad-width,110px),160px);min-width:84px;height:29px;min-height:29px;max-height:29px;display:flex;align-items:center;justify-content:center;gap:6px;padding:3px 7px;margin:0;border:1px solid #42687c;border-radius:4px;background:linear-gradient(180deg,#223e4e,#132c3c);box-shadow:inset 0 1px #c4efff12,0 2px 3px #030e1780;color:#b1cedc;font:700 9px/1 Arial,sans-serif;letter-spacing:.2px;cursor:pointer;overflow:hidden}
+#mhPisadores{box-sizing:border-box;display:flex;justify-content:center;align-items:center;gap:6px;width:100%;min-width:0;margin:8px 0 0;padding:7px 0;border:1px solid #365568;border-radius:5px;background:linear-gradient(180deg,#142b39,#0b1d29);overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#3e6376 #0b1d29}
+#mhPisadores .mh-pad{position:relative;box-sizing:border-box;flex:1 1 0;width:auto;min-width:84px;height:29px;min-height:29px;max-height:29px;display:flex;align-items:center;justify-content:center;gap:6px;padding:3px 7px;margin:0;border:1px solid #42687c;border-radius:4px;background:linear-gradient(180deg,#223e4e,#132c3c);box-shadow:inset 0 1px #c4efff12,0 2px 3px #030e1780;color:#b1cedc;font:700 9px/1 Arial,sans-serif;letter-spacing:.2px;cursor:pointer;overflow:hidden}
 #mhPisadores .mh-pad-key{flex:0 0 auto;display:inline-grid;place-items:center;width:16px;height:16px;border:1px solid #4e7283;border-radius:3px;background:#0b202d;color:#8eb7c9;font:600 9px monospace}
 #mhPisadores .mh-pad-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 #mhPisadores .mh-pad.is-loaded{color:#d4edf6;border-color:#508299}
@@ -8,7 +8,7 @@
 #mhPisadores .mh-pad:focus-visible{outline:2px solid #99e6fa;outline-offset:2px}
 #mhPisadores .mh-pad[aria-pressed=true]{background:linear-gradient(180deg,#31644e,#214b3d);border-color:#8bd3ac;color:#e7fff0;box-shadow:inset 0 1px #c3ffd733,0 0 8px #6acc9c40}
 #mhPisadores .mh-pad[aria-pressed=true] .mh-pad-key{color:#d8ffe6;border-color:#82bc98;background:#28543e}
-@media(max-width:800px){#mhPisadores{gap:6px;padding:6px 8px}#mhPisadores .mh-pad{font-size:8px}}
+@media(max-width:800px){#mhPisadores{gap:6px;padding:6px 0}#mhPisadores .mh-pad{font-size:8px}}
 
 #mhPisadores .mh-pad[hidden]{display:none!important}
 /* Use the exact AUTO light layer, LED keyframes and cadence. */
