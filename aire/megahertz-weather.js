@@ -303,7 +303,7 @@ async function loadNews(){
  if(newsLoadingKey===key)return;
  const token=++newsSeq;newsLoadingKey=key;clearTimeout(newsRetryTimer);
  const label=state.newsOverride?.label||location.countryName||country;
- const query=new URLSearchParams({country,city:location.city||'',region:location.region||'',countryName:location.countryName||'',rev:'editorial-v1'});
+ const query=new URLSearchParams({country,city:location.city||'',region:location.region||'',countryName:location.countryName||'',rev:'direct-rss-v4'});
  const refresh=$('mhNewsRefresh');if(refresh)refresh.disabled=true;
  $('mhNewsRegion').textContent=country;
  let previous=state.news?.cacheKey===key?state.news:null;
@@ -323,7 +323,8 @@ async function loadNews(){
   if(!items.length)throw Error('Las fuentes no entregaron titulares');
   state.news={...data,nationalItems:items,cacheKey:key,label};
   displayNationalHeadlines(items,label,data.updatedAt);
-  newsStatus('ready','Actualizado');
+  newsStatus(data.stale?'cached':'ready',data.stale?'Consulta guardada':'Actualizado');
+  if(data.stale&&$('mhNewsNote'))$('mhNewsNote').textContent='Fuentes sin respuesta · consulta guardada de '+newsTime(data.updatedAt);
   try{localStorage.setItem(newsCachePrefix+key,JSON.stringify({country,updatedAt:data.updatedAt,nationalItems:items.slice(0,30)}))}catch(_){}
   animateNews(items);
  }catch(error){
