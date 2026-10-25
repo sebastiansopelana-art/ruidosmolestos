@@ -1295,7 +1295,23 @@ input[type=range]{accent-color:#baff59}
 .error,[data-status=error],.danger,.warning{color:#ffada6}
 @media(prefers-reduced-motion:reduce){.console,.list-panel{box-shadow:none!important}}
 
-</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024beta5weather"><link rel="stylesheet" href="/aire/estetica/megahertz-logo-progress-v2.css?v=20261024c4"></head><body><main>
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024beta5weather"><link rel="stylesheet" href="/aire/estetica/megahertz-logo-progress-v2.css?v=20261024c4"><style>
+/* Broadcast digital: replaces only the analogue instruments in their existing bay. */
+#mhBroadcastMeters{box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;width:100%;height:100%;min-width:0;min-height:0;padding:5px 0 5px 8px;border-left:1px solid #354d5d;background:#0b1923;color:#adc8d8;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+#mhBroadcastMeters .mh-bc-heading{display:flex;justify-content:space-between;gap:5px;font-size:10px;letter-spacing:.7px;margin-bottom:6px;white-space:nowrap}
+#mhBroadcastMeters .mh-bc-axis{display:flex;justify-content:space-between;margin:0 42px 3px 17px;font-size:9px;color:#9eb5c4}
+#mhBroadcastMeters .mh-bc-row{display:grid;grid-template-columns:11px minmax(0,1fr) 35px;gap:6px;align-items:center;margin:3px 0;min-width:0}
+#mhBroadcastMeters .mh-bc-channel{font-size:11px;color:#adc7d6}
+#mhBroadcastMeters .mh-bc-track{height:15px;position:relative;display:flex;gap:1px;background:#122431;overflow:hidden;border:0;box-shadow:none}
+#mhBroadcastMeters .mh-bc-segment{display:block;flex:1;min-width:0;background:var(--bc-color);opacity:.10}
+#mhBroadcastMeters .mh-bc-segment.lit{opacity:1}
+#mhBroadcastMeters .mh-bc-peak{display:none;position:absolute;top:0;bottom:0;width:2px;background:#efffff;pointer-events:none}
+#mhBroadcastMeters .mh-bc-number{font:11px monospace;text-align:right;color:#e1f6ff;font-variant-numeric:tabular-nums;white-space:nowrap}
+#mhBroadcastMeters .mh-bc-footer{display:flex;justify-content:space-between;gap:5px;margin-top:6px;padding-top:5px;border-top:1px solid #253f4f;font-size:9px;color:#9db6c5;white-space:nowrap}
+#mhBroadcastMeters .mh-bc-clip{color:#879ca8;letter-spacing:.5px}
+#mhBroadcastMeters .mh-bc-clip.on{color:#ff6572}
+@media(max-width:1100px){#mhBroadcastMeters{padding-left:5px}#mhBroadcastMeters .mh-bc-row{grid-template-columns:9px minmax(0,1fr) 31px;gap:4px}#mhBroadcastMeters .mh-bc-axis{margin-left:13px;margin-right:35px}#mhBroadcastMeters .mh-bc-axis span:nth-child(2),#mhBroadcastMeters .mh-bc-axis span:nth-child(4){display:none}#mhBroadcastMeters .mh-bc-heading{font-size:9px;letter-spacing:0}#mhBroadcastMeters .mh-bc-footer{font-size:8px}}
+</style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
@@ -1305,9 +1321,12 @@ input[type=range]{accent-color:#baff59}
    
    <div class="mh-visually-hidden"><span id="musicAir" hidden>EN EL AIRE</span><span id="musicNext">PRÓXIMO · Sin canciones</span></div>
   </div>
-  <aside class="mh-dual-meters" id="mhDualMeters" aria-label="Vúmetros analógicos estéreo: canales izquierdo y derecho de la salida al aire">
-    <div class="mh-vu-instrument" id="mhAnalogLeft" role="meter" aria-label="Canal izquierdo de la emisión, música y tandas" aria-valuemin="-20" aria-valuemax="6" aria-valuenow="-20"></div>
-    <div class="mh-vu-instrument" id="mhAnalogRight" role="meter" aria-label="Canal derecho de la emisión, música y tandas" aria-valuemin="-20" aria-valuemax="6" aria-valuenow="-20"></div>
+  <aside id="mhBroadcastMeters" aria-label="Medidores digitales estéreo de la salida al aire">
+   <div class="mh-bc-heading"><span>SALIDA DE AIRE</span><span>dBFS</span></div>
+   <div class="mh-bc-axis" aria-hidden="true"><span>−60</span><span>−48</span><span>−36</span><span>−24</span><span>−12</span><span>0</span></div>
+   <div class="mh-bc-row"><span class="mh-bc-channel">L</span><div class="mh-bc-track" id="mhBroadcastLeft" role="meter" aria-label="Nivel del canal izquierdo en dBFS" aria-valuemin="-60" aria-valuemax="0" aria-valuenow="-60"><i class="mh-bc-peak" aria-hidden="true"></i></div><output aria-live="off" class="mh-bc-number" id="mhBroadcastLeftValue">−∞</output></div>
+   <div class="mh-bc-row"><span class="mh-bc-channel">R</span><div class="mh-bc-track" id="mhBroadcastRight" role="meter" aria-label="Nivel del canal derecho en dBFS" aria-valuemin="-60" aria-valuemax="0" aria-valuenow="-60"><i class="mh-bc-peak" aria-hidden="true"></i></div><output aria-live="off" class="mh-bc-number" id="mhBroadcastRightValue">−∞</output></div>
+   <div class="mh-bc-footer"><span>PICO RETENIDO · 1 s</span><span id="mhBroadcastClip" class="mh-bc-clip" role="status" aria-label="Sin saturación">● CLIP</span></div>
   </aside>
 </div></section>
 <section class="master" aria-label="Salida de aire compartida"><strong id="air">EN ESPERA</strong><div class="vu" id="vu" role="img" aria-label="Nivel real de la salida de audio"></div><div><input id="seek" aria-label="Progreso del audio en emisión" type="range" min="0" max="1000" value="0" disabled><div class="times"><span id="elapsed">00:00</span><span id="duration">00:00</span></div></div></section>
@@ -1579,97 +1598,58 @@ vu.innerHTML='<div class="mh-metal-logo"><img class="mh-logo-neon" src="/aire/me
 function syncDeckAir(){for(const [key,audio] of [['music',music],['ads',ads]]){const on=playing(audio),badge=$(key+'Air');badge.hidden=!on;badge.closest('.deck').classList.toggle('is-on-air',on);if(key==='music')$(key+'List').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')))}}function syncProgramAir(){const musicOn=playing(music);$('musicListAir').textContent=musicOn?'EN EL AIRE':'EN ESPERA';$('musicListAir').classList.toggle('on-air',musicOn);const on=playing(programs);$('programsAir').textContent=on?'EN EL AIRE':'EN ESPERA';$('programsAir').classList.toggle('on-air',on);$('programsList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')));const thirdOn=playing(ads)&&!!activeBreak;$('thirdAir').textContent=thirdOn?'EN EL AIRE':'EN ESPERA';$('thirdAir').classList.toggle('on-air',thirdOn);$('thirdList').querySelectorAll('.schedule-row').forEach(row=>row.classList.toggle('is-emitting',thirdOn&&row.dataset.key===activeBreak?.key))}
 function syncLogoHeartbeat(){syncProgramAir();vu.classList.toggle('mh-running',playing(music)||playing(ads)||playing(programs)||playing(third));syncDeckAir()}for(const audio of [music,ads,programs,third])for(const event of ['playing','pause','ended','emptied'])audio.addEventListener(event,syncLogoHeartbeat);
 
-/* Analogue studio VU face: sapphire-blue markings, red +3/+6 zone and
-   a needle with calibrated, damped movement. Both respond to the SAME
-   programme output (music / programmes / commercial breaks), as L and R. */
-const vuAngles=[-67,-67],vuNeedles=[],vuInstruments=[];
-const vuScale=[[-20,-64],[-10,-46],[-5,-29],[-3,-13],[0,19],[3,44],[6,65]];
-function vuPoint(deg,r){
- const rad=deg*Math.PI/180;
- return {x:110+r*Math.sin(rad),y:127-r*Math.cos(rad)};
-}
-function vuArc(from,to,r){
- const a=vuPoint(from,r),b=vuPoint(to,r);
- return 'M '+a.x.toFixed(2)+' '+a.y.toFixed(2)+' A '+r+' '+r+' 0 0 1 '+b.x.toFixed(2)+' '+b.y.toFixed(2);
-}
-function analogFace(channel){
- const grad='mh-vu-logo-turquoise-'+channel,red='mh-vu-red-'+channel;
- let ticks='';
- for(let angle=-63;angle<=63;angle+=7){
-  const hot=angle>=25;
-  const inner=vuPoint(angle,83),outer=vuPoint(angle,90);
-  ticks+='<line x1="'+inner.x.toFixed(2)+'" y1="'+inner.y.toFixed(2)+'" x2="'+outer.x.toFixed(2)+'" y2="'+outer.y.toFixed(2)+'" stroke="'+(hot?'#ff4c60':'#0dd7ff')+'" stroke-width="2" opacity=".87"/>';
+/* Broadcast sample-peak meters. Reuse the existing shared output bus and
+   L/R analysers: no new speaker connection, gain or playback changes. */
+const broadcastMeters=['Left','Right'].map((side,i)=>{
+ const element=$('mhBroadcast'+side),segments=[];
+ for(let k=0;k<48;k++){
+  const segment=document.createElement('i'),db=-60+(k+1)*60/48;
+  segment.className='mh-bc-segment';segment.setAttribute('aria-hidden','true');
+  segment.style.setProperty('--bc-color',db>-3?'#f0626e':db>-12?'#d8b45d':'#65c696');
+  element.insertBefore(segment,element.querySelector('.mh-bc-peak'));
+  segments.push(segment);
  }
- for(const item of vuScale){
-  const value=item[0],angle=item[1],a=vuPoint(angle,78),b=vuPoint(angle,92),pos=vuPoint(angle,105),hot=value>0;
-  ticks+='<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'" stroke="'+(hot?'#ff5368':'#0dd7ff')+'" stroke-width="3.7" stroke-linecap="round"/>';
-  ticks+='<text x="'+pos.x.toFixed(2)+'" y="'+(pos.y+3).toFixed(2)+'" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" font-weight="900" fill="'+(hot?'#ff5867':'#83ffff')+'">'+(value>0?'+'+value:value)+'</text>';
- }
- return '<svg class="mh-analog-svg" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
- '<defs><linearGradient id="'+grad+'" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#08bfff"/><stop offset=".5" stop-color="#0dd7ff"/><stop offset="1" stop-color="#83ffff"/></linearGradient>'+
- '<linearGradient id="'+red+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffab75"/><stop offset=".3" stop-color="#ff435e"/><stop offset="1" stop-color="#f20e4e"/></linearGradient>'+
- '<radialGradient id="mh-vu-back-'+channel+'" cx=".5" cy=".2" r=".95"><stop stop-color="#102a3c"/><stop offset="1" stop-color="#03080e"/></radialGradient></defs>'+
- '<rect x="1.5" y="1.5" width="217" height="157" rx="10" fill="url(#mh-vu-back-'+channel+')" stroke="#1c628c" stroke-width="2"/>'+
- '<path d="'+vuArc(-68,23,87)+'" fill="none" stroke="url(#'+grad+')" stroke-width="7" stroke-linecap="round" opacity=".90"/>'+
- '<path d="'+vuArc(23,68,87)+'" fill="none" stroke="url(#'+red+')" stroke-width="7" stroke-linecap="round"/>'+
- '<path d="'+vuArc(-56,52,65)+'" fill="none" stroke="#1379dd" stroke-width="2" opacity=".75"/>'+
- ticks+
- '<path d="'+vuArc(-42,40,62)+'" fill="none" stroke="#2d90db" stroke-width="1" opacity=".5"/>'+
- '<g class="mh-vu-needle" transform="rotate(-67 110 127)"><line class="mh-vu-needle-halo" x1="110" y1="127" x2="110" y2="39" stroke="#0dd7ff" stroke-width="5" opacity=".20"/><line class="mh-vu-needle-line" x1="110" y1="127" x2="110" y2="39"/></g>'+
- '<circle class="mh-vu-pivot" cx="110" cy="127" r="5"/>'+
- '<text x="110" y="151" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="900" letter-spacing="-1" fill="#71ddff">dB</text>'+
- '<text x="187" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" font-weight="900" fill="#688ea7">VU</text>'+
- '</svg>';
-}
-for(let i=0;i<2;i++){
- const element=$(i===0?'mhAnalogLeft':'mhAnalogRight');
- element.innerHTML=analogFace(i===0?'L':'R');
- const side=document.createElement('span');
- side.className='mh-vu-side';side.textContent=i===0?'L':'R';
- element.append(side);
- vuNeedles.push(element.querySelector('.mh-vu-needle'));
- vuInstruments.push(element);
-}
-function vuAngleFor(db){
- if(!Number.isFinite(db)||db<=vuScale[0][0])return -67;
- if(db>=vuScale[vuScale.length-1][0])return 66;
- for(let i=1;i<vuScale.length;i++){
-  const a=vuScale[i-1],b=vuScale[i];
-  if(db<=b[0])return a[1]+(db-a[0])/(b[0]-a[0])*(b[1]-a[1]);
- }
- return -67;
-}
-function drawWord(){
- const playingOnAir=[music,ads,programs,third].some(playing);
- let monoPower=0;
- if(!stereoMeters&&analyser){
+ return {element,segments,marker:element.querySelector('.mh-bc-peak'),number:$('mhBroadcast'+side+'Value'),level:-60,held:-60,holdUntil:0,lit:-1,lastNumber:'',channel:i};
+});
+let broadcastFrameTime=0,broadcastClipUntil=0,broadcastAriaTime=0;
+function drawWord(now){
+ const dt=Math.max(0,broadcastFrameTime?(now-broadcastFrameTime)/1000:1/30);
+ broadcastFrameTime=now;
+ const onAir=[music,ads,programs,third].some(playing);
+ let monoPeak=0;
+ if(onAir&&analyser&&!stereoMeters){
   analyser.getFloatTimeDomainData(monoVuSamples);
-  for(const sample of monoVuSamples)monoPower+=sample*sample;
-  monoPower/=monoVuSamples.length;
+  for(const sample of monoVuSamples)monoPeak=Math.max(monoPeak,Math.abs(sample));
  }
- for(let channel=0;channel<2;channel++){
-  let power=monoPower;
-  if(stereoMeters){
-   const scope=stereoMeters[channel];
-   scope.analyser.getFloatTimeDomainData(scope.samples);
-   power=0;for(const sample of scope.samples)power+=sample*sample;
-   power/=scope.samples.length;
+ for(const meter of broadcastMeters){
+  let peak=monoPeak;
+  if(onAir&&stereoMeters){
+   const scope=stereoMeters[meter.channel];scope.analyser.getFloatTimeDomainData(scope.samples);
+   peak=0;for(const sample of scope.samples)peak=Math.max(peak,Math.abs(sample));
   }
-  // 0 VU calibrated at -18dBFS RMS (studio reference).
-  const db=playingOnAir&&power>1e-14?20*Math.log10(Math.sqrt(power))+18:-40;
-  const target=vuAngleFor(db),old=vuAngles[channel];
-  const follow=target>old?0.60:0.19;
-  vuAngles[channel]=Math.abs(old-target)<0.3?target:old+(target-old)*follow;
-  const element=vuNeedles[channel];
-  if(element)element.setAttribute('transform','rotate('+vuAngles[channel].toFixed(1)+' 110 127)');
-  const meter=vuInstruments[channel];
-  if(meter){
-   const value=Math.max(-20,Math.min(6,db));
-   meter.setAttribute('aria-valuenow',value.toFixed(1));
-   meter.classList.toggle('peak',playingOnAir&&db>=3);
-  }
+  const measured=peak>1e-6?20*Math.log10(peak):-120;
+  const target=onAir?Math.max(-60,Math.min(0,measured)):-60;
+  // Immediate attack, controlled fall, and a separate one-second peak hold.
+  meter.level=target>=meter.level?target:Math.max(target,meter.level-24*dt);
+  if(meter.level>=meter.held){meter.held=meter.level;meter.holdUntil=now+1000}
+  else if(now>meter.holdUntil)meter.held=Math.max(meter.level,meter.held-18*dt);
+  if(onAir&&peak>=.999)broadcastClipUntil=now+2000;
+  const lit=meter.level<=-59.95?0:Math.ceil((meter.level+60)/60*48);
+  if(lit!==meter.lit){meter.segments.forEach((segment,i)=>segment.classList.toggle('lit',i<lit));meter.lit=lit}
+  meter.marker.style.display=meter.held>-59.95?'block':'none';
+  meter.marker.style.left='calc('+Math.max(0,Math.min(100,(meter.held+60)/60*100)).toFixed(2)+'% - 2px)';
+  const number=meter.level<=-59.95?'−∞':Math.abs(meter.level)<.05?'0.0':meter.level.toFixed(1).replace('-','−');
+  if(number!==meter.lastNumber){meter.number.textContent=number;meter.lastNumber=number}
+  if(now-broadcastAriaTime>=250){meter.element.setAttribute('aria-valuenow',meter.level.toFixed(1));meter.element.setAttribute('aria-valuetext',number==='−∞'?'Sin señal':number+' dBFS')}
  }
+ if(now-broadcastAriaTime>=250)broadcastAriaTime=now;
+ const clip=$('mhBroadcastClip'),clipping=now<broadcastClipUntil;
+ if(clip.classList.contains('on')!==clipping){clip.classList.toggle('on',clipping);clip.setAttribute('aria-label',clipping?'Pico al límite digital detectado':'Sin saturación')}
 }
+// Independent 30 Hz visual refresh, including return to silence after Stop.
+let broadcastLastPaint=0;
+function broadcastAnimate(now){if(now-broadcastLastPaint>=1000/30){drawWord(now);broadcastLastPaint=now}requestAnimationFrame(broadcastAnimate)}
+drawWord(performance.now());requestAnimationFrame(broadcastAnimate);
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
 for(const id of ['shuffle','repeat','endStop'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
@@ -2413,7 +2393,7 @@ try{const saved=localStorage.getItem(settingKey);if(saved)applySettings(JSON.par
 for(const a of [music,ads,programs,third])a.addEventListener('play',()=>{if(selectedOutput&&typeof a.setSinkId==='function')a.setSinkId(selectedOutput).catch(()=>say('Salida guardada no disponible; revisá Configuración',true))});
 function fmt(s){return Number.isFinite(s)?String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0'):'00:00'}
 setInterval(()=>{const a=active(),on=playing(a);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
-if(analyser){analyser.getByteFrequencyData(buffer);drawWord(on);if($('silenceEnabled').checked&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
+if(analyser){analyser.getByteFrequencyData(buffer);if($('silenceEnabled').checked&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
 checkScheduledBreaks()
 },100);
 })();
