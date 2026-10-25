@@ -1311,14 +1311,42 @@ input[type=range]{accent-color:#baff59}
 #mhBroadcastMeters .mh-bc-clip{color:#879ca8;letter-spacing:.5px}
 #mhBroadcastMeters .mh-bc-clip.on{color:#ff6572}
 @media(max-width:1100px){#mhBroadcastMeters{padding-left:5px}#mhBroadcastMeters .mh-bc-row{grid-template-columns:9px minmax(0,1fr) 31px;gap:4px}#mhBroadcastMeters .mh-bc-axis{margin-left:13px;margin-right:35px}#mhBroadcastMeters .mh-bc-axis span:nth-child(2),#mhBroadcastMeters .mh-bc-axis span:nth-child(4){display:none}#mhBroadcastMeters .mh-bc-heading{font-size:9px;letter-spacing:0}#mhBroadcastMeters .mh-bc-footer{font-size:8px}}
-</style><link rel="stylesheet" href="/aire/estetica/megahertz-news-editorial.css?v=editorial-v1"></head><body><main>
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-news-editorial.css?v=editorial-v1"><style>
+/* Broadcast transport display; same footprint and controls as before. */
+.console .mh-simple-track #mhPlayerDisplay{display:grid!important;grid-template-rows:12px minmax(24px,1fr) 10px 20px 18px!important;align-items:stretch!important;justify-content:stretch!important;gap:3px!important;width:100%;min-width:0;min-height:0;overflow:hidden;padding:2px 3px 0 1px}
+#mhPlayerDisplay .mh-display-top{display:flex;align-items:center;justify-content:space-between;gap:5px;min-width:0}
+#mhPlayerDisplay .mh-display-kicker{font:500 9px Arial,sans-serif;color:#8caebf;letter-spacing:1px;white-space:nowrap}
+#mhPlayerDisplay .mh-display-state{font:600 8px Arial,sans-serif;letter-spacing:.5px;color:#9ab3c1;white-space:nowrap;display:flex;align-items:center;gap:4px}
+#mhPlayerDisplay .mh-display-state::before{content:"";width:4px;height:4px;border-radius:50%;background:#718c9d;flex-shrink:0}
+#mhPlayerDisplay[data-state=playing] .mh-display-state{color:#ff9aa3}
+#mhPlayerDisplay[data-state=playing] .mh-display-state::before{background:#f0626e}
+#mhPlayerDisplay[data-state=paused] .mh-display-state,#mhPlayerDisplay[data-state=loading] .mh-display-state{color:#e4c77d}
+#mhPlayerDisplay[data-state=paused] .mh-display-state::before,#mhPlayerDisplay[data-state=loading] .mh-display-state::before{background:#d8b45d}
+#mhPlayerDisplay[data-state=error] .mh-display-state{color:#ff9aa3}
+.console .mh-simple-track #mhPlayerDisplay #musicNow{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;align-self:center!important;flex:none!important;background:none!important;border:0!important;padding:0!important;margin:0!important;max-height:40px!important;min-height:0!important;font:500 16px/1.22 Arial,Helvetica,sans-serif!important;letter-spacing:-.15px!important;color:#eef7fc!important;white-space:normal!important;overflow:hidden!important;overflow-wrap:anywhere;text-shadow:none!important}
+#mhPlayerDisplay[data-state=idle] #musicNow{color:#a3bac8!important}
+#mhPlayerDisplay .mh-display-meta{display:flex;align-items:center;justify-content:space-between;gap:5px;font:400 8px Arial,sans-serif;color:#819faf;letter-spacing:.4px;white-space:nowrap;min-width:0}
+#mhPlayerDisplay #mhDisplaySource{overflow:hidden;text-overflow:ellipsis}
+#mhPlayerDisplay #mhDisplayPosition{flex-shrink:0;font-variant-numeric:tabular-nums}
+#mhPlayerDisplay .mh-display-times{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+#mhPlayerDisplay .mh-display-times>span{display:flex;align-items:baseline;gap:5px;min-width:0}
+#mhPlayerDisplay .mh-display-times small{font:400 7px Arial,sans-serif;letter-spacing:.4px;color:#809eae}
+#mhPlayerDisplay .mh-display-times output{font:400 14px monospace;font-variant-numeric:tabular-nums;color:#c7ebf5;white-space:nowrap}
+#mhPlayerDisplay[data-ending=true] #mhDisplayRemaining{color:#e4c77d}
+#mhPlayerDisplay .mh-display-next{display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;border-top:1px solid #253f4f;padding-top:4px}
+#mhPlayerDisplay .mh-display-next>span{font:400 7px Arial,sans-serif;letter-spacing:.4px;color:#7899ad;white-space:nowrap;flex-shrink:0}
+#mhPlayerDisplay #mhDisplayNext{font:400 9px Arial,sans-serif;color:#adc7d7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media(max-width:1100px){.console .mh-simple-track #mhPlayerDisplay #musicNow{font-size:14px!important;max-height:35px!important}#mhPlayerDisplay .mh-display-times{gap:3px}#mhPlayerDisplay .mh-display-times small{display:none}#mhPlayerDisplay .mh-display-kicker{font-size:8px;letter-spacing:.3px}#mhPlayerDisplay .mh-display-state{font-size:7px;letter-spacing:0}}
+</style></head><body><main>
 <section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
-  <div class="mh-song-data mh-on-air-compact">
-   <span class="mh-onair-kicker">AHORA SUENA</span>
-   <div class="now" id="musicNow" aria-live="polite">Sin audio en reproducción</div>
-   
+  <div class="mh-song-data mh-on-air-compact mh-broadcast-display" id="mhPlayerDisplay" data-state="idle">
+   <div class="mh-display-top"><span class="mh-display-kicker">AHORA SUENA</span><span id="mhDisplayState" class="mh-display-state">EN ESPERA</span></div>
+   <div class="now" id="musicNow" aria-live="polite">Listo para emitir</div>
+   <div class="mh-display-meta"><span id="mhDisplaySource">MÚSICA AUTOMÁTICA</span><span id="mhDisplayPosition">— / —</span></div>
+   <div class="mh-display-times"><span><small>TIEMPO</small><output id="mhDisplayElapsed" aria-live="off">00:00</output></span><span><small>RESTA</small><output id="mhDisplayRemaining" aria-live="off">−−:−−</output></span></div>
+   <div class="mh-display-next"><span>SIGUIENTE</span><strong id="mhDisplayNext">Playlist vacía</strong></div>
    <div class="mh-visually-hidden"><span id="musicAir" hidden>EN EL AIRE</span><span id="musicNext">PRÓXIMO · Sin canciones</span></div>
   </div>
   <aside id="mhBroadcastMeters" aria-label="Medidores digitales estéreo de la salida al aire">
@@ -1643,6 +1671,44 @@ function drawWord(now){
 let broadcastLastPaint=0;
 function broadcastAnimate(now){if(now-broadcastLastPaint>=1000/30){drawWord(now);broadcastLastPaint=now}requestAnimationFrame(broadcastAnimate)}
 drawWord(performance.now());requestAnimationFrame(broadcastAnimate);
+
+/* Read-only presentation of the existing transport state. Never selects,
+   advances, seeks, changes gain, or alters the audio routing. */
+function displayFileName(value){return String(value||'').replace(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i,'').replace(/_/g,' ').trim()}
+function setDisplayText(id,text){const element=$(id);if(element.textContent!==text)element.textContent=text}
+function syncOnAirDisplay(audio,on){
+ const k=audio===ads?'ads':audio===programs?'programs':audio===third?'third':'music';
+ const queue=k==='ads'&&activeBreak?activeAdQueue:lists[k],item=queue[index[k]],loaded=!!(item&&audio.getAttribute('src'));
+ const panel=$('mhPlayerDisplay');
+ const mode=audio.error&&loaded?'error':on?(audio.readyState<2?'loading':'playing'):loaded?(audio.ended?'ended':audio.currentTime>.05?'paused':'ready'):'idle';
+ const states={playing:'AL AIRE',paused:'PAUSA',loading:'CARGANDO',ended:'FINALIZADO',ready:'LISTO',idle:'EN ESPERA',error:'ERROR'};
+ if(panel.dataset.state!==mode)panel.dataset.state=mode;
+ setDisplayText('mhDisplayState',states[mode]);
+ const title=loaded?displayFileName(item.name):'Listo para emitir';
+ setDisplayText('musicNow',title);if($('musicNow').title!==title)$('musicNow').title=title;
+ const source={music:'MÚSICA AUTOMÁTICA',programs:'PROGRAMA',ads:'PUBLICIDAD',third:'AUXILIAR'}[k];
+ const extension=loaded?String(item.name||'').match(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i)?.[1]?.toUpperCase():'';
+ setDisplayText('mhDisplaySource',source+(extension?' · '+extension:''));
+ setDisplayText('mhDisplayPosition',loaded?String(index[k]+1).padStart(2,'0')+' / '+String(queue.length).padStart(2,'0'):'— / —');
+ const duration=loaded&&Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:null;
+ const elapsed=loaded&&Number.isFinite(audio.currentTime)?audio.currentTime:0;
+ const remaining=duration===null?null:Math.max(0,duration-elapsed);
+ setDisplayText('mhDisplayElapsed',fmt(elapsed));
+ setDisplayText('mhDisplayRemaining',remaining===null?'−−:−−':'−'+fmt(Math.ceil(remaining)));
+ panel.dataset.ending=String(on&&remaining!==null&&remaining>0&&remaining<=10);
+ let next='';
+ if(k==='ads')next=queue[index.ads+1]?.name||'Fin de tanda';
+ else if(on&&automatic&&pendingBreaks.length)next='Tanda pendiente';
+ else{
+  // Read the explicit cross-playlist next mark without consuming it.
+  for(const playlist of ['music','programs']){const forced=lists[playlist].find(track=>track.id===nextTrackId[playlist]);if(forced){next=forced.name;break}}
+  const stop=k==='music'?pressed('endStop'):k==='programs'?pressed('programsListEndStop'):false;
+  const random=k==='music'?pressed('shuffle'):k==='programs'?programShuffle:thirdShuffle;
+  const repeat=k==='music'?pressed('repeat'):k==='programs'?programRepeat:thirdRepeat;
+  if(!next)next=stop&&loaded?'Detener al finalizar':!queue.length?'Playlist vacía':random?'Selección aleatoria':queue[index[k]+1]?.name||(repeat?queue[0]?.name:'Fin de lista');
+ }
+ next=displayFileName(next);setDisplayText('mhDisplayNext',next);if($('mhDisplayNext').title!==next)$('mhDisplayNext').title=next;
+}
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
 for(const id of ['shuffle','repeat','endStop'])$(id).onclick=()=>$(id).setAttribute('aria-pressed',String(!pressed(id)));
@@ -2385,7 +2451,7 @@ $('importConfig').onclick=()=>$('configFile').click();$('configFile').onchange=a
 try{const saved=localStorage.getItem(settingKey);if(saved)applySettings(JSON.parse(saved));else syncConfigControls();showRecoveryStatus()}catch(error){say('No se pudo recuperar la configuración: '+error.message,true)}
 for(const a of [music,ads,programs,third])a.addEventListener('play',()=>{if(selectedOutput&&typeof a.setSinkId==='function')a.setSinkId(selectedOutput).catch(()=>say('Salida guardada no disponible; revisá Configuración',true))});
 function fmt(s){return Number.isFinite(s)?String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0'):'00:00'}
-setInterval(()=>{const a=active(),on=playing(a);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
+setInterval(()=>{const a=active(),on=playing(a);syncOnAirDisplay(a,on);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
 if(analyser){analyser.getByteFrequencyData(buffer);if($('silenceEnabled').checked&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
 checkScheduledBreaks()
 },100);
