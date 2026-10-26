@@ -1,0 +1,77 @@
+/* Configuration only: compact controls, quiet navigation and aligned editors. */
+#config{width:min(960px,96vw)!important;height:min(690px,92dvh)!important;border-color:#365465;border-radius:10px;font:12px/1.5 Arial,sans-serif}
+#config::backdrop{background:#020910b8;backdrop-filter:blur(3px)}
+#config *,#config *::before,#config *::after{box-sizing:border-box}
+#config [hidden]{display:none!important}
+#config .config-head{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:#10232e;border-color:#2d4756}
+#config .config-head h2{margin:0;font-size:13px;letter-spacing:.9px}
+#config #studioClose{width:30px;min-width:30px;height:30px;min-height:30px;padding:0;font-size:16px;background:transparent;border-color:transparent;box-shadow:none}
+#config .mh-settings-layout{grid-template-columns:178px minmax(0,1fr)}
+#config .config-tabs{gap:3px;padding:12px 8px;background:#0c1b25;border-color:#2c4352}
+#config .config-tabs button{height:32px;min-height:32px;padding:6px 10px;font-size:10px;letter-spacing:.5px;border:1px solid transparent;background:transparent;border-radius:4px;box-shadow:none;color:#9fb9c8}
+#config .config-tabs button.selected{color:#c4f5ff;border-color:#2d6376;background:#163545;box-shadow:inset 2px 0 #62d5ed}
+#config button{min-height:30px;height:auto;max-width:100%;padding:5px 10px;font-size:10px;line-height:1.4;letter-spacing:.25px;border:1px solid #3a5869;border-radius:4px;background:#1a303e;color:#d8e8f0;box-shadow:none;text-shadow:none;white-space:normal;cursor:pointer}
+#config button:hover{background:#244555;border-color:#6198ae}
+#config button:disabled{opacity:.45;cursor:default}
+#config :is(button,input,select,summary):focus-visible{outline:2px solid #71d9ee;outline-offset:2px}
+#config .mh-primary{background:#1b5c74;border-color:#398ca5;color:#effcff}
+#config .mh-settings-content{background:#10232f;scrollbar-width:thin;scrollbar-color:#385b6c #10232f;scroll-padding:18px}
+#config [data-settings-page]{padding:17px 20px 24px}
+#config [data-settings-page] h3{font-size:12px;letter-spacing:.7px;margin:0 0 6px;color:#a5e2f0}
+#config [data-settings-page] p{font-size:11px;line-height:1.55;margin:7px 0 12px;color:#93afbf}
+#config label{font-size:12px;line-height:1.45;margin:8px 0;gap:10px;min-width:0}
+#config input:not([type=checkbox]):not([type=range]):not([type=file]):not([type=hidden]),#config select{min-height:32px;padding:6px 8px;font:12px Arial,sans-serif;color:#e5f3f8;border:1px solid #38586b;background:#0b1b26;border-radius:4px;min-width:0;max-width:100%;color-scheme:dark}
+#config input[type=checkbox]{width:14px;height:14px;flex:0 0 14px;margin:0;accent-color:#54bdd6}
+#config .mh-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px;margin:10px 0 14px;align-items:start}
+#config .mh-control-grid>label{display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;gap:6px;margin:0}
+#config .mh-control-grid>label>input,#config .mh-control-grid>label>select{width:100%}
+#config .mh-control-grid>.mh-form-grid{margin:0;gap:12px}
+#config .mh-control-grid>.mh-form-grid>label{margin:0}
+#config .mh-report-filters>label:last-child{grid-column:1/-1}
+#config .mh-settings-group{margin:10px 0;border-color:#314e60;background:#0c1e2a;border-radius:5px}
+#config .mh-settings-group summary{padding:9px 12px;background:#152e3d;font-size:10px;letter-spacing:.6px}
+#config .mh-settings-group-body{padding:8px 12px 10px}
+#config .mh-language-setting{padding:10px 12px;background:#0c1e2a;border-color:#314e60;grid-template-columns:minmax(0,1fr) 180px}
+#config .mh-language-setting p{margin:0}
+#config .mh-settings-subtitle{margin:18px 0 10px;font-size:10px;letter-spacing:.8px;border-color:#2b485b;color:#9ac5d8}
+#config .mh-inline-actions{gap:6px;margin:10px 0}
+#config .mh-inline-actions button{min-height:30px;padding:5px 9px;font-size:10px}
+#config .mh-inline-actions [role=status]{flex:1 1 100%;font-size:11px}
+#config .mh-policy-buttons{display:inline-flex;flex-wrap:wrap;gap:0;max-width:100%;border:1px solid #3a5869;border-radius:4px;overflow:hidden}
+#config .mh-policy-buttons button{height:auto;min-height:30px;border:0;border-radius:0;padding:6px 12px;font-size:10px}
+#config .mh-policy-buttons button[aria-pressed=true]{background:#20586d;box-shadow:none;color:#d2f7ff}
+#config #adsConfigDrop,#config #instDrop{min-height:48px;padding:12px;border:1px dashed #426b7e;background:#102b39;font-size:10px;line-height:1.5}
+#config .mh-muted{padding:0;font-size:11px}
+#config .mh-saved-list{border-color:#2f4c5d;background:#0b1c27}
+#config .mh-record{gap:6px;padding:9px 10px;border-color:#263f50}
+#config .mh-record>span:first-child{flex:1 1 180px;overflow-wrap:anywhere}
+#config .mh-record button{min-height:28px;height:auto;padding:4px 7px;font-size:10px}
+#config .studio-days{display:flex;flex-wrap:wrap;gap:8px 13px;margin:12px 0}
+#config .studio-days label{display:flex;align-items:center;gap:5px;margin:0;font-size:10px}
+#config .studio-log-rows:empty,#config .mh-saved-list:empty{display:none}
+#config .config-foot{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:8px;padding:11px 16px;min-height:54px;background:#0d1e29;border-color:#2f4b5c}
+#config .config-foot #settingsSaved{min-width:0;font-size:10px;line-height:1.5;color:#a9c5d4;overflow-wrap:anywhere}
+#config .config-foot button{min-height:32px;padding:6px 12px}
+@media(max-width:680px){
+ #config{width:97vw!important;height:94dvh!important}
+ #config .config-head{padding:10px 12px}
+ #config .config-head h2{font-size:11px;letter-spacing:.5px}
+ #config .mh-settings-layout{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+ #config .config-tabs{flex-direction:row;gap:4px;padding:7px;overflow-x:auto}
+ #config .config-tabs button{width:auto;flex:0 0 auto;height:32px;min-height:32px;font-size:10px;padding:6px 9px}
+ #config [data-settings-page]{padding:14px 12px 22px}
+ #config .mh-control-grid,#config .mh-form-grid{grid-template-columns:1fr}
+ #config .mh-language-setting{grid-template-columns:1fr}
+ #config label>input:not([type=checkbox]):not([type=range]),#config label>select{max-width:100%}
+ #config .config-foot{grid-template-columns:1fr auto;padding:9px 12px}
+ #config .config-foot #settingsSaved{grid-column:1/-1}
+ #config #studioCancel{justify-self:end}
+}
+
+/* Override console-wide luminous button rules inside the settings dialog. */
+#config .config-tabs button{background:transparent!important;box-shadow:none!important;text-shadow:none!important}
+#config .config-tabs button.selected{background:#163545!important;box-shadow:inset 2px 0 #62d5ed!important}
+#config .mh-control-grid>label>input,#config .mh-control-grid>label>select{width:100%!important}
+#config .mh-unit-control{display:flex;align-items:center;gap:8px}
+#config .mh-unit-control input{width:100%}
+#config .config-tabs button[data-settings-tab].selected:not(#mode),#config .config-tabs button[data-settings-tab].selected:not(#mode):hover{background:#163545!important;box-shadow:inset 2px 0 #62d5ed!important;border-color:#2d6376!important;color:#c4f5ff!important}

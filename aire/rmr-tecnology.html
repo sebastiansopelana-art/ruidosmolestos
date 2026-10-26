@@ -1337,7 +1337,8 @@ input[type=range]{accent-color:#baff59}
 #mhPlayerDisplay .mh-display-next>span{font:400 7px Arial,sans-serif;letter-spacing:.4px;color:#7899ad;white-space:nowrap;flex-shrink:0}
 #mhPlayerDisplay #mhDisplayNext{font:400 9px Arial,sans-serif;color:#adc7d7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 @media(max-width:1100px){.console .mh-simple-track #mhPlayerDisplay #musicNow{font-size:14px!important;max-height:35px!important}#mhPlayerDisplay .mh-display-times{gap:3px}#mhPlayerDisplay .mh-display-times small{display:none}#mhPlayerDisplay .mh-display-kicker{font-size:8px;letter-spacing:.3px}#mhPlayerDisplay .mh-display-state{font-size:7px;letter-spacing:0}}
-</style><link rel="stylesheet" href="/aire/estetica/megahertz-studio-core.css?v=core-v3"><link rel="stylesheet" href="/aire/estetica/megahertz-pisadores.css?v=pads-v3"></head><body><main>
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-studio-core.css?v=core-v3"><link rel="stylesheet" href="/aire/estetica/megahertz-pisadores.css?v=pads-v3"><link rel="stylesheet" href="/aire/megahertz-settings.css?v=20261025-1">
+</head><body><main>
 <div id="studioInstanceNotice" hidden role="status">Otra pestaña tiene el control de emisión. Esta vista no ejecuta eventos ni reproduce audio.</div><section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
@@ -1456,10 +1457,10 @@ input[type=range]{accent-color:#baff59}
 
 <dialog id="config" aria-label="Configuración MEGAHERTZ">
 <form method="dialog" id="configForm">
-  <header class="config-head"><h2>CONFIGURACIÓN · MEGAHERTZ</h2><button type="button" id="studioClose">✕ CANCELAR</button></header>
+  <header class="config-head"><h2>CONFIGURACIÓN · MEGAHERTZ</h2><button type="button" id="studioClose" aria-label="CANCELAR" title="CANCELAR">✕</button></header>
   <div class="mh-settings-layout">
     <nav class="config-tabs" aria-label="Secciones de configuración">
-      <button type="button" class="selected" data-settings-tab="general">GENERAL</button>
+      <button type="button" class="selected" aria-current="page" data-settings-tab="general">GENERAL</button>
       <button type="button" data-settings-tab="ads">PUBLICIDAD</button>
       <button type="button" data-settings-tab="institutional">INSTITUCIONALES</button>
       <button type="button" data-settings-tab="audio">AUDIO</button><button type="button" data-settings-tab="events">EVENTOS</button><button type="button" data-settings-tab="reports">REGISTRO</button><button type="button" data-settings-tab="security">PERMISOS</button><button type="button" data-settings-tab="backup">RESPALDOS</button>
@@ -1564,40 +1565,54 @@ input[type=range]{accent-color:#baff59}
 <section data-settings-page="audio" hidden>
  <h3>AUDIO · AIRE Y PREESCUCHA</h3><p>La preescucha requiere una salida física distinta de aire. Si no está disponible, no se reproduce.</p>
  <div id="studioOutputSlot"></div>
+<div class="mh-control-grid">
  <label>Salida de PREESCUCHA <select id="studioCueOutput"><option value="">Sin configurar · bloqueada</option></select></label>
- <label>Volumen de preescucha <input id="studioCueVolume" type="number" min="0" max="100" value="70"> %</label>
+ <label>Volumen de preescucha <span class="mh-unit-control"><input id="studioCueVolume" type="number" min="0" max="100" value="70"><span>%</span></span></label>
+</div>
  <div class="mh-settings-subtitle">TRANSICIONES</div>
  <label><input id="studioFadeEnabled" type="checkbox"> Activar fundidos y solapamiento</label>
+<div class="mh-control-grid">
  <label>Fundido entre audios (s)<input id="studioFadeSeconds" type="number" min="0" max="10" step="0.1"></label>
  <label>Comenzar el siguiente tema antes del final (s)<input id="studioOverlapSeconds" type="number" min="0" max="15" step="0.1"></label>
  <label>Fundido al detener (s)<input id="studioStopFadeSeconds" type="number" min="0" max="5" step="0.1"></label>
+</div>
  <div class="mh-settings-subtitle">PISADOR Y NIVELES</div>
+<div class="mh-control-grid">
  <label>Atenuación al hablar (dB)<input id="studioDuckDb" type="number" min="-36" max="0"></label>
  <label>Tiempo de bajada (s)<input id="studioDuckAttack" type="number" min="0.02" max="3" step="0.01"></label>
  <label>Tiempo de recuperación (s)<input id="studioDuckRelease" type="number" min="0.05" max="5" step="0.05"></label>
+</div>
  <label><input id="studioAgc" type="checkbox"> Compensación automática de nivel — AGC</label>
+<div class="mh-control-grid">
  <label>Nivel de referencia RMS (dBFS)<input id="studioTargetDb" type="number" min="-30" max="-9"></label>
  <label>Aumento máximo del AGC (dB)<input id="studioMaxGainDb" type="number" min="0" max="12"></label>
+</div>
  <label><input id="studioLimiter" type="checkbox"> Protección de picos</label>
  <label>Umbral de protección (dBFS)<input id="studioCeilingDb" type="number" min="-6" max="0" step="0.1"></label>
  <p>La protección utiliza compresión de picos del motor. No es una medición de true peak ni una certificación de loudness.</p>
 </section>
 <section data-settings-page="events" hidden>
  <h3>EVENTOS Y RECUPERACIÓN</h3><p>Programá institucionales, programas, tandas y comandos. En MANUAL permanecen pendientes hasta volver a AUTOMÁTICO o vencer su espera máxima.</p>
+<div class="mh-control-grid">
  <label>Zona horaria de la emisora<input id="studioTimezone" type="text" placeholder="America/Argentina/Buenos_Aires"></label>
  <label>Espera máxima por defecto (min)<input id="studioRecoveryMinutes" type="number" min="1" max="1440"></label>
+</div>
  <div id="studioOwnerState" role="status"></div>
  <div class="mh-settings-subtitle">EDITOR DE EVENTOS</div>
  <input id="studioEventId" type="hidden">
+<div class="mh-control-grid">
  <label>Nombre<input id="studioEventName" maxlength="150" type="text"></label>
  <label>Acción<select id="studioEventType"><option value="institutional">Institucional</option><option value="program">Programa grabado</option><option value="ad">Tanda publicitaria</option><option value="play">Iniciar música</option><option value="stop">Detener emisión</option></select></label>
  <label>Material<select id="studioEventTarget"></select></label>
  <label>Horarios (HH:MM, separados por coma)<input id="studioEventTimes" type="text" placeholder="09:00, 12:00, 18:00"></label>
+</div>
  <div id="studioEventDays" class="studio-days"></div>
  <div class="mh-form-grid"><label>Desde<input id="studioEventStart" type="date"></label><label>Hasta<input id="studioEventEnd" type="date"></label></div>
+<div class="mh-control-grid">
  <label>Prioridad (0–9)<input id="studioEventPriority" type="number" min="0" max="9" value="5"></label>
  <label>Espera máxima (min)<input id="studioEventDelay" type="number" min="1" max="1440" value="15"></label>
  <label>Regla<select id="studioEventPolicy"><option value="end">Fin del audio</option><option value="exact">Hora exacta</option></select></label>
+</div>
  <label><input id="studioEventOverlay" type="checkbox"> Institucional sobre la música con pisador</label>
  <label><input id="studioEventEnabled" type="checkbox" checked> Evento activo</label>
  <div class="mh-inline-actions"><button id="studioStageEvent" type="button">AGREGAR AL BORRADOR</button><button id="studioNewEvent" type="button">NUEVO</button></div>
@@ -1606,10 +1621,12 @@ input[type=range]{accent-color:#baff59}
 </section>
 <section data-settings-page="reports" hidden>
  <h3>REGISTRO DE EMISIÓN</h3><p>Registra la reproducción del motor: inicio, finalización, interrupción y errores. Las preescuchas no se contabilizan como emisión.</p>
+<div class="mh-control-grid mh-report-filters">
  <div class="mh-form-grid"><label>Desde<input id="studioLogFrom" type="date"></label><label>Hasta<input id="studioLogTo" type="date"></label></div>
  <label>Tipo<select id="studioLogType"><option value="">Todos</option><option value="ad-spot">Avisos publicitarios</option><option value="ad-break">Tandas</option><option value="music">Música</option><option value="program">Programas</option><option value="institutional">Institucionales</option><option value="cart">Pisadores</option><option value="event">Eventos</option></select></label>
  <label>Estado<select id="studioLogStatus"><option value="">Todos</option><option value="complete">Completo</option><option value="interrupted">Interrumpido</option><option value="failed">Fallido</option><option value="expired">Vencido</option><option value="playing">En emisión</option><option value="paused">Pausado</option></select></label>
  <label>Campaña o archivo<input id="studioLogSearch" type="search"></label>
+</div>
  <div class="mh-inline-actions"><button id="studioQueryLogs" type="button">CONSULTAR</button><button id="studioExportLog" type="button">CSV DETALLADO</button><button id="studioExportAds" type="button">INFORME PUBLICITARIO CSV</button></div>
  <p id="studioLogCount" role="status"></p><div id="studioLogRows" class="studio-log-rows"></div>
 </section>
@@ -2134,7 +2151,7 @@ $('programsListEndStop').onclick=()=>{
  button.setAttribute('aria-pressed',String(!pressed('programsListEndStop')));
 };
 
-function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.settingsTab==='ads'))}
+function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.settingsTab==='ads');b.setAttribute('aria-current',b.dataset.settingsTab==='ads'?'page':'false')})}
 
 /* Panel único de tandas: acciones reales, sin controles duplicados en barra inferior. */
 
@@ -2462,7 +2479,7 @@ $('copyLibraryAds').onclick=async()=>{if(!lists.ads.length){$('adsDropCount').te
 
 /* Clic en fondo exterior cierra; el contenido y los campos mantienen sus acciones. */
 $('config').addEventListener('click',e=>{if(e.target!==$('config')||studio.committing)return;const r=$('config').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('config').close()});
-for(const button of document.querySelectorAll('[data-settings-tab]'))button.onclick=()=>{document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!==button.dataset.settingsTab);document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b===button));if(button.dataset.settingsTab==='audio')deviceList();if(button.dataset.settingsTab==='events'){const current=$('studioEventTarget').value;studioTargets();if(current)$('studioEventTarget').value=current;studioJournal()}if(button.dataset.settingsTab==='reports')studioQueryLogs()};
+for(const button of document.querySelectorAll('[data-settings-tab]'))button.onclick=()=>{document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!==button.dataset.settingsTab);document.querySelectorAll('[data-settings-tab]').forEach(b=>{b.classList.toggle('selected',b===button);b.setAttribute('aria-current',b===button?'page':'false')});if(button.dataset.settingsTab==='audio')deviceList();if(button.dataset.settingsTab==='events'){const current=$('studioEventTarget').value;studioTargets();if(current)$('studioEventTarget').value=current;studioJournal()}if(button.dataset.settingsTab==='reports')studioQueryLogs()};
 $('importConfig').onclick=()=>$('configFile').click();
 try{const saved=localStorage.getItem(settingKey);if(saved)applySettings(JSON.parse(saved));else syncConfigControls();showRecoveryStatus()}catch(error){say('No se pudo recuperar la configuración: '+error.message,true)}
 
@@ -2529,7 +2546,7 @@ studioOwnerText();
 // Load libraries before recovering any scheduled occurrence.
 Promise.all([openBreakAssetsDb(),studio.db.open()]).then(()=>{const wait=setInterval(()=>{if(breakAssetsLoaded&&institutionalDb){clearInterval(wait);studio.ready=true;studioRecoverLogs()}},100)}).catch(e=>say(e.message,true));
 const dayNames=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];dayNames.forEach((n,i)=>{const l=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.value=i;c.checked=true;l.append(c,document.createTextNode(n));$('studioEventDays').append(l)});
-function studioTargets(){const type=$('studioEventType').value,host=$('studioEventTarget');host.replaceChildren();const rows=type==='ad'?breakPresets:type==='institutional'?institutionalItems:type==='program'?lists.programs:[];for(const r of rows)host.add(new Option(r.name,r.id));host.disabled=!rows.length}
+function studioTargets(){const type=$('studioEventType').value,host=$('studioEventTarget'),material=['ad','institutional','program'].includes(type);host.closest('label').hidden=!material;$('studioEventOverlay').closest('label').hidden=type!=='institutional';if(type!=='institutional')$('studioEventOverlay').checked=false;host.replaceChildren();const rows=type==='ad'?breakPresets:type==='institutional'?institutionalItems:type==='program'?lists.programs:[];for(const r of rows)host.add(new Option(r.name,r.id));host.disabled=!rows.length}
 $('studioEventType').onchange=studioTargets;
 function studioNewEvent(){for(const [id,v]of Object.entries({studioEventId:'',studioEventName:'',studioEventTimes:'',studioEventStart:'',studioEventEnd:'',studioEventPriority:5,studioEventDelay:15}))$(id).value=v;$('studioEventEnabled').checked=true;$('studioEventOverlay').checked=false;studioTargets()}
 $('studioNewEvent').onclick=studioNewEvent;
@@ -2575,9 +2592,11 @@ async function studioWriteSnapshot(snapshot){for(const [name,stores]of Object.en
 async function studioRestore(snapshot){const previous=await studioSnapshot();try{await studioWriteSnapshot(snapshot)}catch(e){await studioWriteSnapshot(previous);throw Error('Restauración revertida: '+e.message)}}
 $('exportConfig').onclick=async()=>{try{if(studio.role!=='admin')throw Error('Se requiere administrador');$('studioBackupStatus').textContent='Preparando audios y registro…';const files=[],snapshot=await studioEncode(await studioSnapshot(),files),blob=await S.packArchive({createdAt:new Date().toISOString(),fileRefs:[],snapshot},files,(n,t)=>$('studioBackupStatus').textContent='Verificando audio '+n+'/'+t);studioDownload(blob,'megahertz-'+localScheduleDate()+'.mhbackup');$('studioBackupStatus').textContent='Respaldo completo descargado: configuración guardada, playlists, audios y registro. La clave actual se conserva al restaurar.'}catch(e){$('studioBackupStatus').textContent=e.message}};
 $('configFile').onchange=async e=>{try{if(studio.role!=='admin'||!studio.owner)throw Error('Se requiere administrador y control de emisión');const f=e.target.files[0];if(!f)return;if(f.name.endsWith('.json')){const settings=JSON.parse(await f.text());if(settings.version!==1)throw Error('Formato no compatible');studioValidateLegacy(settings);studio.draft.legacyModes={};for(const key of ['programShuffle','programRepeat','programEndStop'])if(key in settings)studio.draft.legacyModes[key]=settings[key];if(settings.interfaceLanguage)studio.draft.languagePending=settings.interfaceLanguage;if(settings.breakPresets)breakPresets=settings.breakPresets.map(b=>S.validateEvent({...b,type:'ad'}));for(const [id,key]of [['volume','volume'],['startupMode','mode'],['startPolicy','policy'],['threshold','threshold'],['silenceSeconds','silenceSeconds'],['breakLabel','breakLabel'],['adTime','adTime'],['extraTimes','extraTimes'],['outputDevice','output']])if(settings[key]!==undefined)$(id).value=settings[key];for(const [id,key]of [['startShuffle','shuffle'],['startRepeat','repeat'],['startEndStop','endStop'],['silenceEnabled','silence'],['autoRecoveryEnabled','autoRecovery']])$(id).checked=!!settings[key];if(settings.days)for(const box of dayHost.querySelectorAll('input'))box.checked=settings.days.includes(+box.value);refreshAdSlotsFromSettings();showBreakPresets();$('studioBackupStatus').textContent='Configuración antigua preparada. Pulsá Guardar para aplicar.'}else{const data=await S.unpackArchive(f,(n,t)=>$('studioBackupStatus').textContent='Comprobando audio '+n+'/'+t),snapshot=studioDecode(data.manifest.snapshot,data.files);if(!snapshot?.databases||!snapshot.storage)throw Error('Respaldo incompleto');for(const [name,stores]of Object.entries(snapshot.databases)){if(!studioDbSpec[name]||Object.keys(stores).some(k=>!(k in studioDbSpec[name])))throw Error('Estructura de base no admitida');for(const rows of Object.values(stores))if(!Array.isArray(rows)||rows.some(r=>!r||!('key'in r)||!('value'in r)))throw Error('Registros inválidos')}if(Object.keys(studioDbSpec).some(k=>!snapshot.databases[k]))throw Error('Faltan bases en el respaldo');if(snapshot.storage[S.OPTIONS_KEY])S.validateOptions(JSON.parse(snapshot.storage[S.OPTIONS_KEY]));studio.restore=snapshot;$('studioBackupStatus').textContent='Integridad comprobada. Guardar restaurará todo y recargará la consola. Cancelar conserva el estado actual.'}}catch(err){studio.restore=null;$('studioBackupStatus').textContent='No se importó: '+err.message}e.target.value=''};
-$('configForm').addEventListener('submit',e=>{e.preventDefault();if(!studio.committing)$('config').close()});$('config').addEventListener('cancel',e=>{if(studio.committing)e.preventDefault()});
+$('configForm').addEventListener('submit',e=>{e.preventDefault()});$('config').addEventListener('cancel',e=>{if(studio.committing)e.preventDefault()});
 const outputDetails=$('outputDevice').closest('details');if(outputDetails)$('studioOutputSlot').append(outputDetails);
 studioRole();studioFillOptions();studioNewEvent();
+// Stop controls are useful only while their independent preview is running.
+for(const [audio,id]of [[previewAds,'stopAdPreview'],[institutionalPreview,'instStopPreview']]){const sync=()=>{$(id).hidden=audio.paused||audio.ended};for(const event of ['playing','pause','ended','error','emptied'])audio.addEventListener(event,sync);sync()}
 
 S.installPads({studio,meter,say});
 setInterval(()=>{const a=active(),on=playing(a);syncOnAirDisplay(a,on);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===studio.padAudio?'AL AIRE · PISADOR':a===institutionalAir?'AL AIRE · INSTITUCIONAL':a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;

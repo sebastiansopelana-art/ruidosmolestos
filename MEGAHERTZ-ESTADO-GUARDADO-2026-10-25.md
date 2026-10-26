@@ -85,3 +85,12 @@ Historial: `5664df2` → `307f10e` → **`e27a4a2`**.
 ## Reparaciones posteriores a la auditoría
 
 Se corrigieron F01–F22. Detalle y límites de verificación en tests/MEGAHERTZ-REPARACIONES-2026-10-25.md. Batería reproducible de 158 casos aprobados. Se conserva el diseño y la disposición de pisadores.
+
+
+## Configuración compacta y ordenada
+
+Botonera lateral de 32 px, cierre superior compacto, Guardar/Cancelar agrupados y fijos, editores de audio/eventos/registro en grillas alineadas y zonas de carga reducidas. CSS limitado a #config en aire/megahertz-settings.css. Los botones para detener preescucha aparecen mientras su audio está activo.
+
+Enter ya no cierra ni descarta el borrador. Eventos oculta Material para comandos y muestra la opción de pisador sólo en institucionales. Navegación comunica la sección actual mediante aria-current.
+
+Verificación: 160 casos automáticos aprobados (67 integración + 74 límites + 8 salvaguardas + 11 núcleo). Navegador: ocho secciones sin desbordamiento horizontal en escritorio, Enter conserva borrador, Cancelar restaura, Guardar persiste el valor después de recargar. Sin cambios en la consola principal.
