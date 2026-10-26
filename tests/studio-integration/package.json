@@ -1,0 +1,10 @@
+{
+  "private": true,
+  "scripts": {
+    "test": "node run.cjs && node bounds.cjs && node safeguards.cjs"
+  },
+  "dependencies": {
+    "fake-indexeddb": "6.2.6",
+    "jsdom": "30.1.3"
+  }
+}

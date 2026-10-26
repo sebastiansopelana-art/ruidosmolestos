@@ -1,0 +1,5 @@
+
+# Local integration-test dependencies and generated results
+tests/studio-integration/node_modules
+tests/studio-integration/results.json
+tests/studio-integration/bounds-results.json

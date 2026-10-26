@@ -80,3 +80,8 @@ Historial: `5664df2` → `307f10e` → **`e27a4a2`**.
 - Antes de escribir, revisar el HEAD remoto para preservar cambios concurrentes.
 - Verificar en navegador la versión desplegada, no sólo el commit de GitHub.
 - El historial de Git guarda el código y esta bitácora. Los audios y datos locales del usuario se respaldan desde Configuración → Respaldos en su propio navegador; no confundir ambos respaldos.
+
+
+## Reparaciones posteriores a la auditoría
+
+Se corrigieron F01–F22. Detalle y límites de verificación en tests/MEGAHERTZ-REPARACIONES-2026-10-25.md. Batería reproducible de 158 casos aprobados. Se conserva el diseño y la disposición de pisadores.

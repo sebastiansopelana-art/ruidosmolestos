@@ -30,7 +30,9 @@ function scheduledEpoch(day,time,zone){
  const p=zonedParts(guess,zone);return p.date===day&&p.time===time?guess:null;
 }
 class Planner{
- constructor({state,zone=defaults.timezone,onChange=()=>{},onRecord=()=>{}}={}){this.zone=zone;this.state=state&&typeof state==='object'?state:{};this.onChange=onChange;this.onRecord=onRecord;this.recovered=[];for(const r of Object.values(this.state))if(r.status==='running'){r.status='interrupted';r.reason='Se cerró o recargó la consola';this.recovered.push(clone(r))}}
+ constructor({state,zone=defaults.timezone,onChange=()=>{},onRecord=()=>{},recover=true}={}){this.zone=zone;this.state=state&&typeof state==='object'?state:{};this.onChange=onChange;this.onRecord=onRecord;this.recovered=[];if(recover)this.recoverRunning()}
+ recoverRunning(){const recovered=[];for(const r of Object.values(this.state))if(r.status==='running'){r.status='interrupted';r.reason='Se cerró o recargó la consola';r.updatedAt=new Date().toISOString();recovered.push(clone(r))}this.recovered.push(...recovered);if(recovered.length)this.onChange(this.state);return recovered}
+
  record(key,patch){const value=this.state[key]={...this.state[key],...patch,key,updatedAt:new Date().toISOString()};this.onChange(this.state);return value}
  scan(events,now=Date.now(),active=null){
   const today=zonedParts(now,this.zone).date,yesterday=new Date(new Date(today+'T12:00:00Z').getTime()-86400000).toISOString().slice(0,10),due=[];
@@ -75,13 +77,17 @@ class AudioEngine{
  setDuck(on){this.ducked=!!on;const seconds=on?this.options.duckAttack:this.options.duckRelease;this.duck.gain.setTargetAtTime(on?dbToGain(this.options.duckDb):1,this.context.currentTime,Math.max(.01,seconds/3))}
  async prepare(audio){const node=this.add(audio).gain.gain;node.cancelScheduledValues(this.context.currentTime);node.setValueAtTime(1,this.context.currentTime);await this.route(this.options.output||'');await this.resume()}
  fadeIn(audio,seconds=this.options.fadeSeconds){const g=this.add(audio).gain.gain,t=this.context.currentTime;g.cancelScheduledValues(t);if(!this.options.fadeEnabled||seconds<=0){g.setValueAtTime(1,t);return}g.setValueAtTime(0,t);g.linearRampToValueAtTime(1,t+seconds)}
- async transitionOut(audio,seconds){
-  if(audio.paused||audio.ended||!audio.src||seconds<=0)return;
-  const tail=new Audio();tail.preload='auto';tail.src=audio.currentSrc||audio.src;this.add(tail);tail.currentTime=audio.currentTime;this.tails.add(tail);const gain=this.inputs.get(tail).gain.gain;
-  this.add(audio).gain.gain.setValueAtTime(0,this.context.currentTime);
-  try{await tail.play();audio.pause();gain.setValueAtTime(1,this.context.currentTime);gain.linearRampToValueAtTime(0,this.context.currentTime+seconds);setTimeout(()=>this.removeTail(tail),seconds*1000+80)}catch(_){this.removeTail(tail);audio.pause()}
+ async transitionOut(audio,seconds,fadeSeconds=seconds){
+  if(audio.paused||audio.ended||!audio.src||seconds<=0)return null;
+  const tail=new Audio();tail.preload='auto';tail.src=audio.currentSrc||audio.src;this.add(tail);const gain=this.inputs.get(tail).gain.gain;gain.setValueAtTime(0,this.context.currentTime);
+  try{tail.currentTime=audio.currentTime;await tail.play();this.add(audio).gain.gain.setValueAtTime(0,this.context.currentTime);audio.pause();this.tails.add(tail);
+   let resolve;const done=new Promise(r=>resolve=r);this.tailMeta??=new Map();this.tailMeta.set(tail,{resolve,started:performance.now(),seconds});
+   const t=this.context.currentTime;gain.setValueAtTime(1,t);gain.setValueAtTime(1,t+Math.max(0,seconds-fadeSeconds));gain.linearRampToValueAtTime(0,t+seconds);
+   tail.onended=()=>this.removeTail(tail,'complete');tail.onerror=()=>this.removeTail(tail,'failed');setTimeout(()=>this.removeTail(tail,'complete'),seconds*1000+80);return {audio:tail,done};
+  }catch(_){tail.pause();const node=this.inputs.get(tail);node?.source.disconnect();node?.gain.disconnect();this.inputs.delete(tail);audio.pause();return null}
  }
- removeTail(tail){tail.pause();tail.removeAttribute('src');tail.load();const node=this.inputs.get(tail);if(node){node.source.disconnect();node.gain.disconnect();this.inputs.delete(tail)}this.tails.delete(tail)}
+ removeTail(tail,status='interrupted'){if(!this.tails.has(tail))return;const meta=this.tailMeta?.get(tail);this.tails.delete(tail);this.tailMeta?.delete(tail);tail.onended=tail.onerror=null;tail.pause();tail.removeAttribute('src');tail.load();const node=this.inputs.get(tail);if(node){node.source.disconnect();node.gain.disconnect();this.inputs.delete(tail)}meta?.resolve({status,playedSeconds:Math.max(0,Math.min(meta.seconds,(performance.now()-meta.started)/1000)),endedAt:new Date().toISOString()})}
+
  silenceTails(){for(const tail of [...this.tails])this.removeTail(tail)}
  async stop(audio){const seconds=this.options.fadeEnabled?this.options.stopFadeSeconds:0;const g=this.add(audio).gain.gain,t=this.context.currentTime;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);if(seconds>0){g.linearRampToValueAtTime(0,t+seconds);await new Promise(resolve=>setTimeout(resolve,seconds*1000))}audio.pause();if(Number.isFinite(audio.duration))audio.currentTime=0;g.setValueAtTime(1,this.context.currentTime)}
  update(now){if(!this.options.agc||now-this.lastAgc<100)return;this.lastAgc=now;this.rms.getFloatTimeDomainData(this.samples);let p=0;for(const x of this.samples)p+=x*x;const db=10*Math.log10(Math.max(1e-12,p/this.samples.length));if(db<-55)return;const target=Math.max(dbToGain(-12),Math.min(dbToGain(this.options.maxGainDb),dbToGain(this.options.targetDb-db)));this.agcValue+=(target-this.agcValue)*.08;this.agc.gain.setTargetAtTime(this.agcValue,this.context.currentTime,.15)}
