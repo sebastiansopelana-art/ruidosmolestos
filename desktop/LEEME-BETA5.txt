@@ -1,0 +1,14 @@
+MEGAHERTZ — BETA 5
+RMR Technology · Powered by Sebastián Sopelana
+
+WINDOWS: Windows 10/11 de 64 bits. Extraé TODO el ZIP a una carpeta y abrí MegaHertz Beta 5.exe. Conservá juntos todos los archivos; el EXE no funciona solo. No necesita Node ni Python.
+
+MAC: macOS 12 Monterey o posterior. Elegí Intel para tu MacBook Air 2015; Apple Silicon para M1/M2/M3/M4/M5. Extraé el ZIP y arrastrá MegaHertz Beta 5.app a Aplicaciones. Es una beta sin firma ni notarización: macOS puede pedir autorización en Privacidad y seguridad. No desactives la protección del sistema.
+
+DATOS: la Beta 5 tiene un perfil independiente. Desde la versión web: Configuración > Respaldos > exportar respaldo completo .mhbackup. En la aplicación: importar el respaldo y Guardar. Los audios no están incluidos en esta descarga. Conservá el respaldo original. Windows y Mac no sincronizan sus datos entre sí.
+
+USO: cargá un audio de prueba antes de emitir. Probá música, programas, tandas, pisadores, Guardar/Cancelar y respaldo. La aplicación debe estar abierta y el equipo despierto para emitir y cumplir horarios. Clima/noticias necesitan Internet. Si el puerto local 18765 está ocupado, la aplicación informa el error en lugar de abrir otra versión.
+
+VERIFICACIÓN: base taller-megahertz, commit 4dab797. 160 casos automatizados del software aprobados y comprobación HTTP del lanzador y sus 13 recursos. Paquetes Windows x64, Mac x64 y Mac arm64 inspeccionados. No se ejecutaron en máquinas Windows/macOS desde este entorno; las salidas físicas de audio requieren prueba en tu equipo. No es todavía una versión certificada para emisión desatendida.
+
+VERSIONADO: 0.5.0-beta.5. Electron 37.10.3 para compatibilidad con Monterey. No incluye actualizador automático. Mantener el perfil MegaHertz-Beta5 y la dirección local fija conserva los datos al reemplazar esta aplicación.
