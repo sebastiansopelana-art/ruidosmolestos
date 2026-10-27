@@ -2092,7 +2092,9 @@ function policy(v){exact=v;$('exact').setAttribute('aria-pressed',String(v));$('
 function studioAdPolicy(value){if(!studio.owner||studio.role!=='admin'){say('Se requiere administrador y control de emisión',true);return}const agenda=todayScheduleEntries(),entry=agenda.find(e=>e.key===selectedBreakId)||agenda[0],preset=breakPresets.find(b=>b.id===entry?.id)||breakPresets[0];if(!preset){say('Primero configurá una tanda',true);return}const previous=preset.policy;preset.policy=value;try{persistBreakPresets()}catch(e){preset.policy=previous;say(e.message,true);return}policy(value==='exact');for(const pending of pendingBreaks)if(pending.id===preset.id&&pending.type!=='institutional')pending.policy=value;renderBreakSchedule();studio.stamp=null;say(preset.name+' · '+(value==='exact'?'HORA EXACTA':'FIN DE TEMA'))}
 $('exact').onclick=()=>studioAdPolicy('exact');$('wait').onclick=()=>studioAdPolicy('end');policy(false);
 // Desktop only: mouse movement is reported by the local application.
-let lastPointerMovement=Date.now(),manualSince=Date.now();
+let lastPointerMovement=Date.now(),manualSince=Date.now(),pointerMonitorReady=false;
+window.megahertzDesktop?.pointerAvailable().then(ok=>{pointerMonitorReady=ok;if(!ok)say('Retorno por inactividad no disponible en esta sesión',true)}).catch(()=>{pointerMonitorReady=false});
+window.megahertzDesktop?.onPointerUnavailable(()=>{pointerMonitorReady=false;say('Retorno por inactividad no disponible en esta sesión',true)});
 window.megahertzDesktop?.onPointerMoved(()=>{lastPointerMovement=Date.now()});
 function setAutomaticMode(value){
  automatic=value;
@@ -2103,7 +2105,7 @@ function setAutomaticMode(value){
 }
 $('mode').onclick=()=>setAutomaticMode(!automatic);
 if(window.megahertzDesktop)setInterval(()=>{
- if(studio.owner&&!automatic&&Date.now()-Math.max(manualSince,lastPointerMovement)>=15*60*1000){
+ if(pointerMonitorReady&&studio.owner&&!automatic&&Date.now()-Math.max(manualSince,lastPointerMovement)>=15*60*1000){
   setAutomaticMode(true);say('Automático activado por 15 minutos sin movimiento del mouse');
  }
 },1000);
