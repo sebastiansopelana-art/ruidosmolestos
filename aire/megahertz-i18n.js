@@ -127,6 +127,7 @@ function setLanguage(next){
  if(settings&&settings.value!==language)settings.value=language;
  document.title=translate('MEGAHERTZ · Consola de emisión');
  visit(document.body);
+ document.dispatchEvent(new CustomEvent('megahertz:languagechange',{detail:{language}}));
 }
 function setup(){
  const top=document.getElementById('mhLanguage'),inside=document.getElementById('mhLanguageConfig');

@@ -512,6 +512,7 @@ $('mhNewsPlaceAuto')?.addEventListener('click',()=>{
  updateNewsPicker();loadNews();
 });
 
+document.addEventListener('megahertz:languagechange',()=>{if(state.forecast)displayWeather(state.forecast);else clock();if(state.news)displayNationalHeadlines(state.news.nationalItems,state.news.label||newsLocation().countryName,state.news.updatedAt)});
 window.megahertzWeather={commit:action=>{if(!action)return;state.geoMode=action.city?'city':'ip';state.citySearch=action.city||'';if(action.city)localStorage.setItem(manualPlaceKey,action.city);else localStorage.removeItem(manualPlaceKey);$('mhWeatherCityInput').value=action.city||'';displayWeather(action.data)}};
 let configuredNewsSpeed='slow';
 try{configuredNewsSpeed=localStorage.getItem(newsSpeedKey)||'slow'}catch(_){}
