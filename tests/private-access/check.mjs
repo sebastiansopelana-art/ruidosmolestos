@@ -1,0 +1,22 @@
+import {readFile} from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const src=await readFile('functions/_middleware.js','utf8');
+const {onRequest}=await import('data:text/javascript;base64,'+Buffer.from(src).toString('base64'));
+const env={AUTH_PASSWORD:'test-password-only-123456',AUTH_SESSION_KEY:'test-secret-012345678901234567890123456789'};
+async function call(path,{method='GET',body,headers={},settings=env}={}){return onRequest({request:new Request('https://example.com'+path,{method,body,headers}),env:settings,next:()=>new Response('contenido')});}
+assert.equal((await call('/aire/rmr-tecnology.html',{settings:{}})).status,503);
+assert.equal((await call('/')).status,200);
+assert.equal((await call('/demo.html')).status,200);
+assert.equal((await call('/aire/megahertz-i18n.js')).status,200);
+for(const p of ['/aire/','/aire/rmr-tecnology.html','/aire/studio-music.html','/studio.html','/studio','/api/redaccion-chat']) assert.equal((await call(p)).status,303,p);
+assert.equal((await call('/_acceso',{method:'POST',body:'password=wrong',headers:{'Content-Type':'application/x-www-form-urlencoded','Origin':'https://example.com'}})).status,401);
+assert.equal((await call('/_acceso',{method:'POST',body:'password=x',headers:{'Content-Type':'application/x-www-form-urlencoded','Origin':'https://evil.com'}})).status,403);
+let login=await call('/_acceso?return=%2Faire%2F',{method:'POST',body:new URLSearchParams({password:env.AUTH_PASSWORD}).toString(),headers:{'Content-Type':'application/x-www-form-urlencoded','Origin':'https://example.com'}});
+assert.equal(login.status,303); assert.equal(login.headers.get('location'),'/aire/');
+let cookie=login.headers.get('set-cookie'); assert.match(cookie,/Secure; HttpOnly; SameSite=Strict/); cookie=cookie.split(';')[0];
+assert.equal((await call('/aire/rmr-tecnology.html',{headers:{Cookie:cookie}})).status,200);
+assert.equal((await call('/aire/rmr-tecnology.html',{headers:{Cookie:cookie},settings:{...env,AUTH_PASSWORD:'another-password-123456789'}})).status,303);
+assert.equal((await call('/aire/rmr-tecnology.html',{headers:{Cookie:cookie+'x'}})).status,303);
+let logout=await call('/_salir',{method:'POST',headers:{Origin:'https://example.com',Cookie:cookie}});assert.equal(logout.status,303);assert.match(logout.headers.get('set-cookie'),/Max-Age=0/);
+let evil=await call('/_acceso?return=%2F%2Fevil.com',{method:'POST',body:new URLSearchParams({password:env.AUTH_PASSWORD}).toString(),headers:{'Content-Type':'application/x-www-form-urlencoded','Origin':'https://example.com'}});assert.equal(evil.headers.get('location'),'/aire/');
+console.log('Comprobaciones de acceso, bloqueo, sesión y rotación aprobadas.');

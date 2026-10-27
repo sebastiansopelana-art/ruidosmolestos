@@ -66,12 +66,12 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
 </style>
 </head>
 <body>
-<section id="login">
+<section id="login" hidden>
  <div class="box"><h1>PRODUCCIÓN</h1><p>Ingresá tu código</p>
  <input id="pass" type="password" inputmode="numeric" maxlength="4" autofocus>
  <button id="enter">ENTRAR</button><div id="error"></div></div>
 </section>
-<section id="hub" hidden>
+<section id="hub">
  <div class="hubwrap">
   <div class="hubbrand"><div class="brandmark"><img src="/icon-192.png" alt=""><small>Creado por Sebastián Sopelano</small></div><div><b>RUIDOS MOLESTOS</b><span>PRODUCCIÓN · BETA 2</span></div></div>
   <div class="hubgrid">
@@ -87,20 +87,13 @@ textarea{width:100%;min-height:75vh;border:0;outline:0;background:transparent;re
 </section>
 <script>
 (function(){
- const login=document.getElementById('login'),hub=document.getElementById('hub'),pass=document.getElementById('pass'),error=document.getElementById('error');
- const KEY='rm_pass';
- function show(){login.hidden=true;hub.hidden=false}
- function enter(){if(pass.value==='0253'){sessionStorage.setItem(KEY,'ok');show()}else{error.textContent='Código incorrecto';pass.value='';pass.focus()}}
- document.getElementById('enter').onclick=enter;
- pass.addEventListener('keydown',e=>{if(e.key==='Enter')enter()});
- if(sessionStorage.getItem(KEY)==='ok')show();
  document.getElementById('openRedaccion').onclick=()=>location.assign('/aire/redaccion.html');
  document.getElementById('openRmr').onclick=()=>location.assign('/aire/rmr-tecnology.html');
  document.getElementById('openStudio').onclick=()=>location.assign('/aire/studio-music.html?instance='+Date.now());
- document.getElementById('hubExit').onclick=()=>{sessionStorage.removeItem(KEY);location.reload()};
+ document.getElementById('hubExit').onclick=()=>{const f=document.createElement('form');f.method='post';f.action='/_salir';document.body.appendChild(f);f.submit()};
  const btn=document.getElementById('after22Btn'),state=document.getElementById('after22State');
  if(btn)btn.onclick=()=>{state.textContent='SESIÓN ABIERTA HASTA QUE SALGAS'};
- if(state)state.textContent=sessionStorage.getItem(KEY)==='ok'?'SESIÓN ABIERTA HASTA QUE SALGAS':'INGRESÁ CON CONTRASEÑA';
+ if(state)state.textContent='SESIÓN AUTORIZADA';
 })();
 </script>
 </body></html>
