@@ -4,7 +4,7 @@ on:
   push:
     branches: [estudio-linux-tres-plataformas]
 permissions:
-  contents: read
+  contents: write
 jobs:
   builds:
     strategy:
@@ -54,3 +54,27 @@ jobs:
             desktop/MegaHertz-*.zip
             desktop/MegaHertz-*.tar.gz
           if-no-files-found: error
+  publicar-beta:
+    needs: builds
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: MegaHertz-*
+          path: paquetes
+          merge-multiple: true
+      - name: Publicar archivos beta
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f paquetes/MegaHertz-Linux-x64.tar.gz
+          test -f paquetes/MegaHertz-Windows-x64.zip
+          test -f paquetes/MegaHertz-Mac-Intel.zip
+          test -f paquetes/MegaHertz-Mac-Apple-Silicon.zip
+          if ! gh release view estudio-beta-tres >/dev/null 2>&1; then
+            gh release create estudio-beta-tres --target "${{ github.sha }}" --prerelease --title "MEGAHERTZ Estudio · beta para pruebas" --notes "Paquetes beta sin firma, pendientes de pruebas de emisión y de hardware real. En Linux Wayland el retorno por inactividad se desactiva."
+          fi
+          gh release upload estudio-beta-tres paquetes/MegaHertz-* --clobber
