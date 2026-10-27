@@ -2091,7 +2091,22 @@ $('force').onclick=()=>startAds(0,todayScheduleEntries().find(e=>e.key===selecte
 function policy(v){exact=v;$('exact').setAttribute('aria-pressed',String(v));$('wait').setAttribute('aria-pressed',String(!v))}
 function studioAdPolicy(value){if(!studio.owner||studio.role!=='admin'){say('Se requiere administrador y control de emisión',true);return}const agenda=todayScheduleEntries(),entry=agenda.find(e=>e.key===selectedBreakId)||agenda[0],preset=breakPresets.find(b=>b.id===entry?.id)||breakPresets[0];if(!preset){say('Primero configurá una tanda',true);return}const previous=preset.policy;preset.policy=value;try{persistBreakPresets()}catch(e){preset.policy=previous;say(e.message,true);return}policy(value==='exact');for(const pending of pendingBreaks)if(pending.id===preset.id&&pending.type!=='institutional')pending.policy=value;renderBreakSchedule();studio.stamp=null;say(preset.name+' · '+(value==='exact'?'HORA EXACTA':'FIN DE TEMA'))}
 $('exact').onclick=()=>studioAdPolicy('exact');$('wait').onclick=()=>studioAdPolicy('end');policy(false);
-$('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));if(automatic&&pending&&!playing(ads)){const ready=nextReadyBreak(false);if(ready)dispatchStudioEvent(ready)}};
+// Desktop only: mouse movement is reported by the local application.
+let lastPointerMovement=Date.now(),manualSince=Date.now();
+window.megahertzDesktop?.onPointerMoved(()=>{lastPointerMovement=Date.now()});
+function setAutomaticMode(value){
+ automatic=value;
+ if(!value)manualSince=Date.now();
+ $('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';
+ $('mode').setAttribute('aria-pressed',String(automatic));
+ if(automatic&&pending&&!playing(ads)){const ready=nextReadyBreak(false);if(ready)dispatchStudioEvent(ready)}
+}
+$('mode').onclick=()=>setAutomaticMode(!automatic);
+if(window.megahertzDesktop)setInterval(()=>{
+ if(studio.owner&&!automatic&&Date.now()-Math.max(manualSince,lastPointerMovement)>=15*60*1000){
+  setAutomaticMode(true);say('Automático activado por 15 minutos sin movimiento del mouse');
+ }
+},1000);
 $('clearPending').onclick=()=>{for(const e of pendingBreaks){studio.planner?.finish(e,'discarded',{reason:'Descartado por operador'});studioRecord({type:'event',name:e.name,status:'discarded',reason:'Descartado por operador'}).catch(()=>{})}pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
