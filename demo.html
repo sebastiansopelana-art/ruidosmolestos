@@ -2418,6 +2418,9 @@ checkScheduledBreaks()
 },100);
 // DEMO ONLY: the production console never loads this initializer.
 (async()=>{
+ const demoControls=['play','prev','next','programsListPlay','programsListPrev','programsListNext','force'];
+ demoControls.forEach(id=>$(id).disabled=true);
+ say('Preparando audios de demostración…');
  try {
   automatic=false;$('mode').textContent='MANUAL';$('mode').setAttribute('aria-pressed','false');
   const response=await fetch('/assets/megahertz/pulso-demo.wav');if(!response.ok)throw Error('Audio de muestra no disponible');const blob=await response.blob();
@@ -2431,6 +2434,7 @@ checkScheduledBreaks()
   showBreakPresets();renderBreakSchedule();say('DEMOSTRACIÓN · Música, programas y tandas cargados. Pulsá reproducir para escuchar el audio de muestra.');
   document.documentElement.dataset.demoReady='true';
  }catch(e){say('No se pudo preparar la demo: '+e.message,true)}
+ finally{demoControls.forEach(id=>$(id).disabled=false)}
 })();
 
 })();
@@ -2440,4 +2444,4 @@ for(const [id,text] of Object.entries(example)){const el=document.getElementById
 document.getElementById('mhWeekStrip').innerHTML=['HOY','SÁB','DOM','LUN','MAR','MIÉ','JUE'].map((day,i)=>'<div class="mh-week-day"><b>'+day+'</b><span>☀</span><strong>'+(16+i%3)+'° / '+(4+i%3)+'°</strong></div>').join('');
 document.getElementById('mhNewsHeadlines').innerHTML='<div class="mh-news-empty">CENTRO INFORMATIVO · Titulares y región elegidos por el operador. Vista de demostración.</div>';
 setInterval(()=>document.getElementById('mhLocalClock').textContent=new Date().toLocaleTimeString('es-AR',{hour12:false}),1000);
-</script></main><script defer src="/aire/megahertz-logo-progress-v2.js?v=20261024c3"></script></body></html>
+</script></main><script defer src="/aire/megahertz-i18n.js?v=20261027-demo1"></script><script defer src="/aire/megahertz-logo-progress-v2.js?v=20261024c3"></script></body></html>
