@@ -1626,7 +1626,7 @@ function drawBlocks(){
  }
 }
 
-// Al abrir Studio, los cuatro bloques permanecen vacíos hasta pulsar CARGAR PROGRAMA.
+// Al abrir Studio, recuperar automáticamente el programa activo publicado.
 // No se modifica la playlist auxiliar ni la carga manual.
 blockFile.onchange=()=>{const files=Array.from(blockFile.files);blocks[activeBlock].push(...files);blockFile.value='';drawBlocks();files.forEach(f=>rmReadFileDuration(f,drawBlocks))};drawBlocks();
 const search=document.createElement('form');search.className='searchrow';const q=document.createElement('input');q.placeholder='Buscar';q.setAttribute('aria-label','Buscar canción o artista');const go=document.createElement('button');go.textContent='BUSCAR';search.append(q,go);auxPanel.append(search);
@@ -1958,4 +1958,7 @@ document.addEventListener('keydown',event=>{
  document.addEventListener('keydown',firstGesture,{capture:true});
  document.addEventListener('fullscreenchange',()=>{if(document.fullscreenElement)pending=false;else pending=true});
 })();
+
+// Programa activo: cargar las cuatro listas al abrir, sin iniciar audio.
+loadStudioProgram(50);
 </script></body></html>
