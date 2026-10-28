@@ -1253,10 +1253,10 @@ const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
 const rmDurationText=s=>Number(s)>0&&Number.isFinite(Number(s))?fmt(Number(s)):'--:--';
 function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{file.rmDuration=a.duration;URL.revokeObjectURL(url);done()};a.onerror=()=>URL.revokeObjectURL(url);a.src=url}
 const programRow=document.createElement('div');programRow.className='rm-program-row';
-const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA';programLoad.title='Cargar los cuatro bloques del programa 47 desde la biblioteca del estudio';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA 50';programLoad.title='Cargar los cuatro bloques del programa 50 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
 const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';/* La información de estado ya se muestra en el reproductor; no agregar renglón debajo de bloques. */
-async function loadStudioProgram(number=44){
+async function loadStudioProgram(number=50){
  programLoad.disabled=true;programInfo.textContent='Cargando programa '+number+'…';
  try{
   const response=await fetch('/aire/programas/'+encodeURIComponent(number)+'.json',{cache:'no-store'});
@@ -1264,7 +1264,7 @@ async function loadStudioProgram(number=44){
   const manifest=await response.json();
   window.rmLoadedProgram=number;
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
-  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
+  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,year:t.year||null,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
   for(const t of blocks.flat()){const cached=rmVideoCache[t.query];if(!t.videoId&&cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){t.videoId=cached.id;t.durationSeconds=t.durationSeconds||cached.durationSeconds||0;t.rmAudioQualityStatus=cached.qualityStatus||'pendiente';t.rmAudioSource=cached.source||''}}
   activeBlock=0;drawBlocks();
    // Precarga inteligente: resolver identificadores en segundo plano, sin abrir reproductores adicionales.
@@ -1293,11 +1293,11 @@ async function loadStudioProgram(number=44){
      }
     })();
    }
-  programLoad.textContent='CARGAR PROGRAMA';
+  programLoad.textContent='CARGAR PROGRAMA 50';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
 }
-programLoad.addEventListener('click',()=>loadStudioProgram(47));
+programLoad.addEventListener('click',()=>loadStudioProgram(50));
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);/* Control de carga oculto; se conserva el input para no alterar los manejadores. */
@@ -1349,7 +1349,7 @@ async function loadBlockFacts(f){
   const response=await fetch('/api/song-facts?title='+encodeURIComponent(title)+'&artist='+encodeURIComponent(artist),{cache:'no-store'});
   if(!response.ok)throw Error('Sin datos');
   const data=await response.json();if(seq!==blockFactsSequence)return;
-  year.textContent=data.year||'Sin confirmar';
+  year.textContent=f.year||data.year||'Sin confirmar';
   writers.textContent=data.writers?.length?data.writers.join(', '):'Sin confirmar';
   label.textContent=data.label||'Sin confirmar';
  }catch(_){if(seq!==blockFactsSequence)return;year.textContent='Sin verificar';writers.textContent='Sin verificar';label.textContent='Sin verificar'}
@@ -1918,7 +1918,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  patOverlapAudio.addEventListener('ended',()=>{if(!patOverlapActive||stopRequested)return;patOverlapActive=false;patOverlapStarted=false;if(repeat)playIndex(current);else next()});
  function initializeYT(){if(!window.YT?.Player){setTimeout(initializeYT,200);return}
  player=new YT.Player(ytHost,{height:'1',width:'1',playerVars:{playsinline:1,controls:0,origin:location.origin},events:{
-  onReady:()=>{ready=true;state.textContent='LISTO';status('YouTube Music listo · buscá o elegí un tema');player.setVolume(Number(vol.value)||85)},
+  onReady:()=>{ready=true;status('YouTube Music listo · buscá o elegí un tema');player.setVolume(Number(vol.value)||85)},
   onStateChange:e=>{if(activeProduction)return;if(e.data===YT.PlayerState.PLAYING)live(true);else if(e.data===YT.PlayerState.PAUSED||e.data===YT.PlayerState.ENDED||e.data===YT.PlayerState.CUED)live(false);if(e.data===YT.PlayerState.ENDED&&!stopRequested&&!activeProduction){if(repeat&&current>=0)playIndex(current);else next()}update()},
   onError:e=>{live(false);status('Video no reproducible ('+e.data+'). Probá otro resultado.')},
   onAutoplayBlocked:()=>status('El navegador requiere pulsar PLAY para habilitar YouTube.')
@@ -1958,4 +1958,6 @@ document.addEventListener('keydown',event=>{
  document.addEventListener('keydown',firstGesture,{capture:true});
  document.addEventListener('fullscreenchange',()=>{if(document.fullscreenElement)pending=false;else pending=true});
 })();
+
+loadStudioProgram(50);
 </script></body></html>
