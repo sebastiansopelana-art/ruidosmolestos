@@ -1,0 +1,37 @@
+{
+  "programa": 50,
+  "fecha": "2026-10-28",
+  "publicacion": "https://ruidosmolestos.pages.dev/historias/charly-garcia.html",
+  "guion": "/aire/programas/50.txt",
+  "estudio": "/aire/studio-music.html",
+  "cantidadTemas": 16,
+  "bloques": 4,
+  "segundosMusica": 3955,
+  "verificaciones": {
+    "paginaPublica": true,
+    "aficheVisible": true,
+    "carga16TemasEstudio": true,
+    "paginasYouTubeConDuracion": 16,
+    "reproduccionAudible": "no confirmada: media.readyState=0 en este navegador remoto",
+    "redaccion": "libreto publicado; lectura privada requiere código de acceso existente"
+  },
+  "duraciones": {
+    "1": 216,
+    "2": 245,
+    "3": 225,
+    "4": 191,
+    "5": 275,
+    "6": 372,
+    "8": 418,
+    "9": 244,
+    "10": 203,
+    "12": 136,
+    "13": 194,
+    "14": 269,
+    "15": 289,
+    "16": 267,
+    "7": 203,
+    "11": 208
+  }
+}
+

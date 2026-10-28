@@ -1,7 +1,7 @@
 # RUIDOS MOLESTOS — PROGRAMA 50
 ## CHARLY: UNA PARTE DE NUESTRA VIDA
 
-**Guion integral para revisión de Sebastián Sopelana.**
+**Guion integral del especial publicado. Producción: Sebastián Sopelana.**
 **Emisión de referencia:** 28 de octubre de 2026. FM del Lago 102.5, San Martín de los Andes. 19 a 21 h.
 
 ### PRODUCCIÓN — NO LEER AL AIRE
@@ -10,7 +10,7 @@ Especial dedicado exclusivamente a Charly García. Cancela las propuestas anteri
 
 Precisión de aniversario: Charly cumplió 75 años el 23/10/2026; el cincuentenario del debut discográfico de Sui Generis, Vida (1972), fue en 2022. No anunciar que en 2026 se cumplen exactamente 50 años de carrera. El cincuenta corresponde a esta emisión; el homenaje recorre más de medio siglo de obra.
 
-Las indicaciones entre corchetes no se leen. Pausas: / breve; // larga. No superponer canciones con letra al relato. Dejar terminar las versiones elegidas. La selección de grabaciones está especificada al final; enlaces y reproducción en Estudio pendientes de comprobación. No hay carga ni publicación realizadas.
+Las indicaciones entre corchetes no se leen. Pausas: / breve; // larga. No superponer canciones con letra al relato. Dejar terminar las versiones elegidas. La selección está cargada en aire/programas/50.json y disponible desde Estudio. Las 16 páginas de YouTube y sus duraciones se comprobaron. La reproducción audible no se pudo confirmar en el navegador remoto, donde el tiempo de los videos permanece en cero. Historia y afiche publicados.
 
 Pronunciaciones de apoyo: SUI GENERIS: SUI YÉNERIS; SERÚ GIRÁN: acentos tal como se escriben; SAY NO MORE: SÉI NOU MOR; CLICS MODERNOS: tal como se escribe. Nombres propios en mayúsculas en el relato.
 
@@ -324,9 +324,9 @@ LA HISTORIA LLEGÓ A SU FIN, / EL ROCK, POR SUERTE, NO. //
 
 ### CONTROL DE MUSICALIZACIÓN
 
-La lista es una selección editorial, no una playlist cargada. Faltan: resolver 16 enlaces directos para las grabaciones indicadas, verificar correspondencia de audio/álbum, reproducción y duración real; cronometrar lectura con Sebastián; ajustar tandas al reloj de dos horas. No atribuir al conductor asistencia personal a recitales. No reproducir letras extensas de canciones. No convertir el incendio de Rezo por vos en causa única documentada del álbum fallido. No afirmar historias de entierros o muertes para explicar Rasguña las piedras.
+La playlist de 16 enlaces directos está cargada en cuatro bloques. Duración musical comprobada en los reproductores de YouTube: 65 min 55 s. Ver aire/programas/50-verificacion.json. Con 4.922 palabras de libreto, la lectura se estima en 38–41 min a 120–130 palabras por minuto, antes de las pausas; reservar el resto del reloj de dos horas para cortinas, separadores y tandas. La estimación no sustituye una lectura cronometrada de Sebastián. No atribuir al conductor asistencia personal a recitales. No reproducir letras extensas de canciones. No convertir el incendio de Rezo por vos en causa única documentada del álbum fallido. No afirmar historias de entierros o muertes para explicar Rasguña las piedras.
 
-Este guion tiene presentación, cuatro relatos, justificaciones, selección y cierre completos. Es una primera versión integral para revisión editorial; no equivale a una emisión técnicamente lista ni a la extensión histórica de aproximadamente 50 páginas.
+Este guion tiene presentación, cuatro relatos, justificaciones, selección y cierre completos. El guion y los recursos están publicados; la comprobación de audio queda limitada por el navegador remoto. No se presenta como una emisión con reproducción audible certificada.
 
 16. Rock.com.ar, podcast con identificación separada del repertorio de Alta fidelidad (1997) y la versión de Inconsciente colectivo de Mercedes Sosa (1983). https://rock.com.ar/podcast/rock-roll-yo/charly-garcia-rock-and-roll-yo-07/
 
