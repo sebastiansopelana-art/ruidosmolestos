@@ -1,0 +1,1 @@
+Reservado por Sope para el lunes 2 de noviembre de 2026. The Idle Race / The Move / ELO / Wizzard. Numeración de emisión pendiente; no anunciar como programa 51 activo. Afiche preservado en /assets/programa-51-afiche.webp. Versiones sin guías de lectura.
