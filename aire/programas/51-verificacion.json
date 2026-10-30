@@ -9,10 +9,23 @@
     "durationSeconds": 4624,
     "redaccionTextMatches": true,
     "javascriptSyntax": true,
-    "publishedOnMegahertz": false,
-    "studioVisibleLoad": false,
-    "redaccionAuthenticated": false,
-    "audiblePlayback": false
+    "publishedOnMegahertz": true,
+    "studioVisibleLoad": true,
+    "redaccionAuthenticated": true,
+    "audiblePlayback": false,
+    "historyVisible": true,
+    "posterVisible": true,
+    "redaccionCharacters": 24047
   },
-  "nota": "Actualizar sólo después de comprobar el despliegue y las interfaces reales. Reserva ELO preservada para lunes."
+  "nota": "Prueba real con autenticación segura y navegación Acceso privado → Redacción / Estudio. No se pulsó CARGAR PROGRAMA para obtener las 16 filas iniciales. Audio detenido al cerrar la prueba. No se conoce la causa del streaming detenido; no se atribuye como hecho a la consola ni al equipo del usuario.",
+  "streamingTest": {
+    "track": "Queen — One Vision",
+    "currentTime": 0,
+    "readyState": 0,
+    "duration": 245,
+    "muted": false,
+    "error": null,
+    "audibleConfirmed": false
+  },
+  "publishedContentCommit": "6de19c5ef43a848f8d955bd437843596cea99587"
 }

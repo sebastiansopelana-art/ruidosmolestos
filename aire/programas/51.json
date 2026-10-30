@@ -1,7 +1,7 @@
 {
   "programa": 51,
   "titulo": "Queen: los que estuvieron ahí",
-  "estado": "preparado; carga-visible-y-reproduccion-por-comprobar",
+  "estado": "publicado; guion-y-16-temas-visibles-comprobados; reproduccion-audible-no-confirmada",
   "artistas": [
     "Queen",
     "David Bowie",
@@ -308,5 +308,5 @@
     }
   ],
   "durationSeconds": 4624,
-  "nota": "Páginas, títulos, canales y duraciones comprobados; streaming audible no confirmado todavía en Estudio. La propuesta ELO permanece íntegra en programas/reservas/2026-11-02."
+  "nota": "Verificado en www.megahertz.com.ar por Acceso privado: guion Queen completo en Redacción (24.047 caracteres), 16 temas automáticos en Estudio, historia y afiche visibles. One Vision queda currentTime=0/readyState=0 en navegador remoto; no se afirma reproducción audible. Reserva ELO para lunes preservada."
 }
