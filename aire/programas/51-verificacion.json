@@ -1,0 +1,19 @@
+{
+  "programa": 51,
+  "fecha": "2026-10-30",
+  "checks": {
+    "manifest16": true,
+    "fourPerBlock": true,
+    "uniqueVideoIds": true,
+    "youtubePagesOK": 16,
+    "durationSeconds": 3651,
+    "redaccionEmbeddedTextMatches": true,
+    "javascriptSyntax": true,
+    "studioDefault51": true,
+    "publishedOnMegahertz": false,
+    "studioVisibleLoad": false,
+    "redaccionAuthenticated": false,
+    "audiblePlayback": false
+  },
+  "pending": "Verificar despliegue, carga dentro de Estudio, Redacción autenticada y audio real; no declarar terminado por pruebas estáticas."
+}
