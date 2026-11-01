@@ -19,3 +19,8 @@
 .mh-visor-trial .center-controls.mh-emission-trio>#mode,.mh-visor-trial .center-controls.mh-emission-trio>#settings{font-size:8px!important;padding:2px!important;letter-spacing:0!important}
 .mh-visor-trial .center-controls.mh-emission-trio>#mhLocalClock{font-size:12px!important;letter-spacing:0!important}
 @media(max-width:1000px){.mh-visor-trial .console{grid-template-columns:minmax(0,1fr) 205px 35%!important}.mh-visor-trial .console>.emission-controls{grid-template-columns:minmax(0,1fr) 205px!important}.mh-visor-trial .music-screen{grid-template-columns:minmax(0,1fr) minmax(110px,.8fr)!important}.mh-visor-trial .center-controls.mh-emission-trio>#mhLocalClock{font-size:10px!important}}
+.mh-visor-trial .console>.master{grid-template-rows:minmax(0,1fr)!important}
+.mh-visor-trial .mh-visor-progress .mh-logo-ticks{display:flex!important;justify-content:space-between!important;align-items:start!important;white-space:nowrap!important;color:#a2e6e9!important}
+.mh-visor-trial .mh-visor-progress #seek{appearance:none!important;-webkit-appearance:none!important;min-height:8px!important;background:linear-gradient(to right,#75e4d6 0%,#75e4d6 var(--mh-pct,0%),#315c72 var(--mh-pct,0%),#315c72 100%)!important;border:1px solid #4b8997!important;border-radius:8px!important;touch-action:pan-y!important}
+.mh-visor-trial .mh-visor-progress #seek::-webkit-slider-runnable-track{height:6px;background:transparent;border:0}
+.mh-visor-trial .mh-visor-progress #seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;margin-top:-2px;border:2px solid #2dc8bd;border-radius:50%;background:#b4fff0}
