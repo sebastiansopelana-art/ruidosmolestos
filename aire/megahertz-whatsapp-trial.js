@@ -3,7 +3,7 @@
 if(new URLSearchParams(location.search).get('whatsapp')!=='prueba')return;
 const deck=document.querySelector('.mh-weather-deck');if(!deck)return;
 document.documentElement.classList.add('mh-whatsapp-trial');
-const style=document.createElement('link');style.rel='stylesheet';style.href='/aire/megahertz-whatsapp-trial.css?v=20261101';document.head.append(style);
+const style=document.createElement('link');style.rel='stylesheet';style.href='/aire/megahertz-whatsapp-trial.css?v=20261101b';document.head.append(style);
 const panel=document.createElement('section');panel.id='mhWhatsapp';panel.setAttribute('aria-label','WhatsApp · prueba de operación');
 panel.innerHTML=`<header><strong>WHATSAPP <small>ESTUDIO</small></strong><span class="wa-off">SIN VINCULAR</span></header>
 <div class="wa-toolbar"><button type="button" id="waImport">+ AUDIO</button><button type="button" id="waExample">PROBAR AUDIO</button><a href="https://web.whatsapp.com/" target="_blank" rel="noopener noreferrer">ABRIR WHATSAPP ↗</a></div>
