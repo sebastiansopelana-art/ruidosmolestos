@@ -2599,9 +2599,13 @@ studioRole();studioFillOptions();studioNewEvent();
 for(const [audio,id]of [[previewAds,'stopAdPreview'],[institutionalPreview,'instStopPreview']]){const sync=()=>{$(id).hidden=audio.paused||audio.ended};for(const event of ['playing','pause','ended','error','emptied'])audio.addEventListener(event,sync);sync()}
 
 S.installPads({studio,meter,say});
+if(new URLSearchParams(location.search).get('whatsapp')==='prueba')window.MHWhatsAppTrial={
+ cue:audio=>{if(!studio.owner)throw Error('Otra pestaña tiene el control');return studioCue(audio)},
+ air:async file=>{if(!studio.owner||studioExclusive()||playing(ads))return false;const found=lists.programs.findIndex(x=>x.file===file);let position=found;if(position<0){if(!add('programs',[file]))return false;position=lists.programs.length-1}return startProgram(position)}
+};
 setInterval(()=>{const a=active(),on=playing(a);syncOnAirDisplay(a,on);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===studio.padAudio?'AL AIRE · PISADOR':a===institutionalAir?'AL AIRE · INSTITUCIONAL':a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
 if(analyser){studio.engine.update(performance.now());analyser.getByteFrequencyData(buffer);if((studio.draft?studio.draft.settings.silence:$('silenceEnabled').checked)&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number(studio.draft?studio.draft.settings.threshold:$('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number(studio.draft?studio.draft.settings.silenceSeconds:$('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
 checkScheduledBreaks()
 },100);
 })();
-</script><script src="/aire/megahertz-weather.js?v=20261027-lang2" defer></script><script src="/aire/megahertz-i18n.js?v=20261027-lang2" defer></script></main><script defer src="/aire/megahertz-logo-progress-v2.js?v=20261024c3"></script></body></html>
+</script><script src="/aire/megahertz-weather.js?v=20261027-lang2" defer></script><script src="/aire/megahertz-i18n.js?v=20261027-lang2" defer></script></main><script defer src="/aire/megahertz-logo-progress-v2.js?v=20261024c3"></script><script defer src="/aire/megahertz-whatsapp-trial.js?v=20261101"></script></body></html>

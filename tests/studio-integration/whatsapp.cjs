@@ -1,0 +1,12 @@
+const {test}=require('node:test'),assert=require('node:assert/strict'),{JSDOM}=require('jsdom'),fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'../..'),script=fs.readFileSync(root+'/aire/megahertz-whatsapp-trial.js','utf8');
+function setup(query='?whatsapp=prueba'){
+ const d=new JSDOM('<section class="mh-weather-deck"><h1>CLIMA</h1></section>',{url:'https://www.megahertz.com.ar/aire/rmr-tecnology'+query,runScripts:'outside-only'}),w=d.window;let plays=0,pauses=0;
+ w.URL.createObjectURL=()=> 'blob:test';w.URL.revokeObjectURL=()=>{};w.HTMLMediaElement.prototype.play=async()=>{plays++};w.HTMLMediaElement.prototype.pause=()=>{pauses++};w.eval(script);
+ const file=new w.File(['audio'],'Oyente.wav',{type:'audio/wav'}),input=w.document.getElementById('waFile');
+ const load=()=>{Object.defineProperty(input,'files',{value:[file],configurable:true});input.dispatchEvent(new w.Event('change'));};
+ return {w,load,get plays(){return plays},close:()=>w.close()};
+}
+test('normal console is unchanged and trial never claims WhatsApp is connected',()=>{const a=setup('');assert.equal(a.w.document.getElementById('mhWhatsapp'),null);a.close();const b=setup();assert.match(b.w.document.querySelector('.wa-off').textContent,/SIN VINCULAR/);assert.equal(b.w.document.querySelector('.wa-reply button').disabled,true);b.close()});
+test('loading audio is silent; failed cue never falls back to air',async()=>{const x=setup();try{x.load();assert.equal(x.plays,0);let air=0;x.w.MHWhatsAppTrial={cue:async()=>{throw Error('Falta otra salida')},air:async()=>air++};await x.w.document.getElementById('waCue').onclick();assert.equal(x.plays,0);assert.equal(air,0);assert.match(x.w.document.getElementById('waStatus').textContent,/bloqueada/)}finally{x.close()}});
+test('explicit cue and explicit air are separate, transport refusal is visible',async()=>{const x=setup();try{x.load();let aired=0;x.w.MHWhatsAppTrial={cue:async()=>{},air:async()=>{aired++;return false}};await x.w.document.getElementById('waCue').onclick();assert.equal(x.plays,1);assert.equal(aired,0);await x.w.document.getElementById('waAir').onclick();assert.equal(aired,1);assert.match(x.w.document.getElementById('waStatus').textContent,/No se emitió/);x.w.document.getElementById('waForecast').click();assert.equal(x.w.document.getElementById('waForecast').getAttribute('aria-expanded'),'true')}finally{x.close()}});
