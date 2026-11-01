@@ -24,3 +24,9 @@
 .mh-visor-trial .mh-visor-progress #seek{appearance:none!important;-webkit-appearance:none!important;min-height:8px!important;background:linear-gradient(to right,#75e4d6 0%,#75e4d6 var(--mh-pct,0%),#315c72 var(--mh-pct,0%),#315c72 100%)!important;border:1px solid #4b8997!important;border-radius:8px!important;touch-action:pan-y!important}
 .mh-visor-trial .mh-visor-progress #seek::-webkit-slider-runnable-track{height:6px;background:transparent;border:0}
 .mh-visor-trial .mh-visor-progress #seek::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:11px;height:11px;margin-top:-2px;border:2px solid #2dc8bd;border-radius:50%;background:#b4fff0}
+.mh-visor-trial .music-screen #mhBroadcastMeters{display:grid!important;grid-template-rows:10px 8px 12px 12px 12px!important;gap:3px!important;align-content:center!important;justify-content:stretch!important;padding:4px 0 4px 8px!important;overflow:hidden!important}
+.mh-visor-trial #mhBroadcastMeters .mh-bc-heading{font-size:8px!important;line-height:10px!important}
+.mh-visor-trial #mhBroadcastMeters .mh-bc-axis{font-size:7px!important;line-height:8px!important}
+.mh-visor-trial #mhBroadcastMeters .mh-bc-row{height:12px!important;min-height:0!important}
+.mh-visor-trial #mhBroadcastMeters .mh-bc-track{height:10px!important}
+.mh-visor-trial #mhBroadcastMeters .mh-bc-footer{font-size:7px!important;line-height:10px!important;margin:0!important;padding:0!important}

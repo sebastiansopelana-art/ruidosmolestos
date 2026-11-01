@@ -4,5 +4,5 @@ const seek=document.getElementById('seek'),screen=document.querySelector('.music
 let rail=seek.closest('.mh-logo-timeline')?.parentElement||seek.parentElement;
 if(!rail||rail===master)return;
 document.documentElement.classList.add('mh-visor-trial');rail.classList.add('mh-visor-progress');screen.append(rail);
-const css=document.createElement('link');css.rel='stylesheet';css.href='/aire/megahertz-visor-trial.css?v=20261101b';document.head.append(css);
+const css=document.createElement('link');css.rel='stylesheet';css.href='/aire/megahertz-visor-trial.css?v=20261101c';document.head.append(css);
 })();
