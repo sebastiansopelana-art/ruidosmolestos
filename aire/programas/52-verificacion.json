@@ -1,0 +1,17 @@
+{
+  "programa": 52,
+  "fecha": "2026-11-02",
+  "checks": {
+    "manifest16": true,
+    "fourPerBlock": true,
+    "youtubePagesOK": 16,
+    "durationSeconds": 4448,
+    "redaccionTextMatches": true,
+    "javascriptSyntax": true,
+    "publishedOnMegahertz": false,
+    "studioVisibleLoad": false,
+    "redaccionAuthenticated": false,
+    "audiblePlayback": false
+  },
+  "nota": "Interfaz y reproducción pendientes de comprobar tras despliegue. Queen y reserva ELO preservados."
+}
