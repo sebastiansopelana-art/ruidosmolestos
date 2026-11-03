@@ -1,4 +1,6 @@
 {
-  "numero": 52,
-  "titulo": "U2: volver a encontrarse"
+  "numero": 53,
+  "titulo": "El desierto tenía otra música",
+  "libreto": "53.txt",
+  "musica": "53.json"
 }
