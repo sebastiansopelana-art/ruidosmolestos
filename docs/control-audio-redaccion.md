@@ -20,3 +20,11 @@ YouTube Premium es una condición de la cuenta del usuario. Esta integración no
 ## Comprobación
 
 `node --test tests/audio-quality.test.cjs`: 5 pruebas sobre señales de nivel conocido, silencio interno frente a bordes, antífase/canal mudo/picos, muestras inválidas y semántica de errores de oEmbed.
+
+## Verificación publicada — 4 de noviembre de 2026
+
+Cloudflare Pages megahertz completó el despliegue. En la sesión autenticada de Redacción se comprobó el botón, la carga de 16 temas del programa 54 y la vista previa oficial de YouTube. Se invocó WebMCP y las 16 consultas de oEmbed devolvieron título y canal. Se rechazaron parámetros inesperados. Ninguna pista se aprobó automáticamente.
+
+Prueba de archivo local: el selector de archivos del navegador remoto no devolvió el evento necesario para adjuntar el WAV de referencia. No se completó la prueba de decodificación y worker de extremo a extremo; sólo se verificó el cálculo con las pruebas automatizadas. El juicio de calidad perceptual y el audio de YouTube siguen pendientes de escucha.
+
+Sesión de YouTube Premium observada; el menú de Porch Swing Slidin’ ofrece resoluciones hasta 1080p, sin medida de fidelidad sonora. No confundir resolución con calidad de grabación.
