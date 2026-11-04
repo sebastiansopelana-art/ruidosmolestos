@@ -65,3 +65,9 @@ Excluidos los nombres ya trabajados que recuperamos: Son House, Fred McDowell, E
 - El guion ronda las 4.200 palabras; no es un libreto de 50 páginas.
 - Texto y listas preparados para Redacción y Estudio existentes, sin rediseño.
 - Afiche basado en fotografía real de una resonadora, no un retrato de los cuatro protagonistas. Fotografía de Lubos Bena; adaptación de composición; CC BY-SA 3.0: https://creativecommons.org/licenses/by-sa/3.0/.
+
+## Comprobación posterior en el dominio vigente
+
+Contenido publicado mediante commit 20d2868ccf8ae8989026dad48beae5619e8e1d61. Ingreso por el mecanismo seguro a Producción. Redacción muestra programa 54, 23.391 caracteres, cuatro capítulos y cierre correcto. Estudio carga automáticamente 16 filas en cuatro bloques con todas sus duraciones. Historia pública y afiche visibles; afiche 1080 × 1440.
+
+Prueba Porch Swing Slidin’: duración 210, currentTime 0, readyState 0, paused false, muted false, sin error. No se comprobó reproducción audible. Se detuvo la prueba. No afirmar listo para emisión ni escucha integral de las 16 pistas.
