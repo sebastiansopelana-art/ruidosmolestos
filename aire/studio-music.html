@@ -1684,6 +1684,9 @@ for(const [deckIndex,deck] of decks.entries()){
  pad.className='separator-pad';pad.setAttribute('aria-label','Separadores '+(deckIndex===1?1:5)+' a '+(deckIndex===1?4:8));deck.querySelector('.screen').append(pad);
  const urls=rmSeparatorNames.slice(deckIndex*4,deckIndex*4+4).map(name=>rmSeparatorBase+encodeURIComponent(name));
  const buffers=[null,null,null,null],elements=urls.map(()=>{const a=new Audio();a.preload='auto';return a});
+ const sepGain=rmContext?rmContext.createGain():null;
+ if(sepGain){sepGain.gain.value=Number(deck.querySelector('.vol').value)/100;sepGain.connect(rmContext.destination)}
+ deck.querySelector('.vol').addEventListener('input',e=>{if(sepGain)sepGain.gain.value=Number(e.target.value)/100});
  const buttons=[],stored=[null,null,null,null];let current=-1,source=null,playing=false,token=0;
  const picker=document.createElement('input');picker.type='file';picker.accept='audio/*';picker.hidden=true;footer.append(picker);let pending=-1;
  const screen=deck.querySelector('.screen'),screenTrack=screen.querySelector('.track'),screenArtist=screen.querySelector('.artist'),screenRoute=screen.querySelector('.full-route'),screenClock=screen.querySelector('.screen-countdown strong');let sepTicker=null,sepStarted=0,sepDuration=0;
@@ -1710,7 +1713,7 @@ for(const [deckIndex,deck] of decks.entries()){
    try{
     if(rmContext.state==='suspended')rmContext.resume().catch(()=>{});
     const node=rmContext.createBufferSource();
-    node.buffer=buffers[i];node.connect(rmContext.destination);source=node;
+    node.buffer=buffers[i];node.connect(sepGain||rmContext.destination);source=node;
     node.onended=()=>{if(source===node){source=null;playing=false;reset();screenClock.textContent='00:00'}};
     node.start(0);playing=true;b.dataset.playing='true';markSeparator(i,node.buffer.duration);return;
    }catch(e){console.warn('WebAudio fallback',e)}
