@@ -1306,7 +1306,7 @@ const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].que
 const blockDeck=decks[0],blockScreen=blockDeck.querySelector('.screen');
 const blockHost=document.createElement('div');blockHost.id='rm-block-youtube';blockHost.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none';blockDeck.append(blockHost);
 // Transiciones suaves entre consolas: bajar el volumen antes de detener, sin bloquear la nueva pista.
-function rmFadeOut(getVolume,setVolume,stop,ms=850){
+function rmFadeOut(getVolume,setVolume,stop,ms=140){
  let initial=0;try{initial=Number(getVolume())||0}catch(e){stop();return}
  if(initial<=0){stop();return}
  const started=performance.now();
@@ -1563,7 +1563,7 @@ function startAutoMix(){
   blockResolve(upcoming).then(id=>{if(autoSepPending?.index===blockCurrent+1){autoSepNextId=id;autoSepNextReady=true;finishAutoMix()}}).catch(()=>{autoSepNextReady=false});
  }else{autoSepNextReady=true}
 
- autoSepAudio.src=rmSeparatorBase+encodeURIComponent(rmSeparatorNames[n]);
+ autoSepAudio.src=rmCueUrl(rmSeparatorBase+encodeURIComponent(rmSeparatorNames[n]));
  autoSepAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
  showAutoSepDisplay(n);
  blockStatus('MEZCLA · '+rmSeparatorLabels[n]+' → '+blockPlaylist()[blockCurrent+1].name);
@@ -1642,26 +1642,82 @@ auxFile.onchange=()=>{const files=Array.from(auxFile.files);auxFiles.push(...fil
 /* Separadores precargados: reproducción inmediata desde memoria cuando está disponible */
 const rmAudioContext=window.AudioContext||window.webkitAudioContext;
 const rmContext=rmAudioContext?new rmAudioContext():null;
+// Biblioteca compartida de cues: una descarga por audio, con caché en memoria.
+const rmCueCache=new Map(),rmCueQueue=[];
+let rmCueLoading=0;
+function rmCuePump(){
+ while(rmCueLoading<3&&rmCueQueue.length){
+  const entry=rmCueQueue.shift();rmCueLoading++;
+  (async()=>{
+   try{
+    const response=await fetch(entry.url,{cache:'force-cache'});
+    if(!response.ok)throw Error('HTTP '+response.status);
+    const bytes=await response.arrayBuffer();
+    entry.blobUrl=URL.createObjectURL(new Blob([bytes],{type:response.headers.get('content-type')||'audio/mpeg'}));
+    if(entry.decode&&rmContext){
+     try{entry.buffer=await rmContext.decodeAudioData(bytes.slice(0))}
+     catch(e){console.warn('Audio preparado sin decodificación WebAudio',e)}
+    }
+   }catch(e){console.warn('Precarga diferida: se usará audio por URL',entry.url,e)}
+   finally{entry.resolve(entry);rmCueLoading--;rmCuePump()}
+  })();
+ }
+}
+function rmWarmCue(url,decode=false){
+ if(!url)return Promise.resolve(null);
+ const existing=rmCueCache.get(url);if(existing)return existing.promise;
+ let resolve;
+ const promise=new Promise(done=>{resolve=done});
+ const entry={url,decode,resolve,promise,blobUrl:null,buffer:null};
+ rmCueCache.set(url,entry);rmCueQueue.push(entry);rmCuePump();
+ return promise;
+}
+function rmCueUrl(url){return rmCueCache.get(url)?.blobUrl||url}
+if(rmContext){
+ const activate=()=>{if(rmContext.state==='suspended')rmContext.resume().catch(()=>{})};
+ document.addEventListener('pointerdown',activate,{capture:true,once:true});
+ document.addEventListener('keydown',activate,{capture:true,once:true});
+}
+rmWarmCue(blockEndAudio.src,false);
 for(const [deckIndex,deck] of decks.entries()){
  const footer=deck.querySelector('.footer'),air=deck.querySelector('.heading .air'),pad=document.createElement('div');
  pad.className='separator-pad';pad.setAttribute('aria-label','Separadores '+(deckIndex===1?1:5)+' a '+(deckIndex===1?4:8));deck.querySelector('.screen').append(pad);
  const urls=rmSeparatorNames.slice(deckIndex*4,deckIndex*4+4).map(name=>rmSeparatorBase+encodeURIComponent(name));
- const buffers=[null,null,null,null],elements=urls.map(url=>{const a=new Audio();a.preload='auto';a.src=url;a.load();return a});
+ const buffers=[null,null,null,null],elements=urls.map(()=>{const a=new Audio();a.preload='auto';return a});
  const buttons=[],stored=[null,null,null,null];let current=-1,source=null,playing=false,token=0;
  const picker=document.createElement('input');picker.type='file';picker.accept='audio/*';picker.hidden=true;footer.append(picker);let pending=-1;
  const screen=deck.querySelector('.screen'),screenTrack=screen.querySelector('.track'),screenArtist=screen.querySelector('.artist'),screenRoute=screen.querySelector('.full-route'),screenClock=screen.querySelector('.screen-countdown strong');let sepTicker=null,sepStarted=0,sepDuration=0;
  const reset=()=>{buttons.forEach(b=>b.dataset.playing='false');air.dataset.live='false';if(sepTicker){clearInterval(sepTicker);sepTicker=null}};
  const markSeparator=(i,duration)=>{const label=rmSeparatorLabels[deckIndex*4+i],file=rmSeparatorNames[deckIndex*4+i];screenTrack.textContent=label;screenArtist.textContent='RUIDOS MOLESTOS · SEPARADOR';screenRoute.textContent=file;screenRoute.title=file;sepDuration=duration||0;sepStarted=performance.now();screenClock.textContent=sepDuration?fmt(sepDuration):'--:--';air.dataset.live='true';if(sepTicker)clearInterval(sepTicker);sepTicker=setInterval(()=>{const left=Math.max(0,sepDuration-(performance.now()-sepStarted)/1000);screenClock.textContent=sepDuration?fmt(left):'--:--'},200)};
  const stop=()=>{token++;if(source){try{source.stop()}catch(e){}source.disconnect();source=null}elements.forEach(a=>{a.pause();try{a.currentTime=0}catch(e){}});playing=false;reset()};
- const preload=async i=>{const url=urls[i];try{const response=await fetch(url);if(!response.ok)throw Error('HTTP '+response.status);const data=await response.arrayBuffer();if(url!==urls[i])return;if(rmContext){const decoded=await rmContext.decodeAudioData(data);if(url===urls[i])buffers[i]=decoded}}catch(e){console.warn('Separador '+(deckIndex*4+i+1)+' sin precarga decodificada; usando audio precargado',e)}};
+ const preload=async i=>{
+  const url=urls[i],entry=await rmWarmCue(url,true);
+  if(url!==urls[i]||!entry)return;
+  buffers[i]=entry.buffer||null;
+  if(current!==i||!playing){const audio=elements[i];audio.src=entry.blobUrl||url;audio.load()}
+ };
  picker.addEventListener('change',()=>{const file=picker.files?.[0];if(!file||pending<0)return;const i=pending;stop();if(stored[i]&&urls[i].startsWith('blob:'))URL.revokeObjectURL(urls[i]);stored[i]=file;urls[i]=URL.createObjectURL(file);buffers[i]=null;elements[i].src=urls[i];elements[i].load();buttons[i].title=rmSeparatorLabels[deckIndex*4+i]+' · '+file.name;preload(i);picker.value=''});
- const play=async i=>{
-  if(current===i&&playing){stop();return}
-  stop();current=i;const id=token;const b=buttons[i];
-  if(rmContext&&buffers[i]){
-   try{if(rmContext.state!=='running')await rmContext.resume();if(id!==token)return;const node=rmContext.createBufferSource();node.buffer=buffers[i];node.connect(rmContext.destination);source=node;node.onended=()=>{if(source===node){source=null;playing=false;reset();screenClock.textContent='00:00'}};node.start(0);playing=true;b.dataset.playing='true';markSeparator(i,node.buffer.duration);return}catch(e){console.warn('WebAudio fallback',e)}
+ let lastStartAt=-Infinity;
+ const play=i=>{
+  const now=performance.now();
+  // El segundo clic de un doble clic NO detiene la emisión.
+  if(current===i&&playing){
+   if(now-lastStartAt<480)return;
+   stop();return;
   }
-  const audio=elements[i];try{audio.currentTime=0}catch(e){}
+  stop();current=i;lastStartAt=now;const id=token,b=buttons[i];
+  if(rmContext&&buffers[i]){
+   try{
+    if(rmContext.state==='suspended')rmContext.resume().catch(()=>{});
+    const node=rmContext.createBufferSource();
+    node.buffer=buffers[i];node.connect(rmContext.destination);source=node;
+    node.onended=()=>{if(source===node){source=null;playing=false;reset();screenClock.textContent='00:00'}};
+    node.start(0);playing=true;b.dataset.playing='true';markSeparator(i,node.buffer.duration);return;
+   }catch(e){console.warn('WebAudio fallback',e)}
+  }
+  const audio=elements[i],cachedSrc=rmCueUrl(urls[i]);
+  if(audio.src!==cachedSrc)audio.src=cachedSrc;
+  try{audio.currentTime=0}catch(e){}
   playing=true;b.dataset.playing='true';markSeparator(i,audio.duration);
   audio.play().catch(e=>{if(id===token){playing=false;reset();console.warn('No se pudo reproducir separador',e)}});
  };
@@ -1677,6 +1733,12 @@ for(const [deckIndex,deck] of decks.entries()){
 
 const rmProductionCatalog=[{"id":"rm-prod-0","title":"Rock Eco","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/02%20Rock%20Eco%20RM%20Seco.mp3","file":"02 Rock Eco RM Seco.mp3"},{"id":"rm-prod-1","title":"Insoportable corto","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/04%20Seco%20Insoportable%20Corto%20Telefonico.mp3","file":"04 Seco Insoportable Corto Telefonico.mp3"},{"id":"rm-prod-2","title":"Insoportable corto 2","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/05%20Seco%20Insoportable%20Corto.mp3","file":"05 Seco Insoportable Corto.mp3"},{"id":"rm-prod-3","title":"Nosotros solo","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/06%20Seco%20Nosotros%20Solo%20te%20Ofrecemos.mp3","file":"06 Seco Nosotros Solo te Ofrecemos.mp3"},{"id":"rm-prod-4","title":"RM insoportable","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/07%20Seco%20RM%20Insoportable%20PdR.mp3","file":"07 Seco RM Insoportable PdR.mp3"},{"id":"rm-prod-5","title":"Sebastián Sopelana","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/08%20Seco%20SS%20Recorrido%20Insopor.mp3","file":"08 Seco SS Recorrido Insopor.mp3"},{"id":"rm-prod-6","title":"Subite RM","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/09%20Seco%20Subite%20RM.mp3","file":"09 Seco Subite RM.mp3"},{"id":"rm-prod-7","title":"Seco, vos y yo","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/10%20Seco%20Vos%20y%20Yo%20sabemos.mp3","file":"10 Seco Vos y Yo sabemos.mp3"},{"id":"rm-prod-8","title":"Ya sabemos telefónico","artist":"PRODUCCIÓN RM · Separador","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/11%20Seco%20Ya%20Sabemos%20Telefonico.mp3","file":"11 Seco Ya Sabemos Telefonico.mp3"},{"id":"rm-prod-9","title":"Vuelta de la tanda, Ya volvimos","artist":"PRODUCCIÓN RM · Separador de regreso","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Volvimos%20TANDA.mp3","file":"Volvimos TANDA.mp3"},{"id":"rm-prod-10","title":"Ya volvemos","artist":"PRODUCCIÓN RM · Separador de tanda","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Ya%20Volvemos%20Tanda.mp3","file":"Ya Volvemos Tanda.mp3"},{"id":"rm-prod-11","title":"Cortina narración Pat Metheny","artist":"PRODUCCIÓN RM · Cortina","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/CORTINA%2003%20PAT.mp3","file":"CORTINA 03 PAT.mp3"},{"id":"rm-prod-12","title":"Cortina de apertura y cierre Ry Cooder","artist":"PRODUCCIÓN RM · Cortina","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/CORTINA%203%20%20%20Ry%20Cooder%20-%20Somebody's%20Callin'%20My%20Name%20-%20Crossroads%20Soundtrack.mp3","file":"CORTINA 3   Ry Cooder - Somebody's Callin' My Name - Crossroads Soundtrack.mp3"},{"id":"rm-prod-13","title":"Presentación Ruidos Molestos","artist":"PRODUCCIÓN RM · Presentación","source":"production","url":"https://nmcycgpwptxydxbookxw.supabase.co/storage/v1/object/public/ruidos-molestos-audio/Presentacion%20RM%20con%20Tema%20sin%20cortina.mp3","file":"Presentacion RM con Tema sin cortina.mp3"}];
 
+
+/* Preparar las cuatro presentaciones/cortinas del auxiliar desde el arranque. */
+for(const id of ['rm-prod-13','rm-prod-9','rm-prod-12','rm-prod-11']){
+ const cue=rmProductionCatalog.find(x=>x.id===id);
+ if(cue)rmWarmCue(cue.url,false);
+}
 
 /* Indicadores operativos: PLAY en marcha, PAUSA sostenida, REPETIR sostenido y pulsos para desplazamiento. */
 (function(){
@@ -1821,8 +1883,8 @@ const fmtAux=n=>fmt(Number(n)||0);
   elapsed.textContent='00:00';seek.value=0;
  });
  function stop(){stopRequested=true;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;window.dispatchEvent(new Event('rm-aux-takeover'));patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();rmAuxLastScrolled=-1;if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'';productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
- productionAudio.addEventListener('loadedmetadata',()=>{if(ytQueue[current]?.id==='rm-prod-9'){const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(pat&&!patOverlapAudio.src){patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';patOverlapAudio.load()}}const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;window.dispatchEvent(new Event('rm-aux-takeover'));patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();rmAuxLastScrolled=-1;if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=rmCueUrl(x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'');productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ productionAudio.addEventListener('loadedmetadata',()=>{if(ytQueue[current]?.id==='rm-prod-9'){const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(pat&&!patOverlapAudio.src){patOverlapAudio.src=rmCueUrl(pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'');patOverlapAudio.load()}}const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
  function playChoice(x){if(!x)return;let index=ytQueue.findIndex(t=>t.id===x.id);if(index<0){add(x);index=ytQueue.findIndex(t=>t.id===x.id)}if(index>=0)playIndex(index);field.value='';setSuggestions([])}
@@ -1905,7 +1967,7 @@ const fmtAux=n=>fmt(Number(n)||0);
  productionAudio.addEventListener('playing',()=>{if(activeProduction)live(true)});productionAudio.addEventListener('pause',()=>{if(activeProduction&&!patOverlapActive)live(false)});function startPatOverlap(){
   if(patOverlapStarted||stopRequested||ytQueue[current]?.id!=='rm-prod-9')return;
   const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(!pat)return;
-  patOverlapStarted=true;if(!patOverlapAudio.src)patOverlapAudio.src=pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'';
+  patOverlapStarted=true;if(!patOverlapAudio.src)patOverlapAudio.src=rmCueUrl(pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'');
   patOverlapAudio.currentTime=0;
   patOverlapAudio.volume=Number(vol.value)/100;
   patOverlapAudio.play().then(()=>{if(stopRequested||!patOverlapStarted){patOverlapAudio.pause();return}patOverlapActive=true;status('MEZCLA · Ya volvimos + Pat Metheny');render()}).catch(()=>{patOverlapStarted=false;status('No se pudo iniciar la cortina Pat Metheny')});
