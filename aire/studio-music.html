@@ -1381,7 +1381,7 @@ function blockYTInit(){
   const state=e.data;
   setBlockAir(state===YT.PlayerState.PLAYING);
   if(state===YT.PlayerState.PLAYING){blockYTActive=true;blockDeck.dataset.playbackState='REPRODUCIENDO'}
-  if(state===YT.PlayerState.PAUSED||state===YT.PlayerState.CUED){blockDeck.dataset.playbackState='PAUSADO';if(state===YT.PlayerState.PAUSED)autoSepAudio.pause()}
+  if(state===YT.PlayerState.PAUSED||state===YT.PlayerState.CUED){blockDeck.dataset.playbackState='PAUSADO'}
   if(state===YT.PlayerState.ENDED&&blockYTActive){
    const next=blockCurrent+1;
    if(blockRepeat)playBlockTrack(blockCurrent);
@@ -1389,7 +1389,7 @@ function blockYTInit(){
    else{blockYTActive=false;if(!blockEndStarted)playBlockEndSeparator();else if(blockEndAudio.ended)setBlockAir(false)}
   }
  },
- onError:()=>{blockStatus('La grabación seleccionada no se puede reproducir; probá otra');blockDeck.querySelector('.air').dataset.live='false'}
+ onError:()=>{blockDeck.querySelector('.air').dataset.live='false';if(blockYTActive&&!blockRepeat&&blockCurrent+1<blockPlaylist().length){blockStatus('Grabación no disponible · pasando al siguiente tema con separador');if(!autoSepTriggered)startAutoMix();autoSepSongEnded=true;finishAutoMix()}else blockStatus('La grabación seleccionada no se puede reproducir; probá otra')}
  }});
 }
 /* Cierre de cada bloque: Ya volvemos, sin pasar automáticamente al bloque siguiente. */
@@ -1477,9 +1477,18 @@ function blockRefreshTime(){
  if(!autoSepDisplaySnapshot)blockDeck.querySelector('.screen-countdown strong').textContent=duration?fmt(Math.max(0,duration-current)):'--:--';
  if(duration>0&&!blockSeekDragging)blockDeck.querySelector('.seek').value=Math.round(current/duration*1000);
   const item=blockPlaylist()[blockCurrent];if(duration>0&&item&&Math.abs((item.durationSeconds||0)-duration)>1){item.durationSeconds=duration;refreshBlockDurations()}
- if(duration>0&&duration-current<=2&&duration-current>0&&blockYT.getPlayerState?.()===YT.PlayerState.PLAYING){
-  if(blockCurrent===blockPlaylist().length-1){if(!blockRepeat&&!blockEndStarted)playBlockEndSeparator()}
+ // El separador entra exactamente en los últimos dos segundos del tema.
+ const remaining=duration-current;
+ const ytContinuing=ytState===YT.PlayerState.PLAYING||ytState===YT.PlayerState.BUFFERING||ytState===YT.PlayerState.ENDED;
+ if(duration>0&&remaining<=2&&remaining>0&&ytState===YT.PlayerState.PLAYING&&!blockRepeat){
+  if(blockCurrent===blockPlaylist().length-1){if(!blockEndStarted)playBlockEndSeparator()}
   else if(!autoSepTriggered)startAutoMix();
+ }
+ // Watchdog de continuidad: YouTube no siempre emite ENDED. No cortar una pausa manual.
+ if(autoSepTriggered&&!autoSepSongEnded&&!blockRepeat&&!blockSeekDragging&&current>5&&duration>0&&remaining<=2.5&&ytContinuing&&
+    (remaining<=0.35||now-rmSilenceLastProgressAt>=1500)){
+  autoSepSongEnded=true;
+  finishAutoMix();
  }
 }
 blockTick=setInterval(blockRefreshTime,350);
@@ -1541,11 +1550,10 @@ function stopAutoSep(preserveTail=false){
 }
 let autoSepNextReady=false,autoSepNextId=null,autoSepTransitioning=false;
 function finishAutoMix(){
- if(!autoSepPending||!autoSepSongEnded||autoSepTransitioning)return;
- // Iniciar el siguiente tema sin esperar al final del separador: ambos se superponen.
+ if(!autoSepPending||!autoSepSongEnded||!autoSepFinished||autoSepTransitioning)return;
+ // El separador comienza dos segundos antes del fin y el tema siguiente entra al terminar el separador.
  const p=autoSepPending;
  if(p.block!==activeBlock||!blockYTActive)return;
- if(!autoSepNextReady&&!autoSepFinished)return;
  autoSepTransitioning=true;
  autoSepPending=null;
  // Conservar el separador sonando en un canal independiente hasta su final natural.
@@ -1563,13 +1571,19 @@ function startAutoMix(){
   blockResolve(upcoming).then(id=>{if(autoSepPending?.index===blockCurrent+1){autoSepNextId=id;autoSepNextReady=true;finishAutoMix()}}).catch(()=>{autoSepNextReady=false});
  }else{autoSepNextReady=true}
 
- autoSepAudio.src=rmSeparatorBase+encodeURIComponent(rmSeparatorNames[n]);
+ const separatorURL=rmSeparatorBase+encodeURIComponent(rmSeparatorNames[n]);
+ if(autoSepAudio.src!==separatorURL){autoSepAudio.src=separatorURL;autoSepAudio.load()}
  autoSepAudio.volume=Number(blockDeck.querySelector('.vol').value)/100;
  showAutoSepDisplay(n);
  blockStatus('MEZCLA · '+rmSeparatorLabels[n]+' → '+blockPlaylist()[blockCurrent+1].name);
  autoSepAudio.play().catch(()=>{autoSepFinished=true;finishAutoMix()});
 }
 autoSepAudio.addEventListener('ended',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
+function prepareNextAutoSeparator(){
+ if(!autoSepAudio.paused||autoSepTriggered||autoSepPending)return;
+ const url=rmSeparatorBase+encodeURIComponent(rmSeparatorNames[autoSepTurn%rmSeparatorNames.length]);
+ if(autoSepAudio.src!==url){autoSepAudio.src=url;autoSepAudio.load()}
+}
 autoSepAudio.addEventListener('timeupdate',()=>{if(autoSepSongEnded)finishAutoMix()});
 autoSepAudio.addEventListener('error',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
@@ -1581,6 +1595,8 @@ function playBlockTrack(index,preserveSeparatorTail=false){
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
  if(f.programTrack){
   blockCurrent=index;blockYTActive=true;loadBlockFacts(f);
+  prepareNextAutoSeparator();
+  const upcomingTrack=selected[index+1];if(upcomingTrack?.programTrack&&!upcomingTrack.videoId)blockResolve(upcomingTrack).catch(()=>{});
   blockDeck.querySelector('.screen .track').textContent=f.name.split(' — ').slice(1).join(' — ')||f.name;
   blockDeck.querySelector('.screen .artist').textContent=f.name.split(' — ')[0]||'PROGRAMA '+(window.rmLoadedProgram||45);
   blockDeck.querySelector('.full-route').textContent='PROGRAMA '+(window.rmLoadedProgram||45)+' · BLOQUE '+(activeBlock+1);
