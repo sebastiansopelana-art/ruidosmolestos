@@ -5,7 +5,9 @@ runtime=pathlib.Path(sys.argv[1]).resolve();target=pathlib.Path(sys.argv[2]).res
 payload=target/'payload';payload.mkdir(parents=True,exist_ok=True)
 with zipfile.ZipFile(runtime) as z:z.extractall(payload)
 (payload/'electron.exe').rename(payload/'MegaHertz.exe')
-app=payload/'resources'/'app';app.mkdir(parents=True,exist_ok=True)
+app=payload/'resources'/'app'
+if app.exists():shutil.rmtree(app)
+app.mkdir(parents=True,exist_ok=True)
 for name in ['main.cjs','package.json']:shutil.copy2(source/'desktop'/name,app/name)
 web=app/'web';queue=['aire/rmr-tecnology.html'];seen=set()
 while queue:
