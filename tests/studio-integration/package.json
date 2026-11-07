@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "test": "node run.cjs && node bounds.cjs && node safeguards.cjs"
+    "test": "node run.cjs && node bounds.cjs && node safeguards.cjs && node advertising.cjs && node demo-i18n.cjs && node visor.cjs && node whatsapp.cjs"
   },
   "dependencies": {
     "fake-indexeddb": "6.2.6",
