@@ -1,0 +1,28 @@
+{
+  "programa": 55,
+  "fecha": "2026-11-10",
+  "checks": {
+    "manifest16": true,
+    "fourPerBlock": true,
+    "youtubePagesOK": 16,
+    "embedAllowed": 16,
+    "officialTopicChannels": 14,
+    "thirdPartyChannels": 2,
+    "musicSeconds": 4256,
+    "embeddedRedaccionMatches": true,
+    "javascriptSyntax": true,
+    "publishedOnMegahertz": false,
+    "redaccionVisible": false,
+    "studioVisibleTracks": 0,
+    "audiblePlayback": false,
+    "socialImages": 3
+  },
+  "limitaciones": [
+    "No se certificó audio mediante escucha ni se midieron silencios.",
+    "Comprobación privada de Redacción/Estudio pendiente de autenticación."
+  ],
+  "versiones": {
+    "descartada": "Happy Man Blues, regrabación 2007",
+    "elegida": "Working Girl Blues, subida identificada como 1995"
+  }
+}
