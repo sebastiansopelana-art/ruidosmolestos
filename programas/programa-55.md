@@ -1,27 +1,27 @@
-# Programa 55 — Tres caminos, una misma raíz
+# Programa 55 — 3 caminos, una misma raíz
 
 10 de noviembre de 2026. Sebastián Sopelana / Ruidos Molestos / FM del Lago 102.5 / 19–21 h.
 
 ## Decisión aprobada
-Sope pidió blues de los 70 a los 90 y habilitó uno, dos o tres protagonistas. Se retiró la primera propuesta Muddy Waters/Johnny Winter/James Cotton al confirmar Sope que ya se había realizado. Se recuperaron además materiales anteriores de Winter/Muddy, el programa 30 (Otis Rush, Magic Sam, Jimmy Dawkins, Luther Allison) y el 41 (Koko Taylor, Mighty Joe Young, Carey Bell y Son Seals). Para Brooks/Hunter/Walker y Lone Star Shootout no aparecieron capítulos dedicados en las búsquedas realizadas. No se certifica que la historia completa del archivo sea exhaustiva. El 54 recuperado cierra con Bush — Glycerine.
-Sope aprobó la muestra narrativa y pidió 16 temas: cuatro de cada protagonista y cuatro del álbum compartido. Luego dijo «Hacelo». Se mantiene esa estructura sin forzar un cuarto protagonista. Ervin Charles aparece como invitado de la sesión y parte de la anécdota, no como un cuarto bloque individual.
+Sope pidió blues de los 70 a los 90 y habilitó uno, 2 o 3 protagonistas. Se retiró la primera propuesta Muddy Waters/Johnny Winter/James Cotton al confirmar Sope que ya se había realizado. Se recuperaron además materiales anteriores de Winter/Muddy, el programa 30 (Otis Rush, Magic Sam, Jimmy Dawkins, Luther Allison) y el 41 (Koko Taylor, Mighty Joe Young, Carey Bell y Son Seals). Para Brooks/Hunter/Walker y Lone Star Shootout no aparecieron capítulos dedicados en las búsquedas realizadas. No se certifica que la historia completa del archivo sea exhaustiva. El 54 recuperado cierra con Bush — Glycerine.
+Sope aprobó la muestra narrativa y pidió 16 temas: 4 de cada protagonista y 4 del álbum compartido. Luego dijo «Hacelo». Se mantiene esa estructura sin forzar un cuarto protagonista. Ervin Charles aparece como invitado de la sesión y parte de la anécdota, no como un cuarto bloque individual.
 
 ## Reglas aplicadas y revisión
-Escenas ancladas en hechos: cuatro canciones de la antología de 1978, actuaciones de Hunter en el Lobby y fracaso de la distribución de Spindletop, dificultades de circulación de los discos de Walker y cejilla/entrada en las sesiones de 1999. No se inventan diálogos, gestos ni recuerdos presenciales del conductor. Sólo pausas / y //; no indicaciones de voz, cortinas, pronunciación ni instrucciones de locución. Las canciones y sus razones están al final del capítulo. Las referencias a títulos dentro del relato cumplen una función histórica. Se retoma un objeto de la escena final en el cierre. Se evitó convertir cada párrafo en comentario sobre cómo escuchar la música.
+Escenas ancladas en hechos: 4 canciones de la antología de 1978, actuaciones de Hunter en el Lobby y fracaso de la distribución de Spindletop, dificultades de circulación de los discos de Walker y cejilla/entrada en las sesiones de 1999. No se inventan diálogos, gestos ni recuerdos presenciales del conductor. Sólo pausas / y //; no indicaciones de voz, cortinas, pronunciación ni instrucciones de locución. Las canciones y sus razones están al final del capítulo. Las referencias a títulos dentro del relato cumplen una función histórica. Se retoma un objeto de la escena final en el cierre. Se evitó convertir cada párrafo en comentario sobre cómo escuchar la música.
 El TXT y el dossier conservan escritura normal y nombres destacados en mayúsculas. Redacción ya convierte a mayúsculas todos los libretos recuperados; se preservó ese comportamiento del sistema, sin rediseñar controles. El texto embebido tiene el mismo contenido en mayúsculas.
 El guion ronda 3.500 palabras contando barras y encabezados: relato para radio, no una supuesta entrega de 50 páginas.
 
 ## Correcciones factuales
-No se presenta al trío como una banda permanente ni se afirma que los tres toquen en todas las pistas de Lone Star Shootout. Roll y Bon Ton alternan a los tres; Street Walking Woman destaca Walker y Hunter; You're Playing Hooky destaca Brooks y Walker. Born in Louisiana es de Ervin Charles y no se programó como canción solista de los tres. No se confunde el álbum de 1999 con el instrumental homónimo de Border Town Legend de 1996.
+No se presenta al trío como una banda permanente ni se afirma que los 3 toquen en todas las pistas de Lone Star Shootout. Roll y Bon Ton alternan a los 3; Street Walking Woman destaca Walker y Hunter; You're Playing Hooky destaca Brooks y Walker. Born in Louisiana es de Ervin Charles y no se programó como canción solista de los 3. No se confunde el álbum de 1999 con el instrumental homónimo de Border Town Legend de 1996.
 La cejilla y el pago de $1,50 están narrados en las notas de Alligator: se atribuyen a esa fuente, sin fabricar un diálogo. Las fechas menores de la biografía de Walker contienen inconsistencias (edición de Blues 1987/1988 e I Got a Sweet Tooth 1997/1998): se toma 1988 del crédito digital oficial de Blues y 1998 de la discografía y testimonio del sitio del artista. No se usa la afirmación imposible «1952, a los 17» de esa biografía. El conflicto de Black Top con la distribuidora se atribuye al sitio del artista y no se presenta como una investigación contractual propia.
 
 ## Música y comprobaciones
 Las 16 páginas tienen playabilityStatus OK, duración positiva y playableInEmbed true. Esto no mide calidad de audio ni prueba reproducción audible en Estudio. Las pistas 11 y 12 son de terceros; no se rotulan como oficiales. Se descartó Happy Man Blues, canal Topic, porque su descripción reveló una regrabación de 2007, fuera del período aprobado. Working Girl Blues ocupa su lugar con la versión identificada de 1995.
-Las tres piezas de Brooks publicadas en Deluxe Edition se documentan como recopilación de grabaciones de 1979, 1983 y 1996; no se usa el año de la recopilación como año de grabación original.
+Las 3 piezas de Brooks publicadas en Deluxe Edition se documentan como recopilación de grabaciones de 1979, 1983 y 1996; no se usa el año de la recopilación como año de grabación original.
 Consultar aire/programas/55-verificacion.json para el estado de publicación e interfaz. No se afirma reproducción probada ni ausencia de silencio sin escucha.
 
 ## Redes
-Tres ilustraciones originales asistidas por IA, identificadas como ILUSTRACIÓN, con texto y número 55. No representan fotografías documentales de un club, un objeto real ni instrumentos específicos de los músicos. El tercer gráfico ilustra una cejilla de época de forma conceptual; la fuente no describe su modelo. No es un afiche fotográfico ni se inventan retratos de los protagonistas. La publicación se prepara en la web; no se envía a redes sociales sin una instrucción de envío.
+3 ilustraciones originales asistidas por IA, identificadas como ILUSTRACIÓN, con texto y número 55. No representan fotografías documentales de un club, un objeto real ni instrumentos específicos de los músicos. El tercer gráfico ilustra una cejilla de época de forma conceptual; la fuente no describe su modelo. No es un afiche fotográfico ni se inventan retratos de los protagonistas. La publicación se prepara en la web; no se envía a redes sociales sin una instrucción de envío.
 
 ## Fuentes
 
@@ -44,25 +44,25 @@ Tres ilustraciones originales asistidas por IA, identificadas como ILUSTRACIÓN,
 ## Guion
 
 RUIDOS MOLESTOS — PROGRAMA 55
-TRES CAMINOS, UNA MISMA RAÍZ
+3 CAMINOS, UNA MISMA RAÍZ
 LONNIE BROOKS / LONG JOHN HUNTER / PHILLIP WALKER
 
 PRESENTACIÓN
 
 Buenas noches. / Bienvenidos a Ruidos Molestos. //
 
-Hoy hay tres guitarras esperando su turno. / Antes de juntarlas, vamos a seguir a los hombres que las llevaron por caminos diferentes durante años. //
+Hoy hay 3 guitarras esperando su turno. / Antes de juntarlas, vamos a seguir a los hombres que las llevaron por caminos diferentes durante años. //
 
-Desde la puesta al aire, la musicalización y la locución, los acompaña SEBASTIÁN SOPELANA. / Por FM del Lago 102.5. // Programa 55. / Tres caminos, una misma raíz.
+Desde la puesta al aire, la musicalización y la locución, los acompaña SEBASTIÁN SOPELANA. / Por FM del Lago 102.5. // Programa 55. / 3 caminos, una misma raíz.
 
 CAPÍTULO 1 — LONNIE BROOKS
-CUATRO CANCIONES PARA SALIR DEL ANONIMATO
+4 CANCIONES PARA SALIR DEL ANONIMATO
 
-Chicago, 1978. / A LONNIE BROOKS le dieron lugar para cuatro canciones en una antología. / No era su primer paso sobre un escenario. / Llevaba años trabajando en los bares de la ciudad. / Años armando una banda, grabando simples, tocando para gente que podía escucharlo una noche y volver a buscarlo la siguiente. / Ahora, cuatro grabaciones podían llevar ese trabajo mucho más lejos de la puerta del local.
+Chicago, 1978. / A LONNIE BROOKS le dieron lugar para 4 canciones en una antología. / No era su primer paso sobre un escenario. / Llevaba años trabajando en los bares de la ciudad. / Años armando una banda, grabando simples, tocando para gente que podía escucharlo una noche y volver a buscarlo la siguiente. / Ahora, 4 grabaciones podían llevar ese trabajo mucho más lejos de la puerta del local.
 
 El hombre que lo eligió fue BRUCE IGLAUER, de Alligator Records. / El proyecto se llamó Living Chicago Blues. / Y entre los músicos de aquella serie apareció BROOKS. //
 
-En los comentarios que acompañaron después su primer álbum para Alligator quedó una palabra que merece atención: NUEVO. / Así lo estaban recibiendo algunos críticos. / Para ellos acababa de aparecer. / Para él, habían pasado unos veinte años desde los primeros discos. / El tiempo del músico y el tiempo de quien lo descubre rara vez coinciden.
+En los comentarios que acompañaron después su primer álbum para Alligator quedó una palabra que merece atención: NUEVO. / Así lo estaban recibiendo algunos críticos. / Para ellos acababa de aparecer. / Para él, habían pasado unos 20 años desde los primeros discos. / El tiempo del músico y el tiempo de quien lo descubre rara vez coinciden.
 
 Quiero retroceder hasta el nombre que había usado antes. / GUITAR JUNIOR. / Con ese nombre había grabado en Luisiana, para Goldband. / Había tenido un éxito regional con Family Rules. / Los discos le habían abierto las puertas de bailes y locales del sur. / También había salido de gira con SAM COOKE. / Pero una canción que funciona en una región no garantiza trabajo para siempre.
 
@@ -72,21 +72,21 @@ Traía consigo la música de Luisiana. / En Chicago se acercó al blues de la ci
 
 Los discos, sin embargo, no terminaban de darle la misma continuidad que los escenarios. / Hubo un álbum para Capitol en 1969 que tuvo una circulación malograda. / En 1975 viajó a Francia y volvió a grabar. / Seguía sumando experiencias, pero todavía faltaba un disco capaz de presentar con amplitud su música y su trabajo con una banda.
 
-Por eso volvemos a aquellas cuatro canciones de 1978. / A partir de ellas llegó un contrato. / Y en 1979 apareció Bayou Lightning. //
+Por eso volvemos a aquellas 4 canciones de 1978. / A partir de ellas llegó un contrato. / Y en 1979 apareció Bayou Lightning. //
 
 Lo grabaron en Curtom Studios, en Chicago. / BROOKS y BRUCE IGLAUER compartieron la producción. / Allí estaban BOB LEVIS en guitarra, ROB WATERS en teclados, HARLAN TERSON en bajo y CASEY JONES en batería. / BILLY BRANCH participó con su armónica en una de las piezas. / El disco ya podía mostrar al grupo con espacio propio, sin tener que repartir un álbum con otros líderes.
 
-Durante los ochenta ese trabajo empezó a encontrar otras puertas. / En Montreux, BROOKS conoció a ROY CLARK, una figura del country y de la televisión estadounidense. / CLARK quedó impresionado y le consiguió una aparición en Hee Haw. / Un guitarrista que había hecho su recorrido en clubes de blues encontraba una entrada a un programa que miraba otro público.
+Durante los años 80 ese trabajo empezó a encontrar otras puertas. / En Montreux, BROOKS conoció a ROY CLARK, una figura del country y de la televisión estadounidense. / CLARK quedó impresionado y le consiguió una aparición en Hee Haw. / Un guitarrista que había hecho su recorrido en clubes de blues encontraba una entrada a un programa que miraba otro público.
 
 Y hacia el final de esa década apareció otra compañía en el escenario: / su hijo RONNIE BAKER BROOKS. / Ya estaba de gira con la banda en 1987. / Después participó en Live From Chicago. / Aquella música, que para algunos había sido una novedad en 1978, se estaba convirtiendo también en un oficio compartido entre padre e hijo.
 
 En 1996, Roadhouse Rules lo llevó a trabajar con el productor JIM GAINES. / RONNIE también figuraba entre los guitarristas. / En la grabación había pasado tiempo, había otra generación, había otros estudios. / El nombre que BROOKS tuvo que inventarse al llegar a Chicago ya podía llevar a alguien hasta su música.
 
-Quedan abiertas, por ahora, las otras dos guitarras de esta historia. / Para encontrar una de ellas hay que dejar Chicago y acercarse a la frontera. / Allí había un hombre al que no hacía falta presentarle su nombre al público. / El problema era conseguir que lo conocieran más allá de aquella región.
+Quedan abiertas, por ahora, las otras 2 guitarras de esta historia. / Para encontrar una de ellas hay que dejar Chicago y acercarse a la frontera. / Allí había un hombre al que no hacía falta presentarle su nombre al público. / El problema era conseguir que lo conocieran más allá de aquella región.
 
-JUSTIFICACIÓN DE LOS CUATRO TEMAS
+JUSTIFICACIÓN DE LOS 4 TEMAS
 
-Voodoo Daddy presenta al BROOKS de Bayou Lightning y su mezcla de Luisiana con Chicago. / In the Dark deja espacio para el costado lento y la guitarra. / Don't Take Advantage of Me corresponde a la etapa de Hot Shot, en los ochenta. / Hoodoo She Do nos lleva hasta Roadhouse Rules, en 1996, con RONNIE BAKER BROOKS dentro de la banda.
+Voodoo Daddy presenta al BROOKS de Bayou Lightning y su mezcla de Luisiana con Chicago. / In the Dark deja espacio para el costado lento y la guitarra. / Don't Take Advantage of Me corresponde a la etapa de Hot Shot, en los años 80. / Hoodoo She Do nos lleva hasta Roadhouse Rules, en 1996, con RONNIE BAKER BROOKS dentro de la banda.
 
 TEMAS DEL BLOQUE 1
 01. LONNIE BROOKS — VOODOO DADDY
@@ -103,7 +103,7 @@ Ciudad Juárez. / En el Lobby Bar, LONG JOHN HUNTER podía alejarse del amplific
 
 Otra de sus maniobras ocurría sobre el escenario. / Con una mano sostenía el instrumento y seguía tocando; con la otra se agarraba de una viga y se balanceaba. / El público conocía aquellos recursos. / En un lugar donde pasaban soldados, viajeros y gente de ambos lados de la frontera, HUNTER había aprendido a sostener una noche entera.
 
-Cuando uno escucha que un músico fue descubierto en los noventa, puede imaginar a alguien joven dando sus primeros pasos. / HUNTER había nacido en 1931. / Su reconocimiento internacional iba a llegar después de décadas de trabajo. / Antes de que circularan sus álbumes, había personas que podían contar cómo tocaba, cómo salía a la calle, cómo animaba el bar. / Su historia viajaba en los recuerdos de quienes habían estado ahí.
+Cuando uno escucha que un músico fue descubierto en los años 90, puede imaginar a alguien joven dando sus primeros pasos. / HUNTER había nacido en 1931. / Su reconocimiento internacional iba a llegar después de décadas de trabajo. / Antes de que circularan sus álbumes, había personas que podían contar cómo tocaba, cómo salía a la calle, cómo animaba el bar. / Su historia viajaba en los recuerdos de quienes habían estado ahí.
 
 El comienzo había tenido otro escenario: / un concierto de B. B. KING en Beaumont. / HUNTER todavía trabajaba en una fábrica de cajas. / Ver a KING frente a aquel público le cambió los planes. / Después compró una guitarra y empezó a buscar la manera de tocar. / ERVIN CHARLES, un músico de la zona, estuvo ligado a esos primeros pasos. / Lo vamos a encontrar otra vez al final de este recorrido.
 
@@ -123,9 +123,9 @@ Alligator lo incorporó en 1996. / Border Town Legend permitió que mucha gente 
 
 Al año siguiente publicó Swinging from the Rafters. / El nombre recordaba las vigas del Lobby. / Lo que había sido parte de una noche de trabajo en Juárez ahora servía para presentar un álbum en otros países. / El público que nunca había cruzado aquella puerta empezaba a conocerlo.
 
-HUNTER ya tenía más de sesenta años. / Y en 1999 iba a llevar su guitarra a otra reunión. / Allí estarían PHILLIP WALKER y LONNIE BROOKS. / También aparecería ERVIN CHARLES, el hombre que lo había acompañado cuando todavía no era una leyenda de ninguna frontera.
+HUNTER ya tenía más de 60 años. / Y en 1999 iba a llevar su guitarra a otra reunión. / Allí estarían PHILLIP WALKER y LONNIE BROOKS. / También aparecería ERVIN CHARLES, el hombre que lo había acompañado cuando todavía no era una leyenda de ninguna frontera.
 
-JUSTIFICACIÓN DE LOS CUATRO TEMAS
+JUSTIFICACIÓN DE LOS 4 TEMAS
 
 T-Bone Intentions abre con el impulso de Border Town Legend. / Ice Cold permite quedarse en su costado más lento. / Marfa Lights mantiene el paisaje del oeste de Texas dentro de la selección. / Time and Time Again lleva al álbum de 1997 cuyo título recuerda las actuaciones del Lobby Bar.
 
@@ -144,7 +144,7 @@ En 1995, PHILLIP WALKER tenía un álbum nuevo. / Se llamaba Working Girl Blues.
 
 Para un músico que había pasado tantos años viajando, esa dificultad tenía un peso concreto. / La canción podía llegar por la radio. / El nombre podía quedar en la memoria. / Faltaba que el disco estuviera ahí cuando alguien fuera a buscarlo.
 
-WALKER ya conocía la distancia entre trabajar mucho y tener un reconocimiento duradero. / Había sido guitarrista de acompañamiento antes de poner su nombre al frente. / En los setenta había grabado sus primeros álbumes como líder. / Para mediados de los noventa llevaba una vida entera tratando de hacer circular su música.
+WALKER ya conocía la distancia entre trabajar mucho y tener un reconocimiento duradero. / Había sido guitarrista de acompañamiento antes de poner su nombre al frente. / En los años 70 había grabado sus primeros álbumes como líder. / Para mediados de los años 90 llevaba una vida entera tratando de hacer circular su música.
 
 Vamos a volver a Port Arthur, Texas. / Mucho antes de Black Top. / Allí había crecido escuchando a músicos como LONG JOHN HUNTER. / En su biografía quedó una imagen de los comienzos: / una caja de cigarros convertida en instrumento y alambres finos usados como cuerdas. / Todavía no podía comprar la guitarra que quería.
 
@@ -154,23 +154,23 @@ Después vino El Paso, donde WALKER se reencontró con HUNTER. / Tocaron en la m
 
 Entre ellas estuvo INA BEATRICE WALKER, conocida como BEA BOPP. / Cantó con él y escribió canciones. / Más adelante dejó las actuaciones en clubes y siguió componiendo. / Parte de la música que PHILLIP llevaba al escenario estaba relacionada con ese trabajo compartido en casa. / El nombre de ella quedó en composiciones y agradecimientos de sus discos.
 
-A comienzos de los setenta apareció The Bottom of the Top. / Después llegó Someday You'll Have These Blues. / También trabajó durante años con el productor BRUCE BROMBERG y con DENNIS WALKER, bajista y compositor, que no era pariente suyo. / Los apellidos podían repetirse en los créditos; cada uno estaba allí por su propio trabajo.
+A comienzos de los años 70 apareció The Bottom of the Top. / Después llegó Someday You'll Have These Blues. / También trabajó durante años con el productor BRUCE BROMBERG y con DENNIS WALKER, bajista y compositor, que no era pariente suyo. / Los apellidos podían repetirse en los créditos; cada uno estaba allí por su propio trabajo.
 
 DENNIS escribió Don't Be Afraid of the Dark. / PHILLIP la grabó antes de que se convirtiera en una canción asociada al éxito de ROBERT CRAY. / Dentro de ese recorrido hay otra forma de escuchar las conexiones del blues: / una composición pasa de un cantante a otro, crece ante un público diferente y conserva en sus créditos el nombre de quien la escribió.
 
-En los ochenta, PHILLIP también acompañó a PERCY MAYFIELD y participó con su banda en grabaciones de TED HAWKINS. / El trabajo de acompañar seguía conviviendo con sus propios álbumes. / El guitarrista que encabezaba una noche podía estar sosteniendo la voz de otro músico en una sesión posterior.
+En los años 80, PHILLIP también acompañó a PERCY MAYFIELD y participó con su banda en grabaciones de TED HAWKINS. / El trabajo de acompañar seguía conviviendo con sus propios álbumes. / El guitarrista que encabezaba una noche podía estar sosteniendo la voz de otro músico en una sesión posterior.
 
 En 1991 murió BEA BOPP. / La biografía de su página recoge que años después él seguía nombrándola como una inspiración. / Sus canciones continuaron en el recorrido de PHILLIP, entre los viajes, los conciertos y los nuevos discos.
 
-Cuando llegó la oportunidad de Black Top, en los noventa, había detrás todo ese camino. / Y volvemos al álbum de 1995 que no estaba llegando a quienes lo buscaban. / El problema de distribución afectó también al siguiente proyecto. / La edición de I Got a Sweet Tooth terminó saliendo en 1998, según la discografía del propio artista. / Otra vez había música grabada esperando poder circular.
+Cuando llegó la oportunidad de Black Top, en los años 90, había detrás todo ese camino. / Y volvemos al álbum de 1995 que no estaba llegando a quienes lo buscaban. / El problema de distribución afectó también al siguiente proyecto. / La edición de I Got a Sweet Tooth terminó saliendo en 1998, según la discografía del propio artista. / Otra vez había música grabada esperando poder circular.
 
-Un año después, PHILLIP recibió una oportunidad distinta: / reunirse con BROOKS y HUNTER. / Ya no había que empezar explicando de dónde venía su manera de tocar. / Los otros conocían parte de ese mundo. / Habían pasado por algunos de los mismos lugares, escuchado a los mismos músicos y acompañado a personas que los tres recordaban.
+1 año después, PHILLIP recibió una oportunidad distinta: / reunirse con BROOKS y HUNTER. / Ya no había que empezar explicando de dónde venía su manera de tocar. / Los otros conocían parte de ese mundo. / Habían pasado por algunos de los mismos lugares, escuchado a los mismos músicos y acompañado a personas que los 3 recordaban.
 
 WALKER llegó con su guitarra y su estuche. / Entre las cosas que guardaba había un pequeño objeto que, durante la grabación, iba a devolver a la conversación el nombre de LONESOME SUNDOWN.
 
-JUSTIFICACIÓN DE LOS CUATRO TEMAS
+JUSTIFICACIÓN DE LOS 4 TEMAS
 
-Don't Be Afraid of the Dark recupera la composición de DENNIS WALKER en la voz de PHILLIP. / The Blues and My Guitar corresponde a su trabajo de los ochenta y deja desarrollar la guitarra. / Working Girl Blues recupera el tema que da nombre al disco de 1995. / I Got a Sweet Tooth cierra su recorrido individual en los noventa antes del encuentro compartido.
+Don't Be Afraid of the Dark recupera la composición de DENNIS WALKER en la voz de PHILLIP. / The Blues and My Guitar corresponde a su trabajo de los años 80 y deja desarrollar la guitarra. / Working Girl Blues recupera el tema que da nombre al disco de 1995. / I Got a Sweet Tooth cierra su recorrido individual en los años 90 antes del encuentro compartido.
 
 TEMAS DEL BLOQUE 3
 09. PHILLIP WALKER — DON'T BE AFRAID OF THE DARK
@@ -187,31 +187,31 @@ Austin, Texas. / Durante las sesiones de Lone Star Shootout estaban trabajando s
 
 PHILLIP WALKER abrió su estuche y sacó una. / Había pertenecido al propio SUNDOWN. / Él se la había regalado años atrás. //
 
-La anécdota quedó escrita en las notas del disco. / Los músicos estaban recuperando una de sus canciones y, entre los instrumentos, aparecía algo que había usado su autor. / BROOKS y WALKER habían trabajado con él en la banda de CLIFTON CHENIER. / WALKER también había grabado y viajado con SUNDOWN durante los setenta.
+La anécdota quedó escrita en las notas del disco. / Los músicos estaban recuperando una de sus canciones y, entre los instrumentos, aparecía algo que había usado su autor. / BROOKS y WALKER habían trabajado con él en la banda de CLIFTON CHENIER. / WALKER también había grabado y viajado con SUNDOWN durante los años 70.
 
 WALKER conservaba aquel regalo desde hacía años. / Ahora volvía a usarlo en una canción de quien se lo había dado. / Cuando hizo falta, PHILLIP lo tenía a mano. / La historia de esta reunión también estaba guardada entre las cosas que los músicos llevaban al trabajo.
 
-El proyecto había nacido de una idea de TARY OWENS. / En la producción estuvieron OWENS, JON FOOSE y BRUCE IGLAUER. / La mayor parte se grabó en Arlyn Studios, en Austin. / El álbum apareció en mayo de 1999. / Para entonces, los tres protagonistas ya habían construido carreras propias lejos de los primeros escenarios compartidos.
+El proyecto había nacido de una idea de TARY OWENS. / En la producción estuvieron OWENS, JON FOOSE y BRUCE IGLAUER. / La mayor parte se grabó en Arlyn Studios, en Austin. / El álbum apareció en mayo de 1999. / Para entonces, los 3 protagonistas ya habían construido carreras propias lejos de los primeros escenarios compartidos.
 
-Las notas del disco describen un clima de recuerdos, historias intercambiadas y desafíos de guitarra. / El título anunciaba un duelo. / Los créditos permiten seguir con precisión quién canta, quién acompaña y quién toma el siguiente solo. / A veces se alternan los tres; otras veces uno queda al frente y los demás sostienen la canción.
+Las notas del disco describen un clima de recuerdos, historias intercambiadas y desafíos de guitarra. / El título anunciaba un duelo. / Los créditos permiten seguir con precisión quién canta, quién acompaña y quién toma el siguiente solo. / A veces se alternan los 3; otras veces uno queda al frente y los demás sostienen la canción.
 
-Hay una diferencia entre reunir tres nombres en una portada y conseguir que se escuchen entre sí. / Aquí el que termina un solo vuelve a acompañar. / El que estaba haciendo la base espera su lugar. / El intercambio tiene una forma que podemos seguir en la grabación, sin necesidad de imaginar palabras que nadie dejó registradas.
+Hay una diferencia entre reunir 3 nombres en una portada y conseguir que se escuchen entre sí. / Aquí el que termina un solo vuelve a acompañar. / El que estaba haciendo la base espera su lugar. / El intercambio tiene una forma que podemos seguir en la grabación, sin necesidad de imaginar palabras que nadie dejó registradas.
 
 A esa reunión llegó también ERVIN CHARLES como invitado. / No llevaba el mismo espacio en la portada, pero era parte del origen de la historia. / En Port Arthur había sido un referente para aquellos músicos. / LONG JOHN HUNTER lo conocía desde sus primeros pasos.
 
-ERVIN había comprado la entrada con la que HUNTER fue a aquel concierto de B. B. KING. / El concierto que lo llevó a conseguir una guitarra y empezar a tocar. / Según las notas de Lone Star Shootout, al terminar las sesiones HUNTER le devolvió el importe: / un dólar con cincuenta. //
+ERVIN había comprado la entrada con la que HUNTER fue a aquel concierto de B. B. KING. / El concierto que lo llevó a conseguir una guitarra y empezar a tocar. / Según las notas de Lone Star Shootout, al terminar las sesiones HUNTER le devolvió el importe: / 1,50 dólares. //
 
-Habían pasado décadas. / En el medio quedaban el Lobby Bar, las noches de trabajo, los viajes, los discos que apenas circularon y los que finalmente encontraron público. / La entrada todavía tenía un precio que los dos podían recordar.
+Habían pasado décadas. / En el medio quedaban el Lobby Bar, las noches de trabajo, los viajes, los discos que apenas circularon y los que finalmente encontraron público. / La entrada todavía tenía un precio que los 2 podían recordar.
 
-Pienso en esos dos objetos. / La cejilla que WALKER había guardado. / El dinero de una entrada que HUNTER terminó devolviendo. / Son detalles pequeños para explicar una carrera musical. / Pero alcanzan para acercarnos a las personas que estaban dentro de aquella sala.
+Pienso en esos 2 objetos. / La cejilla que WALKER había guardado. / El dinero de una entrada que HUNTER terminó devolviendo. / Son detalles pequeños para explicar una carrera musical. / Pero alcanzan para acercarnos a las personas que estaban dentro de aquella sala.
 
 BROOKS había llegado hasta Chicago y había cambiado incluso su nombre. / HUNTER se había quedado durante años en la frontera. / WALKER había seguido hacia California. / Cuando se reunieron, cada uno podía traer una parte distinta de lo que habían aprendido cerca de los mismos lugares.
 
-Y SUNDOWN, que ya no estaba, seguía presente en una canción y una cejilla. / ERVIN estaba ahí para tocar y recibir, tanto tiempo después, aquel dólar con cincuenta. // Las guitarras todavía tenían trabajo por delante.
+Y SUNDOWN, que ya no estaba, seguía presente en una canción y una cejilla. / ERVIN estaba ahí para tocar y recibir, tanto tiempo después, ese importe de 1,50 dólares. // Las guitarras todavía tenían trabajo por delante.
 
-JUSTIFICACIÓN DE LOS CUATRO TEMAS
+JUSTIFICACIÓN DE LOS 4 TEMAS
 
-Roll, Roll, Roll permite reconocer las tres voces y los relevos de guitarra. / Bon Ton Roulet recupera un clásico de su mundo compartido. / Street Walking Woman concentra el intercambio de solos entre HUNTER y WALKER. / You're Playing Hooky cierra con la canción de SUNDOWN y la cejilla de la historia: BROOKS canta y WALKER acompaña y toma un solo.
+Roll, Roll, Roll permite reconocer las 3 voces y los relevos de guitarra. / Bon Ton Roulet recupera un clásico de su mundo compartido. / Street Walking Woman concentra el intercambio de solos entre HUNTER y WALKER. / You're Playing Hooky cierra con la canción de SUNDOWN y la cejilla de la historia: BROOKS canta y WALKER acompaña y toma un solo.
 
 TEMAS DEL BLOQUE 4
 13. LONNIE BROOKS, LONG JOHN HUNTER Y PHILLIP WALKER — ROLL, ROLL, ROLL
@@ -223,7 +223,7 @@ LA HISTORIA FUE CONTADA, AHORA DEJEMOS QUE HABLE LA MÚSICA.
 
 CIERRE GENERAL
 
-Al empezar teníamos tres guitarras esperando su turno. / Ahora sabemos algo de los caminos que las llevaron hasta aquella grabación. / Chicago, la frontera, California. / Y, adentro de un estuche, una cejilla que había seguido viajando con su dueño.
+Al empezar teníamos 3 guitarras esperando su turno. / Ahora sabemos algo de los caminos que las llevaron hasta aquella grabación. / Chicago, la frontera, California. / Y, adentro de un estuche, una cejilla que había seguido viajando con su dueño.
 
 Me quedo con esa imagen. / PHILLIP abriendo el estuche para resolver algo que la canción necesitaba. / Entre sus herramientas también había un regalo de otro músico. / Todavía servía. / Todavía tenía un lugar en lo que estaban tocando. //
 

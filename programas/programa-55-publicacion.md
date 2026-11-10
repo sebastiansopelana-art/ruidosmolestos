@@ -1,14 +1,14 @@
 # Ruidos Molestos — Programa 55
 
-## Texto para acompañar las tres imágenes
+## Texto para acompañar las 3 imágenes
 
 UNA CEJILLA GUARDADA. UNA ENTRADA QUE SE PAGÓ DÉCADAS DESPUÉS.
 
 Lonnie Brooks llegó a Chicago. Long John Hunter se hizo leyenda en la frontera. Phillip Walker siguió hasta California. En 1999 volvieron a encontrarse para grabar Lone Star Shootout.
 
-Entre las guitarras aparecieron una cejilla que había pertenecido a Lonesome Sundown y una deuda de un dólar con cincuenta por una entrada para ver a B. B. King.
+Entre las guitarras aparecieron una cejilla que había pertenecido a Lonesome Sundown y una deuda de 1,50 dólares por una entrada para ver a B. B. King.
 
-En el programa 55 de Ruidos Molestos seguimos esos tres caminos con blues de los 70, 80 y 90.
+En el programa 55 de Ruidos Molestos seguimos esos 3 caminos con blues de los 70, 80 y 90.
 
 Con Sebastián Sopelana · FM del Lago 102.5 · 19 a 21 h.
 Escuchá la radio: https://radiofmdellago.com.ar/stream/
@@ -18,7 +18,7 @@ Historia, canciones e imágenes: https://www.megahertz.com.ar/historias/programa
 
 ## Orden y archivos
 
-1. Lo llamaban nuevo. Llevaba veinte años tocando. — /assets/programa-55-carrusel-1.webp
+1. Lo llamaban nuevo. Llevaba 20 años tocando. — /assets/programa-55-carrusel-1.webp
 2. Su fama no cruzaba la frontera. — /assets/programa-55-carrusel-2.webp
 3. Una cejilla guardaba la historia. — /assets/programa-55-carrusel-3.webp
 
