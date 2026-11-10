@@ -170,7 +170,7 @@ WALKER llegó con su guitarra y su estuche. / Entre las cosas que guardaba habí
 
 JUSTIFICACIÓN DE LOS CUATRO TEMAS
 
-Don't Be Afraid of the Dark recupera la composición de DENNIS WALKER en la voz de PHILLIP. / The Blues and My Guitar corresponde a su trabajo de los ochenta y deja desarrollar la guitarra. / Working Girl Blues representa Working Girl Blues, el disco de 1995. / I Got a Sweet Tooth cierra su recorrido individual en los noventa antes del encuentro compartido.
+Don't Be Afraid of the Dark recupera la composición de DENNIS WALKER en la voz de PHILLIP. / The Blues and My Guitar corresponde a su trabajo de los ochenta y deja desarrollar la guitarra. / Working Girl Blues recupera el tema que da nombre al disco de 1995. / I Got a Sweet Tooth cierra su recorrido individual en los noventa antes del encuentro compartido.
 
 TEMAS DEL BLOQUE 3
 09. PHILLIP WALKER — DON'T BE AFRAID OF THE DARK
@@ -189,7 +189,7 @@ PHILLIP WALKER abrió su estuche y sacó una. / Había pertenecido al propio SUN
 
 La anécdota quedó escrita en las notas del disco. / Los músicos estaban recuperando una de sus canciones y, entre los instrumentos, aparecía algo que había usado su autor. / BROOKS y WALKER habían trabajado con él en la banda de CLIFTON CHENIER. / WALKER también había grabado y viajado con SUNDOWN durante los setenta.
 
-El estuche había conservado aquel regalo. / Había pasado por otros conciertos y otras grabaciones hasta llegar a esa sesión. / Cuando hizo falta, PHILLIP lo tenía a mano. / La historia de esta reunión también estaba guardada entre las cosas que los músicos llevaban al trabajo.
+WALKER conservaba aquel regalo desde hacía años. / Ahora volvía a usarlo en una canción de quien se lo había dado. / Cuando hizo falta, PHILLIP lo tenía a mano. / La historia de esta reunión también estaba guardada entre las cosas que los músicos llevaban al trabajo.
 
 El proyecto había nacido de una idea de TARY OWENS. / En la producción estuvieron OWENS, JON FOOSE y BRUCE IGLAUER. / La mayor parte se grabó en Arlyn Studios, en Austin. / El álbum apareció en mayo de 1999. / Para entonces, los tres protagonistas ya habían construido carreras propias lejos de los primeros escenarios compartidos.
 

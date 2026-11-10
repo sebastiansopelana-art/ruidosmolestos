@@ -11,11 +11,13 @@
     "musicSeconds": 4256,
     "embeddedRedaccionMatches": true,
     "javascriptSyntax": true,
-    "publishedOnMegahertz": false,
+    "publishedOnMegahertz": true,
     "redaccionVisible": false,
     "studioVisibleTracks": 0,
     "audiblePlayback": false,
-    "socialImages": 3
+    "socialImages": 3,
+    "publicHistoryVisible": true,
+    "socialImagesLoaded": 3
   },
   "limitaciones": [
     "No se certificó audio mediante escucha ni se midieron silencios.",
@@ -24,5 +26,6 @@
   "versiones": {
     "descartada": "Happy Man Blues, regrabación 2007",
     "elegida": "Working Girl Blues, subida identificada como 1995"
-  }
+  },
+  "deployment": "Cloudflare Pages: megahertz — success"
 }
