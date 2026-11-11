@@ -1,1 +1,292 @@
-cat: production56/redaccion.html: No such file or directory
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>REDACCIÓN · RUIDOS MOLESTOS</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:#151c1b;color:#e7e4d9;font-family:Arial,Helvetica,sans-serif}button,select{font:inherit}button{cursor:pointer;color:#e7e4d9;background:#293330;border:1px solid #66766a;border-radius:6px;padding:9px 13px;font-weight:700}button:hover{background:#3b4b41}button:focus-visible,textarea:focus-visible{outline:2px solid #d9b48a;outline-offset:2px}.primary{background:#526b58;border-color:#a9c6b1}.active{background:#637e6b;border-color:#d9b48a}.shell{height:100dvh;display:flex;flex-direction:column}.bar{flex:none;display:flex;align-items:center;gap:9px;flex-wrap:wrap;padding:11px 16px;background:#293330;border-bottom:1px solid #66766a}.brand{margin-right:auto;min-width:190px}.brand strong{display:block;letter-spacing:1.6px;font-size:15px}.brand small{color:#d9b48a;letter-spacing:1px;font-size:10px}.group{display:flex;gap:6px;align-items:center}.speed{width:110px;accent-color:#d9b48a}.stat{font-size:12px;color:#c5cec1;min-width:45px;text-align:center}.viewer{flex:1;min-height:0;position:relative;overflow:hidden;background:#151e1b}.scroll{height:100%;overflow:auto;overscroll-behavior:contain;scroll-behavior:auto;scrollbar-color:#496779 #293330;outline:none}.reading{width:100%;padding:25vh clamp(20px,5vw,105px) 55vh;white-space:pre-wrap;overflow-wrap:break-word;font-family:Arial,Helvetica,sans-serif;font-size:38px;line-height:1.65;letter-spacing:.025em;font-weight:600;text-transform:uppercase;color:#f0eee6}.reading:empty:before{content:'PEGÁ TU LIBRETO EN EDITAR TEXTO PARA EMPEZAR.';color:#a9c6b1}.guide{position:absolute;top:34%;left:0;right:0;height:1px;background:#d9b48a66;pointer-events:none}.guide:before{content:'';position:absolute;left:0;top:-9px;width:5px;height:19px;background:#d9b48a}.editor{height:100%;width:100%;resize:none;background:#1b2522;border:0;color:#f0eee6;padding:35px clamp(20px,5vw,105px);font:24px/1.6 Arial,sans-serif;outline:none;text-transform:uppercase}.footer{flex:none;display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 17px;background:#293330;border-top:1px solid #66766a;color:#c5cec1;font-size:12px}.footer span{white-space:nowrap}.hide{display:none!important}@media(max-width:800px){.brand{width:100%}.bar{gap:7px;padding:9px}.bar button{padding:9px}.speed{width:90px}.reading{font-size:31px}.footer{flex-wrap:wrap}}:fullscreen .shell{height:100dvh}
+
+/* ADAPTACIÓN MULTIRRESOLUCIÓN · CONSERVA CONTROLES Y MODO AIRE */
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+.shell{width:100%;min-width:0;height:100dvh;max-height:100dvh}
+.bar{width:100%;min-width:0;display:flex;flex-wrap:wrap;align-content:center;gap:clamp(5px,.8vw,10px);padding:clamp(6px,1vw,12px)}
+.bar .brand{flex:1 1 220px;min-width:0;margin-right:0}
+.bar .group{min-width:0;flex-wrap:wrap}
+.bar button{white-space:normal;line-height:1.2}
+.bar label{font-size:12px}
+.viewer{min-height:0;min-width:0;width:100%;flex:1 1 auto}
+.scroll{width:100%;height:100%}
+.reading{width:100%;max-width:none;padding:clamp(65px,24vh,260px) clamp(14px,4vw,90px) 55vh;line-height:1.55}
+.editor{width:100%;padding:clamp(14px,3vw,38px);font-size:clamp(17px,2vw,24px)}
+.footer{min-width:0;gap:8px;flex-wrap:wrap;padding:6px clamp(8px,1vw,17px)}
+.footer span{white-space:normal}
+@media(max-width:1050px){
+ .bar .brand{flex-basis:100%}
+ .bar .group{flex:0 1 auto}
+ .bar button{font-size:clamp(11px,1.3vw,14px);padding:7px 9px}
+ .bar .speed{width:clamp(70px,10vw,110px)}
+}
+@media(max-width:600px){
+ .bar{gap:5px;padding:6px}
+ .bar .brand{flex-basis:100%}
+ .bar .brand strong{font-size:13px}
+ .bar .brand small{font-size:9px}
+ .bar .group{gap:4px}
+ .bar button{padding:6px;font-size:11px}
+ .bar label{font-size:10px}
+ .bar .speed{width:65px}
+ .reading{padding-left:16px;padding-right:16px;line-height:1.5;letter-spacing:.01em}
+ .footer{font-size:10px}
+}
+@media(max-height:550px){
+ .bar{padding:4px 8px;gap:4px}
+ .bar .brand strong{font-size:12px}
+ .bar .brand small{display:none}
+ .bar button{padding:5px 7px}
+ .reading{padding-top:18vh}
+ .footer{padding:4px 8px}
+}
+
+</style><link rel="stylesheet" href="/aire/audio-quality.css?v=1"></head><body><div class="shell">
+<header class="bar"><div class="brand"><strong>RUIDOS MOLESTOS · REDACCIÓN</strong><small>TELEPROMPTER · MODO AIRE</small></div>
+<div class="group"><label for="programNumber">PROGRAMA</label><input id="programNumber" type="number" min="1" max="999" value="56" style="width:68px;background:#151e1b;color:#f0eee6;border:1px solid #66766a;border-radius:5px;padding:9px;font-weight:bold"><button id="loadProgram" class="primary">RECUPERAR PROGRAMA</button></div><div class="group"><button id="mode" class="primary" title="CAMBIAR ENTRE MANUAL Y AUTOMÁTICO">MODO MANUAL</button><button id="play" title="INICIAR O PAUSAR DESPLAZAMIENTO">▶ INICIAR</button></div>
+<div class="group"><label for="speed">VELOCIDAD</label><input id="speed" class="speed" type="range" min="5" max="100" value="30"><span id="speedValue" class="stat">30</span></div>
+<div class="group"><button id="smaller" title="ACHICAR LETRA">A−</button><button id="bigger" title="AGRANDAR LETRA">A+</button></div>
+<div class="group"><button id="back" title="RETROCEDER UN PÁRRAFO">↶ PÁRRAFO</button><button id="edit">EDITAR TEXTO</button><button id="fullscreen">⛶ PANTALLA COMPLETA</button><a href="/aire/" style="color:#d9b48a;padding:8px">SALIR</a></div></header>
+<main class="viewer"><div id="scroll" class="scroll" tabindex="0" aria-label="TEXTO DEL TELEPROMPTER"><div id="reading" class="reading" data-program="56">RUIDOS MOLESTOS — PROGRAMA 56
+DESPUÉS DE LOS GIGANTES
+EMERSON, LAKE &amp; PALMER / U.K. / ASIA
+
+PRESENTACIÓN
+
+HAY MÚSICOS QUE DEJAN UNA BANDA Y SE LLEVAN ALGO MÁS QUE UN INSTRUMENTO. / SE LLEVAN UNA MANERA DE ESCUCHAR, UNA DISCUSIÓN PENDIENTE, UNA IDEA QUE TODAVÍA NO ENCONTRÓ SU LUGAR. // ESTA NOCHE VAMOS A SEGUIR ESAS HUELLAS. / DESDE LOS ESCENARIOS DESMESURADOS DE LOS AÑOS 70 HASTA LAS CANCIONES QUE ENTRARON POR LAS RADIOS EN LOS AÑOS 80. / EMERSON, LAKE &amp; PALMER. / U.K. / ASIA. // 3 NOMBRES PARA UNA HISTORIA DE ENCUENTROS, AMBICIÓN Y NUEVAS OPORTUNIDADES. //
+
+DESDE LA PUESTA AL AIRE, LA MUSICALIZACIÓN Y LA LOCUCIÓN, LOS ACOMPAÑA SEBASTIÁN SOPELANA. / POR FM DEL LAGO 102.5. / ESTO ES RUIDOS MOLESTOS. //
+
+CAPÍTULO 1 — EL HOMBRE QUE PIDIÓ UNA NOCHE PARA PENSAR
+
+INGLATERRA. / PRIMAVERA DE 1970. // CARL PALMER TIENE UNA INVITACIÓN QUE MUCHOS MÚSICOS ACEPTARÍAN ANTES DE QUE TERMINARA LA FRASE. / KEITH EMERSON Y GREG LAKE ESTÁN BUSCANDO BATERISTA. / QUIEREN QUE VAYA A TOCAR CON ELLOS. // PERO PALMER TIENE UNA BANDA. / ATOMIC ROOSTER ESTÁ EMPEZANDO A ENCONTRAR SU PÚBLICO. / ABANDONARLA SIGNIFICA DEJAR UN PROYECTO QUE TAMBIÉN ES SUYO. //
+
+LA DUDA TIENE UN PESO QUE DESPUÉS, CUANDO CONOCEMOS EL FINAL, RESULTA FÁCIL OLVIDAR. / EN ESE MOMENTO NO EXISTEN LOS ESTADIOS DE ELP NI LAS PORTADAS QUE VAN A HACERSE FAMOSAS. / HAY 2 MÚSICOS CON ANTECEDENTES IMPORTANTES Y UNA PROPUESTA. / EL FUTURO TODAVÍA NO TIENE DISCOS DE PLATINO. //
+
+EMERSON VIENE DE THE NICE. / LAKE TRAE LA VOZ Y EL BAJO CON LOS QUE HABÍA PARTICIPADO EN EL NACIMIENTO DE KING CRIMSON. / PALMER LLEVA UNA EXPERIENCIA DISTINTA: SOUL, BLUES, EL ESPECTÁCULO INCENDIARIO DE ARTHUR BROWN Y LA AVENTURA RECIENTE DE ATOMIC ROOSTER. / NO VIENEN DEL MISMO LUGAR. / ESA DIFERENCIA VA A SER PARTE DEL MOTOR. //
+
+PALMER ACEPTA PROBAR. / SE ENCUENTRAN A TOCAR Y TRABAJAN CON MATERIAL QUE EMERSON Y LAKE CONOCEN DE SUS GRUPOS ANTERIORES. / LA PRUEBA FUNCIONA. / LE OFRECEN EL PUESTO. // Y CARL PIDE TIEMPO. / QUIERE PENSARLO. // VUELVE AL DÍA SIGUIENTE. / TOCAN OTRA VEZ. / RECIÉN ENTONCES DICE QUE SÍ. //
+
+AHÍ HAY UNA IMAGEN QUE VALE CONSERVAR: EL BATERISTA QUE TODAVÍA PUEDE LEVANTARSE E IRSE, DELANTE DE UN PROYECTO AL QUE TERMINARÁ DEDICANDO UNA PARTE ENORME DE SU VIDA. / LA HISTORIA SUELE GUARDAR LA FOTO DEL ÉXITO. / A VECES CONVIENE MIRAR EL INSTANTE ANTERIOR, CUANDO TODAVÍA HABÍA QUE ELEGIR. //
+
+EL NOMBRE DEL GRUPO NO ES UNA FANTASÍA NI UNA CONSIGNA. / SON SUS APELLIDOS. / EMERSON, LAKE &amp; PALMER. / LOS 3 EXPUESTOS DESDE LA PRIMERA PALABRA. / UNA PROMESA DE IGUALDAD QUE TAMBIÉN DEJA A LA VISTA EL PROBLEMA: CÓMO REUNIR PERSONALIDADES TAN FUERTES SIN QUE LA MÚSICA SE CONVIERTA EN UNA DISPUTA PERMANENTE POR EL CENTRO. //
+
+EN AGOSTO DE 1970 PASAN POR PLYMOUTH Y DESPUÉS POR EL FESTIVAL DE LA ISLA DE WIGHT. / LA BANDA RECIÉN EMPIEZA Y YA TIENE QUE PRESENTARSE ANTE UNA MULTITUD. / EL TAMAÑO DEL ESCENARIO PARECE ADELANTARSE AL TAMAÑO DE SU HISTORIA. / APENAS SE ESTÁN CONOCIENDO COMO GRUPO Y AFUERA YA SE ESPERA UNA REVELACIÓN. //
+
+ESCUCHAR A ELP IMPLICA ACEPTAR UNA CONVIVENCIA POCO HABITUAL. / LA PERCUSIÓN PUEDE OCUPAR EL PRIMER PLANO. / EL BAJO SOSTIENE EL PESO ELÉCTRICO Y LA VOZ ABRE UN ESPACIO HUMANO ENTRE LOS TECLADOS. / EL ÓRGANO PUEDE SONAR COMO UNA PARED O COMO UN INSTRUMENTO QUE EMPUJA A LOS OTROS 2 HACIA UNA CARRERA. / EL PIANO TRAE OTRA RESPIRACIÓN. / Y CUANDO PARECE QUE TODO VA A CRECER, UNA GUITARRA ACÚSTICA CAMBIA LA ESCALA. //
+
+EL PRIMER ÁLBUM SE GRABA EN ADVISION, EN LONDRES. / GREG LAKE ASUME LA PRODUCCIÓN Y EDDY OFFORD TRABAJA COMO INGENIERO. / LAKE NO QUEDA REDUCIDO A CANTAR LO QUE OTRO COMPONE: INTERVIENE EN LA FORMA QUE TOMA EL CONJUNTO. / ESA FUNCIÓN AYUDA A ENTENDER POR QUÉ LA BANDA PUEDE SER EXUBERANTE Y, AL MISMO TIEMPO, ENCONTRAR MOMENTOS DE UNA CLARIDAD CASI ÍNTIMA. //
+
+EL PROGRESIVO SUELE CONTARSE A TRAVÉS DE SUS COMPLICACIONES. / LOS CAMBIOS DE RITMO, LOS INSTRUMENTOS, LAS OBRAS EXTENSAS. / PERO TAMBIÉN SE PUEDE ESCUCHAR DESDE UNA PREGUNTA MUCHO MÁS CERCANA: ¿CÓMO HACEMOS PARA ESTAR JUNTOS CUANDO CADA UNO IMAGINA ALGO DISTINTO? //
+
+EN ELP ESA PREGUNTA ESTÁ DESDE EL PRINCIPIO. / NO SE RESUELVE UNA VEZ Y PARA SIEMPRE. / VUELVE EN CADA ENSAYO, CADA DISCO Y CADA DECISIÓN. / LA MÚSICA CONSERVA ESA TENSIÓN. / POR ESO PUEDE SENTIRSE TAN VIVA INCLUSO CUANDO CONOCEMOS DE MEMORIA EL RECORRIDO. //
+
+TODAVÍA ESTAMOS EN EL COMIENZO. / PALMER YA ELIGIÓ QUEDARSE. / AHORA LOS 3 TIENEN QUE DEMOSTRAR QUE AQUELLA PRUEBA PUEDE CONVERTIRSE EN UNA BANDA. //
+
+JUSTIFICACIÓN MUSICAL DEL CAPÍTULO 1
+THE BARBARIAN: ABRE CON EL PESO INSTRUMENTAL DEL DEBUT DE 1970.
+KNIFE-EDGE: MUESTRA EL ENCUENTRO ENTRE ÓRGANO, VOZ Y PULSO ELÉCTRICO.
+LUCKY MAN: PERMITE ESCUCHAR EL COSTADO MELÓDICO DE GREG LAKE DENTRO DEL MISMO ÁLBUM.
+FROM THE BEGINNING: LLEVA ESE CONTRASTE A TRILOGY, DE 1972.
+
+TEMAS DEL BLOQUE 1
+1. EMERSON, LAKE &amp; PALMER — THE BARBARIAN — 1970.
+2. EMERSON, LAKE &amp; PALMER — KNIFE-EDGE — 1970.
+3. EMERSON, LAKE &amp; PALMER — LUCKY MAN — 1970.
+4. EMERSON, LAKE &amp; PALMER — FROM THE BEGINNING — 1972.
+
+CAPÍTULO 2 — EL ESCENARIO EMPIEZA A PESAR
+
+UN DISCO DOBLE ABIERTO SOBRE LA MESA. / 4 CARAS DE VINILO. / EN 1977, EMERSON, LAKE &amp; PALMER DISTRIBUYEN WORKS VOLUME 1 DE UNA MANERA REVELADORA: UNA CARA PARA CADA MÚSICO Y OTRA PARA LOS 3 JUNTOS. // LA FORMA FÍSICA DEL ÁLBUM PARECE DIBUJAR LA RELACIÓN. / CADA UNO NECESITA SU HABITACIÓN. / DESPUÉS TIENEN QUE VOLVER A ENCONTRARSE. //
+
+PARA LLEGAR HASTA AHÍ HABÍAN CONSTRUIDO UNA MÚSICA CAPAZ DE CAMBIAR DE DIMENSIÓN EN POCOS COMPASES. / EL OYENTE PODÍA ENTRAR POR UNA MELODÍA SENCILLA Y TERMINAR FRENTE A UNA ARQUITECTURA ENORME. / ESE MOVIMIENTO FUE PARTE DE SU ATRACTIVO. / TAMBIÉN EXIGÍA QUE LOS INTEGRANTES NEGOCIARAN CONTINUAMENTE QUÉ BANDA QUERÍAN SER. //
+
+EMERSON TENÍA UNA RELACIÓN CON EL TECLADO QUE REUNÍA DISCIPLINA Y RIESGO. / LA FORMACIÓN MUSICAL CONVIVÍA CON UNA PRESENCIA ESCÉNICA QUE LLEVABA EL INSTRUMENTO AL TERRENO FÍSICO. / LAKE APORTABA UN CENTRO VOCAL RECONOCIBLE INCLUSO CUANDO ALREDEDOR CAMBIABA TODO. / PALMER ENCONTRABA UNA MANERA DE DAR PRECISIÓN Y EMPUJE A MATERIALES QUE PODÍAN QUEBRARSE SI EL PULSO DEJABA DE SOSTENERLOS. //
+
+NO ERAN 3 ESPECIALISTAS TRABAJANDO EN COMPARTIMENTOS CERRADOS. / LA FUERZA APARECÍA EN LO QUE OCURRÍA ENTRE ELLOS. / UNA ENTRADA DE BATERÍA PODÍA CAMBIAR LA DIRECCIÓN DEL ÓRGANO. / UNA VOZ PODÍA HACER QUE UNA SECCIÓN INSTRUMENTAL ADQUIRIERA OTRO SENTIDO. / LA SENSACIÓN DE VÉRTIGO DEPENDÍA DE QUE HUBIERA ALGUIEN SOSTENIENDO EL PISO. //
+
+EN LOS AÑOS 70 ESA AMBICIÓN TAMBIÉN OCUPA ESPACIO FUERA DEL DISCO. / EQUIPOS, ESCENARIOS, TRASLADOS. / TODO LO QUE EL PÚBLICO ESCUCHA NECESITA UNA ESTRUCTURA MATERIAL PARA LLEGAR HASTA AHÍ. / Y UNA ESTRUCTURA TIENE COSTOS, HORARIOS Y LÍMITES, AUNQUE LA IMAGINACIÓN DE LOS MÚSICOS NO QUIERA RECONOCERLOS. //
+
+WORKS LLEVA ESA ESCALA HACIA UNA GIRA CON ORQUESTA Y CORO EN PARTE DE SU RECORRIDO. / EN MONTREAL, EN 1977, LA BANDA ACTÚA EN EL ESTADIO OLÍMPICO. / EL PROYECTO QUE HABÍA EMPEZADO CON 3 HOMBRES PROBÁNDOSE EN UN ENSAYO AHORA SE DESPLIEGA FRENTE A DECENAS DE MILES DE PERSONAS. //
+
+LA IMAGEN PUEDE LEERSE COMO UNA CONQUISTA. / TAMBIÉN COMO UNA PREGUNTA: ¿HASTA DÓNDE PUEDE CRECER UNA BANDA SIN QUEDAR ATRAPADA DENTRO DE LO QUE CONSTRUYÓ? // CUANTO MÁS GRANDE ES LA MAQUINARIA, MÁS DIFÍCIL RESULTA GIRAR. / LO QUE AYER PARECÍA UNA POSIBILIDAD EMPIEZA A CONVERTIRSE EN UNA OBLIGACIÓN. //
+
+NO HACE FALTA IMAGINAR UNA PELEA QUE NADIE DOCUMENTÓ PARA PERCIBIR ESE PROBLEMA. / ESTÁ EN LAS DECISIONES VISIBLES: EL REPARTO DE LAS CARAS DE WORKS, LA ESCALA DE LA GIRA, EL REGRESO AL ESTUDIO, LA DISTANCIA ENTRE EL IMPULSO INICIAL Y EL PESO DE SOSTENERLO. / A VECES UNA HISTORIA SE CUENTA MEJOR MIRANDO LO QUE LAS PERSONAS HACEN QUE PONIÉNDOLES FRASES EN LA BOCA. //
+
+LOVE BEACH APARECE EN 1978. / SE GRABA EN NASSAU, EN LAS BAHAMAS. / DESPUÉS LLEGA LA INTERRUPCIÓN DE LA BANDA. / EL CIERRE DE AQUELLA PRIMERA ETAPA NO BORRA LO ANTERIOR, PERO CAMBIA EL PAISAJE PARA SUS INTEGRANTES. / CARL PALMER VUELVE A TENER QUE PENSAR QUÉ HACER CON SUS MANOS, SU TIEMPO Y SU NOMBRE. //
+
+ES EL MISMO HOMBRE QUE EN 1970 HABÍA PEDIDO UNA NOCHE PARA DECIDIR. / AHORA TIENE UNA TRAYECTORIA QUE PODRÍA CONVERTIRSE EN REFUGIO. / TAMBIÉN PODRÍA SER UNA CARGA: CADA PROYECTO NUEVO CORRE EL RIESGO DE SER MEDIDO CONTRA EL TAMAÑO DE ELP. //
+
+EL PASADO PRESTIGIOSO OFRECE UNA VENTAJA EXTRAÑA. / ABRE PUERTAS, PERO ENTRA ANTES QUE UNO. / LOS DEMÁS CREEN SABER QUÉ VAN A ESCUCHAR INCLUSO ANTES DEL PRIMER ENSAYO. // PARA EMPEZAR OTRA VEZ HACE FALTA ENCONTRAR COMPAÑEROS DISPUESTOS A ESCUCHAR ALGO QUE TODAVÍA NO EXISTE. //
+
+PALMER NO ABANDONA LA BÚSQUEDA. / MIENTRAS TANTO, EN OTRA ZONA DEL MISMO MAPA MUSICAL, UN CANTANTE Y BAJISTA QUE TAMBIÉN CONOCE LAS RUPTURAS INTENTA REUNIR SU PROPIA BANDA. / SE LLAMA JOHN WETTON. / TODAVÍA FALTA PARA QUE SUS CAMINOS SE JUNTEN. //
+
+JUSTIFICACIÓN MUSICAL DEL CAPÍTULO 2
+HOEDOWN: REPRESENTA EL IMPULSO INSTRUMENTAL DE TRILOGY.
+STILL...YOU TURN ME ON: RECUPERA LA INTIMIDAD DENTRO DE BRAIN SALAD SURGERY.
+KARN EVIL 9, 1ST IMPRESSION, PART 2: CONCENTRA LA TEATRALIDAD Y LA ENERGÍA COLECTIVA DE ESA ETAPA.
+C'EST LA VIE: MUESTRA EL ESPACIO PROPIO DE GREG LAKE EN WORKS VOLUME 1.
+
+TEMAS DEL BLOQUE 2
+5. EMERSON, LAKE &amp; PALMER — HOEDOWN — 1972.
+6. EMERSON, LAKE &amp; PALMER — STILL...YOU TURN ME ON — 1973.
+7. EMERSON, LAKE &amp; PALMER — KARN EVIL 9, 1ST IMPRESSION, PART 2 — 1973.
+8. EMERSON, LAKE &amp; PALMER — C'EST LA VIE — 1977.
+
+CAPÍTULO 3 — VOLVER A ENCONTRARSE EN OTRO NOMBRE
+
+EN LA TAPA DEL PRIMER ÁLBUM DE U.K. HAY 4 MÚSICOS Y UN NOMBRE QUE PARECE DEMASIADO CORTO PARA TODO LO QUE TRAEN. / JOHN WETTON. / BILL BRUFORD. / EDDIE JOBSON. / ALLAN HOLDSWORTH. // EL DISCO APARECE EN 1978. / NINGUNO LLEGA COMO UN PRINCIPIANTE. / PERO NINGUNO PUEDE SABER SI ESAS EXPERIENCIAS VAN A ENCAJAR. //
+
+WETTON Y BRUFORD YA HABÍAN COMPARTIDO KING CRIMSON. / RECONOCEN LA MANERA DE TOCAR DEL OTRO. / CONOCEN ESE INTERCAMBIO ENTRE BAJO Y BATERÍA EN EL QUE UNA FIGURA PUEDE SOSTENER UNA CANCIÓN O ABRIR UNA PUERTA INESPERADA. / VOLVER A ENCONTRARSE OFRECE ALGO QUE NO SE COMPRA CON VIRTUOSISMO: UNA MEMORIA EN COMÚN. //
+
+ESA MEMORIA, SIN EMBARGO, NO ESCRIBE EL FUTURO. / EN U.K. HAY OTRAS 2 PERSONALIDADES. / JOBSON REÚNE TECLADOS Y VIOLÍN ELÉCTRICO. / HOLDSWORTH LLEVA UNA GUITARRA CUYA FLUIDEZ PARECE DISCUTIR LOS LÍMITES HABITUALES DEL INSTRUMENTO. / NO ESTÁN AHÍ PARA DECORAR UNA SOCIEDAD ANTERIOR. / TIENEN SU PROPIA IDEA DE LA MÚSICA. //
+
+EL GRUPO OBLIGA A ESCUCHAR EN VARIAS DIRECCIONES. / LA VOZ DE WETTON PUEDE OFRECER UN PUNTO DE APOYO MIENTRAS EL ACOMPAÑAMIENTO CAMBIA DE FORMA. / UN TECLADO CONSTRUYE UNA SUPERFICIE Y LA GUITARRA LA ATRAVIESA SIN RECURRIR SIEMPRE A LOS GESTOS QUE EL ROCK VOLVIÓ FAMILIARES. / LA BATERÍA NO SE LIMITA A MARCAR EL CAMINO: INTERVIENE EN SU DISEÑO. //
+
+HAY ALGO CONMOVEDOR EN ESTAS REUNIONES DE MÚSICOS EXPERIMENTADOS. / DESDE AFUERA PARECEN COMBINACIONES PERFECTAS. / SE SUMAN LOS NOMBRES Y SE SUPONE QUE EL RESULTADO ESTÁ GARANTIZADO. / ADENTRO HAY QUE RESOLVER CUESTIONES MUCHO MENOS ABSTRACTAS: CUÁNTO ESPACIO TIENE CADA UNO, QUÉ SE REPITE, QUÉ SE DEJA ABIERTO, QUÉ PARTE NECESITA QUEDAR FIJADA PARA QUE LA CANCIÓN EXISTA. //
+
+UNA FORMACIÓN REÚNE CAPACIDADES. / UNA BANDA NECESITA ADEMÁS UNA FORMA DE CONVIVIR CON ELLAS. // U.K. CONSIGUE DEJAR UN PRIMER DISCO QUE CONSERVA ESA FRICCIÓN ENTRE PRECISIÓN, MELODÍA Y LIBERTAD INSTRUMENTAL. / ESCUCHARLO HOY PERMITE OÍR POSIBILIDADES QUE NO TERMINARON DE ESTABILIZARSE. / EL REGISTRO PERMANECE. / LA FORMACIÓN CAMBIA. //
+
+BRUFORD Y HOLDSWORTH SALEN DEL GRUPO. / WETTON Y JOBSON CONTINÚAN CON TERRY BOZZIO EN BATERÍA. / PARA EL SIGUIENTE ÁLBUM DE ESTUDIO, DANGER MONEY, DE 1979, U.K. ES UN TRÍO. / LA GUITARRA DEJA DE SER PARTE DE LA FORMACIÓN. / EL ESPACIO VUELVE A ORGANIZARSE. //
+
+NO ES UN CAMBIO MENOR. / LO QUE ANTES PODÍA REPARTIRSE ENTRE 4 AHORA REQUIERE OTRAS SOLUCIONES. / JOBSON OCUPA UN LUGAR INSTRUMENTAL TODAVÍA MÁS AMPLIO. / LA VOZ DE WETTON SIGUE OFRECIENDO CONTINUIDAD. / BOZZIO TRAE OTRA ENERGÍA, OTRO MODO DE DAR FORMA AL MOVIMIENTO. //
+
+EN APENAS 2 ÁLBUMES DE ESTUDIO QUEDA RETRATADA UNA BÚSQUEDA QUE NO ENCONTRÓ UNA CONVIVENCIA DURADERA. / PERO UNA BANDA BREVE NO ES NECESARIAMENTE UNA BANDA INCOMPLETA. / HAY ENCUENTROS QUE DURAN LO SUFICIENTE PARA PRODUCIR UNA MÚSICA QUE NADIE HABRÍA HECHO SOLO. //
+
+WETTON SALE DE ESA EXPERIENCIA CON ALGO QUE SEGUIRÁ CRECIENDO: SU LUGAR COMO CANTANTE Y COMPOSITOR. / EL BAJO NO DESAPARECE. / LA VOZ EMPIEZA A PROYECTAR OTRA CLASE DE CERCANÍA. / PUEDE SOSTENER UNA ESTRUCTURA COMPLEJA, PERO TAMBIÉN ACERCARSE A UNA CANCIÓN DIRECTA SIN PERDER IDENTIDAD. //
+
+EN EL TRÁNSITO HACIA LOS AÑOS 80, ESA POSIBILIDAD SE VUELVE DECISIVA. / NO ALCANZA CON REUNIR OTRA VEZ A MÚSICOS ADMIRADOS. / HACE FALTA ENCONTRAR UNA IDEA QUE LOS LLEVE HACIA ADELANTE. / UNA CANCIÓN PUEDE SER ESA IDEA. / Y PARA WETTON, LOS PRÓXIMOS COMPAÑEROS VAN A INCLUIR A UN BATERISTA QUE ACABA DE VIVIR EL FINAL DE UNA DE LAS BANDAS MÁS GRANDES DEL PROGRESIVO. //
+
+JUSTIFICACIÓN MUSICAL DEL CAPÍTULO 3
+IN THE DEAD OF NIGHT: PRESENTA EL CUARTETO ORIGINAL Y SU EQUILIBRIO ENTRE CANTO Y COMPLEJIDAD.
+ALASKA: ABRE EL ESPACIO INSTRUMENTAL DEL PRIMER ÁLBUM.
+RENDEZVOUS 6:02: INTRODUCE LA FORMACIÓN DE DANGER MONEY Y SU COSTADO MELÓDICO.
+NOTHING TO LOSE: COMPLETA EL PASO AL TRÍO CON TERRY BOZZIO.
+
+TEMAS DEL BLOQUE 3
+9. U.K. — IN THE DEAD OF NIGHT — 1978.
+10. U.K. — ALASKA — 1978.
+11. U.K. — RENDEZVOUS 6:02 — 1979.
+12. U.K. — NOTHING TO LOSE — 1979.
+
+CAPÍTULO 4 — EL FUTURO ENTRA POR LA RADIO
+
+JAPÓN. / DICIEMBRE DE 1983. // ASIA TIENE UN COMPROMISO TELEVISIVO CON MTV Y EL CANTANTE QUE HABÍA PUESTO LA VOZ EN SU ÉXITO YA NO ESTÁ EN EL GRUPO. / JOHN WETTON HA SALIDO. / PARA OCUPAR SU LUGAR LLEGA GREG LAKE. // DETRÁS DE LA BATERÍA ESTÁ CARL PALMER. / POR UN MOMENTO, 2 APELLIDOS DE ELP VUELVEN A COMPARTIR ESCENARIO DENTRO DE OTRA BANDA. //
+
+ESA ESCENA CONCENTRA LOS CRUCES DE ESTA HISTORIA. / LAKE HABÍA ABIERTO UNA PUERTA EN 1970. / PALMER LA HABÍA ATRAVESADO. / MÁS DE 1 DÉCADA DESPUÉS, PALMER RECIBE A LAKE EN EL GRUPO QUE HABÍA FORMADO JUNTO CON WETTON. / LOS NOMBRES CAMBIAN DE POSICIÓN. / LA RELACIÓN MUSICAL VUELVE A APARECER. //
+
+PARA ENTENDER CÓMO LLEGARON AHÍ HAY QUE RETROCEDER A 1981. / WETTON ENCUENTRA UNA NUEVA SOCIEDAD CON STEVE HOWE Y GEOFF DOWNES, PROVENIENTES DE YES, Y CON PALMER. / LA BANDA SE LLAMA ASIA. / EL PASADO DE CADA INTEGRANTE ES IMPORTANTE, PERO NO CONSTITUYE TODAVÍA UNA IDENTIDAD COLECTIVA. //
+
+LA VOZ DE WETTON Y LOS TECLADOS DE DOWNES ENCUENTRAN UN CENTRO. / HOWE APORTA UNA MANERA DE TOCAR RECONOCIBLE SIN NECESIDAD DE OCUPAR TODO EL ESPACIO. / PALMER TIENE QUE DECIDIR CÓMO PONER UNA TÉCNICA ENORME AL SERVICIO DE CANCIONES QUE REQUIEREN OTRA ESCALA. / LA DIFICULTAD SE DESPLAZA: AHORA CUENTA CUÁNTO PUEDE DECIR CADA GESTO. //
+
+EL DEBUT APARECE EN 1982. / LA PORTADA DE ROGER DEAN CONSERVA UN VÍNCULO VISUAL CON EL UNIVERSO QUE MUCHOS OYENTES CONOCEN. / ADENTRO, LAS CANCIONES SE ACERCAN A LA RADIO. / NO NECESITAN DURAR UNA CARA DE VINILO PARA CONSTRUIR TENSIÓN. / LA MELODÍA OCUPA EL FRENTE Y EL TRABAJO INSTRUMENTAL SIGUE FUNCIONANDO DEBAJO. //
+
+EL DISCO LLEGA AL NÚMERO 1 EN ESTADOS UNIDOS. / LA NUEVA BANDA ALCANZA UNA EXPOSICIÓN QUE DESBORDA LA SUMA DE SUS ANTECEDENTES. / HAY OYENTES QUE LLEGAN POR LOS MÚSICOS Y OTROS QUE LOS DESCUBREN SIN CONOCER SUS GRUPOS ANTERIORES. / ESA CONVIVENCIA CAMBIA EL SIGNIFICADO DEL ÉXITO: EL PASADO YA NO ES LA ÚNICA PUERTA DE ENTRADA. //
+
+DESDE LA RADIO SE PERCIBE DE UNA MANERA ESPECIAL. / UNA CANCIÓN APARECE ENTRE OTRAS CANCIONES, EN MEDIO DEL VIAJE, DEL TRABAJO O DE UNA TARDE CUALQUIERA. / NO PIDE QUE SEPAMOS QUIÉN TOCÓ CON QUIÉN. / PRIMERO TIENE QUE HACERNOS SENTIR ALGO. / DESPUÉS, SI QUEREMOS, PODEMOS TIRAR DEL HILO Y DESCUBRIR LA HISTORIA QUE TRAE. //
+
+ASIA CONSIGUE QUE ESE HILO UNA GENERACIONES Y EXPERIENCIAS DISTINTAS. / PARA ALGUNOS, LA VOZ DE WETTON ES NUEVA. / PARA OTROS, SUENA COMO ALGUIEN CONOCIDO QUE ACABA DE ENCONTRAR OTRA HABITACIÓN. / PALMER SIGUE SIENDO PALMER AUNQUE LA BATERÍA NO NECESITE DESPLEGAR TODAS SUS POSIBILIDADES A CADA MOMENTO. //
+
+PERO EL ÉXITO NO VUELVE INMUNE A UNA BANDA. / ALPHA APARECE EN 1983 Y DESPUÉS LLEGA LA SALIDA DE WETTON. / EL COMPROMISO JAPONÉS OBLIGA A RESOLVER UNA AUSENCIA EN EL CENTRO DEL GRUPO. / GREG LAKE ENTRA PARA ESA ETAPA BREVE. / MÁS TARDE WETTON REGRESA. //
+
+LA ESCENA DE JAPÓN NO ES UNA REUNIÓN DE ELP, NI CONVIENE CONTARLA COMO SI LO FUERA. / EMERSON NO ESTÁ. / LAS CANCIONES PERTENECEN A OTRO PROYECTO. / LO EXTRAORDINARIO ES JUSTAMENTE VER A LAKE Y PALMER COMPARTIENDO UNA SITUACIÓN NUEVA, CON SUS TRAYECTORIAS PRESENTES Y UNA NECESIDAD CONCRETA DELANTE. //
+
+LAS CONEXIONES ENTRE BANDAS SUELEN DIBUJARSE COMO UN ÁRBOL PROLIJO. / UN NOMBRE SALE DE UNA RAMA Y APARECE EN OTRA. / EN LA VIDA REAL HAY COMPROMISOS, ENSAYOS, DECISIONES DIFÍCILES Y LUGARES QUE ALGUIEN TIENE QUE OCUPAR. / DETRÁS DE UNA FLECHA HAY UNA PERSONA QUE VUELVE A ENTRAR A UNA SALA Y SE PREGUNTA SI TODAVÍA PUEDE CONSTRUIR ALGO CON LOS DEMÁS. //
+
+ESTA NOCHE SEGUIMOS A MÚSICOS QUE TOMARON ESE RIESGO MÁS DE 1 VEZ. / ALGUNOS ENCUENTROS DURARON AÑOS. / OTROS DEJARON APENAS UNOS DISCOS. / OTROS SE SOSTUVIERON LO NECESARIO PARA AFRONTAR UN ESCENARIO. / TODOS PERMITEN ESCUCHAR EL PROGRESIVO COMO UNA HISTORIA DE PERSONAS QUE SIGUIERON BUSCANDO COMPAÑÍA PARA SUS IDEAS. //
+
+JUSTIFICACIÓN MUSICAL DEL CAPÍTULO 4
+ONLY TIME WILL TELL: PRESENTA LA SOCIEDAD WETTON/DOWNES Y EL SONIDO DEL DEBUT.
+SOLE SURVIVOR: CONSERVA LA FUERZA INSTRUMENTAL DENTRO DEL FORMATO DE CANCIÓN.
+DON'T CRY: LLEVA EL RECORRIDO A ALPHA, DE 1983.
+HEAT OF THE MOMENT: CIERRA CON EL EMBLEMA DEL ENCUENTRO ENTRE ESOS MÚSICOS Y LA RADIO DE LOS AÑOS 80.
+
+TEMAS DEL BLOQUE 4
+13. ASIA — ONLY TIME WILL TELL — 1982.
+14. ASIA — SOLE SURVIVOR — 1982.
+15. ASIA — DON'T CRY — 1983.
+16. ASIA — HEAT OF THE MOMENT — 1982.
+
+CIERRE GENERAL
+
+AL COMIENZO HABÍA UN BATERISTA QUE PIDIÓ TIEMPO PARA PENSAR. / AL FINAL ENCONTRAMOS A ESE MISMO MÚSICO JUNTO A COMPAÑEROS QUE TAMBIÉN HABÍAN TENIDO QUE EMPEZAR DE NUEVO. // EN EL MEDIO QUEDARON DISCOS, ESCENARIOS, DESPEDIDAS Y CANCIONES QUE ENCONTRARON PÚBLICOS INESPERADOS. //
+
+EL TALENTO PERMITE IMAGINAR UN MUNDO. / COMPARTIRLO EXIGE ESCUCHAR A ALGUIEN MÁS. / QUIZÁ POR ESO SEGUIMOS VOLVIENDO A ESTAS BANDAS: PORQUE DETRÁS DE SU MÚSICA ENORME TODAVÍA SE ESCUCHA EL ESFUERZO DE ENCONTRARSE. //
+
+DESDE LA PUESTA AL AIRE, LA MUSICALIZACIÓN Y LA LOCUCIÓN, LOS ACOMPAÑÓ SEBASTIÁN SOPELANA. / POR FM DEL LAGO 102.5. / ESTO FUE RUIDOS MOLESTOS. //
+
+LA HISTORIA LLEGÓ A SU FIN, EL ROCK POR SUERTE, NO.
+</div></div><div id="guide" class="guide"></div><textarea id="editor" class="editor hide" spellcheck="false" placeholder="PEGÁ AQUÍ EL LIBRETO. EL TEXTO SE MOSTRARÁ EN MAYÚSCULAS."></textarea></main>
+<footer class="footer"><span id="status">MANUAL · LISTO PARA LEER</span><span>ESPACIO: INICIAR / PAUSAR · ↑ ↓: DESPLAZAR · ESC: SALIR DE PANTALLA COMPLETA</span><span id="progress">0%</span></footer>
+</div>
+<script>
+(function(){
+if(sessionStorage.getItem('rm_pass')!=='ok'){location.replace('/aire/');return}
+const $=id=>document.getElementById(id),scroll=$('scroll'),reading=$('reading'),editor=$('editor'),modeBtn=$('mode'),play=$('play'),status=$('status'),speed=$('speed'),speedValue=$('speedValue'),progress=$('progress');
+const KEY='rm_redaccion_nueva_v1',SETTINGS='rm_redaccion_teleprompter_v1';let settings={};try{settings=JSON.parse(localStorage.getItem(SETTINGS)||'{}')}catch(e){}
+let auto=false,running=false,editing=false,fontSize=Number(settings.fontSize)||38,last=0,frame=0,manualUntil=0;
+const sample=reading.textContent;reading.textContent=sample||localStorage.getItem(KEY)||'';editor.value=reading.textContent;
+async function loadProgram(n=Number($('programNumber').value)){
+ $('programNumber').value=String(n);
+ if(!Number.isInteger(n)||n<1||n>999){status.textContent='NÚMERO DE PROGRAMA INVÁLIDO';return}
+ stop();const button=$('loadProgram');button.disabled=true;status.textContent='RECUPERANDO PROGRAMA '+n+'…';
+ try{
+  const response=await fetch('/aire/programas/'+encodeURIComponent(n)+'.txt',{cache:'no-store'});
+  if(!response.ok)throw Error('NO SE ENCONTRÓ EL LIBRETO DEL PROGRAMA '+n);
+  const content=await response.text();
+  if(!content.trim())throw Error('EL LIBRETO ESTÁ VACÍO');
+  reading.textContent=content.toLocaleUpperCase('es-AR');
+  editor.value=reading.textContent;localStorage.setItem(KEY,reading.textContent);
+  scroll.scrollTop=0;editing=false;editor.classList.add('hide');scroll.classList.remove('hide');$('guide').classList.remove('hide');$('edit').textContent='EDITAR TEXTO';
+  update();status.textContent='PROGRAMA '+n+' RECUPERADO · LIBRETO LISTO';
+ }catch(e){status.textContent=e.message}finally{button.disabled=false}
+}
+$('loadProgram').onclick=()=>loadProgram();
+fontSize=Math.max(20,Math.min(88,fontSize));reading.style.fontSize=fontSize+'px';speed.value=Math.max(5,Math.min(100,Number(settings.speed)||30));speedValue.textContent=speed.value;
+function saveSettings(){localStorage.setItem(SETTINGS,JSON.stringify({fontSize,speed:Number(speed.value)}))}
+function update(){modeBtn.textContent=auto?'MODO AUTOMÁTICO':'MODO MANUAL';modeBtn.classList.toggle('active',auto);play.textContent=running?'Ⅱ PAUSAR':'▶ INICIAR';play.disabled=editing;status.textContent=editing?'EDICIÓN · GUARDADO LOCAL':auto?(running?'AUTOMÁTICO · EN MARCHA':'AUTOMÁTICO · EN PAUSA'):'MANUAL · RUEDA, TECLADO O ARRASTRE';progress.textContent=Math.round(100*scroll.scrollTop/Math.max(1,scroll.scrollHeight-scroll.clientHeight))+'%'}
+function stop(){running=false;cancelAnimationFrame(frame);last=0;update()}
+function tick(t){if(!running||!auto||editing)return;if(!last)last=t;const dt=Math.min(80,t-last);last=t;if(t>manualUntil){scroll.scrollTop+=Number(speed.value)*dt/1000;}if(scroll.scrollTop>=scroll.scrollHeight-scroll.clientHeight-1){stop();return}update();frame=requestAnimationFrame(tick)}
+function togglePlay(){if(editing)return;if(!auto)auto=true;if(running){stop()}else{running=true;last=0;frame=requestAnimationFrame(tick);update()}}
+modeBtn.onclick=()=>{auto=!auto;stop();update()};play.onclick=togglePlay;
+function manual(){if(running)stop();manualUntil=performance.now()+800;update()}
+scroll.addEventListener('wheel',manual,{passive:true});scroll.addEventListener('touchstart',manual,{passive:true});scroll.addEventListener('pointerdown',manual,{passive:true});scroll.addEventListener('scroll',()=>{progress.textContent=Math.round(100*scroll.scrollTop/Math.max(1,scroll.scrollHeight-scroll.clientHeight))+'%'},{passive:true});
+$('smaller').onclick=()=>{fontSize=Math.max(20,fontSize-2);reading.style.fontSize=fontSize+'px';saveSettings()};$('bigger').onclick=()=>{fontSize=Math.min(88,fontSize+2);reading.style.fontSize=fontSize+'px';saveSettings()};
+speed.oninput=()=>{speedValue.textContent=speed.value;saveSettings()};
+$('back').onclick=()=>{manual();const current=scroll.scrollTop;const nodes=reading.textContent.split(/\n\s*\n/);const estimate=Math.max(130,reading.clientWidth/(fontSize*1.5));const amount=Math.max(fontSize*3,Math.min(600,(nodes.length?nodes[Math.max(0,Math.floor(current/300)-1)]||'':'' ).length/estimate*fontSize*1.65));scroll.scrollTop=Math.max(0,current-amount)};
+$('edit').onclick=()=>{stop();editing=!editing;editor.classList.toggle('hide',!editing);scroll.classList.toggle('hide',editing);$('guide').classList.toggle('hide',editing);$('edit').textContent=editing?'GUARDAR Y LEER':'EDITAR TEXTO';if(editing){editor.value=reading.textContent;editor.focus()}else{reading.textContent=editor.value.toLocaleUpperCase('es-AR');localStorage.setItem(KEY,reading.textContent);scroll.scrollTop=0}update()};
+$('fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){status.textContent='PANTALLA COMPLETA NO DISPONIBLE EN ESTE NAVEGADOR'}};
+document.addEventListener('keydown',e=>{if(editing||e.target===editor||e.target===speed||e.target.tagName==='BUTTON')return;if(e.code==='Space'){e.preventDefault();togglePlay()}else if(e.key==='ArrowDown'||e.key==='ArrowUp'||e.key==='PageDown'||e.key==='PageUp'){manual()}});
+/* Mismo comportamiento de pantalla completa que ESTUDIO: intento al abrir,
+   reintento con la primera interacción autorizada por el navegador. */
+let fullscreenPending=true;
+function tryAutoFullscreen(){
+ if(document.fullscreenElement){fullscreenPending=false;return}
+ if(!fullscreenPending||!document.documentElement.requestFullscreen)return;
+ try{
+  const result=document.documentElement.requestFullscreen({navigationUI:'hide'});
+  if(result&&typeof result.then==='function')result.then(()=>{fullscreenPending=false}).catch(()=>{});
+ }catch(e){}
+}
+document.addEventListener('pointerdown',()=>{if(fullscreenPending)tryAutoFullscreen()},{capture:true});
+document.addEventListener('keydown',()=>{if(fullscreenPending)tryAutoFullscreen()},{capture:true});
+document.addEventListener('fullscreenchange',()=>{fullscreenPending=!document.fullscreenElement});
+tryAutoFullscreen();
+window.addEventListener('beforeunload',()=>{if(editing)localStorage.setItem(KEY,editor.value.toLocaleUpperCase('es-AR'))});
+update();
+(async function loadLatest(){
+ status.textContent='BUSCANDO ÚLTIMO PROGRAMA PUBLICADO…';
+ try{
+  const response=await fetch('/aire/programas/ultimo.json',{cache:'no-store'});
+  if(!response.ok)throw Error('NO SE PUDO CONSULTAR EL ÚLTIMO PROGRAMA');
+  const manifest=await response.json();
+  const number=Number(manifest.numero);
+  if(!Number.isInteger(number)||number<1||number>999)throw Error('NÚMERO DE PROGRAMA NO VÁLIDO');
+  await loadProgram(number);
+ }catch(e){status.textContent=e.message+' · USÁ RECUPERAR PROGRAMA'}
+})();
+})();
+</script><script src="/aire/audio-quality.js?v=1" defer></script></body></html>
