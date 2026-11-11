@@ -11,3 +11,5 @@ Vista autenticada Estudio en www.megahertz.com.ar: 16 filas y duraciones en 4 bl
 Historia /historias/programa-56.html con fuentes y enlaces. Carrusel de 3 imágenes pendiente: no confundir producción editorial publicada con paquete de redes completo.
 
 Fuentes: https://carlpalmer.com/carl-bio.php ; https://www.emersonlakeandpalmer.com/ ; https://johnwettonlegacy.co.uk/biography ; https://www.onamrecords.com/artists/uk ; https://originalasia.com/files/pr20100712.pdf . Reflexiones sobre convivencia, escucha y sonido son elaboración editorial, no testimonios atribuidos.
+
+Verificación final 18:58 h Argentina: Redacción autenticada muestra programa56, 18.438 caracteres, 4 capítulos y cierre ROCK. Tras loadLatest conserva 56 y estado PROGRAMA56 RECUPERADO. Captura de evidencia en scratch /workspace/shared/programa56-redaccion.jpg. Estudio16 filas comprobadas. Duración musical69:10. Sigue pendiente audio audible y carrusel.
