@@ -20,9 +20,21 @@
   "duracionesCorroboradasEnReproductor": false,
   "redaccionCoincideConTxt": true,
   "scriptsValidos": true,
-  "redaccionPrivadaVerificada": false,
-  "estudioPrivadoVerificado": false,
+  "redaccionPrivadaVerificada": true,
+  "estudioPrivadoVerificado": true,
   "audioEscuchado": false,
   "silenciosComprobados": false,
-  "nota": "Identificadores y títulos localizados en páginas/listados públicos. La comprobación directa completa se interrumpió; no se certifica inserción, escucha, silencios ni disponibilidad regional."
+  "nota": "Identificadores y títulos localizados en páginas/listados públicos. La comprobación directa completa se interrumpió; no se certifica inserción, escucha, silencios ni disponibilidad regional.",
+  "historiaPublicaVerificada": true,
+  "imagenesCarruselCargadas": 3,
+  "commitContenido": "1932278e1450d31199fc16a74602ba47858872da",
+  "despliegueMegahertz": "success",
+  "pruebaReproduccion": {
+    "tema": "Welcome To The Jungle",
+    "currentTime": 0,
+    "readyState": 0,
+    "paused": false,
+    "pruebaDetenida": true
+  },
+  "revisionWebMCP": "Falló consulta; status devolvió programa 0 y tracks vacíos. No acredita verificación de fuentes."
 }
