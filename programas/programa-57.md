@@ -63,3 +63,39 @@ Una historia centrada en Renaissance, independiente del programa anterior. Apert
 14. Back Home Once Again (1978) — https://www.youtube.com/watch?v=K9bikKIFFZ0 — 197 s
 15. Closer Than Yesterday (1978) — https://www.youtube.com/watch?v=qRq5pY9EvgY — 199 s
 16. Ashes Are Burning (1973) — https://www.youtube.com/watch?v=aa3kCZRKj4Y — 682 s
+
+## Comprobación posterior al despliegue
+
+{
+  "programa": 57,
+  "musicaSegundos": 5264,
+  "musicaTotal": "87:44",
+  "palabrasGuion": 3315,
+  "cuatroCapitulos": true,
+  "cuatroTemasPorBloque": true,
+  "idsUnicos": true,
+  "paginasYouTubeOK": 16,
+  "embedPermitido": 16,
+  "canalTopic": 16,
+  "guionSinELP": true,
+  "audioEscuchado": false,
+  "silenciosComprobados": false,
+  "redaccionPrivadaVerificada": true,
+  "estudioPrivadoVerificado": true,
+  "nota": "La comprobación de páginas y metadatos no certifica sonido, ausencia de silencios ni disponibilidad regional en Argentina.",
+  "redaccionCaracteres": 19096,
+  "cargaAutomaticaSinPulsarCargar": true,
+  "imagenesPublicasCargadas": 3,
+  "despliegueMegahertz": "success",
+  "commitContenido": "3ca77a3d9a1d0d0a4b83f8cb0b9155ce8f89946f",
+  "pruebaReproduccion": {
+    "tema": "Prologue",
+    "duration": 339,
+    "currentTime": 0,
+    "readyState": 0,
+    "paused": false,
+    "muted": false,
+    "error": null,
+    "detenidaAlTerminar": true
+  }
+}
