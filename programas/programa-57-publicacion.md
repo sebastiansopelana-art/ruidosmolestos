@@ -13,3 +13,7 @@ Historia e imágenes: https://www.megahertz.com.ar/historias/programa-57
 #RuidosMolestos #GunsNRoses #Rock #FMDelLago #SanMartinDeLosAndes
 
 3 ilustraciones de carrusel y 1 historia vertical. No se enviaron publicaciones a cuentas de redes.
+
+
+## Rediseño visual — 13/11/2026
+Por pedido de Sope, sustituidas las cuatro piezas por una campaña editorial de rock: negro, marfil, rojo; tipografía condensada y escenas de apariencia fotográfica. Portada guitarra/rosa, ruta1985, reencuentro2016 y adaptación9:16. Arte y recreaciones asistidas por IA, no fotos históricas. Se preservan guion, canciones y controles.
