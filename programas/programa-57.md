@@ -1,101 +1,81 @@
-# Programa 57 — Renaissance: La voz que encontró su lugar
+# Programa 57 — Especial Guns N’ Roses
 
-Viernes 13/11/2026. 4 capítulos; 16 versiones de estudio.
+Cambio expreso de Sope el 13/11/2026: Renaissance resulta demasiado lento para un viernes. Se reemplaza el programa activo por Guns N’ Roses con 16 canciones elegidas del conjunto de su discografía. Se conserva el trabajo Renaissance para otra ocasión, sin nueva fecha ni número asignado.
 
-## Criterio editorial
+## Enfoque
 
-Una historia centrada en Renaissance, independiente del programa anterior. Apertura en entrevista radial de 1989 y cierre que transforma la imagen de la escucha. Escenas y testimonios documentados; interpretaciones del narrador sin diálogos inventados. No se afirma que la ilustración sea una foto histórica. Cifras en números, pausas / y //, sin guías de interpretación ni enlaces en el texto de aire. Las justificaciones quedan al final de cada capítulo.
+Historias con escenas verificables, personas y tensiones, sin diálogos inventados ni una ficha cronológica. Apertura y cierre desarrollados, cifras en números, pausas / y //, sin guías de voz. No confundir grabaciones con público sobregrabado del EP con conciertos en vivo. No presentar el regreso de2016 como reunión de los5originales. Versiones de estudio completas, evitando videoclips con introducciones o pausas extra.
 
 ## Fuentes
 
-- Alison Steele entrevista a Annie Haslam, agosto de 1989: humor, tesitura, papel de la radio y Carnegie Hall: https://www.jtl.us/nlightsweb/lib/reviews/anhas89.htm
-- Gary James entrevista a Annie Haslam: trabajo en cabaret, aviso y audición: https://www.classicbands.com/RenaissanceInterview.html
-- Annie Haslam, The Strange Brew: audición, Carnegie Hall y presión comercial: https://thestrangebrew.co.uk/interviews/annie-haslam-renaissance/
-- Annie Haslam, MisplacedStraws, 27/9/2024: reconstrucción de la formación, Jon Camp y Terry Sullivan: https://misplacedstraws.com/2024/09/a-conversation-with-renaissance-vocalist-annie-haslam.html
-- Michael Dunford, entrevista de David Cohen de 2012: guitarra, grabador y correspondencia con Betty Thatcher: https://www.guitarpoint.net/musicians-interviews-guitarist-david-cohen-guitarpoint/michael-dunford-1944-2012-guitarist-composer-renaissance/
-- Thirteen Musical Biographies: declaraciones de integrantes sobre las audiciones y la formación: https://www.jtl.us/nlightsweb/lib/reviews/nightbrd.htm
-- Annie Haslam, The Strange Brew: Betty y su sillón de escritura. Se excluye del programa el eje Wetton/Asia: https://thestrangebrew.co.uk/interviews/annie-haslam/
-- Annie Haslam, Martin Kinch, mayo de 1999: paseo con Roy Wood y Trip to the Fair: https://cherryblossomclinic.x10.mx/annie.html
-- Annie Haslam, Mike Barnes/Prog: preparación y ensayos de Scheherazade: https://www.loudersound.com/features/musically-scheherazade-and-other-stories-is-the-one-annie-haslam-on-renaissances-1975-masterpiece
-- Andy Powell, DMME, 29/1/2015: sesión de Ashes Are Burning: https://dmme.net/andy-powell-on-renaissance/
-- Annie Haslam, Progressive Rock Central, 6/9/2019: Alison Steele y Ed Sciaky: https://progressiverockcentral.com/2019/09/06/interview-with-annie-haslam-of-renaissance/
-- Annie Haslam, Chris Wheatley/Prog: voces dobladas y Northern Lights: https://www.loudersound.com/features/renaissance-song-for-all-seasons
-- Annie Haslam, Kevin Cooper: regreso de 2009, pérdida de Dunford y continuidad: https://www.ukmusicreviews.co.uk/interviews/interview-annie-haslam/
-- Annie Haslam, Hit Channel, 17/2/2018: decisión de continuar después de Dunford: https://hit-channel.com/interview-annie-haslam-renaissance-138132/
-- Sitio de Annie Haslam: identidad musical de Renaissance: https://anniehaslam.com/pages/renaissance-music-store
+- Danny Biral, Slash y Duff: testimonios del Hell Tour, The First 50 Gigs: https://www.first50gigs.com/episode-9-hell-tour-featuring-danny-biral/
+- Slash, Kerrang!, 23/7/2021: voz de Axl, química y reencuentro: https://www.kerrang.com/slash-guns-n-roses-were-a-gang-that-walked-into-a-room-like-you-dont-want-to-f-ck-with-us/
+- Duff McKagan, Stereogum, 7/6/2024: primeros encuentros y regreso: https://stereogum.com/2266852/duff-mckagan-career-spanning-interview/interviews
+- Steven Adler y Matt Sorum, Rhythm, 18/6/2012: ensayos, baterías y relevo: https://www.musicradar.com/news/drums/interview-steven-adler-matt-sorum-the-guns-n-roses-story-549356
+- Mike Clink, Guitar World, 18/6/2024: compromiso de la banda en el estudio: https://www.guitarworld.com/features/mike-clink-slash-and-guns-n-roses-appetite-for-destruction-producer
+- Slash, Guitar World, febrero de 1992: formación, guitarras y canciones: https://www.guitarworld.com/gw-archive/slash-talks-guitars-and-guns-n-roses-1992-guitar-world-interivew
+- Slash, MusicRadar: matices sobre el origen de Sweet Child O’ Mine: https://www.musicradar.com/news/guns-n-roses-sweet-child-o-mine-song-story-slash-interview
+- Tom Zutaut, entrevista de American Masters/PBS: lanzamiento y MTV: https://www.pbs.org/wnet/americanmasters/archive/interview/tom-zutaut/
+- Tom Zutaut, LA Weekly, 20/7/2017: la apuesta por Appetite: https://www.laweekly.com/a-roses-l-a-s-most-dangerous-band/
+- Manny Charlton, Mike Clink y Alan Niven: sesiones de Sound City: https://www.loudersound.com/features/false-starts-and-a-whole-lotta-cash-how-appetite-for-destruction-was-made
+- Slash, Total Guitar/MusicRadar: Use Your Illusion y las canciones anteriores al debut: https://www.musicradar.com/news/slash-guns-n-roses-use-your-illusion
+- Izzy Stradlin, Melody Maker, 10/10/1992: por qué dejó la banda: https://www.a-4-d.com/t3607-1992-10-10-melody-maker-izzy-why-i-left-guns-n-roses
+- Izzy Stradlin, Popular 1/MusicRadar, 13/11/2008: sobriedad: https://www.musicradar.com/news/guitars/izzy-stradlin-on-chinese-democracy-guns-n-roses-past-182717
+- Guitar World: The Spaghetti Incident?, Michael Monroe y Dead Boys: https://www.guitarworld.com/features/guns-n-roses-under-appreciated-the-spaghetti-incident-and-live-era-87-93-re-examined
+- Michael Monroe, NME: dedicatoria a Stiv Bators: https://www.nme.com/features/music-interviews/hanoi-rocks-michael-monroe-dave-grohl-manic-street-preachers-guns-n-roses-3224620
+- Axl Rose, entrevista Billboard, febrero de 2009: Chinese Democracy: https://www.heretodaygonetohell.com/articles/showarticle.php?articleid=169
+- Duff McKagan, declaraciones sobre el encuentro londinense de 2010: https://blabbermouth.net/news/duff-mckagan-says-it-was-really-great-to-see-axl-rose-again
+- Axl y Duff, Globo TV, 4/9/2016: llamada y regreso: https://www.a-4-d.com/t2751-2016-09-04-globo-tv-interview-with-axl-and-duff
+- Historia oficial de Troubadour: concierto del 1/4/2016: https://www.troubadour.com/history/
+- Universal Music: catálogo de álbumes y singles: https://www.universal-music.de/gunsnroses/musik
+- Guns N’ Roses: lanzamiento oficial de Nothin’ y Atlas: https://gunsnroses.com/blogs/news/guns-n-roses-debut-two-highly-anticipated-new-songs-nothin-and-atlas
 
 ## Verificación
 
 {
   "programa": 57,
-  "musicaSegundos": 5264,
-  "musicaTotal": "87:44",
-  "palabrasGuion": 3315,
-  "cuatroCapitulos": true,
-  "cuatroTemasPorBloque": true,
-  "idsUnicos": true,
-  "paginasYouTubeOK": 16,
-  "embedPermitido": 16,
-  "canalTopic": 16,
-  "guionSinELP": true,
-  "audioEscuchado": false,
-  "silenciosComprobados": false,
+  "especial": "Guns N' Roses",
+  "reemplaza": "Renaissance; conservado en reserva",
+  "palabrasGuion": 3543,
+  "musicaSegundos": 5356,
+  "musicaTotal": "89:16",
+  "discosRepresentados": [
+    "Appetite For Destruction",
+    "Chinese Democracy",
+    "G N' R Lies",
+    "The Spaghetti Incident?",
+    "Use Your Illusion I",
+    "Use Your Illusion II"
+  ],
+  "identificadoresYTLocalizados": 16,
+  "fuentesOficiales": 14,
+  "subidasDeTerceros": 2,
+  "estadoInsercion": "pendiente",
+  "duracionesCorroboradasEnReproductor": false,
+  "redaccionCoincideConTxt": true,
+  "scriptsValidos": true,
   "redaccionPrivadaVerificada": false,
   "estudioPrivadoVerificado": false,
-  "nota": "La comprobación de páginas y metadatos no certifica sonido, ausencia de silencios ni disponibilidad regional en Argentina."
+  "audioEscuchado": false,
+  "silenciosComprobados": false,
+  "nota": "Identificadores y títulos localizados en páginas/listados públicos. La comprobación directa completa se interrumpió; no se certifica inserción, escucha, silencios ni disponibilidad regional."
 }
 
 ## Música
 
-1. Prologue (1972) — https://www.youtube.com/watch?v=lX5XZugVVhE — 339 s
-2. Kiev (1972) — https://www.youtube.com/watch?v=eE-Ylkdh1aQ — 459 s
-3. Let It Grow (1973) — https://www.youtube.com/watch?v=znIWOa21u60 — 258 s
-4. Carpet Of The Sun (1973) — https://www.youtube.com/watch?v=8jfQZ1nv99c — 212 s
-5. Bound For Infinity (1972) — https://www.youtube.com/watch?v=0Jsw64_g-OE — 264 s
-6. Black Flame (1974) — https://www.youtube.com/watch?v=VmfY6_XD-DQ — 389 s
-7. Spare Some Love (1972) — https://www.youtube.com/watch?v=0etrYoj_-nw — 311 s
-8. I Think Of You (1974) — https://www.youtube.com/watch?v=hBOl1WG53B0 — 184 s
-9. Trip To The Fair (1975) — https://www.youtube.com/watch?v=PGGHZBGTMNM — 651 s
-10. The Vultures Fly High (1975) — https://www.youtube.com/watch?v=AyXyUbvNYPA — 188 s
-11. Ocean Gypsy (1975) — https://www.youtube.com/watch?v=FOM7qonoH5M — 428 s
-12. The Captive Heart (1977) — https://www.youtube.com/watch?v=1H-UEnBYS6o — 256 s
-13. Northern Lights (1978) — https://www.youtube.com/watch?v=HKBJqHvQvjg — 247 s
-14. Back Home Once Again (1978) — https://www.youtube.com/watch?v=K9bikKIFFZ0 — 197 s
-15. Closer Than Yesterday (1978) — https://www.youtube.com/watch?v=qRq5pY9EvgY — 199 s
-16. Ashes Are Burning (1973) — https://www.youtube.com/watch?v=aa3kCZRKj4Y — 682 s
-
-## Comprobación posterior al despliegue
-
-{
-  "programa": 57,
-  "musicaSegundos": 5264,
-  "musicaTotal": "87:44",
-  "palabrasGuion": 3315,
-  "cuatroCapitulos": true,
-  "cuatroTemasPorBloque": true,
-  "idsUnicos": true,
-  "paginasYouTubeOK": 16,
-  "embedPermitido": 16,
-  "canalTopic": 16,
-  "guionSinELP": true,
-  "audioEscuchado": false,
-  "silenciosComprobados": false,
-  "redaccionPrivadaVerificada": true,
-  "estudioPrivadoVerificado": true,
-  "nota": "La comprobación de páginas y metadatos no certifica sonido, ausencia de silencios ni disponibilidad regional en Argentina.",
-  "redaccionCaracteres": 19096,
-  "cargaAutomaticaSinPulsarCargar": true,
-  "imagenesPublicasCargadas": 3,
-  "despliegueMegahertz": "success",
-  "commitContenido": "3ca77a3d9a1d0d0a4b83f8cb0b9155ce8f89946f",
-  "pruebaReproduccion": {
-    "tema": "Prologue",
-    "duration": 339,
-    "currentTime": 0,
-    "readyState": 0,
-    "paused": false,
-    "muted": false,
-    "error": null,
-    "detenidaAlTerminar": true
-  }
-}
+1. Welcome To The Jungle (Appetite For Destruction, 1987) — https://www.youtube.com/watch?v=0CNPR2qNzxk — 273s — Guns N' Roses
+2. It's So Easy (Appetite For Destruction, 1987) — https://www.youtube.com/watch?v=BZjP3NaLoCQ — 203s — Guns2011NRoses
+3. Nightrain (Appetite For Destruction, 1987) — https://www.youtube.com/watch?v=VMDljoM5JFI — 269s — Guns N' Roses
+4. Mr. Brownstone (Appetite For Destruction, 1987) — https://www.youtube.com/watch?v=27rKrR424cA — 229s — Guns N' Roses
+5. Sweet Child O' Mine (Appetite For Destruction, 1987) — https://www.youtube.com/watch?v=oMfMUfgjiLg — 356s — Guns N' Roses
+6. Patience (G N' R Lies, 1988) — https://www.youtube.com/watch?v=7Sr91G7m0SA — 356s — Guns N' Roses
+7. Don't Cry (Original) (Use Your Illusion I, 1991) — https://www.youtube.com/watch?v=-DPomaw9Sl0 — 285s — Guns N' Roses
+8. You Could Be Mine (Use Your Illusion II, 1991) — https://www.youtube.com/watch?v=6Sp1bLrBAuQ — 344s — Guns N' Roses
+9. Civil War (Use Your Illusion II, 1991) — https://www.youtube.com/watch?v=-ucDiz3GYrg — 461s — Guns N' Roses
+10. Live And Let Die (Use Your Illusion I, 1991) — https://www.youtube.com/watch?v=RywqQ_AKB9M — 184s — Guns N' Roses
+11. November Rain (Use Your Illusion I, 1991) — https://www.youtube.com/watch?v=y6lfK3bH4z8 — 537s — Guns N' Roses
+12. Estranged (Use Your Illusion II, 1991) — https://www.youtube.com/watch?v=cm5VIM7ynQQ — 565s — Nenad Bošković
+13. Ain't It Fun (The Spaghetti Incident?, 1993) — https://www.youtube.com/watch?v=emRAZ9S86Us — 306s — Guns N' Roses
+14. Chinese Democracy (Chinese Democracy, 2008) — https://www.youtube.com/watch?v=FfIZr38DLSg — 284s — Guns N' Roses
+15. Better (Chinese Democracy, 2008) — https://www.youtube.com/watch?v=tVKtLfFD8Po — 298s — Guns N' Roses
+16. Paradise City (Appetite For Destruction, 1987) — https://www.youtube.com/watch?v=2Ou85hM1xm8 — 406s — Guns N' Roses
