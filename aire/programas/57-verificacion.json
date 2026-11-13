@@ -1,0 +1,18 @@
+{
+  "programa": 57,
+  "musicaSegundos": 5264,
+  "musicaTotal": "87:44",
+  "palabrasGuion": 3315,
+  "cuatroCapitulos": true,
+  "cuatroTemasPorBloque": true,
+  "idsUnicos": true,
+  "paginasYouTubeOK": 16,
+  "embedPermitido": 16,
+  "canalTopic": 16,
+  "guionSinELP": true,
+  "audioEscuchado": false,
+  "silenciosComprobados": false,
+  "redaccionPrivadaVerificada": false,
+  "estudioPrivadoVerificado": false,
+  "nota": "La comprobación de páginas y metadatos no certifica sonido, ausencia de silencios ni disponibilidad regional en Argentina."
+}
