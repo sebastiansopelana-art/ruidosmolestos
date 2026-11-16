@@ -24,7 +24,7 @@ Alice Cooper relató su llegada a Michigan, la impresión que le produjeron MC5 
 8. Iggy and the Stooges — Search and Destroy (1973) · https://www.youtube.com/watch?v=LC9km8qnbOY · pendiente identificación de mezcla/edición
 9. Alice Cooper — I'm Eighteen (1970) · https://www.youtube.com/watch?v=sgTVKW7g2Dg · remaster de estudio indexizado
 10. Alice Cooper — Under My Wheels (1971) · https://www.youtube.com/watch?v=gdlC6i9W2rs · republicación de catálogo oficial 2026
-11. Alice Cooper — School's Out (1972) · https://www.youtube.com/watch?v=2Oo8QzDHimQ · video oficial en vivo; duración pendiente
+11. Alice Cooper — School's Out (1972) · https://www.youtube.com/watch?v=37ALmuMSHEI · edición oficial original de estudio, duración 3:29
 12. Alice Cooper — Billion Dollar Babies (1973) · https://www.youtube.com/watch?v=z2kBG5dcVtU · álbum oficial
 13. The Bob Seger System — Ramblin' Gamblin' Man (1968) · https://www.youtube.com/watch?v=U4ayQ4E3zy4 · republicación de catálogo oficial
 14. The Bob Seger System — 2 + 2 = ? (1968) · https://www.youtube.com/watch?v=8vkap4GvyG4 · álbum oficial
