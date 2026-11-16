@@ -171,12 +171,12 @@
       "durationSeconds": 206,
       "durationSource": "duración referencial de edición; sin prueba audible",
       "youtubeTitle": "Search and Destroy",
-      "channel": "versión en video indexada",
+      "channel": "Iggy & The Stooges (video oficial enlazado)",
       "bloque": 2,
       "label": "Iggy and the Stooges — Search and Destroy",
       "query": "Iggy and the Stooges Search and Destroy",
       "verificacion": "Identificador localizado en fuentes públicas. Sin prueba de audio audible, silencio o avance automático.",
-      "sourceType": "pendiente identificación de mezcla/edición"
+      "sourceType": "mezcla original de David Bowie; video enlazado desde sitio oficial de Iggy and the Stooges"
     },
     {
       "numero": 9,
@@ -220,17 +220,17 @@
       "title": "School's Out",
       "year": 1972,
       "album": "School's Out",
-      "videoId": "2Oo8QzDHimQ",
-      "url": "https://www.youtube.com/watch?v=2Oo8QzDHimQ",
-      "durationSeconds": 0,
-      "durationSource": "duración pendiente de lectura en el reproductor",
+      "videoId": "37ALmuMSHEI",
+      "url": "https://www.youtube.com/watch?v=37ALmuMSHEI",
+      "durationSeconds": 209,
+      "durationSource": "duración de edición de estudio según Rhino; reproducción sin comprobar",
       "youtubeTitle": "School's Out",
       "channel": "Official Alice Cooper",
       "bloque": 3,
       "label": "Alice Cooper — School's Out",
       "query": "Alice Cooper School's Out",
-      "verificacion": "Identificador localizado en fuentes públicas. Sin prueba de audio audible, silencio o avance automático.",
-      "sourceType": "video oficial en vivo; duración pendiente"
+      "verificacion": "Identificador oficial de edición de estudio confirmado; streaming, silencios y avance pendientes",
+      "sourceType": "edición original de estudio oficial Rhino/Warner"
     },
     {
       "numero": 12,
