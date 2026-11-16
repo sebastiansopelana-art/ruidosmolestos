@@ -8,8 +8,12 @@
   "audioAudible": "NO COMPROBADO",
   "silencios": "NO COMPROBADO",
   "avanceAutomatico": "NO COMPROBADO",
-  "redaccionPrivada": "PENDIENTE",
-  "estudioPrivado": "PENDIENTE",
+  "redaccionPrivada": "NO COMPROBADA (requiere sesión privada)",
+  "estudioPrivado": "NO COMPROBADO (requiere sesión privada)",
   "assets": "3 ilustraciones SVG para web; versiones JPG editoriales producidas por separado",
-  "dominio": "Pendiente de verificación en www.megahertz.com.ar"
+  "dominio": "COMPROBADO: megahertz.com.ar muestra programa 58 en ultimo.json, manifest y la página pública de historia.",
+  "publicacionCloudflare": "Cloudflare Pages: megahertz, check success (commit 2d30a5254fe9552adaeae0ef5166337aac03482b)",
+  "historiaPublica": "COMPROBADO",
+  "manifestPublico": "COMPROBADO",
+  "imagenPublica": "SUBIDA COMO SVG; verificación de carga como imagen aún pendiente"
 }
