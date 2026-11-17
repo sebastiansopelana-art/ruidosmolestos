@@ -45,7 +45,7 @@ Fecha: 2026-11-17 · formato completo 4 capítulos/16 canciones · 1 protagonist
 3. Radiohead — Fake Plastic Trees (The Bends, 1995) · https://www.youtube.com/watch?v=n5h0qHwNrHk · video oficial
 4. Radiohead — Street Spirit (Fade Out) (The Bends, 1995) · https://www.youtube.com/watch?v=LCJblaUkkfc · video oficial
 5. Radiohead — Paranoid Android (OK Computer, 1997) · https://www.youtube.com/watch?v=fHiGbolFFGw · video oficial
-6. Radiohead — Karma Police (OK Computer, 1997) · https://www.youtube.com/watch?v=4IJI6soiQhI · grabación original de estudio, canal oficial
+6. Radiohead — Subterranean Homesick Alien (OK Computer, 1997; remaster XL 2017) · https://www.youtube.com/watch?v=f-Eu5ZvcLb0 · edición oficial Radiohead - Topic. Selección exigida junto a Pyramid Song, que permanece como tema 12.
 7. Radiohead — No Surprises (OK Computer, 1997) · https://www.youtube.com/watch?v=u5CVsCnxyXg · video oficial
 8. Radiohead — Let Down (OK Computer, 1997) · https://www.youtube.com/watch?v=duBCwvC1kP4 · grabación original de estudio, canal oficial
 9. Radiohead — Everything in Its Right Place (Kid A, 2000) · https://www.youtube.com/watch?v=NUnXxh5U25Y · grabación original de estudio, canal oficial
@@ -61,3 +61,7 @@ Tiempo musical de referencia: 77:33. Estimación basada en las duraciones de pub
 
 ## Estado técnico
 El guion se guarda en 59.txt, manifiesto en 59.json y el estudio lo autoload al abrir. Queda pendiente autenticar sesión privada de Redacción/Estudio, confirmar audio audible, verificar silencios y avance automático. Los identificadores de YouTube proceden de búsquedas públicas y páginas catalogadas; no afirmar prueba audible.
+
+
+## Ajuste de repertorio solicitado — 17/11/2026
+Se mantiene Pyramid Song (tema 12, capítulo 3) y se incorpora Subterranean Homesick Alien (tema 6, capítulo 2) en reemplazo de Karma Police para conservar 16 pistas. La versión enlazada por el usuario se verificó como remaster oficial, `f-Eu5ZvcLb0`. Se añadió al guion el testimonio de THOM sobre los extraterrestres y la referencia a Bob Dylan; fuente entrevista HUMO 22/07/1997: https://mail.citizeninsane.eu/media/bel/03/pt_1997-07-22_humo.html . Se actualizaron TXT, Redacción embebida, historia y música. La prueba de audio audible y silencios sigue pendiente.

@@ -2,8 +2,8 @@
   "programa": 59,
   "fecha": "2026-11-17",
   "titular": "Radiohead — El valor de no repetirse",
-  "guionCaracteres": 26237,
-  "guionPalabras": 4585,
+  "guionCaracteres": 26773,
+  "guionPalabras": 4679,
   "capitulos": 4,
   "temas": 16,
   "temasPorBloque": [
@@ -14,7 +14,7 @@
   ],
   "nueveAlbumes": true,
   "idsUnicos": true,
-  "musicaReferenciaSegundos": 4653,
+  "musicaReferenciaSegundos": 4657,
   "audioAudible": "NO COMPROBADO",
   "silencios": "NO COMPROBADO",
   "avanceAutomatico": "NO COMPROBADO",
@@ -38,5 +38,8 @@
     "https://pitchfork.com/news/66137-jonny-greenwood-talks-radioheads-early-days-recording-process-rejected-spectre-theme-more/",
     "https://www.nme.com/news/music/radiohead-2025-european-tour-madrid-night-one-setlist-footage-photos-3905517",
     "https://rockhall.com/inductees/radiohead/"
-  ]
+  ],
+  "ajusteRepertorio": "Pyramid Song se mantiene en la pista 12, capítulo 3. Subterranean Homesick Alien (Remastered) reemplaza Karma Police en pista 6, capítulo 2.",
+  "subterraneanId": "f-Eu5ZvcLb0",
+  "subterraneanFuente": "Radiohead Official Artist Channel; XL Recordings 2017; video proporcionado por el usuario"
 }
