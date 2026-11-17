@@ -40,7 +40,7 @@ Fecha: 2026-11-17 · formato completo 4 capítulos/16 canciones · 1 protagonist
 - Rock and Roll Hall of Fame 2019: David Byrne y Radiohead: https://rockhall.com/inductees/radiohead/
 
 ## Música (16 URL localizadas)
-1. Radiohead — Creep (Pablo Honey, 1993) · https://www.youtube.com/watch?v=zFYEYRcjK2g · grabación original de estudio del canal oficial
+1. Radiohead — Blow Out (Pablo Honey, 1993) · https://www.youtube.com/watch?v=ocQImpRfPMk · grabación original de estudio XL Recordings (Radiohead Official Artist Channel)
 2. Radiohead — My Iron Lung (The Bends, 1994) · https://www.youtube.com/watch?v=pRU-6vaKaf4 · video oficial; comprobar audio al aire
 3. Radiohead — Fake Plastic Trees (The Bends, 1995) · https://www.youtube.com/watch?v=n5h0qHwNrHk · video oficial
 4. Radiohead — Street Spirit (Fade Out) (The Bends, 1995) · https://www.youtube.com/watch?v=LCJblaUkkfc · video oficial
@@ -65,3 +65,7 @@ El guion se guarda en 59.txt, manifiesto en 59.json y el estudio lo autoload al 
 
 ## Ajuste de repertorio solicitado — 17/11/2026
 Se mantiene Pyramid Song (tema 12, capítulo 3) y se incorpora Subterranean Homesick Alien (tema 6, capítulo 2) en reemplazo de Karma Police para conservar 16 pistas. La versión enlazada por el usuario se verificó como remaster oficial, `f-Eu5ZvcLb0`. Se añadió al guion el testimonio de THOM sobre los extraterrestres y la referencia a Bob Dylan; fuente entrevista HUMO 22/07/1997: https://mail.citizeninsane.eu/media/bel/03/pt_1997-07-22_humo.html . Se actualizaron TXT, Redacción embebida, historia y música. La prueba de audio audible y silencios sigue pendiente.
+
+
+## Ajuste de repertorio — 17/11/2026
+Sope pide eliminar Creep de la selección musical. Se reemplaza exclusivamente la pista 1 por Blow Out, cierre de Pablo Honey de 1993, manteniendo la representación del disco. Se preserva la mención histórica al gran éxito inicial sin emitirlo. Fuente de audio oficial: https://www.youtube.com/watch?v=ocQImpRfPMk ; duración 4:42 según https://radiohead.bandcamp.com/track/blow-out y https://shop.xlrecordings.com/release/346538-radiohead-pablo-honey . Permanecen Subterranean Homesick Alien (tema 6) y Pyramid Song (tema 12). No se certificó sonido audible ni detección de silencios.
