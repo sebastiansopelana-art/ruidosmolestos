@@ -1,0 +1,42 @@
+{
+  "programa": 59,
+  "fecha": "2026-11-17",
+  "titular": "Radiohead — El valor de no repetirse",
+  "guionCaracteres": 26237,
+  "guionPalabras": 4585,
+  "capitulos": 4,
+  "temas": 16,
+  "temasPorBloque": [
+    4,
+    4,
+    4,
+    4
+  ],
+  "nueveAlbumes": true,
+  "idsUnicos": true,
+  "musicaReferenciaSegundos": 4653,
+  "audioAudible": "NO COMPROBADO",
+  "silencios": "NO COMPROBADO",
+  "avanceAutomatico": "NO COMPROBADO",
+  "redaccionPrivada": "PENDIENTE",
+  "estudioPrivado": "PENDIENTE",
+  "publicacionMegahertz": "PENDIENTE DE DESPLIEGUE Y PRUEBA",
+  "imagenes": "3 ilustraciones SVG publicadas; 3 JPG editoriales y 1 story local disponible",
+  "fuentes": [
+    "https://archives-abingdon.org.uk/content/uncategorized/radiohead",
+    "https://www.musicradar.com/news/jonny-greenwood-on-early-radiohead-rehearsals",
+    "https://www.mixonline.com/recording/classic-tracks/classic-tracks-radioheads-creep",
+    "https://citizeninsane.eu/media/uk/uncut/05/pt_2001-08_uncut.html",
+    "https://treefingers.com/news/1997/capitol-ok-computer-press-kit-july-1997/",
+    "https://citizeninsane.eu/media/uk/etc/03/pt_1997-08_themix.html",
+    "https://www.nme.com/news/music/radiohead-glastonbury-1997-hell-2091762",
+    "https://movingimage.org/archived-events/radiohead-in-meeting-people-is-easy/",
+    "https://musictech.com/guides/essential-guide/landmark-productions-radiohead-kid-a/",
+    "https://citizeninsane.eu/media/uk/nme/04/pt_2000-12-23_nme.html",
+    "https://citizeninsane.eu/media/uk/bbc/07/i07a_2007-12-14_bbcrad4.html",
+    "https://music.apple.com/us/album/in-rainbows/1109714933",
+    "https://pitchfork.com/news/66137-jonny-greenwood-talks-radioheads-early-days-recording-process-rejected-spectre-theme-more/",
+    "https://www.nme.com/news/music/radiohead-2025-european-tour-madrid-night-one-setlist-footage-photos-3905517",
+    "https://rockhall.com/inductees/radiohead/"
+  ]
+}
