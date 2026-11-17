@@ -26,6 +26,7 @@ input[type=range]{width:100%;min-width:0;accent-color:#58bfe8;cursor:pointer}
 .rm-stop-after[aria-pressed="true"]{background:#205344;border-color:#85d9b3;color:#f3fff9}
 .rm-stop-after[aria-pressed="true"] .rm-stop-after-led{background:#72ecaa;box-shadow:0 0 9px #6bffaa88;border-color:#a6ffcf}
 .rm-stop-after[aria-pressed="true"] .rm-stop-after-state{color:#a6ffce}
+@media(max-width:480px){ .rm-stop-after{font-size:10px;gap:6px;padding-left:5px;padding-right:5px}.rm-stop-after .rm-stop-after-state{min-width:61px;font-size:9px}}
 
 .volume{display:grid;grid-template-columns:60px minmax(0,1fr) 35px;gap:9px;align-items:center;font-size:11px;font-weight:700;color:#bcd2e1}
 .footer{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:29px}
@@ -1615,7 +1616,7 @@ autoSepAudio.addEventListener('timeupdate',()=>{if(autoSepSongEnded)finishAutoMi
 autoSepAudio.addEventListener('error',()=>{restoreAutoSepDisplay();autoSepFinished=true;finishAutoMix()});
 blockDeck.querySelector('.vol').addEventListener('input',e=>{autoSepAudio.volume=Number(e.target.value)/100});
 function playBlockTrack(index,preserveSeparatorTail=false){
-  if(!preserveSeparatorTail&&blockCurrent>=0)rmStopAfter[0].clear();
+  if(!preserveSeparatorTail&&blockCurrent>=0&&blockYTActive)rmStopAfter[0].clear();
   ++rmAudioSwitchEpoch;
   rmSilenceReset();
   stopBlockEndSeparator();
@@ -1662,7 +1663,7 @@ function drawBlocks(){
    const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
    t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
    row.addEventListener('mousedown',e=>{if(e.detail>1)e.preventDefault()});
-   row.addEventListener('dblclick',e=>{e.preventDefault();window.getSelection()?.removeAllRanges();if(activeBlock!==b){stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1;activeBlock=b}playBlockTrack(i)});
+   row.addEventListener('dblclick',e=>{e.preventDefault();window.getSelection()?.removeAllRanges();if(activeBlock!==b){rmStopAfter[0].clear();stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1;activeBlock=b}playBlockTrack(i)});
    const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.durationSeconds||f.rmDuration);
    if(f.programTrack){const status=f.rmAudioQualityStatus||'pendiente';row.title=status==='oficial_verificado'?'FUENTE OFICIAL · Calidad técnica del stream no verificable':status==='no_apto'?'NO APTO PARA EMISIÓN':'PENDIENTE DE VERIFICACIÓN';}
    row.append(t,duration);blockItems.append(row);
@@ -1938,7 +1939,7 @@ const fmtAux=n=>fmt(Number(n)||0);
   status('DETENER DESPUÉS DEL TEMA · ACTIVADO EN AUXILIAR');
  });
  function stop(){rmStopAfter[1].clear();stopRequested=true;patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();activeProduction=false;if(ready){try{player.stopVideo()}catch(e){}}live(false);elapsed.textContent='00:00';seek.value=0}
- function playIndex(i){if(i<0||i>=ytQueue.length)return;if(current>=0)rmStopAfter[1].clear();++rmAudioSwitchEpoch;window.dispatchEvent(new Event('rm-aux-takeover'));patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();rmAuxLastScrolled=-1;if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=rmCueUrl(x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'');productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
+ function playIndex(i){if(i<0||i>=ytQueue.length)return;if(current>=0&&!stopRequested)rmStopAfter[1].clear();++rmAudioSwitchEpoch;window.dispatchEvent(new Event('rm-aux-takeover'));patOverlapAudio.pause();patOverlapActive=false;patOverlapStarted=false;productionAudio.pause();stopRequested=false;current=i;const x=ytQueue[i];track.textContent=x.title;artist.textContent=x.artist||'YouTube Music';deck.querySelector('.full-route').textContent=x.source==='production'?(rmProductionCatalog.find(p=>p.id===x.id)?.file||x.title):(x.artist||'YouTube Music')+' / '+x.title;deck.querySelector('.full-route').title=deck.querySelector('.full-route').textContent;status('Preparando: '+x.title);loadSongFacts(x);render();rmAuxLastScrolled=-1;if(x.source==='production'){if(ready)player.stopVideo();activeProduction=true;productionAudio.src=rmCueUrl(x.url||rmProductionCatalog.find(p=>p.id===x.id)?.url||'');productionAudio.volume=Number(vol.value)/100;productionAudio.play().catch(e=>{live(false);status('No se pudo reproducir el archivo de producción')});}else{productionAudio.pause();activeProduction=false;if(ready){player.loadVideoById({videoId:x.id,startSeconds:0});player.setVolume(Number(vol.value)||85)}else status('Cargando motor de YouTube…')}}
  productionAudio.addEventListener('loadedmetadata',()=>{if(ytQueue[current]?.id==='rm-prod-9'){const pat=ytQueue.find(x=>x.id==='rm-prod-11');if(pat&&!patOverlapAudio.src){patOverlapAudio.src=rmCueUrl(pat.url||rmProductionCatalog.find(x=>x.id===pat.id)?.url||'');patOverlapAudio.load()}}const x=ytQueue[current];if(activeProduction&&x?.source==='production')rememberDuration(x,productionAudio.duration)});
  function next(){if(stopRequested)return;if(current+1<ytQueue.length)playIndex(current+1);else{stop();status('Terminó la playlist auxiliar')}}
  function selectSuggestion(i){if(!suggestions.length)return;selected=Math.max(0,Math.min(suggestions.length-1,i));[...suggestionBox.querySelectorAll('.suggestion')].forEach((row,n)=>row.setAttribute('aria-selected',String(n===selected)));suggestionBox.querySelectorAll('.suggestion')[selected]?.scrollIntoView({block:'nearest'})}
