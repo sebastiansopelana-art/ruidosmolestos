@@ -1279,7 +1279,7 @@ const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
 const rmDurationText=s=>Number(s)>0&&Number.isFinite(Number(s))?fmt(Number(s)):'--:--';
 function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{file.rmDuration=a.duration;URL.revokeObjectURL(url);done()};a.onerror=()=>URL.revokeObjectURL(url);a.src=url}
 const programRow=document.createElement('div');programRow.className='rm-program-row';
-const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA 59';programLoad.title='Cargar los cuatro bloques del programa 57 desde la biblioteca del estudio';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA 60';programLoad.title='Cargar los cuatro bloques del programa 60 desde la biblioteca del estudio';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
 const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';/* La información de estado ya se muestra en el reproductor; no agregar renglón debajo de bloques. */
 async function loadStudioProgram(number=59){
@@ -1290,7 +1290,7 @@ async function loadStudioProgram(number=59){
   const manifest=await response.json();
   window.rmLoadedProgram=number;
   if(!Array.isArray(manifest.tracks)||manifest.tracks.length!==16)throw Error('El programa no tiene 16 temas');
-  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,year:t.year||null,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0}));
+  for(let b=0;b<4;b++)blocks[b]=manifest.tracks.filter(t=>t.bloque===b+1).map(t=>({name:t.label,query:t.query,programTrack:true,year:t.year||null,videoId:/^[A-Za-z0-9_-]{11}$/.test(t.videoId||'')?t.videoId:null,durationSeconds:t.durationSeconds||0,pronunciacion:String(t.pronunciacion||'')}));
   for(const t of blocks.flat()){const cached=rmVideoCache[t.query];if(!t.videoId&&cached&&/^[A-Za-z0-9_-]{11}$/.test(cached.id)){t.videoId=cached.id;t.durationSeconds=t.durationSeconds||cached.durationSeconds||0;t.rmAudioQualityStatus=cached.qualityStatus||'pendiente';t.rmAudioSource=cached.source||''}}
   activeBlock=0;drawBlocks();
    // Precarga inteligente: resolver identificadores en segundo plano, sin abrir reproductores adicionales.
@@ -1319,11 +1319,11 @@ async function loadStudioProgram(number=59){
      }
     })();
    }
-  programLoad.textContent='CARGAR PROGRAMA 59';
+  programLoad.textContent='CARGAR PROGRAMA 60';
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
 }
-programLoad.addEventListener('click',()=>loadStudioProgram(59));
+programLoad.addEventListener('click',()=>loadStudioProgram(60));
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);/* Control de carga oculto; se conserva el input para no alterar los manejadores. */
@@ -1661,6 +1661,7 @@ function drawBlocks(){
   for(const [i,f] of blocks[b].entries()){
    const row=document.createElement('div');row.className='entry rm-block-cue';row.dataset.block=b;row.dataset.index=i;row.dataset.playing=String(blockYTActive&&blockYTReady&&blockYT?.getPlayerState?.()===YT.PlayerState.PLAYING&&b===activeBlock&&i===blockCurrent);
    const t=document.createElement('span');t.textContent=String(i+1).padStart(2,'0')+' · '+f.name;
+   if(f.pronunciacion){const phonetic=document.createElement('small');phonetic.textContent='FONÉTICA · '+f.pronunciacion;phonetic.style.cssText='display:block;margin-top:3px;color:#9acbd0;font:600 11px/1.4 system-ui,-apple-system,Arial,sans-serif';t.append(phonetic)}
    t.style.cursor='pointer';t.title='Doble clic para reproducir en reproductor 1';
    row.addEventListener('mousedown',e=>{if(e.detail>1)e.preventDefault()});
    row.addEventListener('dblclick',e=>{e.preventDefault();window.getSelection()?.removeAllRanges();if(activeBlock!==b){rmStopAfter[0].clear();stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1;activeBlock=b}playBlockTrack(i)});
@@ -2078,5 +2079,5 @@ document.addEventListener('keydown',event=>{
  document.addEventListener('fullscreenchange',()=>{if(document.fullscreenElement)pending=false;else pending=true});
 })();
 
-loadStudioProgram(59);
+loadStudioProgram(60);
 </script></body></html>

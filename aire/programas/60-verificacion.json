@@ -1,0 +1,16 @@
+{
+  "numero": 60,
+  "capitulos": 4,
+  "temas": 16,
+  "fonetica": 16,
+  "libreto_palabras": 6156,
+  "comprobado": "Sintaxis JS y 16 enlaces/IDs incluidos. Código publicado pendiente de comprobación final.",
+  "no_comprobado": [
+    "Redacción autenticada",
+    "Estudio autenticado",
+    "audio audible",
+    "silencios",
+    "avance automático"
+  ],
+  "cambios_estudio": "Solo default de 59 a 60 y fonética visible en filas; función Detener después del tema preservada"
+}
