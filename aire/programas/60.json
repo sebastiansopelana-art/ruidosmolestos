@@ -50,7 +50,8 @@
       "label": "Hawkwind — Hurry on Sundown",
       "query": "Hawkwind Hurry on Sundown",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Parlophone UK, remaster 1996 del álbum original 1970"
+      "sourceType": "Parlophone UK, remaster 1996 del álbum original 1970",
+      "pronunciacion": "JÁ-RI ON SÁN-DAUN"
     },
     {
       "numero": 2,
@@ -68,7 +69,8 @@
       "label": "Hawkwind — Silver Machine",
       "query": "Hawkwind Silver Machine",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Single Version; voz de Lemmy"
+      "sourceType": "Single Version; voz de Lemmy",
+      "pronunciacion": "SÍL-VER MA-SHÍN"
     },
     {
       "numero": 3,
@@ -86,7 +88,8 @@
       "label": "Hawkwind — Kings of Speed",
       "query": "Hawkwind Kings of Speed",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Reedición Atomhenge/Cherry Red de la grabación original"
+      "sourceType": "Reedición Atomhenge/Cherry Red de la grabación original",
+      "pronunciacion": "KÍNGS OV SPÍD"
     },
     {
       "numero": 4,
@@ -104,7 +107,8 @@
       "label": "Hawkwind — Motorhead",
       "query": "Hawkwind Motorhead",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Reedición Atomhenge/Cherry Red de la grabación de 1975"
+      "sourceType": "Reedición Atomhenge/Cherry Red de la grabación de 1975",
+      "pronunciacion": "MÓU-TER-JED"
     },
     {
       "numero": 5,
@@ -122,7 +126,8 @@
       "label": "Motörhead — Louie Louie",
       "query": "Motörhead Louie Louie",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Audio oficial, Sanctuary/BMG, sencillo 1978"
+      "sourceType": "Audio oficial, Sanctuary/BMG, sencillo 1978",
+      "pronunciacion": "LÚ-I LÚ-I"
     },
     {
       "numero": 6,
@@ -140,7 +145,8 @@
       "label": "Motörhead — (I Won't) Pay Your Price",
       "query": "Motörhead (I Won't) Pay Your Price",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Audio oficial Motörhead"
+      "sourceType": "Audio oficial Motörhead",
+      "pronunciacion": "AI UÓUNT PÉI IOR PRÁIS"
     },
     {
       "numero": 7,
@@ -158,7 +164,8 @@
       "label": "Motörhead — I'll Be Your Sister",
       "query": "Motörhead I'll Be Your Sister",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Audio oficial Motörhead"
+      "sourceType": "Audio oficial Motörhead",
+      "pronunciacion": "ÁIL BI IOR SÍS-TER"
     },
     {
       "numero": 8,
@@ -176,7 +183,8 @@
       "label": "Motörhead — Metropolis",
       "query": "Motörhead Metropolis",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Audio oficial Motörhead"
+      "sourceType": "Audio oficial Motörhead",
+      "pronunciacion": "MI-TRÓ-PO-LIS"
     },
     {
       "numero": 9,
@@ -194,7 +202,8 @@
       "label": "UFO — Doctor Doctor",
       "query": "UFO Doctor Doctor",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Chrysalis, remaster 2007, versión estudio"
+      "sourceType": "Chrysalis, remaster 2007, versión estudio",
+      "pronunciacion": "DÓK-TOR DÓK-TOR"
     },
     {
       "numero": 10,
@@ -212,7 +221,8 @@
       "label": "UFO — Too Hot to Handle",
       "query": "UFO Too Hot to Handle",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Chrysalis, remaster 2024, versión estudio"
+      "sourceType": "Chrysalis, remaster 2024, versión estudio",
+      "pronunciacion": "TÚ JÓT TU JÁN-DOL"
     },
     {
       "numero": 11,
@@ -230,7 +240,8 @@
       "label": "UFO — Only You Can Rock Me",
       "query": "UFO Only You Can Rock Me",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Video musical oficial UFO, Chrysalis"
+      "sourceType": "Video musical oficial UFO, Chrysalis",
+      "pronunciacion": "ÓUN-LI IÚ KEN RÓK MI"
     },
     {
       "numero": 12,
@@ -248,7 +259,8 @@
       "label": "UFO — Cherry",
       "query": "UFO Cherry",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Chrysalis, remaster 2024, versión estudio"
+      "sourceType": "Chrysalis, remaster 2024, versión estudio",
+      "pronunciacion": "CHÉ-RI"
     },
     {
       "numero": 13,
@@ -266,7 +278,8 @@
       "label": "Fastway — Easy Livin'",
       "query": "Fastway Easy Livin'",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983"
+      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983",
+      "pronunciacion": "Í-SI LÍ-VIN"
     },
     {
       "numero": 14,
@@ -284,7 +297,8 @@
       "label": "Fastway — Feel Me, Touch Me (Do Anything You Want)",
       "query": "Fastway Feel Me, Touch Me (Do Anything You Want)",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983"
+      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983",
+      "pronunciacion": "FÍL MI, TÁCH MI (DÚ É-NI-THING IÚ UÁNT)"
     },
     {
       "numero": 15,
@@ -302,7 +316,8 @@
       "label": "Fastway — Say What You Will",
       "query": "Fastway Say What You Will",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983"
+      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983",
+      "pronunciacion": "SÉI UÁT IÚ UÍL"
     },
     {
       "numero": 16,
@@ -320,7 +335,8 @@
       "label": "Fastway — Another Day",
       "query": "Fastway Another Day",
       "verificacion": "ID, artista y canción localizados en búsquedas públicas. No comprobada reproducción audible, corte de silencio ni avance automático en Estudio.",
-      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983"
+      "sourceType": "Columbia / Sony Music Entertainment, grabación original 1983",
+      "pronunciacion": "A-NÁ-DER DÉI"
     }
   ],
   "verificacion": "16 URLs/IDs de pistas oficiales o de distribuidoras localizados por consulta pública. Calidad audible y silencios sin comprobar; pruebas en sesión privada pendientes."
