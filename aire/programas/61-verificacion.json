@@ -1,0 +1,26 @@
+{
+  "programa": 61,
+  "fecha": "2026-11-20",
+  "titulo": "El blues que se negó a morir",
+  "guionPalabras": 6872,
+  "guionCaracteres": 38223,
+  "capitulos": 4,
+  "temas": 16,
+  "temasPorBloque": [
+    4,
+    4,
+    4,
+    4
+  ],
+  "idsUnicos": true,
+  "foneticaTemas": true,
+  "audioReferenciaSegundos": 4117,
+  "audioAudible": "NO COMPROBADO",
+  "silencios": "NO COMPROBADO",
+  "avanceAutomatico": "NO COMPROBADO",
+  "redaccionPrivada": "NO COMPROBADA",
+  "estudioPrivado": "NO COMPROBADO",
+  "controlDetenerDespuesTema": "Código preservado",
+  "imagenes": "3 SVG editoriales para web; JPGs y story local disponibles, no publicados en Instagram",
+  "despliegue": "PENDIENTE"
+}
