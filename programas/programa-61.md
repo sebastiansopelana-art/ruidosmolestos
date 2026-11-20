@@ -47,4 +47,18 @@ Duración de referencia de pistas 4117 s; verificar dentro del reproductor. Las 
 - Memphis Music Hall of Fame — Denise LaSalle: https://memphismusichalloffame.com/inductee/deniselasalle/
 
 ## Estado y seguridad de producción
-Redacción y Estudio se actualizan mediante cambio de programa activo y guion; conservar controles existentes. 16 pistas malaco/compañías localizadas en YouTube pero audio audible, silencios, avance automático y autenticación privada necesitan pruebas reales antes de emisión. Las imágenes de Instagram son escenas editoriales generadas, NO fotografías documentales de Z.Z. Hill, Denise LaSalle, Little Milton y Bobby Bland.
+Redacción y Estudio se actualizan mediante cambio de programa activo y guion; conservar controles existentes. 16 pistas malaco/compañías localizadas en YouTube pero audio audible, silencios, avance automático y autenticación privada necesitan pruebas reales antes de emisión. Se descartaron las recreaciones de IA para Instagram. La historia pública exhibe fotografías documentales verificadas, con autoría/licencia; Z.Z. Hill aparece en portada original de Malaco (derechos reservados).
+
+## Fuentes de las nuevas imágenes REALES del programa 61
+Se retiraron de la portada los tres dibujos / recreaciones creados por IA. Sólo se muestran fotos verificadas de los artistas.
+1. **Z.Z. Hill** — Fotografía en la portada original del álbum *Down Home* (Malaco Records, 1981). Fuente de imagen: https://i.scdn.co/image/ab67616d0000b273308b3a9472fc9484be1f2edf. Fuente original de la discográfica: https://malaco.com/artist/blues-rb/z-z-hill/ . **Derechos reservados de Malaco/propietarios**. Antes de publicar esa fotografía en cuentas sociales comerciales corresponde confirmar permiso de uso.
+2. **Denise LaSalle** — Fotografía real de Mike Shea, Monterey Blues Festival, junio de 2009. Creative Commons CC BY-SA 3.0: https://commons.wikimedia.org/wiki/File:Denise-LaSalle-2009-Monterey.jpg . Fotografía original sin manipulación.
+3. **Little Milton** — Fotografía real de Lioneldecoster, Bagneux, Francia, 4 de diciembre de 1982. CC BY-SA 3.0: https://commons.wikimedia.org/wiki/File:Little_Milton.jpg . Fotografía original sin manipulación.
+4. **Bobby "Blue" Bland** — Fotografía real de Kingkongphoto / celebrity-photos.com, Baltimore, 9 de mayo de 1998. CC BY-SA 2.0: https://commons.wikimedia.org/wiki/File:Bobby_Blue_Bland.jpg . Fotografía original sin manipulación.
+
+**Disposición de las tres placas:**
+- Placa 1: Z.Z. Hill (portada original).
+- Placa 2: Denise LaSalle (fotografía de concierto).
+- Placa 3: Little Milton y Bobby Bland (dos fotografías reales colocadas una junto a otra; NO es una imagen histórica de ambos juntos).
+
+**Advertencia:** los JPGs anteriores generados con IA NO se deben usar ni presentar como fotos históricas. La nueva galería fotográfica de Megahertz es la fuente actual. Las fotografías pueden verse y sus fuentes originales consultarse desde el enlace de la historia.

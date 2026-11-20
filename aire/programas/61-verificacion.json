@@ -21,6 +21,14 @@
   "redaccionPrivada": "NO COMPROBADA",
   "estudioPrivado": "NO COMPROBADO",
   "controlDetenerDespuesTema": "Código preservado",
-  "imagenes": "3 SVG editoriales para web; JPGs y story local disponibles, no publicados en Instagram",
-  "despliegue": "PENDIENTE"
+  "imagenes": "Galería histórica corregida con 4 fotografías REALES verificadas en 3 paneles. Anteriores imágenes generadas por IA descartadas. Foto Z.Z. Hill: portada Malaco, derechos reservados; fotos de Denise/Milton/Bobby: CC BY-SA.",
+  "despliegue": "PENDIENTE",
+  "instagramJPG": "NO GENERADO el nuevo paquete JPG; el paquete previo con recreaciones de IA se considera descartado",
+  "fotosReales": true,
+  "fuentesFotografias": [
+    "https://malaco.com/artist/blues-rb/z-z-hill/",
+    "https://commons.wikimedia.org/wiki/File:Denise-LaSalle-2009-Monterey.jpg",
+    "https://commons.wikimedia.org/wiki/File:Little_Milton.jpg",
+    "https://commons.wikimedia.org/wiki/File:Bobby_Blue_Bland.jpg"
+  ]
 }
