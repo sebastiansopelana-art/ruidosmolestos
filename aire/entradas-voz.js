@@ -27,6 +27,26 @@ const entradasVoz = (() => {
     } catch {}
     return track.introCue?.videoId===video && Number.isFinite(track.introCue.seconds) ? track.introCue : null;
   }
+  async function albumCue(video,artist,title,album) {
+    if (!album || !artist || !title) return null;
+    const clean=value=>String(value||'').normalize('NFKD').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const options={signal:AbortSignal.timeout(7000)};
+    const embed=new URLSearchParams({url:'https://www.youtube.com/watch?v='+video,format:'json'});
+    const catalog=new URLSearchParams({artist_name:artist,track_name:title,album_name:album});
+    const [metadata,song]=await Promise.all([
+      fetch('https://www.youtube.com/oembed?'+embed,options).then(r=>r.ok?r.json():null),
+      fetch('https://lrclib.net/api/get?'+catalog,options).then(r=>r.ok?r.json():null)
+    ]);
+    if(!metadata || !song || clean(metadata.author_name)!==clean(artist+' - Topic') ||
+       clean(metadata.title)!==clean(title) || clean(song.artistName)!==clean(artist) ||
+       clean(song.trackName)!==clean(title) || clean(song.albumName)!==clean(album)) return null;
+    for (const line of String(song.syncedLyrics || '').split('\n')) {
+      const m=/^\[(\d+):(\d{2})(?:[.:](\d{1,3}))?\]\s*(.*)/.exec(line.trim());
+      if(!m || !m[4].trim() || /^[(\[♪♫*]|^(instrumental|intro|music)\s*$/i.test(m[4].trim())) continue;
+      return {seconds:Number(m[1])*60+Number(m[2])+Number('0.'+(m[3]||'0')),source:'Referencia del disco · letra sincronizada'};
+    }
+    return null;
+  }
   async function measure(track) {
     if (track instanceof File) return scan(track);
     const video=track.videoId || await blockResolve(track);
@@ -34,9 +54,10 @@ const entradasVoz = (() => {
     if (saved) return saved;
     const [artist,title]=(track.name||'').split(' — ');
     const q=new URLSearchParams({video,artist:track.artist||artist,title:track.title||title||'',album:track.album||''});
+    const disk=await albumCue(video,q.get('artist'),q.get('title'),q.get('album')).catch(()=>null);
+    if(disk) return disk;
     const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(30000)});
-    if(!res.ok) return null;
-    return res.json();
+    return res.ok ? res.json() : null;
   }
   function next() {
     while(running<3 && queue.length) {
