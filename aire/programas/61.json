@@ -51,7 +51,13 @@
       "query": "Z.Z. Hill Down Home Blues",
       "pronunciacion": "DÁUN JÓUM BLÚS",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "prsGOzxaS0E",
+        "seconds": 12.34,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:7983316"
+      }
     },
     {
       "numero": 2,
@@ -70,7 +76,13 @@
       "query": "Z.Z. Hill Cheatin' in the Next Room",
       "pronunciacion": "CHÍ-TIN IN DE NÉKST RÚM",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records, recopilación Greatest Hits"
+      "sourceType": "Malaco Records, recopilación Greatest Hits",
+      "introCue": {
+        "videoId": "QeDuC3KlyVg",
+        "seconds": 12.63,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:13097710"
+      }
     },
     {
       "numero": 3,
@@ -89,7 +101,13 @@
       "query": "Z.Z. Hill Someone Else Is Steppin' In",
       "pronunciacion": "SÁM-UAN ÉLS IS STÉ-PIN ÍN",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Music Group, álbum 1982"
+      "sourceType": "Malaco Music Group, álbum 1982",
+      "introCue": {
+        "videoId": "LXJGe0j3JVM",
+        "seconds": 11.01,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:26181093"
+      }
     },
     {
       "numero": 4,
@@ -108,7 +126,13 @@
       "query": "Z.Z. Hill Shade Tree Mechanic",
       "pronunciacion": "SHÉID TRÍ ME-KÁ-NIK",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "wDbtMyDnyYk",
+        "seconds": 14.99,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:24045111"
+      }
     },
     {
       "numero": 5,
@@ -127,7 +151,13 @@
       "query": "Denise LaSalle Trapped by a Thing Called Love",
       "pronunciacion": "TRÁPT BÁI A THÍNG KÓLD LÁV",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "BWSCD remaster del master original de 1971"
+      "sourceType": "BWSCD remaster del master original de 1971",
+      "introCue": {
+        "videoId": "CsPaNm3W5t4",
+        "seconds": 10.76,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:19791241"
+      }
     },
     {
       "numero": 6,
@@ -146,7 +176,13 @@
       "query": "Denise LaSalle A Lady in the Street",
       "pronunciacion": "A LÉI-DI IN DE STRÍT",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "hFY0NtjRv2Q",
+        "seconds": 20.95,
+        "source": "Referencia del disco · voz aislada en muestra del sello",
+        "reference": "https://www.malacomusiclicensing.com/master/MTI2OTkyMi1hZTNiNzc"
+      }
     },
     {
       "numero": 7,
@@ -184,7 +220,13 @@
       "query": "Denise LaSalle Don't Cry No More",
       "pronunciacion": "DÓUNT KRÁI NO MÓR",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "vRRCz3csBUc",
+        "seconds": 11.15,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:36986728"
+      }
     },
     {
       "numero": 9,
@@ -203,7 +245,13 @@
       "query": "Little Milton The Blues Is Alright",
       "pronunciacion": "DE BLÚS IS OL-RÁIT",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "ShPTVpKmO8Q",
+        "seconds": 10.26,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:30806065"
+      }
     },
     {
       "numero": 10,
@@ -222,7 +270,13 @@
       "query": "Little Milton Annie Mae's Cafe",
       "pronunciacion": "Á-NI MÉIS KA-FÉI",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "3-vSVkHAhwk",
+        "seconds": 7.9,
+        "source": "Referencia del disco · voz aislada en muestra del sello",
+        "reference": "https://www.malacomusiclicensing.com/master/MTI2OTY2Mi00ZTVjZTM"
+      }
     },
     {
       "numero": 11,
@@ -241,7 +295,13 @@
       "query": "Little Milton That's What Love Will Make You Do",
       "pronunciacion": "DATS UÁT LÁV UÍL MÉIK IÚ DÚ",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Stax Records, recopilación original 1968–1971"
+      "sourceType": "Stax Records, recopilación original 1968–1971",
+      "introCue": {
+        "videoId": "UAlwKvRaqMg",
+        "seconds": 32.61,
+        "source": "Letra sincronizada",
+        "reference": "netease:1671654"
+      }
     },
     {
       "numero": 12,
@@ -279,7 +339,13 @@
       "query": "Bobby “Blue” Bland Members Only",
       "pronunciacion": "MÉM-BERS ÓUN-LI",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "fPvVQyu6ZEM",
+        "seconds": 10.51,
+        "source": "Letra sincronizada",
+        "reference": "lrclib:3132143"
+      }
     },
     {
       "numero": 14,
@@ -317,7 +383,13 @@
       "query": "Bobby “Blue” Bland Get Your Money Where You Spend Your Time",
       "pronunciacion": "GUÉT IOR MÁ-NI UÉR IÚ SPÉND IOR TÁIM",
       "verificacion": "URL identificada mediante búsqueda pública por título exacto y propietario discográfico. Reproducción audible y transición en Estudio: pendientes.",
-      "sourceType": "Malaco Records"
+      "sourceType": "Malaco Records",
+      "introCue": {
+        "videoId": "3QR00DkUJZs",
+        "seconds": 6.7,
+        "source": "Referencia del disco · voz aislada en muestra del sello",
+        "reference": "https://www.malacomusiclicensing.com/master/MTI2OTY5MC1hOWVjOTQ"
+      }
     },
     {
       "numero": 16,
