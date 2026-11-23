@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEGAHERTZ · Consola de emisión</title>
+<html lang="es" data-megahertz-demo="true"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MEGAHERTZ · Consola de emisión</title>
 <style>
 *{box-sizing:border-box}body{margin:0;background:#101820;color:#e3edf3;font:12px Arial,sans-serif}button,input{font:inherit}button{height:30px;border:1px solid #647986;border-radius:4px;background:#263b49;color:#edf5fa;font-weight:bold;cursor:pointer;padding:4px 8px}button:hover{background:#3b5668}button:focus-visible,input:focus-visible{outline:2px solid #91d9ff;outline-offset:2px}button[aria-pressed=true]{background:#245b46;border-color:#8ed0ac}main{padding:8px}.console{height:185px;display:grid;grid-template-columns:minmax(0,1fr) 160px minmax(0,1fr);gap:10px;padding:10px;border:1px solid #587385;border-radius:7px;background:#182936}.deck{min-width:0;display:grid;grid-template-rows:18px 36px 18px 30px 30px;gap:5px}.deck h1{margin:0;font-size:11px;letter-spacing:1.4px;color:#9fc1d4}.now{padding:8px;background:#0b1923;border:1px solid #354d5d;border-radius:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:14px;font-weight:bold}.next{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#adc3d1;font-size:10px}.buttons{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.music-extra{grid-template-columns:repeat(3,minmax(0,1fr))}.master{display:flex;flex-direction:column;justify-content:space-between;gap:6px;padding:4px 8px;border-left:1px solid #3c5564;border-right:1px solid #3c5564;text-align:center}.master strong{font-size:10px;letter-spacing:1px}.vu{height:48px;display:flex;gap:3px;align-items:end;padding:5px;background:#07141d;border:1px solid #365060}.vu i{flex:1;background:#6dcc9c;height:2px;max-height:36px}.master input{width:100%;margin:0;accent-color:#a1cfdf}.times{display:flex;justify-content:space-between;font:10px monospace}.master label{font-size:9px;display:flex;align-items:center;gap:5px}.master label input{flex:1;min-width:0}.lists{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}.list-panel{min-width:0;border:1px solid #3c5564;border-radius:5px;background:#152530}.list-head{height:44px;display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-bottom:1px solid #3c5564;gap:8px}.list-head strong{font-size:10px;letter-spacing:1px}.list-head button{height:28px;font-size:10px}.list{min-height:180px;max-height:52vh;overflow:auto}.empty{padding:30px 12px;text-align:center;color:#9ab0bf}.track{display:flex;gap:8px;width:100%;text-align:left;border:0;border-bottom:1px solid #304553;border-radius:0;background:transparent;height:34px;font-size:11px;font-weight:normal;overflow:hidden}.track.active{background:#30576b}.track span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.status{padding:10px 2px;color:#a4bbc9;font-size:11px}.live{color:#8bd4ad}.error{color:#ffb6ab}.drop{outline:2px dashed #93c9e6}
 @media(max-width:800px){.console{grid-template-columns:minmax(0,1fr) 110px minmax(0,1fr);gap:6px;padding:7px;height:190px}button{font-size:9px;padding:3px}.deck h1{font-size:9px}.now{font-size:11px}.master{padding:4px}.list-head{height:auto;min-height:44px;flex-wrap:wrap}}
@@ -1295,19 +1295,67 @@ input[type=range]{accent-color:#baff59}
 .error,[data-status=error],.danger,.warning{color:#ffada6}
 @media(prefers-reduced-motion:reduce){.console,.list-panel{box-shadow:none!important}}
 
-</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024beta5weather"><style>.showcase-banner{display:flex;gap:20px;justify-content:space-between;padding:14px 20px;background:#baff59;color:#10180b;font:800 12px system-ui}.showcase-banner span{font-weight:500}.showcase-banner a{color:inherit}@media(max-width:700px){.showcase-banner{flex-wrap:wrap}.showcase-banner span{display:none}}</style><link rel="stylesheet" href="/aire/estetica/megahertz-logo-progress-v2.css?v=20261024c4"></head><body><div class="showcase-banner">MEGAHERTZ · DEMOSTRACIÓN INTERACTIVA <span>Audios originales de muestra · listas independientes de tu consola</span><a href="/">VOLVER AL SITIO ↗</a></div><main>
-<section class="console" aria-label="Reproductor unificado de música y tandas">
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-meteo-v2.css?v=20261023c"><link rel="stylesheet" href="/aire/estetica/megahertz-commercial.css?v=20261024beta5weather"><link rel="stylesheet" href="/aire/estetica/megahertz-logo-progress-v2.css?v=20261024c4"><style>
+/* Broadcast digital: replaces only the analogue instruments in their existing bay. */
+#mhBroadcastMeters{box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;width:100%;height:100%;min-width:0;min-height:0;padding:5px 0 5px 8px;border-left:1px solid #354d5d;background:#0b1923;color:#adc8d8;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+#mhBroadcastMeters .mh-bc-heading{display:flex;justify-content:space-between;gap:5px;font-size:10px;letter-spacing:.7px;margin-bottom:6px;white-space:nowrap}
+#mhBroadcastMeters .mh-bc-axis{display:flex;justify-content:space-between;margin:0 42px 3px 17px;font-size:9px;color:#9eb5c4}
+#mhBroadcastMeters .mh-bc-row{display:grid;grid-template-columns:11px minmax(0,1fr) 35px;gap:6px;align-items:center;margin:3px 0;min-width:0}
+#mhBroadcastMeters .mh-bc-channel{font-size:11px;color:#adc7d6}
+#mhBroadcastMeters .mh-bc-track{height:15px;position:relative;display:flex;gap:1px;background:#122431;overflow:hidden;border:0;box-shadow:none}
+#mhBroadcastMeters .mh-bc-segment{display:block;flex:1;min-width:0;background:var(--bc-color);opacity:.10}
+#mhBroadcastMeters .mh-bc-segment.lit{opacity:1}
+#mhBroadcastMeters .mh-bc-peak{display:none;position:absolute;top:0;bottom:0;width:2px;background:#efffff;pointer-events:none}
+#mhBroadcastMeters .mh-bc-number{font:11px monospace;text-align:right;color:#e1f6ff;font-variant-numeric:tabular-nums;white-space:nowrap}
+#mhBroadcastMeters .mh-bc-footer{display:flex;justify-content:space-between;gap:5px;margin-top:6px;padding-top:5px;border-top:1px solid #253f4f;font-size:9px;color:#9db6c5;white-space:nowrap}
+#mhBroadcastMeters .mh-bc-clip{color:#879ca8;letter-spacing:.5px}
+#mhBroadcastMeters .mh-bc-clip.on{color:#ff6572}
+@media(max-width:1100px){#mhBroadcastMeters{padding-left:5px}#mhBroadcastMeters .mh-bc-row{grid-template-columns:9px minmax(0,1fr) 31px;gap:4px}#mhBroadcastMeters .mh-bc-axis{margin-left:13px;margin-right:35px}#mhBroadcastMeters .mh-bc-axis span:nth-child(2),#mhBroadcastMeters .mh-bc-axis span:nth-child(4){display:none}#mhBroadcastMeters .mh-bc-heading{font-size:9px;letter-spacing:0}#mhBroadcastMeters .mh-bc-footer{font-size:8px}}
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-news-editorial.css?v=editorial-v1"><style>
+/* Broadcast transport display; same footprint and controls as before. */
+.console .mh-simple-track #mhPlayerDisplay{display:grid!important;grid-template-rows:12px minmax(24px,1fr) 10px 20px 18px!important;align-items:stretch!important;justify-content:stretch!important;gap:3px!important;width:100%;min-width:0;min-height:0;overflow:hidden;padding:2px 3px 0 1px}
+#mhPlayerDisplay .mh-display-top{display:flex;align-items:center;justify-content:space-between;gap:5px;min-width:0}
+#mhPlayerDisplay .mh-display-kicker{font:500 9px Arial,sans-serif;color:#8caebf;letter-spacing:1px;white-space:nowrap}
+#mhPlayerDisplay .mh-display-state{font:600 8px Arial,sans-serif;letter-spacing:.5px;color:#9ab3c1;white-space:nowrap;display:flex;align-items:center;gap:4px}
+#mhPlayerDisplay .mh-display-state::before{content:"";width:4px;height:4px;border-radius:50%;background:#718c9d;flex-shrink:0}
+#mhPlayerDisplay[data-state=playing] .mh-display-state{color:#ff9aa3}
+#mhPlayerDisplay[data-state=playing] .mh-display-state::before{background:#f0626e}
+#mhPlayerDisplay[data-state=paused] .mh-display-state,#mhPlayerDisplay[data-state=loading] .mh-display-state{color:#e4c77d}
+#mhPlayerDisplay[data-state=paused] .mh-display-state::before,#mhPlayerDisplay[data-state=loading] .mh-display-state::before{background:#d8b45d}
+#mhPlayerDisplay[data-state=error] .mh-display-state{color:#ff9aa3}
+.console .mh-simple-track #mhPlayerDisplay #musicNow{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;align-self:center!important;flex:none!important;background:none!important;border:0!important;padding:0!important;margin:0!important;max-height:40px!important;min-height:0!important;font:500 16px/1.22 Arial,Helvetica,sans-serif!important;letter-spacing:-.15px!important;color:#eef7fc!important;white-space:normal!important;overflow:hidden!important;overflow-wrap:anywhere;text-shadow:none!important}
+#mhPlayerDisplay[data-state=idle] #musicNow{color:#a3bac8!important}
+#mhPlayerDisplay .mh-display-meta{display:flex;align-items:center;justify-content:space-between;gap:5px;font:400 8px Arial,sans-serif;color:#819faf;letter-spacing:.4px;white-space:nowrap;min-width:0}
+#mhPlayerDisplay #mhDisplaySource{overflow:hidden;text-overflow:ellipsis}
+#mhPlayerDisplay #mhDisplayPosition{flex-shrink:0;font-variant-numeric:tabular-nums}
+#mhPlayerDisplay .mh-display-times{display:flex;align-items:center;justify-content:space-between;gap:7px;min-width:0}
+#mhPlayerDisplay .mh-display-times>span{display:flex;align-items:baseline;gap:5px;min-width:0}
+#mhPlayerDisplay .mh-display-times small{font:400 7px Arial,sans-serif;letter-spacing:.4px;color:#809eae}
+#mhPlayerDisplay .mh-display-times output{font:400 14px monospace;font-variant-numeric:tabular-nums;color:#c7ebf5;white-space:nowrap}
+#mhPlayerDisplay[data-ending=true] #mhDisplayRemaining{color:#e4c77d}
+#mhPlayerDisplay .mh-display-next{display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;border-top:1px solid #253f4f;padding-top:4px}
+#mhPlayerDisplay .mh-display-next>span{font:400 7px Arial,sans-serif;letter-spacing:.4px;color:#7899ad;white-space:nowrap;flex-shrink:0}
+#mhPlayerDisplay #mhDisplayNext{font:400 9px Arial,sans-serif;color:#adc7d7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+@media(max-width:1100px){.console .mh-simple-track #mhPlayerDisplay #musicNow{font-size:14px!important;max-height:35px!important}#mhPlayerDisplay .mh-display-times{gap:3px}#mhPlayerDisplay .mh-display-times small{display:none}#mhPlayerDisplay .mh-display-kicker{font-size:8px;letter-spacing:.3px}#mhPlayerDisplay .mh-display-state{font-size:7px;letter-spacing:0}}
+</style><link rel="stylesheet" href="/aire/estetica/megahertz-studio-core.css?v=core-v3"><link rel="stylesheet" href="/aire/estetica/megahertz-pisadores.css?v=pads-v3"><link rel="stylesheet" href="/aire/megahertz-settings.css?v=20261025-1">
+</head><body><div style="padding:8px;background:#183b49;color:#ecf6fa">MEGAHERTZ · DEMOSTRACIÓN INTERACTIVA · Datos de prueba independientes · <a href="/" style="color:#aef2dc">VOLVER AL SITIO</a></div><main>
+<div id="studioInstanceNotice" hidden role="status">Otra pestaña tiene el control de emisión. Esta vista no ejecuta eventos ni reproduce audio.</div><section class="console" aria-label="Reproductor unificado de música y tandas">
 <section class="deck" aria-label="Música automática"><h1>MÚSICA AUTOMÁTICA</h1>
 <div class="music-screen mh-simple-track">
-  <div class="mh-song-data mh-on-air-compact">
-   <span class="mh-onair-kicker">AHORA SUENA</span>
-   <div class="now" id="musicNow" aria-live="polite">Sin audio en reproducción</div>
-   
+  <div class="mh-song-data mh-on-air-compact mh-broadcast-display" id="mhPlayerDisplay" data-state="idle">
+   <div class="mh-display-top"><span class="mh-display-kicker">AHORA SUENA</span><span id="mhDisplayState" class="mh-display-state">EN ESPERA</span></div>
+   <div class="now" id="musicNow" aria-live="polite">Listo para emitir</div>
+   <div class="mh-display-meta"><span id="mhDisplaySource">MÚSICA AUTOMÁTICA</span><span id="mhDisplayPosition">— / —</span></div>
+   <div class="mh-display-times"><span><small>TIEMPO</small><output id="mhDisplayElapsed" aria-live="off">00:00</output></span><span><small>RESTA</small><output id="mhDisplayRemaining" aria-live="off">−−:−−</output></span></div>
+   <div class="mh-display-next"><span>SIGUIENTE</span><strong id="mhDisplayNext">Playlist vacía</strong></div>
    <div class="mh-visually-hidden"><span id="musicAir" hidden>EN EL AIRE</span><span id="musicNext">PRÓXIMO · Sin canciones</span></div>
   </div>
-  <aside class="mh-dual-meters" id="mhDualMeters" aria-label="Vúmetros analógicos estéreo: canales izquierdo y derecho de la salida al aire">
-    <div class="mh-vu-instrument" id="mhAnalogLeft" role="meter" aria-label="Canal izquierdo de la emisión, música y tandas" aria-valuemin="-20" aria-valuemax="6" aria-valuenow="-20"></div>
-    <div class="mh-vu-instrument" id="mhAnalogRight" role="meter" aria-label="Canal derecho de la emisión, música y tandas" aria-valuemin="-20" aria-valuemax="6" aria-valuenow="-20"></div>
+  <aside id="mhBroadcastMeters" aria-label="Medidores digitales estéreo de la salida al aire">
+   <div class="mh-bc-heading"><span>SALIDA DE AIRE</span><span>dBFS</span></div>
+   <div class="mh-bc-axis" aria-hidden="true"><span>−60</span><span>−48</span><span>−36</span><span>−24</span><span>−12</span><span>0</span></div>
+   <div class="mh-bc-row"><span class="mh-bc-channel">L</span><div class="mh-bc-track" id="mhBroadcastLeft" role="meter" aria-label="Nivel del canal izquierdo en dBFS" aria-valuemin="-60" aria-valuemax="0" aria-valuenow="-60"><i class="mh-bc-peak" aria-hidden="true"></i></div><output aria-live="off" class="mh-bc-number" id="mhBroadcastLeftValue">−∞</output></div>
+   <div class="mh-bc-row"><span class="mh-bc-channel">R</span><div class="mh-bc-track" id="mhBroadcastRight" role="meter" aria-label="Nivel del canal derecho en dBFS" aria-valuemin="-60" aria-valuemax="0" aria-valuenow="-60"><i class="mh-bc-peak" aria-hidden="true"></i></div><output aria-live="off" class="mh-bc-number" id="mhBroadcastRightValue">−∞</output></div>
+   <div class="mh-bc-footer"><span>PICO RETENIDO · 1 s</span><span id="mhBroadcastClip" class="mh-bc-clip" role="status" aria-label="Sin saturación">● CLIP</span></div>
   </aside>
 </div></section>
 <section class="master" aria-label="Salida de aire compartida"><strong id="air">EN ESPERA</strong><div class="vu" id="vu" role="img" aria-label="Nivel real de la salida de audio"></div><div><input id="seek" aria-label="Progreso del audio en emisión" type="range" min="0" max="1000" value="0" disabled><div class="times"><span id="elapsed">00:00</span><span id="duration">00:00</span></div></div></section>
@@ -1316,7 +1364,7 @@ input[type=range]{accent-color:#baff59}
  <div class="mh-weather-screen" id="mhWeatherScreen">
    <div class="mh-weather-top">
     <div class="mh-weather-location"><span class="mh-weather-live-dot" aria-hidden="true"></span><div class="mh-place" id="mhWeatherPlace">Localizando estación…</div></div>
-    <div class="mh-clock-stage" style="display:flex;align-items:center;justify-content:center;text-align:center"><div class="mh-clock" id="mhLocalClock" role="timer" aria-label="Reloj">--:--:--</div></div>
+
     <div class="mh-weather-station-tag" aria-hidden="true">METEO EN VIVO</div>
    </div>
    <div class="mh-weather-core">
@@ -1345,7 +1393,8 @@ input[type=range]{accent-color:#baff59}
  <div class="mh-visually-hidden"><span id="adsNow" role="status" aria-live="polite">Sin tanda en reproducción</span>
   <div id="adQueueView" aria-label="Orden de avisos de la tanda"></div><span id="adsAir" hidden>EN EL AIRE</span><span id="adsNext">EN ESPERA · Sin avisos cargados</span></div>
 </section>
-<nav class="emission-controls" aria-label="Controles de emisión"><div class="music-controls"><button id="prev" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button id="play" aria-label="Reproducir" title="Reproducir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button id="pause" aria-label="Pausar" title="Pausar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button id="stop" aria-label="Detener" title="Detener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button id="next" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button id="shuffle" aria-pressed="false" aria-label="Aleatorio" title="Aleatorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button id="repeat" aria-pressed="false" aria-label="Repetir" title="Repetir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button id="endStop" aria-pressed="false" aria-label="Parar al final" title="Parar al final"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button></div><div class="center-controls"><button id="mode" aria-pressed="true">AUTOMÁTICO</button><button id="settings">CONFIGURACIÓN</button></div></nav></section>
+<nav class="emission-controls" aria-label="Controles de emisión"><div class="music-controls"><button id="prev" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 5 8 12l11 7Z"/></svg></button><button id="play" aria-label="Reproducir" title="Reproducir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 4 13 8-13 8Z"/></svg></button><button id="pause" aria-label="Pausar" title="Pausar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h3v16H7zM15 4h3v16h-3z"/></svg></button><button id="stop" aria-label="Detener" title="Detener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="1.5"/></svg></button><button id="next" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 5l11 7-11 7Z"/></svg></button><button id="shuffle" aria-pressed="false" aria-label="Aleatorio" title="Aleatorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h3c5 0 7 12 12 12h3m-4-4 4 4-4 4M3 18h3c2 0 4-3 5-6m3-4c1-1 2-2 4-2h3m-4-4 4 4-4 4"/></svg></button><button id="repeat" aria-pressed="false" aria-label="Repetir" title="Repetir"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10V6h14l-3-3m3 3-3 3M20 14v4H6l3 3m-3-3 3-3"/></svg></button><button id="endStop" aria-pressed="false" aria-label="Parar al final" title="Parar al final"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 9 7-9 7ZM17 5v14M21 5v14"/></svg></button></div><div class="center-controls mh-emission-trio" role="group" aria-label="Control de transmisión y reloj local"><button id="mode" aria-pressed="true">AUTOMÁTICO</button><div class="mh-clock mh-emission-clock" id="mhLocalClock" role="timer" aria-label="Hora local de la estación" title="Hora local configurada">--:--:--</div><button id="settings">CONFIGURACIÓN</button></div></nav></section>
+<section id="mhPisadores" aria-label="Pisadores de emisión"><button type="button" class="mh-pad" data-pad="0" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">1</span><span class="mh-pad-name">PISADOR 1</span></button><button type="button" class="mh-pad" data-pad="1" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">2</span><span class="mh-pad-name">PISADOR 2</span></button><button type="button" class="mh-pad" data-pad="2" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">3</span><span class="mh-pad-name">PISADOR 3</span></button><button type="button" class="mh-pad" data-pad="3" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">4</span><span class="mh-pad-name">PISADOR 4</span></button><button type="button" class="mh-pad" data-pad="4" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">5</span><span class="mh-pad-name">PISADOR 5</span></button><button type="button" class="mh-pad" data-pad="5" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">6</span><span class="mh-pad-name">PISADOR 6</span></button><button type="button" class="mh-pad" data-pad="6" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">7</span><span class="mh-pad-name">PISADOR 7</span></button><button type="button" class="mh-pad" data-pad="7" aria-pressed="false"><span class="mh-pad-key" aria-hidden="true">8</span><span class="mh-pad-name">PISADOR 8</span></button><button type="button" class="mh-pad" data-pad="8" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">9</span><span class="mh-pad-name">PISADOR 9</span></button><button type="button" class="mh-pad" data-pad="9" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">10</span><span class="mh-pad-name">PISADOR 10</span></button><button type="button" class="mh-pad" data-pad="10" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">11</span><span class="mh-pad-name">PISADOR 11</span></button><button type="button" class="mh-pad" data-pad="11" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">12</span><span class="mh-pad-name">PISADOR 12</span></button><button type="button" class="mh-pad" data-pad="12" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">13</span><span class="mh-pad-name">PISADOR 13</span></button><button type="button" class="mh-pad" data-pad="13" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">14</span><span class="mh-pad-name">PISADOR 14</span></button><button type="button" class="mh-pad" data-pad="14" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">15</span><span class="mh-pad-name">PISADOR 15</span></button><button type="button" class="mh-pad" data-pad="15" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">16</span><span class="mh-pad-name">PISADOR 16</span></button><button type="button" class="mh-pad" data-pad="16" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">17</span><span class="mh-pad-name">PISADOR 17</span></button><button type="button" class="mh-pad" data-pad="17" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">18</span><span class="mh-pad-name">PISADOR 18</span></button><button type="button" class="mh-pad" data-pad="18" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">19</span><span class="mh-pad-name">PISADOR 19</span></button><button type="button" class="mh-pad" data-pad="19" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">20</span><span class="mh-pad-name">PISADOR 20</span></button><button type="button" class="mh-pad" data-pad="20" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">21</span><span class="mh-pad-name">PISADOR 21</span></button><button type="button" class="mh-pad" data-pad="21" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">22</span><span class="mh-pad-name">PISADOR 22</span></button><button type="button" class="mh-pad" data-pad="22" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">23</span><span class="mh-pad-name">PISADOR 23</span></button><button type="button" class="mh-pad" data-pad="23" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">24</span><span class="mh-pad-name">PISADOR 24</span></button><button type="button" class="mh-pad" data-pad="24" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">25</span><span class="mh-pad-name">PISADOR 25</span></button><button type="button" class="mh-pad" data-pad="25" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">26</span><span class="mh-pad-name">PISADOR 26</span></button><button type="button" class="mh-pad" data-pad="26" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">27</span><span class="mh-pad-name">PISADOR 27</span></button><button type="button" class="mh-pad" data-pad="27" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">28</span><span class="mh-pad-name">PISADOR 28</span></button><button type="button" class="mh-pad" data-pad="28" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">29</span><span class="mh-pad-name">PISADOR 29</span></button><button type="button" class="mh-pad" data-pad="29" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">30</span><span class="mh-pad-name">PISADOR 30</span></button><button type="button" class="mh-pad" data-pad="30" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">31</span><span class="mh-pad-name">PISADOR 31</span></button><button type="button" class="mh-pad" data-pad="31" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">32</span><span class="mh-pad-name">PISADOR 32</span></button><button type="button" class="mh-pad" data-pad="32" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">33</span><span class="mh-pad-name">PISADOR 33</span></button><button type="button" class="mh-pad" data-pad="33" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">34</span><span class="mh-pad-name">PISADOR 34</span></button><button type="button" class="mh-pad" data-pad="34" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">35</span><span class="mh-pad-name">PISADOR 35</span></button><button type="button" class="mh-pad" data-pad="35" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">36</span><span class="mh-pad-name">PISADOR 36</span></button><button type="button" class="mh-pad" data-pad="36" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">37</span><span class="mh-pad-name">PISADOR 37</span></button><button type="button" class="mh-pad" data-pad="37" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">38</span><span class="mh-pad-name">PISADOR 38</span></button><button type="button" class="mh-pad" data-pad="38" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">39</span><span class="mh-pad-name">PISADOR 39</span></button><button type="button" class="mh-pad" data-pad="39" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">40</span><span class="mh-pad-name">PISADOR 40</span></button><button type="button" class="mh-pad" data-pad="40" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">41</span><span class="mh-pad-name">PISADOR 41</span></button><button type="button" class="mh-pad" data-pad="41" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">42</span><span class="mh-pad-name">PISADOR 42</span></button><button type="button" class="mh-pad" data-pad="42" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">43</span><span class="mh-pad-name">PISADOR 43</span></button><button type="button" class="mh-pad" data-pad="43" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">44</span><span class="mh-pad-name">PISADOR 44</span></button><button type="button" class="mh-pad" data-pad="44" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">45</span><span class="mh-pad-name">PISADOR 45</span></button><button type="button" class="mh-pad" data-pad="45" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">46</span><span class="mh-pad-name">PISADOR 46</span></button><button type="button" class="mh-pad" data-pad="46" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">47</span><span class="mh-pad-name">PISADOR 47</span></button><button type="button" class="mh-pad" data-pad="47" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">48</span><span class="mh-pad-name">PISADOR 48</span></button><button type="button" class="mh-pad" data-pad="48" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">49</span><span class="mh-pad-name">PISADOR 49</span></button><button type="button" class="mh-pad" data-pad="49" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">50</span><span class="mh-pad-name">PISADOR 50</span></button><button type="button" class="mh-pad" data-pad="50" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">51</span><span class="mh-pad-name">PISADOR 51</span></button><button type="button" class="mh-pad" data-pad="51" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">52</span><span class="mh-pad-name">PISADOR 52</span></button><button type="button" class="mh-pad" data-pad="52" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">53</span><span class="mh-pad-name">PISADOR 53</span></button><button type="button" class="mh-pad" data-pad="53" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">54</span><span class="mh-pad-name">PISADOR 54</span></button><button type="button" class="mh-pad" data-pad="54" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">55</span><span class="mh-pad-name">PISADOR 55</span></button><button type="button" class="mh-pad" data-pad="55" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">56</span><span class="mh-pad-name">PISADOR 56</span></button><button type="button" class="mh-pad" data-pad="56" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">57</span><span class="mh-pad-name">PISADOR 57</span></button><button type="button" class="mh-pad" data-pad="57" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">58</span><span class="mh-pad-name">PISADOR 58</span></button><button type="button" class="mh-pad" data-pad="58" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">59</span><span class="mh-pad-name">PISADOR 59</span></button><button type="button" class="mh-pad" data-pad="59" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">60</span><span class="mh-pad-name">PISADOR 60</span></button><button type="button" class="mh-pad" data-pad="60" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">61</span><span class="mh-pad-name">PISADOR 61</span></button><button type="button" class="mh-pad" data-pad="61" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">62</span><span class="mh-pad-name">PISADOR 62</span></button><button type="button" class="mh-pad" data-pad="62" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">63</span><span class="mh-pad-name">PISADOR 63</span></button><button type="button" class="mh-pad" data-pad="63" aria-pressed="false" hidden><span class="mh-pad-key" aria-hidden="true">64</span><span class="mh-pad-name">PISADOR 64</span></button></section><input type="file" id="mhPadFile" accept="audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.opus,.aiff" hidden>
 <section class="lists" aria-label="Bibliotecas de emisión">
 <section class="list-panel" id="musicPanel">
   <div class="list-head"><strong>PLAYLIST AUTOMÁTICA</strong><div><button id="addMusic">+ MÚSICA</button><button id="clearMusic">VACIAR</button></div></div>
@@ -1373,33 +1422,26 @@ input[type=range]{accent-color:#baff59}
  <div class="mh-ad-controls-under" aria-label="Controles publicitarios debajo de la agenda">
  <div class="mh-ad-pad" role="group" aria-label="Control de tandas publicitarias">
   <button type="button" id="force" title="Emitir inmediatamente la tanda seleccionada">FORZAR TANDA</button>
-  <button type="button" id="exact" aria-pressed="false" title="Interrumpir música para emitir a la hora exacta">HORA EXACTA</button>
+  <button type="button" id="exact" aria-pressed="false" title="Aplicar hora exacta a la tanda seleccionada">HORA EXACTA</button>
   <button type="button" id="adConfigure" title="Abrir la configuración de publicidad">CONFIGURAR</button>
   <button type="button" id="adHardStop" title="Detener publicidad sin continuar la reproducción anterior">DETENER</button>
-  <button type="button" id="wait" aria-pressed="true" title="Esperar a que finalice el tema">FIN DE TEMA</button>
+  <button type="button" id="wait" aria-pressed="true" title="Aplicar fin de tema a la tanda seleccionada">FIN DE TEMA</button>
   <button type="button" id="clearPending" title="Quitar tandas pendientes de la cola">BORRAR COLA</button>
 </div>
  </div>
 </section>
-<section class="list-panel mh-national-news" id="mhNationalNews" aria-label="Centro informativo nacional">
+<section class="list-panel mh-national-news" id="mhNationalNews" aria-label="Centro informativo nacional" data-news-state="loading">
  <div class="list-head mh-news-panel-head">
-   <strong><span class="mh-news-led" aria-hidden="true"></span> CENTRO INFORMATIVO · <span id="mhNewsCountry">PAÍS</span></strong>
-   <span id="mhNewsUpdated" class="mh-news-update" role="status">CONECTANDO…</span>
+  <div class="mh-news-brand"><span class="mh-news-led" aria-hidden="true"></span><strong>CENTRO INFORMATIVO</strong></div>
+  <button id="mhNewsRefresh" type="button" aria-label="Actualizar noticias">ACTUALIZAR</button>
  </div>
- <div id="mhNewsHeadlines" class="mh-news-headlines" aria-live="polite">
-  <div class="mh-news-empty">Consultando los principales titulares nacionales…</div>
- </div>
- <div class="mh-news-ticker" id="mhNewsTicker" role="region" aria-label="Titulares nacionales desplazándose a la izquierda">
-  <span class="mh-news-tag">ÚLTIMAS</span>
-  <div class="mh-news-viewport"><div class="mh-news-flow" id="mhNewsFlow"><span>CONECTANDO NOTICIAS DEL PAÍS…</span></div></div>
-  <span class="mh-news-source" id="mhNewsRegion">PAÍS</span>
- </div>
+ <div class="mh-news-edition"><strong id="mhNewsCountry">Argentina</strong><span id="mhNewsUpdated" class="mh-news-update" role="status">Actualizando…</span></div>
+ <div class="mh-news-toolbar"><label for="mhNewsSourceFilter" class="mh-visually-hidden">Filtrar noticias por medio</label><select id="mhNewsSourceFilter" aria-label="Filtrar noticias por medio" disabled><option value="">Todos los medios</option></select><span id="mhNewsCount">0 titulares</span></div>
+ <div id="mhNewsHeadlines" class="mh-news-headlines" aria-label="Titulares de los medios" aria-live="polite"><div class="mh-news-empty"><strong>Buscando titulares</strong><span>Consultando la edición seleccionada…</span></div></div>
+ <div id="mhNewsNote" class="mh-news-note">Actualización automática cada 5 minutos</div>
+ <div class="mh-news-ticker" id="mhNewsTicker" hidden aria-hidden="true"><span>ÚLTIMAS</span><div class="mh-news-viewport"><div class="mh-news-flow" id="mhNewsFlow"></div></div><span id="mhNewsRegion">AR</span></div>
  <form class="mh-news-picker" id="mhNewsPlaceForm" aria-label="Elegir país o región para las noticias">
-  <label for="mhNewsPlaceInput">PAÍS / REGIÓN</label>
-  <input id="mhNewsPlaceInput" type="search" list="mhNewsCountries" placeholder="Argentina, Brasil, Neuquén…" maxlength="100" autocomplete="off" aria-label="Buscar país o región del noticiero">
-  <datalist id="mhNewsCountries"></datalist>
-  <button id="mhNewsPlaceSearch" type="submit" title="Buscar noticias del lugar indicado">BUSCAR</button>
-  <button id="mhNewsPlaceAuto" type="button" title="Volver a la ubicación automática de la estación">AUTO</button>
+  <label for="mhNewsPlaceInput">EDICIÓN</label><input id="mhNewsPlaceInput" type="search" list="mhNewsCountries" placeholder="País o región…" maxlength="100" autocomplete="off" aria-label="Buscar país o región del noticiero"><datalist id="mhNewsCountries"></datalist><button id="mhNewsPlaceSearch" type="submit">BUSCAR</button><button id="mhNewsPlaceAuto" type="button" title="Usar ubicación automática">AUTO</button>
  </form>
 </section>
 </div>
@@ -1415,13 +1457,13 @@ input[type=range]{accent-color:#baff59}
 
 <dialog id="config" aria-label="Configuración MEGAHERTZ">
 <form method="dialog" id="configForm">
-  <header class="config-head"><h2>CONFIGURACIÓN · MEGAHERTZ</h2><button value="close">✕ CERRAR</button></header>
+  <header class="config-head"><h2>CONFIGURACIÓN · MEGAHERTZ</h2><button type="button" id="studioClose" aria-label="CANCELAR" title="CANCELAR">✕</button></header>
   <div class="mh-settings-layout">
     <nav class="config-tabs" aria-label="Secciones de configuración">
-      <button type="button" class="selected" data-settings-tab="general">GENERAL</button>
+      <button type="button" class="selected" aria-current="page" data-settings-tab="general">GENERAL</button>
       <button type="button" data-settings-tab="ads">PUBLICIDAD</button>
       <button type="button" data-settings-tab="institutional">INSTITUCIONALES</button>
-      <button type="button" data-settings-tab="backup">RESPALDOS</button>
+      <button type="button" data-settings-tab="audio">AUDIO</button><button type="button" data-settings-tab="events">EVENTOS</button><button type="button" data-settings-tab="reports">REGISTRO</button><button type="button" data-settings-tab="security">PERMISOS</button><button type="button" data-settings-tab="backup">RESPALDOS</button>
     </nav>
     <div class="mh-settings-content">
     <section data-settings-page="general">
@@ -1453,17 +1495,17 @@ input[type=range]{accent-color:#baff59}
       <details class="mh-settings-group mh-meteo-settings" id="mhWeatherSettings">
         <summary>ESTACIÓN METEOROLÓGICA · CLIMA Y NOTICIAS</summary>
         <div class="mh-settings-group-body">
-          <p>La ubicación de la estación define el clima y la hora local. El Centro Informativo puede utilizar esa ubicación o el país o región que elijas en su propio buscador.</p>
+          <p>La ciudad define el clima. La hora de emisión se configura en EVENTOS. El Centro Informativo puede utilizar esa ubicación o el país o región que elijas en su propio buscador.</p>
           <div class="mh-weather-dialog-find">
             <label for="mhWeatherCityInput">CIUDAD / PAÍS</label>
             <input id="mhWeatherCityInput" type="search" placeholder="Ej.: San Martín de los Andes, Argentina" autocomplete="off" maxlength="110">
-            <button type="button" id="mhWeatherCitySearch">GUARDAR CIUDAD</button>
-            <button type="button" id="mhWeatherGPS">DETECTAR UBICACIÓN</button>
+            <button type="button" id="mhWeatherCitySearch">PREPARAR CIUDAD</button>
+            <button type="button" id="mhWeatherGPS">DETECTAR POR IP</button>
           </div>
           <p class="mh-weather-dlg-place" id="mhDetailLocation" role="status">Localizando estación…</p>
           <div class="mh-meteo-options">
             <p class="mh-meteo-scope">COBERTURA: titulares de la ciudad, provincia y país configurados. Las noticias internacionales no relacionadas quedan excluidas.</p>
-            <label>Velocidad de marquesina <select id="mhNewsSpeed"><option value="slow" selected>PAUSADA</option><option value="normal">NORMAL</option><option value="fast">RÁPIDA</option></select></label>
+            <p>Los titulares se consultan cada cinco minutos. También podés actualizarlos y filtrar por medio desde el Centro Informativo.</p>
           </div>
           <div class="mh-settings-subtitle">DETALLES DE LA ESTACIÓN METEOROLÓGICA</div>
           <div id="mhWeatherDetailContent" class="mh-weather-detail-grid"></div>
@@ -1478,7 +1520,7 @@ input[type=range]{accent-color:#baff59}
         <label>Nombre de la tanda<input id="breakLabel" type="text" value="Tanda publicitaria" maxlength="100"></label>
         <label>Cantidad de salidas por día<select id="adFrequency"></select></label>
         <label>Primera salida exacta<input id="adTime" type="time"></label>
-        <div class="mh-inline-actions"><button type="button" id="distributeAdHours">↻ DISTRIBUIR REPETICIONES</button></div>
+        <label>Última salida de la franja<input id="mhAdLastTime" type="time" value="23:59"></label><label>Duración máxima de tanda (seg, 0 sin límite)<input id="mhBreakMaxSeconds" type="number" min="0" max="3600" value="0"></label><div class="mh-inline-actions"><button type="button" id="distributeAdHours">↻ DISTRIBUIR REPETICIONES</button></div>
       </div>
       <div class="mh-settings-subtitle">AVISOS DE ESTA TANDA · ORDEN DE EMISIÓN</div>
        <div class="mh-inline-actions"><button type="button" class="mh-primary" id="adsDropSelect">+ AGREGAR AVISOS</button><button type="button" id="copyLibraryAds">COPIAR DE BIBLIOTECA</button><span id="adsDropCount" role="status">Esta tanda todavía no tiene avisos.</span></div>
@@ -1490,7 +1532,7 @@ input[type=range]{accent-color:#baff59}
       <div id="adSlots" class="mh-time-grid"></div>
       <input id="extraTimes" type="hidden" value="">
       <fieldset class="mh-fieldset"><legend>DÍAS DE EMISIÓN</legend><div id="scheduleDays"></div></fieldset>
-      <div class="mh-settings-subtitle">REGLA DE EMISIÓN</div>
+      <div class="mh-settings-subtitle">VIGENCIA Y PRIORIDAD</div><div class="mh-form-grid"><label>Desde<input id="studioBreakStart" type="date"></label><label>Hasta<input id="studioBreakEnd" type="date"></label><label>Prioridad<input id="studioBreakPriority" type="number" min="0" max="9" value="5"></label><label>Espera máxima (min)<input id="studioBreakDelay" type="number" min="1" max="1440" value="15"></label></div><label><input id="studioBreakEnabled" type="checkbox" checked> Tanda activa</label><div class="mh-settings-subtitle">REGLA DE EMISIÓN</div>
       <div class="mh-policy-buttons" role="group" aria-label="Regla de inicio de la tanda">
         <button type="button" id="adPolicyExact" aria-pressed="false">HORA EXACTA</button>
         <button type="button" id="adPolicyWait" aria-pressed="true">ESPERAR FIN DEL TEMA</button>
@@ -1498,7 +1540,7 @@ input[type=range]{accent-color:#baff59}
       <select id="startPolicy" hidden aria-label="Regla de inicio"><option value="end">Fin de tema</option><option value="exact">Hora exacta</option></select>
       <p>Cada tanda tiene su propia regla: HORA EXACTA interrumpe el tema; FIN DEL TEMA espera. Las pendientes se conservan en MANUAL.</p>
       <div class="mh-inline-actions">
-        <button type="button" class="mh-primary" id="saveAdBreak">GUARDAR TANDA Y HORARIOS</button>
+        <button type="button" class="mh-primary" id="saveAdBreak">PREPARAR TANDA Y HORARIOS</button>
         <button type="button" id="previewAdBreak">▶ PROBAR TANDA</button>
         <button type="button" id="stopAdPreview">■ DETENER PRUEBA</button>
         <button type="button" id="newAdBreak">+ NUEVA TANDA</button>
@@ -1518,157 +1560,210 @@ input[type=range]{accent-color:#baff59}
       <div id="instDrop" tabindex="0" role="button" class="mh-drop">ARRASTRÁ AQUÍ JINGLES Y SEPARADORES, O UTILIZÁ CARGAR INSTITUCIONALES</div>
       <p id="instStatus" role="status">Cargando biblioteca local…</p>
       <div id="instList" class="mh-saved-list"></div>
-      <p>Los horarios y la regla de emisión se guardan con cada archivo. Su disparo automático al aire todavía no está conectado al motor de MEGAHERTZ.</p>
+      <p>Los horarios y la regla de emisión se activan al guardar. También podés crear eventos con fechas, días, prioridades y pisador desde EVENTOS.</p>
     </section>
+<section data-settings-page="audio" hidden>
+ <h3>AUDIO · AIRE Y PREESCUCHA</h3><p>La preescucha requiere una salida física distinta de aire. Si no está disponible, no se reproduce.</p>
+ <div id="studioOutputSlot"></div>
+<div class="mh-control-grid">
+ <label>Salida de PREESCUCHA <select id="studioCueOutput"><option value="">Sin configurar · bloqueada</option></select></label>
+ <label>Volumen de preescucha <span class="mh-unit-control"><input id="studioCueVolume" type="number" min="0" max="100" value="70"><span>%</span></span></label>
+</div>
+ <div class="mh-settings-subtitle">TRANSICIONES</div>
+ <label><input id="studioFadeEnabled" type="checkbox"> Activar fundidos y solapamiento</label>
+<div class="mh-control-grid">
+ <label>Fundido entre audios (s)<input id="studioFadeSeconds" type="number" min="0" max="10" step="0.1"></label>
+ <label>Comenzar el siguiente tema antes del final (s)<input id="studioOverlapSeconds" type="number" min="0" max="15" step="0.1"></label>
+ <label>Fundido al detener (s)<input id="studioStopFadeSeconds" type="number" min="0" max="5" step="0.1"></label>
+</div>
+ <div class="mh-settings-subtitle">PISADOR Y NIVELES</div>
+<div class="mh-control-grid">
+ <label>Atenuación al hablar (dB)<input id="studioDuckDb" type="number" min="-36" max="0"></label>
+ <label>Tiempo de bajada (s)<input id="studioDuckAttack" type="number" min="0.02" max="3" step="0.01"></label>
+ <label>Tiempo de recuperación (s)<input id="studioDuckRelease" type="number" min="0.05" max="5" step="0.05"></label>
+</div>
+ <label><input id="studioAgc" type="checkbox"> Compensación automática de nivel — AGC</label>
+<div class="mh-control-grid">
+ <label>Nivel de referencia RMS (dBFS)<input id="studioTargetDb" type="number" min="-30" max="-9"></label>
+ <label>Aumento máximo del AGC (dB)<input id="studioMaxGainDb" type="number" min="0" max="12"></label>
+</div>
+ <label><input id="studioLimiter" type="checkbox"> Protección de picos</label>
+ <label>Umbral de protección (dBFS)<input id="studioCeilingDb" type="number" min="-6" max="0" step="0.1"></label>
+ <p>La protección utiliza compresión de picos del motor. No es una medición de true peak ni una certificación de loudness.</p>
+</section>
+<section data-settings-page="events" hidden>
+ <h3>EVENTOS Y RECUPERACIÓN</h3><p>Programá institucionales, programas, tandas y comandos. En MANUAL permanecen pendientes hasta volver a AUTOMÁTICO o vencer su espera máxima.</p>
+<div class="mh-control-grid">
+ <label>Zona horaria de la emisora<input id="studioTimezone" type="text" placeholder="America/Argentina/Buenos_Aires"></label>
+ <label>Espera máxima por defecto (min)<input id="studioRecoveryMinutes" type="number" min="1" max="1440"></label>
+</div>
+ <div id="studioOwnerState" role="status"></div>
+ <div class="mh-settings-subtitle">EDITOR DE EVENTOS</div>
+ <input id="studioEventId" type="hidden">
+<div class="mh-control-grid">
+ <label>Nombre<input id="studioEventName" maxlength="150" type="text"></label>
+ <label>Acción<select id="studioEventType"><option value="institutional">Institucional</option><option value="program">Programa grabado</option><option value="ad">Tanda publicitaria</option><option value="play">Iniciar música</option><option value="stop">Detener emisión</option></select></label>
+ <label>Material<select id="studioEventTarget"></select></label>
+ <label>Horarios (HH:MM, separados por coma)<input id="studioEventTimes" type="text" placeholder="09:00, 12:00, 18:00"></label>
+</div>
+ <div id="studioEventDays" class="studio-days"></div>
+ <div class="mh-form-grid"><label>Desde<input id="studioEventStart" type="date"></label><label>Hasta<input id="studioEventEnd" type="date"></label></div>
+<div class="mh-control-grid">
+ <label>Prioridad (0–9)<input id="studioEventPriority" type="number" min="0" max="9" value="5"></label>
+ <label>Espera máxima (min)<input id="studioEventDelay" type="number" min="1" max="1440" value="15"></label>
+ <label>Regla<select id="studioEventPolicy"><option value="end">Fin del audio</option><option value="exact">Hora exacta</option></select></label>
+</div>
+ <label><input id="studioEventOverlay" type="checkbox"> Institucional sobre la música con pisador</label>
+ <label><input id="studioEventEnabled" type="checkbox" checked> Evento activo</label>
+ <div class="mh-inline-actions"><button id="studioStageEvent" type="button">AGREGAR AL BORRADOR</button><button id="studioNewEvent" type="button">NUEVO</button></div>
+ <p id="studioEventMessage" role="status"></p><div id="studioEventsList"></div>
+ <div class="mh-settings-subtitle">PENDIENTES Y RESULTADOS</div><div id="studioEventJournal"></div><button id="studioRefreshEvents" type="button">ACTUALIZAR ESTADO</button>
+</section>
+<section data-settings-page="reports" hidden>
+ <h3>REGISTRO DE EMISIÓN</h3><p>Registra la reproducción del motor: inicio, finalización, interrupción y errores. Las preescuchas no se contabilizan como emisión.</p>
+<div class="mh-control-grid mh-report-filters">
+ <div class="mh-form-grid"><label>Desde<input id="studioLogFrom" type="date"></label><label>Hasta<input id="studioLogTo" type="date"></label></div>
+ <label>Tipo<select id="studioLogType"><option value="">Todos</option><option value="ad-spot">Avisos publicitarios</option><option value="ad-break">Tandas</option><option value="music">Música</option><option value="program">Programas</option><option value="institutional">Institucionales</option><option value="cart">Pisadores</option><option value="event">Eventos</option></select></label>
+ <label>Estado<select id="studioLogStatus"><option value="">Todos</option><option value="complete">Completo</option><option value="interrupted">Interrumpido</option><option value="failed">Fallido</option><option value="expired">Vencido</option><option value="playing">En emisión</option><option value="paused">Pausado</option></select></label>
+ <label>Campaña o archivo<input id="studioLogSearch" type="search"></label>
+</div>
+ <div class="mh-inline-actions"><button id="studioQueryLogs" type="button">CONSULTAR</button><button id="studioExportLog" type="button">CSV DETALLADO</button><button id="studioExportAds" type="button">INFORME PUBLICITARIO CSV</button></div>
+ <p id="studioLogCount" role="status"></p><div id="studioLogRows" class="studio-log-rows"></div>
+</section>
+<section data-settings-page="security" hidden>
+ <h3>PERMISOS DE ESTA CONSOLA</h3><p>Administrador: configuración, música, tandas y respaldos. Operador: controles de emisión y playlist de programas. La protección es local a este navegador.</p>
+ <p id="studioRoleState" role="status"></p>
+ <label>Clave de administrador<input id="studioUnlockPassword" type="password" autocomplete="current-password"></label>
+ <div class="mh-inline-actions"><button id="studioUnlock" type="button">DESBLOQUEAR ADMINISTRACIÓN</button><button id="studioLock" type="button">PASAR A OPERADOR</button></div>
+ <div class="mh-settings-subtitle">CREAR O CAMBIAR CLAVE</div>
+ <label>Clave nueva<input id="studioNewPassword" type="password" autocomplete="new-password" minlength="8"></label>
+ <label>Repetir clave nueva<input id="studioRepeatPassword" type="password" autocomplete="new-password" minlength="8"></label>
+ <p>La nueva clave se aplica con GUARDAR Y CERRAR. No hay una clave predeterminada. Si todavía no creaste una, la configuración sigue abierta al administrador de este navegador.</p>
+</section>
+
     <section data-settings-page="backup" hidden>
-      <h3>RESPALDOS DE CONFIGURACIÓN</h3>
-      <div class="mh-inline-actions"><button type="button" id="exportConfig">EXPORTAR CONFIGURACIÓN</button><button type="button" id="importConfig">IMPORTAR CONFIGURACIÓN</button></div>
-      <input type="file" id="configFile" accept=".json,application/json" hidden>
-      <p>Exporta tandas, horarios y orden de sus avisos, pero no los audios. Los archivos de audio permanecen guardados en este navegador y deben copiarse por separado para otro equipo.</p>
-      <p id="storageSummary"></p>
+      <h3>RESPALDOS COMPLETOS DE LA EMISORA</h3>
+      <div class="mh-inline-actions"><button type="button" id="exportConfig">DESCARGAR RESPALDO COMPLETO</button><button type="button" id="importConfig">RESTAURAR RESPALDO</button></div>
+      <input type="file" id="configFile" accept=".mhbackup,.json,application/json,application/octet-stream" hidden>
+      <p>Incluye audios, playlists, tandas, institucionales, eventos, configuración y registro de emisión. Se verifican los archivos antes de restaurar. La restauración se aplica al guardar, con toda la emisión detenida.</p>
+      <p id="storageSummary"></p><p id="studioBackupStatus" class="studio-backup-progress" role="status"></p>
     </section>
     </div>
   </div>
-  <footer class="config-foot"><span id="settingsSaved" role="status">Los cambios se aplican al guardar.</span><button type="button" class="mh-primary" id="saveConfig">GUARDAR Y CERRAR</button></footer>
+  <footer class="config-foot"><span id="settingsSaved" role="status">Los cambios se aplican al guardar.</span><button type="button" id="studioCancel">CANCELAR</button><button type="button" class="mh-primary" id="saveConfig">GUARDAR Y CERRAR</button></footer>
 </form>
 </dialog>
 
 <input type="file" id="musicFiles" accept="audio/*" multiple hidden><input type="file" id="programsFiles" accept="audio/*" multiple hidden><input type="file" id="thirdFiles" accept="audio/*" multiple hidden><input type="file" id="adsFiles" accept="audio/*" multiple hidden><audio id="musicAudio" preload="metadata"></audio><audio id="adsAudio" preload="metadata"></audio><audio id="programAudio" preload="metadata"></audio><audio id="thirdAudio" preload="metadata"></audio>
+<script src="/aire/megahertz-demo-core.js?v=repairs-v4"></script><script src="/aire/megahertz-advertising.js?v=beta5"></script><script src="/aire/megahertz-demo-pads.js?v=repairs-v4"></script>
 <script>
 (()=>{
 'use strict';const $=id=>document.getElementById(id),music=$('musicAudio'),ads=$('adsAudio'),programs=$('programAudio'),third=$('thirdAudio');
 const lists={music:[],ads:[],programs:[],third:[]},index={music:-1,ads:-1,programs:-1,third:-1};const seenTracks={music:new Set(),programs:new Set(),third:new Set()};let kind='music',automatic=true,exact=false,pending=false,resumeMusic=false,resumeProgram=false,resumeThird=false,afterAdProgramNext=false,afterAdThirdNext=false,afterAdMusicNext=false,programShuffle=false,programRepeat=false,thirdShuffle=false,thirdRepeat=false,context,analyser,buffer,silentSince=0;
 const pendingBreaks=[],seenScheduleKeys=new Set();let seenScheduleDate='',lastClockCheckSecond='',activeAdQueue=[];
 const say=(s,error=false)=>{$('status').textContent=s;$('status').classList.toggle('error',error)};
-const playing=a=>!a.paused&&!a.ended;const active=()=>playing(ads)?ads:playing(third)?third:playing(programs)?programs:playing(music)?music:kind==='ads'?ads:kind==='third'?third:kind==='programs'?programs:music;
+const playing=a=>!!a&&!a.paused&&!a.ended;const active=()=>playing(institutionalAir)?institutionalAir:playing(ads)?ads:playing(studio.padAudio)?studio.padAudio:playing(third)?third:playing(programs)?programs:playing(music)?music:kind==='ads'?ads:kind==='third'?third:kind==='programs'?programs:music;
 let stereoMeters=null,monoVuSamples=null;
-function meter(){
- if(!context){
-  const AC=window.AudioContext||window.webkitAudioContext;
-  if(!AC)return;
-  context=new AC();analyser=context.createAnalyser();analyser.fftSize=1024;
-  buffer=new Uint8Array(analyser.frequencyBinCount);
-  // One shared broadcast bus. Music, programs and advertising keep their
-  // existing priorities: only the on-air source reaches the L/R instruments.
-  for(const audio of [music,ads,programs,third]){
-   const source=context.createMediaElementSource(audio);
-   source.connect(analyser);
-  }
-  if(typeof context.createChannelSplitter==='function'){
-   try{
-    const splitter=context.createChannelSplitter(2);
-    const left=context.createAnalyser(),right=context.createAnalyser();
-    left.fftSize=1024;right.fftSize=1024;
-    analyser.connect(splitter);
-    splitter.connect(left,0);splitter.connect(right,1);
-    stereoMeters=[
-     {analyser:left,samples:new Float32Array(left.fftSize)},
-     {analyser:right,samples:new Float32Array(right.fftSize)}
-    ];
-   }catch(_){stereoMeters=null}
-  }
-  // Keep exactly one path to the speakers: do NOT send split analyzers
-  // into the destination or the audio could be doubled.
-  analyser.connect(context.destination);
-  monoVuSamples=new Float32Array(analyser.fftSize);
- }
- if(context.state==='suspended')context.resume().catch(()=>say('No se pudo activar la salida de audio',true));
-}
+const S=window.MHStudio, institutionalAir=new Audio();
+const studio={options:S.readOptions(),db:new S.Database(),engine:null,draft:null,owner:!navigator.locks,role:localStorage.getItem(S.SECURITY_KEY)?'operator':'admin',sessions:new Map(),tailSessions:new Map(),transportVersion:0,mediaVersion:new Map(),manualDuck:false,event:null,ready:false};
+S.station=studio;
+function meter(){if(!studio.engine){studio.engine=new S.AudioEngine([music,ads,programs,third,institutionalAir],{...studio.options,volume:Number(studio.draft?studio.draft.settings.volume:$('volume').value),output:selectedOutput});context=studio.engine.context;analyser=studio.engine.analyser;buffer=new Uint8Array(analyser.frequencyBinCount);stereoMeters=studio.engine.stereo;monoVuSamples=new Float32Array(analyser.fftSize)}studio.engine.resume().catch(e=>say(e.message,true))}
 const vu=$('vu');vu.replaceChildren();vu.setAttribute('aria-label','MEGAHERTZ · Marca animada');
-vu.innerHTML='<div class="mh-metal-logo"><img class="mh-logo-neon" src="/aire/megahertz-neon-animado.svg?v=autograph20261024v2" alt="MEGAHERTZ — RADIO AUTOMATION" /></div>';;
+vu.innerHTML='<div class="mh-metal-logo"><img class="mh-logo-neon" src="/aire/megahertz-neon-animado.svg?v=cian-esfumado-20261024" alt="MEGAHERTZ — RADIO AUTOMATION" /></div>';;
 function syncDeckAir(){for(const [key,audio] of [['music',music],['ads',ads]]){const on=playing(audio),badge=$(key+'Air');badge.hidden=!on;badge.closest('.deck').classList.toggle('is-on-air',on);if(key==='music')$(key+'List').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')))}}function syncProgramAir(){const musicOn=playing(music);$('musicListAir').textContent=musicOn?'EN EL AIRE':'EN ESPERA';$('musicListAir').classList.toggle('on-air',musicOn);const on=playing(programs);$('programsAir').textContent=on?'EN EL AIRE':'EN ESPERA';$('programsAir').classList.toggle('on-air',on);$('programsList').querySelectorAll('.track').forEach(row=>row.classList.toggle('is-emitting',on&&row.classList.contains('active')));const thirdOn=playing(ads)&&!!activeBreak;$('thirdAir').textContent=thirdOn?'EN EL AIRE':'EN ESPERA';$('thirdAir').classList.toggle('on-air',thirdOn);$('thirdList').querySelectorAll('.schedule-row').forEach(row=>row.classList.toggle('is-emitting',thirdOn&&row.dataset.key===activeBreak?.key))}
 function syncLogoHeartbeat(){syncProgramAir();vu.classList.toggle('mh-running',playing(music)||playing(ads)||playing(programs)||playing(third));syncDeckAir()}for(const audio of [music,ads,programs,third])for(const event of ['playing','pause','ended','emptied'])audio.addEventListener(event,syncLogoHeartbeat);
 
-/* Analogue studio VU face: sapphire-blue markings, red +3/+6 zone and
-   a needle with calibrated, damped movement. Both respond to the SAME
-   programme output (music / programmes / commercial breaks), as L and R. */
-const vuAngles=[-67,-67],vuNeedles=[],vuInstruments=[];
-const vuScale=[[-20,-64],[-10,-46],[-5,-29],[-3,-13],[0,19],[3,44],[6,65]];
-function vuPoint(deg,r){
- const rad=deg*Math.PI/180;
- return {x:110+r*Math.sin(rad),y:127-r*Math.cos(rad)};
-}
-function vuArc(from,to,r){
- const a=vuPoint(from,r),b=vuPoint(to,r);
- return 'M '+a.x.toFixed(2)+' '+a.y.toFixed(2)+' A '+r+' '+r+' 0 0 1 '+b.x.toFixed(2)+' '+b.y.toFixed(2);
-}
-function analogFace(channel){
- const grad='mh-vu-logo-turquoise-'+channel,red='mh-vu-red-'+channel;
- let ticks='';
- for(let angle=-63;angle<=63;angle+=7){
-  const hot=angle>=25;
-  const inner=vuPoint(angle,83),outer=vuPoint(angle,90);
-  ticks+='<line x1="'+inner.x.toFixed(2)+'" y1="'+inner.y.toFixed(2)+'" x2="'+outer.x.toFixed(2)+'" y2="'+outer.y.toFixed(2)+'" stroke="'+(hot?'#ff4c60':'#0dd7ff')+'" stroke-width="2" opacity=".87"/>';
+/* Broadcast sample-peak meters. Reuse the existing shared output bus and
+   L/R analysers: no new speaker connection, gain or playback changes. */
+const broadcastMeters=['Left','Right'].map((side,i)=>{
+ const element=$('mhBroadcast'+side),segments=[];
+ for(let k=0;k<48;k++){
+  const segment=document.createElement('i'),db=-60+(k+1)*60/48;
+  segment.className='mh-bc-segment';segment.setAttribute('aria-hidden','true');
+  segment.style.setProperty('--bc-color',db>-3?'#f0626e':db>-12?'#d8b45d':'#65c696');
+  element.insertBefore(segment,element.querySelector('.mh-bc-peak'));
+  segments.push(segment);
  }
- for(const item of vuScale){
-  const value=item[0],angle=item[1],a=vuPoint(angle,78),b=vuPoint(angle,92),pos=vuPoint(angle,105),hot=value>0;
-  ticks+='<line x1="'+a.x.toFixed(2)+'" y1="'+a.y.toFixed(2)+'" x2="'+b.x.toFixed(2)+'" y2="'+b.y.toFixed(2)+'" stroke="'+(hot?'#ff5368':'#0dd7ff')+'" stroke-width="3.7" stroke-linecap="round"/>';
-  ticks+='<text x="'+pos.x.toFixed(2)+'" y="'+(pos.y+3).toFixed(2)+'" text-anchor="middle" font-size="12" font-family="Arial,sans-serif" font-weight="900" fill="'+(hot?'#ff5867':'#83ffff')+'">'+(value>0?'+'+value:value)+'</text>';
- }
- return '<svg class="mh-analog-svg" viewBox="0 0 220 160" preserveAspectRatio="xMidYMid meet" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">'+
- '<defs><linearGradient id="'+grad+'" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#08bfff"/><stop offset=".5" stop-color="#0dd7ff"/><stop offset="1" stop-color="#83ffff"/></linearGradient>'+
- '<linearGradient id="'+red+'" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffab75"/><stop offset=".3" stop-color="#ff435e"/><stop offset="1" stop-color="#f20e4e"/></linearGradient>'+
- '<radialGradient id="mh-vu-back-'+channel+'" cx=".5" cy=".2" r=".95"><stop stop-color="#102a3c"/><stop offset="1" stop-color="#03080e"/></radialGradient></defs>'+
- '<rect x="1.5" y="1.5" width="217" height="157" rx="10" fill="url(#mh-vu-back-'+channel+')" stroke="#1c628c" stroke-width="2"/>'+
- '<path d="'+vuArc(-68,23,87)+'" fill="none" stroke="url(#'+grad+')" stroke-width="7" stroke-linecap="round" opacity=".90"/>'+
- '<path d="'+vuArc(23,68,87)+'" fill="none" stroke="url(#'+red+')" stroke-width="7" stroke-linecap="round"/>'+
- '<path d="'+vuArc(-56,52,65)+'" fill="none" stroke="#1379dd" stroke-width="2" opacity=".75"/>'+
- ticks+
- '<path d="'+vuArc(-42,40,62)+'" fill="none" stroke="#2d90db" stroke-width="1" opacity=".5"/>'+
- '<g class="mh-vu-needle" transform="rotate(-67 110 127)"><line class="mh-vu-needle-halo" x1="110" y1="127" x2="110" y2="39" stroke="#0dd7ff" stroke-width="5" opacity=".20"/><line class="mh-vu-needle-line" x1="110" y1="127" x2="110" y2="39"/></g>'+
- '<circle class="mh-vu-pivot" cx="110" cy="127" r="5"/>'+
- '<text x="110" y="151" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="900" letter-spacing="-1" fill="#71ddff">dB</text>'+
- '<text x="187" y="149" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" font-weight="900" fill="#688ea7">VU</text>'+
- '</svg>';
-}
-for(let i=0;i<2;i++){
- const element=$(i===0?'mhAnalogLeft':'mhAnalogRight');
- element.innerHTML=analogFace(i===0?'L':'R');
- const side=document.createElement('span');
- side.className='mh-vu-side';side.textContent=i===0?'L':'R';
- element.append(side);
- vuNeedles.push(element.querySelector('.mh-vu-needle'));
- vuInstruments.push(element);
-}
-function vuAngleFor(db){
- if(!Number.isFinite(db)||db<=vuScale[0][0])return -67;
- if(db>=vuScale[vuScale.length-1][0])return 66;
- for(let i=1;i<vuScale.length;i++){
-  const a=vuScale[i-1],b=vuScale[i];
-  if(db<=b[0])return a[1]+(db-a[0])/(b[0]-a[0])*(b[1]-a[1]);
- }
- return -67;
-}
-function drawWord(){
- const playingOnAir=[music,ads,programs,third].some(playing);
- let monoPower=0;
- if(!stereoMeters&&analyser){
+ return {element,segments,marker:element.querySelector('.mh-bc-peak'),number:$('mhBroadcast'+side+'Value'),level:-60,held:-60,holdUntil:0,lit:-1,lastNumber:'',channel:i};
+});
+let broadcastFrameTime=0,broadcastClipUntil=0,broadcastAriaTime=0;
+function drawWord(now){
+ const dt=Math.max(0,broadcastFrameTime?(now-broadcastFrameTime)/1000:1/30);
+ broadcastFrameTime=now;
+ const onAir=[music,ads,programs,third,institutionalAir,studio.padAudio].filter(Boolean).some(playing);
+ let monoPeak=0;
+ if(onAir&&analyser&&!stereoMeters){
   analyser.getFloatTimeDomainData(monoVuSamples);
-  for(const sample of monoVuSamples)monoPower+=sample*sample;
-  monoPower/=monoVuSamples.length;
+  for(const sample of monoVuSamples)monoPeak=Math.max(monoPeak,Math.abs(sample));
  }
- for(let channel=0;channel<2;channel++){
-  let power=monoPower;
-  if(stereoMeters){
-   const scope=stereoMeters[channel];
-   scope.analyser.getFloatTimeDomainData(scope.samples);
-   power=0;for(const sample of scope.samples)power+=sample*sample;
-   power/=scope.samples.length;
+ for(const meter of broadcastMeters){
+  let peak=monoPeak;
+  if(onAir&&stereoMeters){
+   const scope=stereoMeters[meter.channel];scope.analyser.getFloatTimeDomainData(scope.samples);
+   peak=0;for(const sample of scope.samples)peak=Math.max(peak,Math.abs(sample));
   }
-  // 0 VU calibrated at -18dBFS RMS (studio reference).
-  const db=playingOnAir&&power>1e-14?20*Math.log10(Math.sqrt(power))+18:-40;
-  const target=vuAngleFor(db),old=vuAngles[channel];
-  const follow=target>old?0.60:0.19;
-  vuAngles[channel]=Math.abs(old-target)<0.3?target:old+(target-old)*follow;
-  const element=vuNeedles[channel];
-  if(element)element.setAttribute('transform','rotate('+vuAngles[channel].toFixed(1)+' 110 127)');
-  const meter=vuInstruments[channel];
-  if(meter){
-   const value=Math.max(-20,Math.min(6,db));
-   meter.setAttribute('aria-valuenow',value.toFixed(1));
-   meter.classList.toggle('peak',playingOnAir&&db>=3);
-  }
+  const measured=peak>1e-6?20*Math.log10(peak):-120;
+  const target=onAir?Math.max(-60,Math.min(0,measured)):-60;
+  // Immediate attack, controlled fall, and a separate one-second peak hold.
+  meter.level=target>=meter.level?target:Math.max(target,meter.level-24*dt);
+  if(meter.level>=meter.held){meter.held=meter.level;meter.holdUntil=now+1000}
+  else if(now>meter.holdUntil)meter.held=Math.max(meter.level,meter.held-18*dt);
+  if(onAir&&peak>=.999)broadcastClipUntil=now+2000;
+  const lit=meter.level<=-59.95?0:Math.ceil((meter.level+60)/60*48);
+  if(lit!==meter.lit){meter.segments.forEach((segment,i)=>segment.classList.toggle('lit',i<lit));meter.lit=lit}
+  meter.marker.style.display=meter.held>-59.95?'block':'none';
+  meter.marker.style.left='calc('+Math.max(0,Math.min(100,(meter.held+60)/60*100)).toFixed(2)+'% - 2px)';
+  const number=meter.level<=-59.95?'−∞':Math.abs(meter.level)<.05?'0.0':meter.level.toFixed(1).replace('-','−');
+  if(number!==meter.lastNumber){meter.number.textContent=number;meter.lastNumber=number}
+  if(now-broadcastAriaTime>=250){meter.element.setAttribute('aria-valuenow',meter.level.toFixed(1));meter.element.setAttribute('aria-valuetext',number==='−∞'?'Sin señal':number+' dBFS')}
  }
+ if(now-broadcastAriaTime>=250)broadcastAriaTime=now;
+ const clip=$('mhBroadcastClip'),clipping=now<broadcastClipUntil;
+ if(clip.classList.contains('on')!==clipping){clip.classList.toggle('on',clipping);clip.setAttribute('aria-label',clipping?'Pico al límite digital detectado':'Sin saturación')}
+}
+// Independent 30 Hz visual refresh, including return to silence after Stop.
+let broadcastLastPaint=0;
+function broadcastAnimate(now){if(now-broadcastLastPaint>=1000/30){drawWord(now);broadcastLastPaint=now}requestAnimationFrame(broadcastAnimate)}
+drawWord(performance.now());requestAnimationFrame(broadcastAnimate);
+
+/* Read-only presentation of the existing transport state. Never selects,
+   advances, seeks, changes gain, or alters the audio routing. */
+function displayFileName(value){return String(value||'').replace(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i,'').replace(/_/g,' ').trim()}
+function setDisplayText(id,text){const element=$(id);if(element.textContent!==text)element.textContent=text}
+function syncOnAirDisplay(audio,on){
+ if(audio===studio.padAudio){$('mhPlayerDisplay').dataset.state=on?'playing':'ended';setDisplayText('mhDisplayState',on?'AL AIRE':'FINALIZADO');setDisplayText('musicNow',displayFileName(studio.padTitle||'Pisador'));setDisplayText('mhDisplaySource','PISADOR '+((studio.padIndex??0)+1));setDisplayText('mhDisplayPosition','— / —');setDisplayText('mhDisplayElapsed',fmt(audio.currentTime));setDisplayText('mhDisplayRemaining',Number.isFinite(audio.duration)?'−'+fmt(Math.ceil(Math.max(0,audio.duration-audio.currentTime))):'−−:−−');setDisplayText('mhDisplayNext',playing(music)||playing(programs)?'Continúa la programación':'Fin de pisador');return}
+ if(audio===institutionalAir){const item=studio.instItem;const panel=$('mhPlayerDisplay');panel.dataset.state=on?'playing':'ended';setDisplayText('mhDisplayState',on?'AL AIRE':'FINALIZADO');setDisplayText('musicNow',displayFileName(item?.name||'Institucional'));setDisplayText('mhDisplaySource','INSTITUCIONAL');setDisplayText('mhDisplayPosition','01 / 01');setDisplayText('mhDisplayElapsed',fmt(audio.currentTime));setDisplayText('mhDisplayRemaining',Number.isFinite(audio.duration)?'−'+fmt(Math.ceil(Math.max(0,audio.duration-audio.currentTime))):'−−:−−');setDisplayText('mhDisplayNext',studio.overlay?'Continúa la música':'Retorno a programación');return}
+ const k=audio===ads?'ads':audio===programs?'programs':audio===third?'third':'music';
+ const queue=k==='ads'&&activeBreak?activeAdQueue:lists[k],item=queue[index[k]],loaded=!!(item&&audio.getAttribute('src'));
+ const panel=$('mhPlayerDisplay');
+ const mode=audio.error&&loaded?'error':on?(audio.readyState<2?'loading':'playing'):loaded?(audio.ended?'ended':audio.currentTime>.05?'paused':'ready'):'idle';
+ const states={playing:'AL AIRE',paused:'PAUSA',loading:'CARGANDO',ended:'FINALIZADO',ready:'LISTO',idle:'EN ESPERA',error:'ERROR'};
+ if(panel.dataset.state!==mode)panel.dataset.state=mode;
+ setDisplayText('mhDisplayState',states[mode]);
+ const title=loaded?displayFileName(item.name):'Listo para emitir';
+ setDisplayText('musicNow',title);if($('musicNow').title!==title)$('musicNow').title=title;
+ const source={music:'MÚSICA AUTOMÁTICA',programs:'PROGRAMA',ads:'PUBLICIDAD',third:'AUXILIAR'}[k];
+ const extension=loaded?String(item.name||'').match(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i)?.[1]?.toUpperCase():'';
+ setDisplayText('mhDisplaySource',source+(extension?' · '+extension:''));
+ setDisplayText('mhDisplayPosition',loaded?String(index[k]+1).padStart(2,'0')+' / '+String(queue.length).padStart(2,'0'):'— / —');
+ const duration=loaded&&Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:null;
+ const elapsed=loaded&&Number.isFinite(audio.currentTime)?audio.currentTime:0;
+ const remaining=duration===null?null:Math.max(0,duration-elapsed);
+ setDisplayText('mhDisplayElapsed',fmt(elapsed));
+ setDisplayText('mhDisplayRemaining',remaining===null?'−−:−−':'−'+fmt(Math.ceil(remaining)));
+ panel.dataset.ending=String(on&&remaining!==null&&remaining>0&&remaining<=10);
+ let next='';
+ if(k==='ads')next=queue[index.ads+1]?.name||'Fin de tanda';
+ else if(on&&automatic&&pendingBreaks.length)next='Tanda pendiente';
+ else{
+  // Read the explicit cross-playlist next mark without consuming it.
+  for(const playlist of ['music','programs']){const forced=lists[playlist].find(track=>track.id===nextTrackId[playlist]);if(forced){next=forced.name;break}}
+  const stop=k==='music'?pressed('endStop'):k==='programs'?pressed('programsListEndStop'):false;
+  const random=k==='music'?pressed('shuffle'):k==='programs'?programShuffle:thirdShuffle;
+  const repeat=k==='music'?pressed('repeat'):k==='programs'?programRepeat:thirdRepeat;
+  if(!next)next=stop&&loaded?'Detener al finalizar':!queue.length?'Playlist vacía':random?'Selección aleatoria':queue[index[k]+1]?.name||(repeat?queue[0]?.name:'Fin de lista');
+ }
+ next=displayFileName(next);setDisplayText('mhDisplayNext',next);if($('mhDisplayNext').title!==next)$('mhDisplayNext').title=next;
 }
 
 function pressed(id){return $(id).getAttribute('aria-pressed')==='true'}
@@ -1906,33 +2001,38 @@ async function readDropEntry(entry){if(entry.isFile)return [await new Promise((r
 function collectDrop(transfer){const entries=Array.from(transfer.items||[]).filter(i=>i.kind==='file').map(i=>i.webkitGetAsEntry?.()).filter(Boolean);const fallback=Array.from(transfer.files||[]);return entries.length?Promise.all(entries.map(readDropEntry)).then(batches=>batches.flat()):Promise.resolve(fallback)}
 document.addEventListener('dragover',e=>{if(Array.from(e.dataTransfer?.types||[]).includes('Files'))e.preventDefault()});
 document.addEventListener('drop',e=>{if(Array.from(e.dataTransfer?.types||[]).includes('Files'))e.preventDefault()});
-async function run(k,i){if(k==='ads')return playBreakAd(i);if(!lists[k][i]){say('Primero cargá '+(k==='music'?'canciones':k==='programs'?'audios de programas':k==='third'?'audios de la playlist 3':'avisos'));return false}const a=k==='music'?music:k==='programs'?programs:k==='third'?third:ads;meter();kind=k;index[k]=i;if(k!=='ads')seenTracks[k].add(i);a.src=lists[k][i].url;$(k==='music'?'musicNow':k==='programs'?'programsNow':k==='third'?'thirdNow':'adsNow').textContent=lists[k][i].name;if(k==='music'){$('musicListNow').textContent=lists[k][i].name;$('musicNow').textContent=lists[k][i].name.replace(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i,'').replace(/_/g,' ').trim()}render(k);try{await a.play();nextTrackPlayed(k,lists[k][i].id);say('En emisión · '+lists[k][i].name);return true}catch(e){say('No se pudo reproducir '+lists[k][i].name+': '+e.message,true);return false}}
-function startMusic(i){if(playing(ads)){say('Detené la tanda antes de iniciar música');return false}programs.pause();third.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;afterAdMusicNext=false;return run('music',i)}
-function startProgram(i){if(playing(ads)){say('Detené la tanda antes de iniciar el programa');return false}music.pause();third.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('programs',i)}
-function startThird(i){if(playing(ads)){say('Detené la tanda antes de iniciar la playlist 3');return false}music.pause();programs.pause();resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('third',i)}
+async function run(k,i,request=null){const token=request??++studio.transportVersion;if(token!==studio.transportVersion)return false;if(studioExclusive()){say('Esperá que termine el institucional',true);return false}if(!studio.owner){say('Otra pestaña tiene el control de emisión',true);return false}if(k==='ads')return playBreakAd(i);if(!lists[k][i]){say('Primero cargá '+(k==='music'?'canciones':k==='programs'?'audios de programas':k==='third'?'audios de la playlist 3':'avisos'));return false}const a=k==='music'?music:k==='programs'?programs:k==='third'?third:ads;meter();const completed=studio.crossfading,status=completed?'complete':'interrupted';studio.crossfading=false;const handle=playing(a)&&studio.options.fadeEnabled?await studio.engine.transitionOut(a,completed?studio.options.overlapSeconds:studio.options.fadeSeconds,studio.options.fadeSeconds):null;if(a===programs&&studio.event?.type==='program'&&studio.sessions.get(a)?.eventOccurrence===studio.event.occurrenceKey)studioFinishProgramEvent('interrupted');if(handle)studioTransferTail(a,handle,status);else studioFinish(a,status);if(token!==studio.transportVersion)return false;studio.mediaVersion.set(a,token);kind=k;index[k]=i;if(k!=='ads')seenTracks[k].add(i);a.src=lists[k][i].url;$(k==='music'?'musicNow':k==='programs'?'programsNow':k==='third'?'thirdNow':'adsNow').textContent=lists[k][i].name;if(k==='music'){$('musicListNow').textContent=lists[k][i].name;$('musicNow').textContent=lists[k][i].name.replace(/\.(mp3|wav|ogg|m4a|aac|flac|aiff|wma|opus)$/i,'').replace(/_/g,' ').trim()}render(k);try{await studio.engine.prepare(a);if(token!==studio.transportVersion||studioExclusive())return false;await a.play();if(token!==studio.transportVersion){if(studio.mediaVersion.get(a)===token)a.pause();return false}studio.engine.fadeIn(a);nextTrackPlayed(k,lists[k][i].id);say('En emisión · '+lists[k][i].name);return true}catch(e){if(token!==studio.transportVersion)return false;studioRecord({type:k==='music'?'music':'program',name:lists[k][i].name,assetId:lists[k][i].id,status:'failed',reason:e.message,playedSeconds:0}).catch(()=>{});say('No se pudo reproducir '+lists[k][i].name+': '+e.message,true);return false}}
+function studioExclusive(){return playing(institutionalAir)&&!studio.overlay}
+async function studioReleaseSources(except){for(const [k,a]of [['music',music],['programs',programs],['third',third]])if(k!==except){const handle=playing(a)&&studio.engine&&studio.options.fadeEnabled?await studio.engine.transitionOut(a,studio.options.fadeSeconds):null;if(handle)studioTransferTail(a,handle,'interrupted');else{studioFinish(a,'interrupted');a.pause()}if(a===programs)studioFinishProgramEvent('interrupted')}}
+async function startMusic(i){if(!studio.owner)return false;if(studioExclusive()){say('Detené el institucional antes de iniciar música');return false}if(playing(ads)){say('Detené la tanda antes de iniciar música');return false}const request=++studio.transportVersion;await studioReleaseSources('music');if(request!==studio.transportVersion)return false;resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;afterAdMusicNext=false;return run('music',i,request)}
+async function startProgram(i){if(!studio.owner)return false;if(studioExclusive()){say('Detené el institucional antes de iniciar el programa');return false}if(playing(ads)){say('Detené la tanda antes de iniciar el programa');return false}const request=++studio.transportVersion;await studioReleaseSources('programs');if(request!==studio.transportVersion)return false;resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdProgramNext=false;afterAdThirdNext=false;return run('programs',i,request)}
+async function startThird(i){if(!studio.owner||studioExclusive()||playing(ads))return false;const request=++studio.transportVersion;await studioReleaseSources('third');if(request!==studio.transportVersion)return false;resumeMusic=false;resumeProgram=false;resumeThird=false;afterAdMusicNext=false;afterAdProgramNext=false;return run('third',i,request)}
 async function playBreakAd(i){
- const item=activeAdQueue[i];if(!item){say('Esta tanda no tiene un aviso disponible',true);return false}
- meter();kind='ads';index.ads=i;ads.src=item.url;
+ const airing=activeBreak,item=activeAdQueue[i];if(!item){say('Esta tanda no tiene un aviso disponible',true);return false}
+ meter();studioFinish(ads,'interrupted');kind='ads';index.ads=i;ads.src=item.url;
  $('adsNow').textContent=(activeBreak?.name||'Tanda')+' · '+item.name;
  renderAdQueue();renderBreakSchedule();
- try{await ads.play();adPlayedOnce=true;say('AL AIRE · '+activeBreak.name+' · '+item.name);return true}
- catch(err){say('No se pudo emitir '+item.name+': '+err.message,true);stopBreakPlayback(true);return false}
+ try{await studio.engine.prepare(ads);if(activeBreak!==airing)return false;await ads.play();if(activeBreak!==airing){ads.pause();return false}adPlayedOnce=true;say('AL AIRE · '+activeBreak.name+' · '+item.name);return true}
+ catch(err){if(activeBreak!==airing)return false;studioRecord({type:'ad-spot',name:item.name,assetId:item.id,assetVersion:item.version||1,client:item.client||'',campaign:item.commercialCampaign||activeBreak?.name,campaignId:item.commercialCampaignId||activeBreak?.id,breakId:activeBreak?.id,status:'failed',reason:err.message,playedSeconds:0}).catch(()=>{});say('No se pudo emitir '+item.name+': '+err.message,true);stopBreakPlayback(true,'failed');return false}
 }
 function startAds(i=0,scheduledBreak=null){
- if(playing(ads)){say('Hay una tanda en emisión; detenela antes de iniciar otra.',true);return false}
+ if(!studio.owner){say('Otra pestaña tiene el control de emisión',true);return false}
+ if(playing(institutionalAir)){say('Esperá que termine el institucional o detenelo',true);return false}if(playing(ads)){say('Hay una tanda en emisión; detenela antes de iniciar otra.',true);return false}
  const agenda=todayScheduleEntries();const entry=scheduledBreak||nextReadyBreak(true)||agenda.find(e=>e.key===selectedBreakId)||agenda[0];
  if(!entry){say('Primero creá una tanda con avisos y horarios',true);return false}
- const preset=breakPresets.find(b=>b.id===entry.id),ids=Array.isArray(preset?.adIds)?preset.adIds:[];
- const queue=ids.map(id=>breakAssets.get(id));
+ const preset=(studio.draft?.presets||breakPresets).find(b=>b.id===entry.id),ids=Array.isArray(preset?.adIds)?preset.adIds:[];
+ const committedAssets=studio.draft?.assets||breakAssets,opts=studio.draft?.options||studio.options,slot=S.zonedParts(Date.now(),opts.timezone);
+ const queue=window.MHAds.resolve(preset||{...entry,adIds:ids},committedAssets,opts.adCampaigns||[],{...slot,date:entry.scheduledDate||slot.date,weekday:entry.scheduledDate?new Date(entry.scheduledDate+'T12:00:00Z').getUTCDay():slot.weekday,hour:entry.hour||slot.time});
  if(!queue.length||queue.some(x=>!x?.url||!x?.file)){say('La tanda '+entry.name+' no tiene todos sus audios. Revisá su configuración.',true);return false}
- const wasMusic=playing(music),wasProgram=playing(programs),wasThird=playing(third);
+ const adWarnings=window.MHAds.warnings(queue,preset?.maxSeconds||0);if(adWarnings.some(w=>w.includes('ausentes')||w.includes('desconocidas'))){say('Revisá la tanda: '+adWarnings.join(' · '),true);return false}
+ ++studio.transportVersion;if(studio.event&&studio.event.type!=='program')studio.planner.finish(studio.event,'interrupted');studioFinishProgramEvent('interrupted');const wasMusic=playing(music),wasProgram=playing(programs),wasThird=playing(third);
  // Preserve the on-air source across chained ad breaks. An idle automatic
  // station must also return to music when a scheduled ad break finishes.
  afterAdProgramNext=afterAdProgramNext||wasProgram;
  afterAdThirdNext=afterAdThirdNext||wasThird;
  afterAdMusicNext=afterAdMusicNext||wasMusic||(automatic&&!wasProgram&&!wasThird&&lists.music.length>0);
  music.pause();programs.pause();third.pause();
- activeBreak={...entry,scheduledDate:entry.scheduledDate||localScheduleDate()};adPlayedOnce=false;activeAdQueue=queue.slice();index.ads=-1;
+ activeBreak={...entry,startedAt:new Date().toISOString(),scheduledDate:entry.scheduledDate||localScheduleDate()};studio.breakSeconds=0;studio.breakIncomplete=false;studio.event=activeBreak;studio.planner?.start(activeBreak);studio.engine?.silenceTails();adPlayedOnce=false;activeAdQueue=queue.slice();index.ads=-1;
  const queuedIndex=pendingBreaks.findIndex(x=>x.key===entry.key);
  if(queuedIndex>=0)pendingBreaks.splice(queuedIndex,1);
  pending=pendingBreaks.length>0;selectedBreakId=entry.key;
@@ -1945,16 +2045,19 @@ function startAds(i=0,scheduledBreak=null){
  if(airingRow)airingRow.scrollIntoView({block:'nearest'});
  playBreakAd(i);return true;
 }
-function stopBreakPlayback(resume=true){
+function stopBreakPlayback(resume=true,status='interrupted'){
+ if(!activeBreak&&!playing(ads))return;const finishing=activeBreak;
+ if(status==='complete'&&studio.breakIncomplete)status='interrupted';
+ studioFinish(ads,status);if(activeBreak){studioRecord({...activeBreak,id:S.uid(),type:'ad-break',campaign:activeBreak.name,campaignId:activeBreak.id,status,playedSeconds:+(studio.breakSeconds||0).toFixed(3)});studio.planner?.finish(activeBreak,status)}if(studio.event===finishing)studio.event=null;
  if(!activeBreak&&!playing(ads))return;
  ads.pause();ads.removeAttribute('src');ads.load();index.ads=-1;
- if(adPlayedOnce)markBreakPassed(activeBreak);
+ if(status==='complete'&&adPlayedOnce)markBreakPassed(activeBreak);
  // On finish/stop the on-air tree closes, even if the user opened it earlier.
  if(activeBreak)expandedBreaks.delete(activeBreak.key);
  adPlayedOnce=false;activeBreak=null;activeAdQueue=[];$('adsNow').textContent='Tanda finalizada';
  renderAdQueue();renderBreakSchedule();render('ads');
  if(!resume){afterAdMusicNext=false;afterAdProgramNext=false;afterAdThirdNext=false;resumeMusic=false;resumeProgram=false;resumeThird=false;return}
- if(automatic&&pendingBreaks.length){const next=nextReadyBreak(true);if(next&&startAds(0,next))return}
+ if(automatic&&pendingBreaks.length){const next=nextReadyBreak(true);if(next&&dispatchStudioEvent(next))return}
  if(afterAdThirdNext){afterAdThirdNext=false;afterAdProgramNext=false;afterAdMusicNext=false;advanceThird();return}
  if(afterAdProgramNext){afterAdProgramNext=false;afterAdMusicNext=false;advancePrograms();return}
  if(afterAdMusicNext){afterAdMusicNext=false;resumeMusic=false;advanceMusicAfterBreak();return}
@@ -1964,7 +2067,7 @@ function stopBreakPlayback(resume=true){
  else if(resumeMusic){kind='music';music.play().catch(e=>say(e.message,true))}
  resumeMusic=false;resumeProgram=false;resumeThird=false;
 }
-function finishAds(){stopBreakPlayback(true)}
+function finishAds(status='interrupted'){stopBreakPlayback(true,status)}
 function advanceMusicAfterBreak(){
  if(startGlobalNext())return;
  // Commercial breaks mark a new musical segment: start a fresh song instead
@@ -1978,21 +2081,23 @@ function advanceMusicAfterBreak(){
  run('music',target);
 }
 function chooseNextTrack(k){const n=lists[k].length;if(!n)return -1;const forced=getNextTrackIndex(k);if(forced>=0)return forced;const repeat=k==='music'?pressed('repeat'):k==='programs'?programRepeat:thirdRepeat,random=k==='music'?pressed('shuffle'):k==='programs'?programShuffle:thirdShuffle;if(!random){const next=index[k]+1;return next<n?next:repeat?0:-1}let possibilities=Array.from({length:n},(_,i)=>i).filter(i=>!seenTracks[k].has(i));if(!possibilities.length){if(!repeat)return -1;seenTracks[k].clear();possibilities=Array.from({length:n},(_,i)=>i)}if(possibilities.length>1)possibilities=possibilities.filter(i=>i!==index[k]);return possibilities[Math.floor(Math.random()*possibilities.length)]}
-function advance(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdMusicNext=true;return}}if(startGlobalNext())return;if(pressed('endStop')){say('Reproducción detenida al final');return}const i=chooseNextTrack('music');if(i<0){say('Fin de la playlist');return}run('music',i)}
-function advancePrograms(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdProgramNext=true;return}}if(startGlobalNext())return;if(pressed('programsListEndStop')){say('Programa detenido al final del audio');return}const i=chooseNextTrack('programs');if(i<0){$('programsAir').textContent='EN ESPERA';say('Fin de la playlist para programas');return}run('programs',i)}
-function advanceThird(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&startAds(0,ready)){afterAdThirdNext=true;return}}if(startGlobalNext())return;const i=chooseNextTrack('third');if(i<0){$('thirdAir').textContent='EN ESPERA';say('Fin de la playlist auxiliar anterior');return}run('third',i)}
-music.onended=advance;programs.onended=advancePrograms;third.onended=advanceThird;ads.onended=()=>index.ads+1<activeAdQueue.length?playBreakAd(index.ads+1):finishAds();
-$('play').onclick=()=>{if(playing(music))return;if(playing(programs)){programs.pause();resumeProgram=false}if(playing(third)){third.pause();resumeThird=false}if(playing(ads)){say('Detené la tanda antes de iniciar música');return}if(index.music<0)startMusic(0);else{meter();kind='music';music.play().catch(e=>say(e.message,true))}};
+function advance(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&dispatchStudioEvent(ready)){afterAdMusicNext=true;return}}if(startGlobalNext())return;if(pressed('endStop')){say('Reproducción detenida al final');return}const i=chooseNextTrack('music');if(i<0){say('Fin de la playlist');return}run('music',i)}
+function advancePrograms(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&dispatchStudioEvent(ready)){afterAdProgramNext=true;return}}if(startGlobalNext())return;if(pressed('programsListEndStop')){say('Programa detenido al final del audio');return}const i=chooseNextTrack('programs');if(i<0){$('programsAir').textContent='EN ESPERA';say('Fin de la playlist para programas');return}run('programs',i)}
+function advanceThird(){if(pending&&automatic){const ready=nextReadyBreak(true);if(ready&&dispatchStudioEvent(ready)){afterAdThirdNext=true;return}}if(startGlobalNext())return;const i=chooseNextTrack('third');if(i<0){$('thirdAir').textContent='EN ESPERA';say('Fin de la playlist auxiliar anterior');return}run('third',i)}
+music.onended=()=>{studioFinish(music,'complete');advance()};programs.onended=()=>{studioFinish(programs,'complete');studioFinishProgramEvent('complete');advancePrograms()};third.onended=()=>{studioFinish(third,'complete');advanceThird()};ads.onended=()=>{if(studio.breakStopping){stopBreakPlayback(false,'interrupted');return}const row=studio.sessions.get(ads),playedSeconds=row?(row.playedMs+(row.since?performance.now()-row.since:0))/1000:0,status=S.finishedSpotStatus({...row,playedSeconds,duration:ads.duration});if(status!=='complete')studio.breakIncomplete=true;studioFinish(ads,status);if(index.ads+1<activeAdQueue.length)playBreakAd(index.ads+1);else finishAds(studio.breakIncomplete?'interrupted':'complete')};
+async function studioResumeSource(k){if(!studio.owner||studioExclusive()||playing(ads)){say('Esperá que termine la emisión exclusiva',true);return false}const a=k==='music'?music:programs;if(playing(a))return true;const i=index[k];if(i<0)return k==='music'?startMusic(0):startProgram(0);const request=++studio.transportVersion;await studioReleaseSources(k);if(request!==studio.transportVersion)return false;meter();await studio.engine.prepare(a);if(request!==studio.transportVersion)return false;kind=k;await a.play();if(request!==studio.transportVersion){a.pause();return false}return true}
+$('play').onclick=()=>studioResumeSource('music').catch(e=>say(e.message,true));
 $('pause').onclick=()=>music.pause();
 $('stop').onclick=()=>{music.pause();music.currentTime=0};$('prev').onclick=()=>startMusic(Math.max(0,index.music-1));$('next').onclick=()=>startMusic((index.music+1)%Math.max(1,lists.music.length));
 $('force').onclick=()=>startAds(0,todayScheduleEntries().find(e=>e.key===selectedBreakId)||nextReadyBreak(true)||todayScheduleEntries()[0]);
 function policy(v){exact=v;$('exact').setAttribute('aria-pressed',String(v));$('wait').setAttribute('aria-pressed',String(!v))}
-$('exact').onclick=()=>policy(true);$('wait').onclick=()=>policy(false);policy(false);
-$('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));if(automatic&&pending&&!playing(ads)){const ready=nextReadyBreak(false);if(ready)startAds(0,ready)}};
-$('clearPending').onclick=()=>{pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
+function studioAdPolicy(value){if(!studio.owner||studio.role!=='admin'){say('Se requiere administrador y control de emisión',true);return}const agenda=todayScheduleEntries(),entry=agenda.find(e=>e.key===selectedBreakId)||agenda[0],preset=breakPresets.find(b=>b.id===entry?.id)||breakPresets[0];if(!preset){say('Primero configurá una tanda',true);return}const previous=preset.policy;preset.policy=value;try{persistBreakPresets()}catch(e){preset.policy=previous;say(e.message,true);return}policy(value==='exact');for(const pending of pendingBreaks)if(pending.id===preset.id&&pending.type!=='institutional')pending.policy=value;renderBreakSchedule();studio.stamp=null;say(preset.name+' · '+(value==='exact'?'HORA EXACTA':'FIN DE TEMA'))}
+$('exact').onclick=()=>studioAdPolicy('exact');$('wait').onclick=()=>studioAdPolicy('end');policy(false);
+$('mode').onclick=()=>{automatic=!automatic;$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));if(automatic&&pending&&!playing(ads)){const ready=nextReadyBreak(false);if(ready)dispatchStudioEvent(ready)}};
+$('clearPending').onclick=()=>{for(const e of pendingBreaks){studio.planner?.finish(e,'discarded',{reason:'Descartado por operador'});studioRecord({type:'event',name:e.name,status:'discarded',reason:'Descartado por operador'}).catch(()=>{})}pendingBreaks.length=0;pending=false;render('ads');renderBreakSchedule();say('Cola pendiente descartada')};$('settings').onclick=()=>{syncConfigControls();$('storageSummary').textContent=lists.music.length+' canciones, '+lists.programs.length+' audios de programas, '+scheduleEntries().length+' salidas publicitarias y '+lists.ads.length+' avisos guardados';$('config').showModal()};
 $('volume').oninput=()=>{music.volume=ads.volume=programs.volume=third.volume=Number($('volume').value)/100;$('volumeValue').textContent=$('volume').value+'%'};music.volume=ads.volume=programs.volume=third.volume=.85;
 $('seek').oninput=()=>{const a=active();if(Number.isFinite(a.duration)&&a.duration>0)a.currentTime=Number($('seek').value)/1000*a.duration};
-for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';void 0}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];if(playlistKey(k))nextTrackId[k]=null;index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
+for(const k of ['music','ads','programs']){const addButton={music:'addMusic',ads:'addAds',programs:'addPrograms',third:'addThird'}[k],clearButton={music:'clearMusic',ads:'clearAds',programs:'clearPrograms',third:'clearThird'}[k];$(addButton).onclick=()=>$(k+'Files').click();$(k+'Files').onchange=e=>{add(k,e.target.files);e.target.value=''};$(clearButton).onclick=()=>{if(k==='ads'){for(const item of lists.ads)URL.revokeObjectURL(item.url);lists.ads=[];render('ads');savePlaylist('ads');return}const source=k==='music'?music:programs;studio.engine?.silenceTails();studioFinish(source,'interrupted');if(k==='programs')studioFinishProgramEvent('interrupted');if(k==='music'){music.pause();music.removeAttribute('src');music.load();$('musicNow').textContent='Sin audio en reproducción';$('musicListNow').textContent='—';void 0}else if(k==='programs'){programs.pause();programs.removeAttribute('src');programs.load();$('programsNow').textContent='—';resumeProgram=false;afterAdProgramNext=false}else if(k==='third'){third.pause();third.removeAttribute('src');third.load();$('thirdNow').textContent='—';resumeThird=false;afterAdThirdNext=false}else{finishAds();ads.removeAttribute('src');ads.load();$('adsNow').textContent='Sin tanda en reproducción'}for(const item of lists[k])URL.revokeObjectURL(item.url);lists[k]=[];if(playlistKey(k))nextTrackId[k]=null;index[k]=-1;if(k!=='ads')seenTracks[k].clear();render(k);savePlaylist(k);syncProgramAir()};const panel=$(k+'Panel');
 panel.ondragenter=e=>activatePlaylistDrop(panel,e);
 panel.ondragover=e=>activatePlaylistDrop(panel,e);
 panel.ondragleave=e=>{if(!e.relatedTarget||!panel.contains(e.relatedTarget))panel.classList.remove('drop')};
@@ -2032,18 +2137,12 @@ $('musicListMode').onchange=e=>setMusicShuffle(e.target.value==='random');
 $('programsListShuffle').onclick=()=>setProgramShuffle(!programShuffle);
 $('programsListRepeat').onclick=()=>setProgramRepeat(!programRepeat);
 $('programsListMode').onchange=e=>setProgramShuffle(e.target.value==='random');
-$('programsListPlay').onclick=()=>{
- if(playing(ads)){say('Detené la tanda antes de iniciar el programa');return}
- if(playing(programs))return;
- if(index.programs<0){startProgram(0);return}
- music.pause();third.pause();resumeMusic=false;resumeThird=false;meter();kind='programs';
- programs.play().catch(e=>say('No se pudo reproducir el programa: '+e.message,true));
-};
+$('programsListPlay').onclick=()=>studioResumeSource('programs').catch(e=>say(e.message,true));
 $('programsListStop').onclick=()=>{programs.pause();if(programs.currentTime>0)programs.currentTime=0;resumeProgram=false;afterAdProgramNext=false;syncProgramAir()};
 /* Identical transport panels: prev, play, pause, stop, next, shuffle, repeat, end-stop. */
 $('endStop').onclick=()=>$('endStop').setAttribute('aria-pressed',String(!pressed('endStop')));
 $('programsListPrev').onclick=()=>startProgram(Math.max(0,index.programs-1));
-$('programsListPause').onclick=()=>programs.pause();
+$('programsListPause').onclick=()=>{++studio.transportVersion;studio.engine?.silenceTails();programs.pause()};
 $('programsListNext').onclick=()=>{
  const n=lists.programs.length;
  if(!n){say('Cargá audio en Playlist para Programas');return}
@@ -2054,7 +2153,7 @@ $('programsListEndStop').onclick=()=>{
  button.setAttribute('aria-pressed',String(!pressed('programsListEndStop')));
 };
 
-function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b.dataset.settingsTab==='ads'))}
+function openBreakConfiguration(){syncConfigControls();$('settings').click();document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!=='ads');document.querySelectorAll('[data-settings-tab]').forEach(b=>{b.classList.toggle('selected',b.dataset.settingsTab==='ads');b.setAttribute('aria-current',b.dataset.settingsTab==='ads'?'page':'false')})}
 
 /* Panel único de tandas: acciones reales, sin controles duplicados en barra inferior. */
 
@@ -2062,7 +2161,7 @@ function syncAdvertisingPanel(){/* El control de tandas se muestra únicamente e
 
 
 
-$('adHardStop').onclick=()=>{if(!playing(ads)&&!activeBreak){say('No hay una tanda para detener');return}stopBreakPlayback(false);say('Publicidad detenida manualmente; la programación anterior permanece pausada')};
+$('adHardStop').onclick=async()=>{if(!playing(ads)&&!activeBreak){say('No hay una tanda para detener');return}const stoppedBreak=activeBreak;studio.breakStopping=true;if(studio.engine)await studio.engine.stop(ads);if(activeBreak===stoppedBreak)stopBreakPlayback(false);studio.breakStopping=false;say('Publicidad detenida manualmente; la programación anterior permanece pausada')};
 
 $('adConfigure').onclick=openBreakConfiguration;
 ads.addEventListener('playing',syncAdvertisingPanel);
@@ -2078,7 +2177,7 @@ const dayHost=$('scheduleDays');['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'].fo
 function selectedDays(){return [...dayHost.querySelectorAll('input:checked')].map(e=>Number(e.value))}
 function configuredTimes(){return [$('adTime').value,...$('extraTimes').value.split(',').map(s=>s.trim())].filter(s=>/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(s))}
 function syncConfigControls(){$('startupMode').value=automatic?'automatic':'manual';$('startPolicy').value=exact?'exact':'end';$('startShuffle').checked=pressed('shuffle');$('startRepeat').checked=pressed('repeat');$('startEndStop').checked=pressed('endStop');/* Detector controlado exclusivamente desde Configuración */}
-function collectSettings(){return {version:1,volume:Number($('volume').value),output:selectedOutput,mode:$('startupMode').value,policy:$('startPolicy').value,shuffle:$('startShuffle').checked,repeat:$('startRepeat').checked,endStop:$('startEndStop').checked,silence:$('silenceEnabled').checked,threshold:Number($('threshold').value),silenceSeconds:Number($('silenceSeconds').value),breakLabel:$('breakLabel').value,adTime:$('adTime').value,extraTimes:$('extraTimes').value,days:selectedDays(),autoRecovery:$('autoRecoveryEnabled').checked,programShuffle,programRepeat,programEndStop:pressed('programsListEndStop'),thirdShuffle,thirdRepeat}}
+function collectSettings(){return {version:1,volume:Number($('volume').value),output:$('outputDevice').value,mode:$('startupMode').value,policy:$('startPolicy').value,shuffle:$('startShuffle').checked,repeat:$('startRepeat').checked,endStop:$('startEndStop').checked,silence:$('silenceEnabled').checked,threshold:Number($('threshold').value),silenceSeconds:Number($('silenceSeconds').value),breakLabel:$('breakLabel').value,adTime:$('adTime').value,extraTimes:$('extraTimes').value,days:selectedDays(),autoRecovery:$('autoRecoveryEnabled').checked,programShuffle,programRepeat,programEndStop:pressed('programsListEndStop'),thirdShuffle,thirdRepeat}}
 async function routeOutput(id){if(typeof music.setSinkId!=='function'){$('outputStatus').textContent='Este navegador usa la salida elegida en el sistema operativo';return false}try{await Promise.all([music.setSinkId(id||''),ads.setSinkId(id||''),...(typeof programs.setSinkId==='function'?[programs.setSinkId(id||'')]:[]),...(typeof third.setSinkId==='function'?[third.setSinkId(id||'')]:[])]);selectedOutput=id||'';$('outputStatus').textContent='Salida de audio aplicada';return true}catch(error){$('outputStatus').textContent='No se pudo aplicar la salida: '+error.message;return false}}
 function applySettings(s){$('volume').value=Math.max(0,Math.min(100,Number(s.volume??85)));$('volume').oninput();automatic=s.mode!=='manual';$('mode').textContent=automatic?'AUTOMÁTICO':'MANUAL';$('mode').setAttribute('aria-pressed',String(automatic));policy(s.policy==='exact');for(const [id,key] of [['shuffle','shuffle'],['repeat','repeat'],['endStop','endStop']])$(id).setAttribute('aria-pressed',String(!!s[key]));$('silenceEnabled').checked=!!s.silence;$('threshold').value=Math.max(-65,Math.min(-20,Number(s.threshold??-48)));$('silenceSeconds').value=Math.max(1,Math.min(30,Number(s.silenceSeconds??3)));$('breakLabel').value=s.breakLabel||'Tanda publicitaria';$('adTime').value=s.adTime||'';$('extraTimes').value=s.extraTimes||'';for(const box of dayHost.querySelectorAll('input'))box.checked=(s.days||[0,1,2,3,4,5,6]).includes(Number(box.value));selectedOutput=typeof s.output==='string'?s.output:'';$('autoRecoveryEnabled').checked=!!s.autoRecovery;setMusicShuffle(pressed('shuffle'));setMusicRepeat(pressed('repeat'));setProgramShuffle(!!s.programShuffle);setProgramRepeat(!!s.programRepeat);$('programsListEndStop').setAttribute('aria-pressed',String(!!s.programEndStop));setThirdShuffle(!!s.thirdShuffle);setThirdRepeat(!!s.thirdRepeat);syncConfigControls();refreshAdSlotsFromSettings()}
 async function deviceList(){const select=$('outputDevice');select.replaceChildren(new Option('Predeterminado del sistema',''));if(!navigator.mediaDevices?.enumerateDevices){$('outputStatus').textContent='La salida se selecciona desde el sistema operativo';return}try{const devices=await navigator.mediaDevices.enumerateDevices();devices.filter(d=>d.kind==='audiooutput'&&d.deviceId!=='default').forEach((d,i)=>select.add(new Option(d.label||'Salida '+(i+1),d.deviceId)));select.value=selectedOutput;if(!select.value&&selectedOutput)select.add(new Option('Salida guardada',selectedOutput));select.value=selectedOutput}catch(error){$('outputStatus').textContent=error.message}}
@@ -2091,6 +2190,7 @@ let dailyPlayedDate='',dailyPlayed=new Set(),scheduleRenderedMinute='';
 
 let breakPresets=[],editingBreakId=null,previewAds=new Audio(),previewAdIndex=0,manualSince=0,lastManualAds=0,selectedBreakId=null,activeBreak=null,adPlayedOnce=false,editingAdIds=[],previewAdQueue=[];
 const breakAssets=new Map(),expandedBreaks=new Set();
+let advertisingUI=null;
 let breakAssetsDb=null,breakAssetsPromise=null,breakAssetsLoaded=false;
 try{const parsed=JSON.parse(localStorage.getItem(breakPresetKey)||'[]');if(Array.isArray(parsed))breakPresets=parsed.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.times));}catch(error){$('adPreviewStatus').textContent='No se pudieron leer tandas guardadas.'}
 for(let n=1;n<=12;n++)$('adFrequency').add(new Option(n===1?'1 vez':n+' veces',String(n)));
@@ -2099,7 +2199,7 @@ function syncAdditionalSlots(){$('extraTimes').value=getAdditionalSlots().filter
 function renderAdditionalSlots(values){const host=$('adSlots');host.replaceChildren();const count=Math.max(1,Number($('adFrequency').value)||1);for(let i=1;i<count;i++){const label=document.createElement('label');label.textContent='Salida '+(i+1);const input=document.createElement('input');input.type='time';input.value=values[i-1]||'';input.addEventListener('change',syncAdditionalSlots);label.append(input);host.append(label)}syncAdditionalSlots();}
 function refreshAdSlotsFromSettings(){if(!$('adFrequency'))return;const old=$('extraTimes').value.split(',').map(x=>x.trim()).filter(Boolean);$('adFrequency').value=String(Math.max(1,Math.min(12,old.length+1)));renderAdditionalSlots(old);updateAdPolicyButtons();}
 $('adFrequency').addEventListener('change',()=>renderAdditionalSlots(getAdditionalSlots()));
-$('distributeAdHours').onclick=()=>{if(!$('adTime').value){$('adPreviewStatus').textContent='Primero elegí la hora de la primera salida.';return}const count=Number($('adFrequency').value),parts=$('adTime').value.split(':').map(Number);const times=[];for(let i=1;i<count;i++){const total=(parts[0]*60+parts[1]+Math.floor(i*1440/count))%1440;times.push(String(Math.floor(total/60)).padStart(2,'0')+':'+String(total%60).padStart(2,'0'))}renderAdditionalSlots(times);$('adPreviewStatus').textContent='Salidas distribuidas conservando el minuto de la primera.'};
+$('distributeAdHours').onclick=()=>{try{const values=window.MHAds.distribute($('adTime').value,$('mhAdLastTime').value,Number($('adFrequency').value));renderAdditionalSlots(values.slice(1));$('adPreviewStatus').textContent='Horarios distribuidos dentro de la franja elegida.'}catch(e){$('adPreviewStatus').textContent=e.message}};
 function updateAdPolicyButtons(){const isExact=$('startPolicy').value==='exact';$('adPolicyExact').setAttribute('aria-pressed',String(isExact));$('adPolicyWait').setAttribute('aria-pressed',String(!isExact));}
 $('adPolicyExact').onclick=()=>{$('startPolicy').value='exact';updateAdPolicyButtons()};
 $('adPolicyWait').onclick=()=>{$('startPolicy').value='end';updateAdPolicyButtons()};
@@ -2116,7 +2216,7 @@ function openBreakAssetsDb(){
  return breakAssetsPromise;
 }
 function breakAssetTransaction(method,item){
- return openBreakAssetsDb().then(db=>new Promise((resolve,reject)=>{
+ if(studio.draft&&method!=='getAll'){studio.draft.assetWrites.push([method,item]);return Promise.resolve()}return openBreakAssetsDb().then(db=>new Promise((resolve,reject)=>{
   const tx=db.transaction('assets',method==='getAll'?'readonly':'readwrite');
   const request=method==='getAll'?tx.objectStore('assets').getAll():tx.objectStore('assets')[method](item);
   let result;
@@ -2153,11 +2253,16 @@ async function detectBreakDuration(url){
 }
 async function saveBreakAudio(file){
  if(!(file instanceof Blob)||(!file.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|opus|m4a|aac|flac|aiff|webm)$/i.test(file.name||'')))return null;
+ const draftAtStart=studio.draft;
+ const contentHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await file.arrayBuffer())),n=>n.toString(16).padStart(2,'0')).join('');
+ for(const asset of breakAssets.values()){if(!asset.contentHash)asset.contentHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await asset.file.arrayBuffer())),n=>n.toString(16).padStart(2,'0')).join('');if(asset.contentHash===contentHash)return asset.id}
  const id='breakaudio-'+Date.now()+'-'+Math.random().toString(36).slice(2);
  const url=URL.createObjectURL(file);
  try{
   const duration=await detectBreakDuration(url);
-  const row={id,name:file.name||'Aviso',file,duration};
+  if(!Number.isFinite(duration)||duration<=0)throw Error('No se pudo leer la duración del audio');
+  const row={id,name:file.name||'Aviso',file,duration,contentHash,version:1};
+  if(studio.draft!==draftAtStart){URL.revokeObjectURL(url);throw Error('La configuración cambió durante la carga; volvé a agregar el archivo')}
   await breakAssetTransaction('put',row);
   breakAssets.set(id,{...row,url});return id;
  }catch(err){URL.revokeObjectURL(url);throw err}
@@ -2165,7 +2270,8 @@ async function saveBreakAudio(file){
 async function addBreakFiles(files){
  let count=0;
  for(const file of files){
-  try{const id=await saveBreakAudio(file);if(id){editingAdIds.push(id);count++}}
+  $('adsDropCount').textContent='Leyendo '+(file.name||'audio')+'…';
+  try{const id=await saveBreakAudio(file);if(id){if(!editingAdIds.includes(id))editingAdIds.push(id);count++}}
   catch(error){$('adsDropCount').textContent='Error guardando '+(file.name||'audio')+': '+error.message;say('No se pudo guardar un aviso de esta tanda',true);renderDraftBreakAds();return}
  }
  renderDraftBreakAds();renderBreakSchedule();
@@ -2185,7 +2291,7 @@ function renderDraftBreakAds(){
  });
  const lengths=editingAdIds.map(id=>breakAssets.get(id)?.duration);
  const total=lengths.length&&lengths.every(Number.isFinite)?formatBreakDuration(lengths.reduce((a,b)=>a+b,0)):'--:--';
- $('adsDropCount').textContent=editingAdIds.length+' aviso(s) · duración total '+total;
+ $('adsDropCount').textContent=editingAdIds.length+' aviso(s) · duración total '+total;advertisingUI?.refresh();
 }
 async function migrateLegacyBreaks(){
  // Las tandas antiguas usaban la lista compartida; asignar sus audios sin alterar los presets.
@@ -2200,40 +2306,40 @@ async function migrateLegacyBreaks(){
   say('Tandas anteriores recuperadas. Sus avisos se pueden editar independientemente.');
  }catch(error){say('No se pudieron recuperar tandas anteriores: '+error.message,true)}
 }
-function activeAdSnapshot(){syncAdditionalSlots();return {id:editingBreakId||'break-'+Date.now()+'-'+Math.random().toString(36).slice(2),name:$('breakLabel').value.trim(),times:configuredTimes(),days:selectedDays(),policy:$('startPolicy').value,adIds:[...editingAdIds]};}
-function persistBreakPresets(){localStorage.setItem(breakPresetKey,JSON.stringify(breakPresets));}
+function activeAdSnapshot(){syncAdditionalSlots();return {id:editingBreakId||'break-'+Date.now()+'-'+Math.random().toString(36).slice(2),name:$('breakLabel').value.trim(),times:configuredTimes(),days:selectedDays(),policy:$('startPolicy').value,adIds:[...editingAdIds],startDate:$('studioBreakStart').value,endDate:$('studioBreakEnd').value,priority:Number($('studioBreakPriority').value),maxDelayMinutes:Number($('studioBreakDelay').value),enabled:$('studioBreakEnabled').checked};}
+function persistBreakPresets(){if(studio.draft)return;localStorage.setItem(breakPresetKey,JSON.stringify(breakPresets));}
 function showBreakPresets(){renderBreakSchedule();const host=$('savedBreaks');host.replaceChildren();if(!breakPresets.length){const empty=document.createElement('div');empty.className='mh-muted';empty.textContent='Todavía no hay tandas guardadas.';host.append(empty);return}
 breakPresets.forEach(b=>{const row=document.createElement('div');row.className='mh-record';const name=document.createElement('div');name.className='mh-record-name';const title=document.createElement('strong');title.textContent=b.name;const details=document.createElement('small');details.textContent=b.times.length+' salida(s) · '+b.times.join(', ')+' · '+(b.policy==='exact'?'HORA EXACTA':'ESPERAR TEMA');name.append(title,details);
-const edit=document.createElement('button');edit.type='button';edit.textContent='EDITAR';edit.onclick=()=>{editingBreakId=b.id;editingAdIds=[...(b.adIds||[])];renderDraftBreakAds();$('breakLabel').value=b.name;$('adTime').value=b.times[0]||'';$('adFrequency').value=String(Math.min(12,Math.max(1,b.times.length)));renderAdditionalSlots(b.times.slice(1));dayHost.querySelectorAll('input').forEach(x=>x.checked=b.days.includes(Number(x.value)));$('startPolicy').value=b.policy;updateAdPolicyButtons();$('adPreviewStatus').textContent='Editando '+b.name+'. Usá GUARDAR TANDA Y HORARIOS para activar y conservar los cambios.'};
+const edit=document.createElement('button');edit.type='button';edit.textContent='EDITAR';edit.onclick=()=>{studioBreakFields(b);$('mhBreakMaxSeconds').value=b.maxSeconds||0;editingBreakId=b.id;editingAdIds=[...(b.adIds||[])];renderDraftBreakAds();$('breakLabel').value=b.name;$('adTime').value=b.times[0]||'';$('adFrequency').value=String(Math.min(12,Math.max(1,b.times.length)));renderAdditionalSlots(b.times.slice(1));dayHost.querySelectorAll('input').forEach(x=>x.checked=b.days.includes(Number(x.value)));$('startPolicy').value=b.policy;updateAdPolicyButtons();$('adPreviewStatus').textContent='Editando '+b.name+'. Prepará la tanda y después pulsá GUARDAR Y CERRAR.'};
 const tryIt=document.createElement('button');tryIt.type='button';tryIt.textContent='▶ PROBAR';tryIt.onclick=()=>previewCurrentAds(b.adIds||[]);
 const del=document.createElement('button');del.type='button';del.textContent='BORRAR';del.onclick=()=>{if(!confirm('¿Borrar los horarios guardados de '+b.name+'?'))return;breakPresets=breakPresets.filter(x=>x.id!==b.id);if(editingBreakId===b.id)editingBreakId=null;try{persistBreakPresets();showBreakPresets();$('adPreviewStatus').textContent='Tanda guardada eliminada. La programación activa de aire no se modificó.'}catch(error){$('adPreviewStatus').textContent='No se pudo borrar: '+error.message}};
 row.append(name,edit,tryIt,del);host.append(row)})}
 function activateBreakSettings(){syncAdditionalSlots();const times=configuredTimes(),label=$('breakLabel').value.trim();if(!label||!times.length||selectedDays().length===0){$('adPreviewStatus').textContent='Completá el nombre, al menos una hora y un día de emisión.';return false}if(times.length!==Number($('adFrequency').value)||new Set(times).size!==times.length){$('adPreviewStatus').textContent='Completá todos los horarios sin repetir horas.';return false}
 if(!editingAdIds.length){$('adPreviewStatus').textContent='Esta tanda debe tener al menos un aviso.';return false}
 if(editingAdIds.some(id=>!breakAssets.get(id)?.file)){$('adPreviewStatus').textContent='Hay avisos sin archivo. Cargalos nuevamente antes de guardar.';return false}
-const snap=activeAdSnapshot();const settings=collectSettings();applySettings(settings);try{localStorage.setItem(settingKey,JSON.stringify(settings));const i=breakPresets.findIndex(x=>x.id===snap.id);if(i>=0)breakPresets[i]=snap;else breakPresets.push(snap);editingBreakId=snap.id;persistBreakPresets();showBreakPresets();$('adPreviewStatus').textContent='Tanda y horarios guardados. Programación activa: '+times.join(', ');return true}catch(error){$('adPreviewStatus').textContent='No se pudo guardar: '+error.message;return false}}
+const snap=activeAdSnapshot();snap.maxSeconds=Number($('mhBreakMaxSeconds').value)||0;try{S.validateEvent({...snap,type:'ad'})}catch(e){$('adPreviewStatus').textContent=e.message;return false}const settings=collectSettings();try{const i=breakPresets.findIndex(x=>x.id===snap.id);if(i>=0)breakPresets[i]=snap;else breakPresets.push(snap);editingBreakId=snap.id;persistBreakPresets();showBreakPresets();$('adPreviewStatus').textContent='Borrador listo. Pulsá GUARDAR Y CERRAR para activar: '+times.join(', ');return true}catch(error){$('adPreviewStatus').textContent='No se pudo guardar: '+error.message;return false}}
 $('saveAdBreak').onclick=activateBreakSettings;
 function stopAdsPreview(){previewAds.pause();previewAds.removeAttribute('src');previewAds.load();previewAdIndex=0;previewAdQueue=[];$('adPreviewStatus').textContent='Preescucha de tanda detenida.'}
 async function previewCurrentAds(ids=editingAdIds){stopAdsPreview();previewAdQueue=ids.map(id=>breakAssets.get(id)).filter(asset=>asset?.url);if(!previewAdQueue.length){$('adPreviewStatus').textContent='Esta tanda todavía no tiene avisos para probar.';return}previewAdIndex=0;await playPreviewAdNext()}
-async function playPreviewAdNext(){const item=previewAdQueue[previewAdIndex];if(!item){$('adPreviewStatus').textContent='Terminó la prueba de la tanda.';return}previewAds.src=item.url;previewAds.volume=ads.volume;try{if(selectedOutput&&typeof previewAds.setSinkId==='function')await previewAds.setSinkId(selectedOutput);await previewAds.play();$('adPreviewStatus').textContent='Preescucha independiente: '+item.name}catch(error){$('adPreviewStatus').textContent='No se pudo probar la tanda: '+error.message}}
+async function playPreviewAdNext(){const item=previewAdQueue[previewAdIndex];if(!item){$('adPreviewStatus').textContent='Terminó la prueba de la tanda.';return}previewAds.src=item.url;previewAds.volume=ads.volume;try{await studioCue(previewAds);await previewAds.play();$('adPreviewStatus').textContent='Preescucha independiente: '+item.name}catch(error){$('adPreviewStatus').textContent='No se pudo probar la tanda: '+error.message}}
 previewAds.onended=()=>{previewAdIndex++;playPreviewAdNext()};
-$('previewAdBreak').onclick=previewCurrentAds;$('stopAdPreview').onclick=stopAdsPreview;
-$('newAdBreak').onclick=()=>{stopAdsPreview();editingBreakId=null;editingAdIds=[];renderDraftBreakAds();$('breakLabel').value='';$('adTime').value='';$('adFrequency').value='1';renderAdditionalSlots([]);dayHost.querySelectorAll('input').forEach(x=>x.checked=true);$('startPolicy').value='end';updateAdPolicyButtons();$('adPreviewStatus').textContent='Nueva tanda. Cargá sus datos y guardá para activarla.'};
+$('previewAdBreak').onclick=()=>previewCurrentAds();$('stopAdPreview').onclick=stopAdsPreview;
+$('newAdBreak').onclick=()=>{$('mhBreakMaxSeconds').value='0';stopAdsPreview();studioBreakFields({});editingBreakId=null;editingAdIds=[];renderDraftBreakAds();$('breakLabel').value='';$('adTime').value='';$('adFrequency').value='1';renderAdditionalSlots([]);dayHost.querySelectorAll('input').forEach(x=>x.checked=true);$('startPolicy').value='end';updateAdPolicyButtons();$('adPreviewStatus').textContent='Nueva tanda. Cargá sus datos y guardá para activarla.'};
 refreshAdSlotsFromSettings();showBreakPresets();renderDraftBreakAds();initializeBreakAssets();
 /* ÁRBOL DE TANDAS · Cada fila es una salida; cada hija es un aviso propio de esa tanda. */
 function scheduleEntries(){
  const entries=[];
- for(const b of breakPresets){
-  if(!Array.isArray(b.times))continue;
+ for(const b of (studio.draft?.presets||breakPresets)){
+  if(!Array.isArray(b.times)||b.enabled===false)continue;
   for(const hour of b.times){
    if(!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(hour))continue;
-   entries.push({key:b.id+'@'+hour,id:b.id,name:b.name,hour,days:Array.isArray(b.days)?b.days:[],policy:b.policy==='exact'?'exact':'end',adIds:[...(b.adIds||[])]});
+   entries.push({...b,key:b.id+'@'+hour,id:b.id,name:b.name,hour,days:Array.isArray(b.days)?b.days:[],policy:b.policy==='exact'?'exact':'end',adIds:window.MHAds.resolve(b,studio.draft?.assets||breakAssets,(studio.draft?.options||studio.options).adCampaigns||[],{...S.zonedParts(Date.now(),studio.options.timezone),hour}).filter(Boolean).map(a=>a.id)});
   }
  }
  return entries.sort((a,b)=>a.hour.localeCompare(b.hour)||a.name.localeCompare(b.name,'es'));
 }
 /* Agenda visible: los horarios se conservan, pero solo mostramos las salidas de HOY. */
-function localScheduleDate(date=new Date()){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
+function localScheduleDate(date=new Date()){return S.zonedParts(+date,studio.options.timezone).date}
 function dailyPlayedFor(date=new Date()){
  const dateKey=localScheduleDate(date);
  if(dateKey!==dailyPlayedDate){dailyPlayedDate=dateKey;dailyPlayed=new Set();
@@ -2245,16 +2351,16 @@ function markBreakPassed(entry){
  if(!entry)return;
  const date=entry.scheduledDate||localScheduleDate();
  if(date!==localScheduleDate())return;
- dailyPlayedFor().add(entry.key);
+ dailyPlayedFor().add(entry.key);studio.planner?.record(entry.key+'#'+date,{status:'complete',name:entry.name,eventId:entry.id,scheduledAt:entry.scheduledAt});
  try{localStorage.setItem(dailyPlayedKey,JSON.stringify({date,keys:[...dailyPlayed]}))}catch(_){}
 }
 function todayScheduleEntries(now=new Date()){
- const date=localScheduleDate(now),time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+ const date=localScheduleDate(now),time=S.zonedParts(+now,studio.options.timezone).time;
  const completed=dailyPlayedFor(now);
  return scheduleEntries().filter(e=>{
    // A break that crosses midnight remains visible until its final ad ends.
    if(activeBreak?.key===e.key)return true;
-   if(!e.days.includes(now.getDay()))return false;
+   if(!e.days.includes(S.zonedParts(+now,studio.options.timezone).weekday)||e.startDate&&date<e.startDate||e.endDate&&date>e.endDate)return false;
    if(pendingBreaks.some(p=>p.key===e.key&&(!p.scheduledDate||p.scheduledDate===date)))return true;
    return e.hour>=time&&!completed.has(e.key);
  });
@@ -2271,30 +2377,7 @@ function nextReadyBreak(force){
  if(!playing(music)&&!playing(programs)&&!playing(third))return pendingBreaks[0];
  return null;
 }
-function checkScheduledBreaks(){
- const now=new Date(),dateKey=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
- const time=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
- const secondStamp=dateKey+':'+time+':'+now.getSeconds();
- if(secondStamp===lastClockCheckSecond)return;lastClockCheckSecond=secondStamp;
- if(dateKey!==seenScheduleDate){
-   seenScheduleDate=dateKey;seenScheduleKeys.clear();
-   for(let i=pendingBreaks.length-1;i>=0;i--)if(pendingBreaks[i].scheduledDate!==localScheduleDate(now))pendingBreaks.splice(i,1);
-   pending=pendingBreaks.length>0;
- }
- const todayMinute=dateKey+':'+time;
- if(todayMinute!==scheduleRenderedMinute){scheduleRenderedMinute=todayMinute;renderBreakSchedule()}
- let changed=false;
- for(const entry of scheduleEntries()){
-  if(entry.hour!==time||!entry.days.includes(now.getDay()))continue;
-  const key=dateKey+'#'+entry.key;
-  if(seenScheduleKeys.has(key)||dailyPlayedFor(now).has(entry.key))continue;
-  seenScheduleKeys.add(key);
-  if(!entry.adIds.length||entry.adIds.some(id=>!breakAssets.get(id)?.file)){say('Tanda '+entry.name+' sin todos sus archivos. Revisá Configuración.',true);continue}
-  pendingBreaks.push({...entry,scheduledDate:localScheduleDate(now)});changed=true;
- }
- if(changed){pending=true;render('ads');renderBreakSchedule()}
- if(automatic&&!playing(ads)){const next=nextReadyBreak(false);if(next)startAds(0,next)}
-}
+function checkScheduledBreaks(){studioTick()}
 function renderBreakSchedule(){
  const host=$('thirdList');const oldScroll=host.scrollTop||0;host.replaceChildren();
  const entries=todayScheduleEntries();
@@ -2322,7 +2405,7 @@ function renderBreakSchedule(){
   else if(pendingBreaks.some(x=>x.key===entry.key)){status.textContent='PENDIENTE';status.classList.add('due')}
   else status.textContent=entry.adIds.length+' AVISOS';
   row.append(hour,info,status);
-  row.onclick=()=>{selectedBreakId=entry.key;$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.toggle('selected',r===row))};
+  row.onclick=()=>{selectedBreakId=entry.key;policy(entry.policy==='exact');$('thirdNow').textContent=entry.hour+' · '+entry.name;host.querySelectorAll('.schedule-row').forEach(r=>r.classList.toggle('selected',r===row))};
   row.ondblclick=()=>emitScheduledBreak(entry);
   row.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();emitScheduledBreak(entry)}};
   const children=document.createElement('div');children.className='schedule-children';
@@ -2368,18 +2451,18 @@ let institutionalDb=null,institutionalItems=[],institutionalPreview=new Audio(),
 const instMessage=s=>$('instStatus').textContent=s;
 function stopInstitutional(){institutionalPreview.pause();institutionalPreview.removeAttribute('src');institutionalPreview.load();if(institutionalUrl){URL.revokeObjectURL(institutionalUrl);institutionalUrl=null}}
 $('instStopPreview').onclick=()=>{stopInstitutional();instMessage('Preescucha detenida.')};
-function instStore(method,...args){return new Promise((resolve,reject)=>{if(!institutionalDb){reject(new Error('La biblioteca todavía no está preparada'));return}const tx=institutionalDb.transaction('assets',['get','getAll'].includes(method)?'readonly':'readwrite'),req=tx.objectStore('assets')[method](...args);let value;req.onsuccess=()=>value=req.result;tx.oncomplete=()=>resolve(value);tx.onerror=()=>reject(tx.error||req.error);tx.onabort=()=>reject(tx.error||new Error('Operación interrumpida'))})}
+function instStore(method,...args){if(studio.draft&&!['get','getAll'].includes(method))return Promise.resolve();return new Promise((resolve,reject)=>{if(!institutionalDb){reject(new Error('La biblioteca todavía no está preparada'));return}const tx=institutionalDb.transaction('assets',['get','getAll'].includes(method)?'readonly':'readwrite'),req=tx.objectStore('assets')[method](...args);let value;req.onsuccess=()=>value=req.result;tx.oncomplete=()=>resolve(value);tx.onerror=()=>reject(tx.error||req.error);tx.onabort=()=>reject(tx.error||new Error('Operación interrumpida'))})}
 async function instPersistOrder(){for(let i=0;i<institutionalItems.length;i++){institutionalItems[i].order=i;await instStore('put',institutionalItems[i])}}
 function instRender(){const host=$('instList');host.replaceChildren();if(!institutionalItems.length){const div=document.createElement('div');div.className='mh-muted';div.textContent='Biblioteca vacía. Cargá jingles o separadores.';host.append(div);return}
 institutionalItems.forEach((item,i)=>{const row=document.createElement('div');row.className='mh-record';row.draggable=true;row.dataset.id=item.id;const info=document.createElement('div');info.className='mh-record-name';const strong=document.createElement('strong');strong.textContent=(i+1)+'. '+item.name;const small=document.createElement('small');small.textContent=item.category==='separadores'?'SEPARADOR':'JINGLE';info.append(strong,small);
-const hour=document.createElement('input');hour.type='time';hour.title='HORA DE EMISIÓN';hour.value=item.hour||'';hour.onchange=async()=>{item.hour=hour.value;try{await instStore('put',item);instMessage('Horario del institucional guardado.')}catch(err){instMessage('Error: '+err.message)}};
-const mode=document.createElement('select');mode.title='REGLA DE EMISIÓN';for(const [value,title] of [['wait','ESPERAR TEMA'],['cut','HORA EXACTA']])mode.add(new Option(title,value));mode.value=item.mode||'wait';mode.onchange=async()=>{item.mode=mode.value;try{await instStore('put',item);instMessage('Regla de emisión guardada.')}catch(err){instMessage('Error: '+err.message)}};
-const play=document.createElement('button');play.type='button';play.textContent='▶ ESCUCHAR';play.onclick=()=>{stopInstitutional();institutionalUrl=URL.createObjectURL(item.blob);institutionalPreview.src=institutionalUrl;institutionalPreview.play().then(()=>instMessage('Preescucha: '+item.name)).catch(err=>instMessage('No se pudo reproducir: '+err.message))};
+const hour=document.createElement('input');hour.type='time';hour.title='HORA DE EMISIÓN';hour.value=item.hour||'';hour.onchange=async()=>{item.hour=hour.value;try{await instStore('put',item);instMessage('Horario preparado. Pulsá GUARDAR Y CERRAR.')}catch(err){instMessage('Error: '+err.message)}};
+const mode=document.createElement('select');mode.title='REGLA DE EMISIÓN';for(const [value,title] of [['wait','ESPERAR TEMA'],['cut','HORA EXACTA']])mode.add(new Option(title,value));mode.value=item.mode||'wait';mode.onchange=async()=>{item.mode=mode.value;try{await instStore('put',item);instMessage('Regla preparada. Pulsá GUARDAR Y CERRAR.')}catch(err){instMessage('Error: '+err.message)}};
+const play=document.createElement('button');play.type='button';play.textContent='▶ ESCUCHAR';play.onclick=()=>{stopInstitutional();institutionalUrl=URL.createObjectURL(item.blob);institutionalPreview.src=institutionalUrl;studioCue(institutionalPreview).then(()=>institutionalPreview.play()).then(()=>instMessage('Preescucha: '+item.name)).catch(err=>instMessage('No se pudo reproducir: '+err.message))};
 const up=document.createElement('button');up.type='button';up.textContent='↑';up.title='Subir';up.onclick=async()=>{if(i===0)return;[institutionalItems[i-1],institutionalItems[i]]=[institutionalItems[i],institutionalItems[i-1]];try{await instPersistOrder();instRender()}catch(err){instMessage(err.message)}};
 const down=document.createElement('button');down.type='button';down.textContent='↓';down.title='Bajar';down.onclick=async()=>{if(i===institutionalItems.length-1)return;[institutionalItems[i+1],institutionalItems[i]]=[institutionalItems[i],institutionalItems[i+1]];try{await instPersistOrder();instRender()}catch(err){instMessage(err.message)}};
 const remove=document.createElement('button');remove.type='button';remove.textContent='✕';remove.title='Eliminar';remove.onclick=async()=>{if(!confirm('¿Eliminar '+item.name+' de la biblioteca local?'))return;try{stopInstitutional();await instStore('delete',item.id);institutionalItems=institutionalItems.filter(x=>x.id!==item.id);await instPersistOrder();instRender();instMessage('Institucional eliminado.')}catch(err){instMessage(err.message)}};
 row.append(info,hour,mode,play,up,down,remove);row.ondragstart=e=>{institutionalDragId=item.id;row.classList.add('dragging');e.dataTransfer.setData('text/plain',item.id);e.dataTransfer.effectAllowed='move'};row.ondragover=e=>{if(institutionalDragId){e.preventDefault();row.classList.add('dragging')}};row.ondragleave=()=>row.classList.remove('dragging');row.ondrop=async e=>{e.preventDefault();const from=institutionalItems.findIndex(x=>x.id===institutionalDragId),to=institutionalItems.findIndex(x=>x.id===item.id);if(from>=0&&to>=0&&from!==to){const moved=institutionalItems.splice(from,1)[0];institutionalItems.splice(to,0,moved);try{await instPersistOrder();instRender()}catch(err){instMessage(err.message)}}institutionalDragId=null};row.ondragend=()=>{institutionalDragId=null;row.classList.remove('dragging')};host.append(row)})}
-async function addInstitutionals(files){if(!institutionalDb){instMessage('La biblioteca todavía no está lista.');return}let count=0;for(const file of files){if(!file.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name))continue;const item={id:'institucionales-'+Date.now()+'-'+Math.random().toString(36).slice(2),type:'institucionales',category:$('instType').value,name:file.name,blob:file,order:institutionalItems.length,hour:'',mode:'wait'};try{await instStore('put',item);institutionalItems.push(item);count++}catch(err){instMessage('No se pudo guardar '+file.name+': '+err.message);break}}instRender();if(count)instMessage(count+' institucional(es) guardado(s) en este navegador. No fueron emitidos al aire.')}
+async function addInstitutionals(files){if(!institutionalDb){instMessage('La biblioteca todavía no está lista.');return}let count=0;for(const file of files){if(!file.type.startsWith('audio/')&&!/\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name))continue;const item={id:'institucionales-'+Date.now()+'-'+Math.random().toString(36).slice(2),type:'institucionales',category:$('instType').value,name:file.name,blob:file,order:institutionalItems.length,hour:'',mode:'wait'};try{await instStore('put',item);institutionalItems.push(item);count++}catch(err){instMessage('No se pudo guardar '+file.name+': '+err.message);break}}instRender();if(count)instMessage(count+' institucional(es) preparados. Pulsá GUARDAR Y CERRAR para conservarlos.')}
 $('instAddFiles').onclick=()=>$('instFiles').click();$('instFiles').onchange=e=>{addInstitutionals([...e.target.files]);e.target.value=''};
 $('instDrop').onclick=()=>$('instFiles').click();$('instDrop').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('instFiles').click()}};$('instDrop').ondragover=e=>{e.preventDefault();$('instDrop').classList.add('dragging')};$('instDrop').ondragleave=()=>$('instDrop').classList.remove('dragging');$('instDrop').ondrop=e=>{e.preventDefault();e.stopPropagation();$('instDrop').classList.remove('dragging');addInstitutionals([...e.dataTransfer.files])};
 try{const request=indexedDB.open('showcase-demo-RMR-Mediateca',1);request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('assets'))request.result.createObjectStore('assets',{keyPath:'id'})};request.onsuccess=async()=>{institutionalDb=request.result;try{const records=await instStore('getAll');institutionalItems=records.filter(x=>x&&(x.type==='institucionales'||x.type==='jingles'||x.type==='separadores')&&x.blob instanceof Blob).sort((a,b)=>(a.order||0)-(b.order||0));instRender();instMessage(institutionalItems.length+' institucional(es) en la biblioteca local.')}catch(err){instMessage('Error al leer la biblioteca: '+err.message)}};request.onerror=()=>instMessage('No se pudo abrir la biblioteca de institucionales.')}catch(err){instMessage('Biblioteca no disponible: '+err.message)}
@@ -2388,7 +2471,7 @@ function showRecoveryStatus(){const enabled=$('autoRecoveryEnabled').checked;if(
 $('autoRecoveryEnabled').onchange=showRecoveryStatus;
 ads.addEventListener('playing',()=>{lastManualAds=Date.now();if(!automatic)manualSince=Date.now()});
 $('mode').addEventListener('click',()=>{manualSince=automatic?0:Date.now();lastManualAds=0;showRecoveryStatus()});
-setInterval(()=>{if(!$('autoRecoveryEnabled').checked||automatic||!scheduleEntries().some(entry=>entry.adIds.length)){if(automatic)manualSince=0;return}if(!manualSince){manualSince=Date.now();return}if(Date.now()-Math.max(manualSince,lastManualAds)>=600000){$('mode').click();say('Protección de publicidad: regreso automático después de 10 minutos en MANUAL.');showRecoveryStatus()}},15000);
+setInterval(()=>{if(!(studio.draft?studio.draft.settings.autoRecovery:$('autoRecoveryEnabled').checked)||automatic||!scheduleEntries().some(entry=>entry.adIds.length)){if(automatic)manualSince=0;return}if(!manualSince){manualSince=Date.now();return}if(Date.now()-Math.max(manualSince,lastManualAds)>=600000){$('mode').click();say('Protección de publicidad: regreso automático después de 10 minutos en MANUAL.');showRecoveryStatus()}},15000);
 
 
 /* Publicidad: carga nativa de audios desde configuración, misma playlist y persistencia. */
@@ -2404,16 +2487,136 @@ adsDrop.ondrop=async e=>{e.preventDefault();e.stopPropagation();adsDrop.classLis
 $('copyLibraryAds').onclick=async()=>{if(!lists.ads.length){$('adsDropCount').textContent='La biblioteca de avisos sueltos está vacía.';return}await addBreakFiles(lists.ads.map(x=>x.file).filter(Boolean))};
 
 /* Clic en fondo exterior cierra; el contenido y los campos mantienen sus acciones. */
-$('config').addEventListener('click',e=>{if(e.target!==$('config'))return;const r=$('config').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('config').close()});
-for(const button of document.querySelectorAll('[data-settings-tab]'))button.onclick=()=>{document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!==button.dataset.settingsTab);document.querySelectorAll('[data-settings-tab]').forEach(b=>b.classList.toggle('selected',b===button));if(button.dataset.settingsTab==='audio')deviceList()};
-$('saveConfig').onclick=()=>{const invalid=$('extraTimes').value.split(',').map(x=>x.trim()).filter(Boolean).some(x=>!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(x));if(invalid){$('settingsSaved').textContent='Revisá los horarios: usá HH:MM separados por comas';return}const settings=collectSettings();applySettings(settings);try{localStorage.setItem(settingKey,JSON.stringify(settings));$('config').close();say('Configuración guardada')}catch(error){$('settingsSaved').textContent='No se pudo guardar: '+error.message}};
-$('exportConfig').onclick=()=>{const data={...collectSettings(),breakPresets,interfaceLanguage:window.megahertzLanguage?.get?.()||'es'},url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='megahertz-configuracion.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
-$('importConfig').onclick=()=>$('configFile').click();$('configFile').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;const s=JSON.parse(await f.text());if(s.version!==1)throw Error('Formato de configuración no compatible');if(s.interfaceLanguage&&window.megahertzLanguage?.set)window.megahertzLanguage.set(s.interfaceLanguage);if(Array.isArray(s.breakPresets)){breakPresets=s.breakPresets.filter(x=>x&&typeof x.id==='string'&&typeof x.name==='string'&&Array.isArray(x.times));persistBreakPresets();showBreakPresets()}applySettings(s);$('settingsSaved').textContent='Configuración importada. Pulsá Guardar y cerrar para conservarla.'}catch(error){$('settingsSaved').textContent=error.message}e.target.value=''};
+$('config').addEventListener('click',e=>{if(e.target!==$('config')||studio.committing)return;const r=$('config').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('config').close()});
+for(const button of document.querySelectorAll('[data-settings-tab]'))button.onclick=()=>{document.querySelectorAll('[data-settings-page]').forEach(p=>p.hidden=p.dataset.settingsPage!==button.dataset.settingsTab);document.querySelectorAll('[data-settings-tab]').forEach(b=>{b.classList.toggle('selected',b===button);b.setAttribute('aria-current',b===button?'page':'false')});if(button.dataset.settingsTab==='audio')deviceList();if(button.dataset.settingsTab==='events'){const current=$('studioEventTarget').value;studioTargets();if(current)$('studioEventTarget').value=current;studioJournal()}if(button.dataset.settingsTab==='reports')studioQueryLogs()};
+$('importConfig').onclick=()=>$('configFile').click();
 try{const saved=localStorage.getItem(settingKey);if(saved)applySettings(JSON.parse(saved));else syncConfigControls();showRecoveryStatus()}catch(error){say('No se pudo recuperar la configuración: '+error.message,true)}
-for(const a of [music,ads,programs,third])a.addEventListener('play',()=>{if(selectedOutput&&typeof a.setSinkId==='function')a.setSinkId(selectedOutput).catch(()=>say('Salida guardada no disponible; revisá Configuración',true))});
+
 function fmt(s){return Number.isFinite(s)?String(Math.floor(s/60)).padStart(2,'0')+':'+String(Math.floor(s%60)).padStart(2,'0'):'00:00'}
-setInterval(()=>{const a=active(),on=playing(a);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
-if(analyser){analyser.getByteFrequencyData(buffer);drawWord(on);if($('silenceEnabled').checked&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number($('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number($('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
+/* Studio v3 integration. All configuration editors share one staged transaction. */
+function studioFinishProgramEvent(status){if(studio.event?.type==='program'){studio.planner.finish(studio.event,status);studioRecord({type:'event',name:studio.event.name,status}).catch(()=>{});studio.event=null}}
+function studioRecord(row){return studio.db.log(row).catch(e=>{say('Error de registro: '+e.message,true);throw e})}
+function studioTransferTail(a,handle,status){const row=studio.sessions.get(a);if(!row)return;studio.sessions.delete(a);const duration=a.duration;studio.tailSessions.set(handle.audio,row);handle.done.then(result=>{studio.tailSessions.delete(handle.audio);const seconds=Math.max(0,(row.playedMs||0)/1000+result.playedSeconds);studioRecord({...row,since:undefined,playedMs:undefined,status:result.status==='complete'?status:result.status==='failed'?'failed':'interrupted',endedAt:result.endedAt,playedSeconds:+Math.min(Number.isFinite(duration)?duration:Infinity,seconds).toFixed(3)}).catch(()=>{})})}
+function studioFinish(a,status){const row=studio.sessions.get(a);if(!row)return;studio.sessions.delete(a);const measured=Math.max(0,row.playedMs/1000+(row.since? (performance.now()-row.since)/1000:0)),seconds=Number.isFinite(a.duration)?Math.min(a.duration,measured):measured;if(a===ads)studio.breakSeconds=(studio.breakSeconds||0)+seconds;studioRecord({...row,since:undefined,playedMs:undefined,status,endedAt:new Date().toISOString(),playedSeconds:+seconds.toFixed(3)}).catch(()=>{})}
+for(const [a,k]of [[music,'music'],[programs,'program'],[third,'program'],[ads,'ad-spot'],[institutionalAir,'institutional']]){
+ a.addEventListener('playing',()=>{if(!studio.owner){a.pause();return}let r=studio.sessions.get(a);if(!r){const item=a===ads?activeAdQueue[index.ads]:a===institutionalAir?studio.instItem:lists[a===music?'music':a===programs?'programs':'third'][index[a===music?'music':a===programs?'programs':'third']];r={id:S.uid(),startedAt:new Date().toISOString(),name:item?.name||'Audio',assetId:item?.id,type:k,status:'playing',assetVersion:item?.version||1,client:item?.client||'',breakId:a===ads?activeBreak?.id:undefined,campaign:a===ads?(item?.commercialCampaign||activeBreak?.name):undefined,campaignId:a===ads?(item?.commercialCampaignId||activeBreak?.id):undefined,playedMs:0,eventOccurrence:a===programs&&studio.event?.type==='program'?studio.event.occurrenceKey:undefined};studio.sessions.set(a,r)}r.status='playing';r.since=performance.now();studioRecord({...r,since:undefined}).catch(()=>{})});
+ a.addEventListener('pause',()=>{const r=studio.sessions.get(a);if(r?.since){r.playedMs+=performance.now()-r.since;r.since=0;r.status='paused';studioRecord({...r,since:undefined,playedSeconds:+(r.playedMs/1000).toFixed(3)}).catch(()=>{})}});
+ a.addEventListener('error',()=>{studioFinish(a,'failed');if(a===ads&&activeBreak)stopBreakPlayback(true,'failed');else if(a===institutionalAir&&studio.event?.type==='institutional'){institutionalAir.pause();studioEndInstitutional('failed')}});if(a===ads)a.addEventListener('seeking',()=>{const r=studio.sessions.get(a);if(r)r.seeked=true});
+}
+// Recover open log rows as interrupted; they are never certified as complete.
+function studioRecoverLogs(){if(!studio.owner||studio.logsRecovered)return;studio.logsRecovered=true;for(const r of studio.planner.recoverRunning())studioRecord({type:'event',...r}).catch(()=>{});studio.db.logs().then(rows=>Promise.all(rows.filter(r=>['playing','paused'].includes(r.status)).map(r=>studioRecord({...r,status:'interrupted',endedAt:new Date().toISOString(),reason:'Recuperación después del cierre de la consola'})))).catch(()=>{})}
+function studioCue(a){const o=studio.draft?studioReadOptions():studio.options;return S.cueRoute(a,o.cueOutput,studio.draft?$('outputDevice').value:selectedOutput,o.cueVolume)}
+$('volume').oninput=()=>{$('volumeValue').textContent=$('volume').value+'%';if(!studio.draft)studio.engine?.configure({volume:Number($('volume').value)})};
+for(const a of [music,ads,programs,third])a.volume=1;
+routeOutput=async id=>{try{meter();await studio.engine.route(id||'');selectedOutput=id||'';studio.engine.options.output=selectedOutput;$('outputStatus').textContent='Salida de AIRE aplicada al motor';return true}catch(e){$('outputStatus').textContent=e.message;return false}};
+$('outputDevice').onchange=()=>{$('outputStatus').textContent='Salida pendiente. Se aplicará al guardar.'};
+const studioOldDevices=deviceList;
+deviceList=async()=>{const air=$('outputDevice').value;await studioOldDevices();if(studio.draft&&air)$('outputDevice').value=air;const cue=$('studioCueOutput'),value=cue.value||studio.options.cueOutput;cue.replaceChildren(new Option('Sin preescucha: bloqueada',''));if(!navigator.mediaDevices?.enumerateDevices){$('outputStatus').textContent='El navegador no permite enumerar salidas de audio';return}try{for(const d of await navigator.mediaDevices.enumerateDevices())if(d.kind==='audiooutput'&&d.deviceId!=='default')cue.add(new Option(d.label||'Salida de preescucha',d.deviceId));if(value&&![...cue.options].some(o=>o.value===value))cue.add(new Option('Salida guardada (no disponible)',value));cue.value=value}catch(e){$('outputStatus').textContent=e.message}};
+$('refreshDevices').onclick=deviceList;
+for(const [id,a]of [['stop',music],['programsListStop',programs]])if($(id))$(id).onclick=async()=>{++studio.transportVersion;if(a===music&&playing(institutionalAir)){await studio.engine.stop(institutionalAir);studioEndInstitutional('interrupted',false);return}studio.engine?.silenceTails();if(studio.engine)await studio.engine.stop(a);else{a.pause();a.currentTime=0}studioFinish(a,'interrupted');if(a===programs)studioFinishProgramEvent('interrupted')};
+$('pause').onclick=()=>{++studio.transportVersion;studio.engine?.silenceTails();music.pause()};
+const optionFields={cueOutput:'studioCueOutput',cueVolume:'studioCueVolume',fadeEnabled:'studioFadeEnabled',fadeSeconds:'studioFadeSeconds',overlapSeconds:'studioOverlapSeconds',stopFadeSeconds:'studioStopFadeSeconds',duckDb:'studioDuckDb',duckAttack:'studioDuckAttack',duckRelease:'studioDuckRelease',agc:'studioAgc',targetDb:'studioTargetDb',maxGainDb:'studioMaxGainDb',limiter:'studioLimiter',ceilingDb:'studioCeilingDb',timezone:'studioTimezone',recoveryMinutes:'studioRecoveryMinutes'};
+function studioFillOptions(){for(const [key,id]of Object.entries(optionFields)){const el=$(id);if(el.type==='checkbox')el.checked=!!studio.options[key];else el.value=studio.options[key]}studioEventList()}
+function studioReadOptions(){const o=S.clone(studio.options);for(const [key,id]of Object.entries(optionFields)){const el=$(id);o[key]=el.type==='checkbox'?el.checked:el.type==='number'||el.type==='range'?Number(el.value):el.value}return S.validateOptions(o)}
+function studioBreakFields(b){$('mhBreakMaxSeconds').value=b.maxSeconds||0;$('studioBreakStart').value=b.startDate||'';$('studioBreakEnd').value=b.endDate||'';$('studioBreakPriority').value=b.priority??5;$('studioBreakDelay').value=b.maxDelayMinutes??15;$('studioBreakEnabled').checked=b.enabled!==false}
+function studioDefinitions(){const presets=studio.draft?.presets||breakPresets,items=studio.draft?.institutions||institutionalItems,options=studio.draft?.options||studio.options;return [...presets.map(b=>({...b,type:'ad',policy:b.policy,maxDelayMinutes:b.maxDelayMinutes??options.recoveryMinutes})),...items.filter(i=>i.hour).map(i=>({id:i.id,name:i.name,type:'institutional',target:i.id,times:[i.hour],days:[0,1,2,3,4,5,6],priority:4,maxDelayMinutes:options.recoveryMinutes,policy:i.mode==='cut'?'exact':'end'})),...options.events]}
+let plannerState={};try{plannerState=JSON.parse(localStorage.getItem(S.PLANNER_KEY)||'{}')}catch(_){}
+for(const key of dailyPlayedFor())if(!plannerState[key+'#'+localScheduleDate()])plannerState[key+'#'+localScheduleDate()]={status:'complete',name:'Tanda anterior',updatedAt:new Date().toISOString()};
+studio.planner=new S.Planner({state:plannerState,recover:false,zone:studio.options.timezone,onChange:state=>{if(studio.owner)localStorage.setItem(S.PLANNER_KEY,JSON.stringify(state))},onRecord:r=>studioRecord(r).catch(()=>{})});
+for(const row of studio.planner.recovered)studioRecord({type:'event',...row}).catch(()=>{});
+function dispatchStudioEvent(e){if(!e||!studio.owner)return false;if(e.type==='program'&&studio.event?.type==='program')studioFinishProgramEvent('interrupted');if(e.type==='ad'||!e.type){const preset=e.target?(studio.draft?.presets||breakPresets).find(b=>b.id===e.target):null;const ok=startAds(0,preset?{...e,id:preset.id,name:preset.name}:e);if(!ok){studio.planner.finish(e,'failed');studioRecord({type:'event',name:e.name,status:'failed',reason:'Tanda sin audios disponibles'}).catch(()=>{})}return ok}
+ studio.event=e;studio.planner.start(e);pendingBreaks.splice(0,pendingBreaks.length,...pendingBreaks.filter(p=>p.occurrenceKey!==e.occurrenceKey));pending=!!pendingBreaks.length;
+ if(e.type==='institutional'){studioStartInstitutional(e);return true}
+ const finish=ok=>{if(studio.event!==e)return;studio.planner.finish(e,ok?'complete':'failed');studioRecord({type:'event',name:e.name,status:ok?'complete':'failed'}).catch(()=>{});studio.event=null};
+ if(e.type==='program'){const n=lists.programs.findIndex(x=>x.id===e.target);if(n<0)finish(false);else Promise.resolve(startProgram(n)).then(ok=>{if(!ok)finish(false)});return n>=0}
+ if(e.type==='play'){Promise.resolve(startMusic(Math.max(0,index.music))).then(finish);return true}
+ if(e.type==='stop'){++studio.transportVersion;studio.stopPad?.();studio.engine?.silenceTails();if(playing(ads))stopBreakPlayback(false);if(playing(institutionalAir)){institutionalAir.pause();studioEndInstitutional('interrupted')}studio.event=e;Promise.all([music,programs,third].map(async a=>{if(studio.engine)await studio.engine.stop(a);else a.pause();studioFinish(a,'interrupted')})).then(()=>finish(true));return true}finish(false);return false;
+}
+async function studioStartInstitutional(e){const item=(studio.draft?.institutions||institutionalItems).find(i=>i.id===(e.target||e.id));if(!item?.blob){studio.planner.finish(e,'failed');studio.event=null;studioRecord({type:'event',name:e.name,status:'failed',reason:'Institucional sin archivo'}).catch(()=>{});return}
+ if(!e.overlay)++studio.transportVersion;meter();studio.instItem=item;studio.overlay=!!e.overlay;studio.resume=[];
+ if(!studio.overlay){for(const a of [music,programs,third])if(playing(a)){studio.resume.push(a);a.pause()}} // overlay preserves the on-air source and ducks its bus below.
+ // Institutional uses its own bypass around the duck gain, so the voice stays at level.
+ const input=studio.engine.inputs.get(institutionalAir);input.gain.disconnect();input.gain.connect(studio.engine.limiter);
+ studio.engine.setDuck(studio.manualDuck||studio.overlay||!!studio.padActive);studio.instUrl=URL.createObjectURL(item.blob);institutionalAir.src=studio.instUrl;
+ try{await studio.engine.prepare(institutionalAir);await institutionalAir.play();say('AL AIRE · '+item.name)}catch(err){if(studio.event!==e)return;studioFinish(institutionalAir,'failed');studioEndInstitutional('failed');say(err.message,true)}
+}
+function studioEndInstitutional(status='complete',resume=true){studioFinish(institutionalAir,status);studio.planner.finish(studio.event,status);studio.event=null;studio.overlay=false;studio.engine?.setDuck(studio.manualDuck||!!studio.padActive);if(studio.instUrl)URL.revokeObjectURL(studio.instUrl);studio.instUrl=null;for(const a of studio.resume||[])if(resume&&!a.ended)a.play().catch(e=>say(e.message,true));studio.resume=[];if(resume&&![music,programs,third,ads].some(playing)&&automatic)advance()}
+institutionalAir.onended=()=>studioEndInstitutional('complete');
+function studioInterruptEvent(){const e=studio.event;if(activeBreak)stopBreakPlayback(false,'interrupted');else if(e?.type==='institutional'){institutionalAir.pause();studioEndInstitutional('interrupted',false)}else if(e?.type==='program'){programs.pause();studioFinish(programs,'interrupted');studioFinishProgramEvent('interrupted')}else if(e){studio.planner.finish(e,'interrupted');studio.event=null}}
+function studioTick(){if(!studio.ready||!studio.owner)return;const options=studio.draft?.options||studio.options;const stamp=Math.floor(Date.now()/1000);if(studio.stamp!==stamp){studio.stamp=stamp;if(stamp%5===0)for(const [a,r]of studio.sessions)studioRecord({...r,since:undefined,playedSeconds:+((r.playedMs+(r.since?performance.now()-r.since:0))/1000).toFixed(3)}).catch(()=>{});studio.planner.zone=options.timezone;const due=studio.planner.scan(studioDefinitions(),Date.now(),studio.event);pendingBreaks.splice(0,pendingBreaks.length,...due);pending=!!due.length;renderBreakSchedule();const urgent=automatic&&studio.event?due.find(e=>e.policy==='exact'&&Number(e.priority)>Number(studio.event.priority??5)):null;if(urgent){studioInterruptEvent();dispatchStudioEvent(urgent)}else if(automatic&&!studio.event&&!playing(ads)&&!playing(institutionalAir)){const e=nextReadyBreak(false);if(e)dispatchStudioEvent(e)}}
+ if(studio.engine)studio.engine.update(performance.now());if(playing(ads)&&(ads.muted||Number(studio.engine?.options.volume)===0)){const r=studio.sessions.get(ads);if(r)r.suppressed=true}
+ if(options.fadeEnabled&&options.overlapSeconds>0&&playing(music)&&!studio.event&&!pending&&!pressed('endStop')&&Number.isFinite(music.duration)&&music.duration-music.currentTime<=options.overlapSeconds&&studio.overlapSrc!==music.src){const can=index.music+1<lists.music.length||pressed('repeat')||getNextTrackIndex('music')>=0;if(can){studio.overlapSrc=music.src;studio.crossfading=true;advance()}}
+}
+const studioOldNext=nextReadyBreak;nextReadyBreak=force=>playing(institutionalAir)||studio.event?null:studioOldNext(force);
+// One console owns the scheduler and playback per origin, including restored tabs.
+if(navigator.locks)navigator.locks.request('showcase-demo-megahertz-air-owner',{ifAvailable:true},lock=>{studio.owner=!!lock;studioOwnerText();studioRecoverLogs();return lock?new Promise(resolve=>window.addEventListener('pagehide',resolve,{once:true})):undefined});
+function studioOwnerText(){const msg=studio.owner?'CONTROL DE EMISIÓN ACTIVO':'SOLO LECTURA · Otra pestaña controla la emisión';$('studioOwnerState').textContent=msg;$('studioInstanceNotice').textContent=msg;$('studioInstanceNotice').hidden=studio.owner}
+studioOwnerText();
+// Load libraries before recovering any scheduled occurrence.
+Promise.all([openBreakAssetsDb(),studio.db.open()]).then(()=>{const wait=setInterval(()=>{if(breakAssetsLoaded&&institutionalDb){clearInterval(wait);studio.ready=true;studioRecoverLogs()}},100)}).catch(e=>say(e.message,true));
+const dayNames=['DOM','LUN','MAR','MIÉ','JUE','VIE','SÁB'];dayNames.forEach((n,i)=>{const l=document.createElement('label'),c=document.createElement('input');c.type='checkbox';c.value=i;c.checked=true;l.append(c,document.createTextNode(n));$('studioEventDays').append(l)});
+function studioTargets(){const type=$('studioEventType').value,host=$('studioEventTarget'),material=['ad','institutional','program'].includes(type);host.closest('label').hidden=!material;$('studioEventOverlay').closest('label').hidden=type!=='institutional';if(type!=='institutional')$('studioEventOverlay').checked=false;host.replaceChildren();const rows=type==='ad'?breakPresets:type==='institutional'?institutionalItems:type==='program'?lists.programs:[];for(const r of rows)host.add(new Option(r.name,r.id));host.disabled=!rows.length}
+$('studioEventType').onchange=studioTargets;
+function studioNewEvent(){for(const [id,v]of Object.entries({studioEventId:'',studioEventName:'',studioEventTimes:'',studioEventStart:'',studioEventEnd:'',studioEventPriority:5,studioEventDelay:15}))$(id).value=v;$('studioEventEnabled').checked=true;$('studioEventOverlay').checked=false;studioTargets()}
+$('studioNewEvent').onclick=studioNewEvent;
+$('studioStageEvent').onclick=()=>{try{const e=S.validateEvent({id:$('studioEventId').value||S.uid(),name:$('studioEventName').value,type:$('studioEventType').value,target:$('studioEventTarget').value,times:$('studioEventTimes').value.split(',').map(t=>t.trim()).filter(Boolean),days:[...$('studioEventDays').querySelectorAll('input:checked')].map(c=>+c.value),startDate:$('studioEventStart').value,endDate:$('studioEventEnd').value,priority:+$('studioEventPriority').value,maxDelayMinutes:+$('studioEventDelay').value,policy:$('studioEventPolicy').value,overlay:$('studioEventOverlay').checked,enabled:$('studioEventEnabled').checked});if(['ad','program','institutional'].includes(e.type)&&!e.target)throw Error('Elegí un audio o una tanda');const i=studio.options.events.findIndex(x=>x.id===e.id);if(i>=0)studio.options.events[i]=e;else studio.options.events.push(e);studioEventList();studioNewEvent();$('studioEventMessage').textContent='Evento preparado. Pulsá GUARDAR Y CERRAR.'}catch(e){$('studioEventMessage').textContent=e.message}};
+function studioEventList(){const host=$('studioEventsList');host.replaceChildren();for(const e of studio.options.events){const row=document.createElement('div');row.className='mh-record';const t=document.createElement('span');t.textContent=(e.enabled?'● ':'○ ')+e.name+' · '+e.times.join(', ')+' · prioridad '+e.priority;const edit=document.createElement('button');edit.type='button';edit.textContent='EDITAR';edit.onclick=()=>{$('studioEventType').value=e.type;studioTargets();for(const [id,v]of Object.entries({studioEventId:e.id,studioEventName:e.name,studioEventTarget:e.target,studioEventTimes:e.times.join(', '),studioEventStart:e.startDate||'',studioEventEnd:e.endDate||'',studioEventPriority:e.priority,studioEventDelay:e.maxDelayMinutes,studioEventPolicy:e.policy}))$(id).value=v;$('studioEventEnabled').checked=e.enabled;$('studioEventOverlay').checked=!!e.overlay;for(const c of $('studioEventDays').querySelectorAll('input'))c.checked=e.days.includes(+c.value)};const del=document.createElement('button');del.type='button';del.textContent='QUITAR';del.onclick=()=>{studio.options.events=studio.options.events.filter(x=>x.id!==e.id);studioEventList()};row.append(t,edit,del);host.append(row)}}
+function studioJournal(){const host=$('studioEventJournal');host.replaceChildren();for(const [key,r]of Object.entries(studio.planner.state).sort((a,b)=>(b[1].scheduledAt||0)-(a[1].scheduledAt||0)).slice(0,100)){const row=document.createElement('div');row.className='mh-record';const t=document.createElement('span');t.textContent=r.name+' · '+r.status+' · '+(r.scheduledAt?new Date(r.scheduledAt).toLocaleString('es-AR',{timeZone:studio.options.timezone,hourCycle:'h23'}):'recuperado');row.append(t);if(['expired','interrupted','failed','discarded'].includes(r.status)){const btn=document.createElement('button');btn.type='button';btn.textContent='REEMITIR MANUALMENTE';btn.onclick=()=>{if(studio.event)return say('Esperá que termine el evento actual',true);const definition=studioDefinitions().find(e=>e.id===r.eventId);if(!definition)return say('El evento ya no existe',true);dispatchStudioEvent({...definition,key:definition.id+'@manual',occurrenceKey:'manual-'+S.uid(),scheduledAt:Date.now(),scheduledDate:localScheduleDate(),hour:S.zonedParts(Date.now(),studio.options.timezone).time})};row.append(btn)}host.append(row)}}
+$('studioRefreshEvents').onclick=studioJournal;
+const studioLabel=value=>window.megahertzLanguage?.t?.(value)||value;
+let studioLogRows=[];const logColumns=[{key:'startedAt',label:'Inicio UTC'},{key:'endedAt',label:'Fin UTC'},{key:'type',label:'Tipo'},{key:'campaign',label:'Tanda'},{key:'name',label:'Audio / evento'},{key:'status',label:'Resultado'},{key:'playedSeconds',label:'Segundos emitidos'},{key:'reason',label:'Observación'}];
+function studioDownload(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000)}
+async function studioQueryLogs(){try{const from=$('studioLogFrom').value,to=$('studioLogTo').value;const rows=await studio.db.logs();studioLogRows=rows.filter(r=>{const day=S.zonedParts(Date.parse(r.startedAt),studio.options.timezone).date;return (!from||day>=from)&&(!to||day<=to)&&(!$('studioLogType').value||$('studioLogType').value==='all'||r.type===$('studioLogType').value)&&(!$('studioLogStatus').value||$('studioLogStatus').value==='all'||r.status===$('studioLogStatus').value)&&(!($('studioLogSearch').value)||((r.name||'')+' '+(r.campaign||'')).toLocaleLowerCase().includes($('studioLogSearch').value.toLocaleLowerCase()))});$('studioLogCount').textContent=studioLogRows.length+' '+studioLabel('registros')+' · '+studioLabel('zona')+' '+studio.options.timezone;const host=$('studioLogRows');host.replaceChildren();for(const r of studioLogRows.slice(-500).reverse()){const row=document.createElement('div');row.className='mh-record';row.dataset.i18nIgnore='';row.textContent=new Date(r.startedAt).toLocaleString('es-AR',{timeZone:studio.options.timezone,hourCycle:'h23'})+' · '+studioLabel({music:'Música',program:'Programa','ad-spot':'Aviso','ad-break':'Tanda',institutional:'Institucional',cart:'Pisador',event:'Evento'}[r.type]||r.type)+' · '+r.name+' · '+({complete:'COMPLETO',interrupted:'INTERRUMPIDO',failed:'FALLIDO',expired:'VENCIDO',playing:'AL AIRE',paused:'PAUSADO',discarded:'DESCARTADO'}[r.status]||r.status)+' · '+Number(r.playedSeconds||0).toFixed(2)+' s';host.append(row)}}catch(e){$('studioLogCount').textContent=e.message}}
+$('studioQueryLogs').onclick=studioQueryLogs;
+$('studioExportLog').onclick=async()=>{await studioQueryLogs();studioDownload(new Blob([S.csv(studioLogRows,logColumns)],{type:'text/csv;charset=utf-8'}),'showcase-demo-megahertz-registro.csv')};
+$('studioExportAds').onclick=async()=>{await studioQueryLogs();studioDownload(new Blob([S.csv(S.summarizeAds(studioLogRows),['campaign','name','complete','interrupted','failed','seconds','completeSeconds'].map((key,i)=>({key,label:['Tanda','Aviso','Completos','Interrumpidos','Fallidos','Segundos registrados','Segundos completos'][i]})))],{type:'text/csv;charset=utf-8'}),'showcase-demo-megahertz-publicidad.csv')};
+function studioRole(){const locked=studio.role!=='admin';$('studioRoleState').textContent=locked?'OPERADOR · Emisión y playlist de programas. Desbloqueá para cambiar configuración.':localStorage.getItem(S.SECURITY_KEY)?'ADMINISTRADOR · Configuración desbloqueada.':'ADMINISTRADOR · Todavía no configuraste una clave local.';$('studioLock').disabled=locked||!localStorage.getItem(S.SECURITY_KEY)}
+$('studioUnlock').onclick=async()=>{try{const record=JSON.parse(localStorage.getItem(S.SECURITY_KEY)||'null');if(!await S.verifyPassword($('studioUnlockPassword').value,record))throw Error('Clave incorrecta');studio.role='admin';$('studioUnlockPassword').value='';studioRole()}catch(e){$('studioRoleState').textContent=e.message}};
+$('studioLock').onclick=()=>{studio.role='operator';studioRole()};
+// Capture all editing paths, including drag/drop and generated library controls.
+for(const event of ['click','change','drop','keydown','dragstart'])document.addEventListener(event,e=>{const el=e.target;if(studio.committing&&el.closest('#config')){e.preventDefault();e.stopImmediatePropagation();return}if(!studio.owner&&((el.closest('#config')&&!el.closest('[data-settings-tab],#studioClose,#studioCancel,[data-settings-page=reports]'))||el.closest('#addMusic,#clearMusic,#addPrograms,#clearPrograms,#addAds,#clearAds,#force,#exact,#wait,#clearPending')||event==='drop'||event==='dragstart')){e.preventDefault();e.stopImmediatePropagation();say('Esta pestaña es de sólo lectura',true);return}if(studio.role==='admin')return;if(el.closest('[data-settings-page="security"]')&&!el.closest('#studioNewPassword,#studioRepeatPassword'))return;const page=el.closest('[data-settings-page]');const safe=el.closest('[data-settings-tab],#studioClose,#studioCancel,#settings,#studioQueryLogs,#studioExportLog,#studioExportAds,#studioRefreshEvents');const forbidden=((event==='drop'||event==='dragstart')&&!!el.closest('#musicPanel,#adsPanel'))||page&&!['reports'].includes(page.dataset.settingsPage)&&!safe||el.closest('#saveConfig,#addMusic,#clearMusic,#musicFiles,#musicPanel .track button,#addAds,#clearAds,#adsFiles,#clearPending,#exact,#wait,#programsPanel button[title*=Automática],#programsPanel button[aria-label*=Automática]');if(forbidden){e.preventDefault();e.stopImmediatePropagation();say('Se requiere permiso de administrador',true)}},true);
+$('settings').onclick=()=>{$('studioNewPassword').value=$('studioRepeatPassword').value=$('studioUnlockPassword').value='';syncConfigControls();if(selectedOutput&&![...$('outputDevice').options].some(o=>o.value===selectedOutput))$('outputDevice').add(new Option('Salida guardada',selectedOutput));$('outputDevice').value=selectedOutput;studio.draft={settings:S.clone({...collectSettings(),output:selectedOutput}),options:S.clone(studio.options),presets:S.clone(breakPresets),institutions:S.clone(institutionalItems),assets:new Map(breakAssets),assetWrites:[],editor:{id:editingBreakId,ids:[...editingAdIds],fields:{maxSeconds:Number($('mhBreakMaxSeconds').value)||0,startDate:$('studioBreakStart').value,endDate:$('studioBreakEnd').value,priority:+$('studioBreakPriority').value,maxDelayMinutes:+$('studioBreakDelay').value,enabled:$('studioBreakEnabled').checked}},weatherCity:$('mhWeatherCityInput').value,weatherDetail:$('mhDetailLocation').textContent,language:window.megahertzLanguage?.get?.()};studioFillOptions();studioBreakFields(breakPresets.find(b=>b.id===editingBreakId)||{});studioNewEvent();studioRole();studioJournal();$('settingsSaved').textContent='Los cambios se aplican juntos al guardar.';$('config').showModal();deviceList()};
+function studioCancel(){if(studio.committing)return;$('studioNewPassword').value=$('studioRepeatPassword').value=$('studioUnlockPassword').value='';const d=studio.draft;if(!d)return;studio.draft=null;studio.options=d.options;breakPresets=d.presets;institutionalItems=d.institutions;for(const [id,a]of breakAssets)if(!d.assets.has(id))URL.revokeObjectURL(a.url);breakAssets.clear();for(const [id,a]of d.assets)breakAssets.set(id,a);editingBreakId=d.editor.id;editingAdIds=[...d.editor.ids];applySettings(d.settings);studioBreakFields(d.editor.fields);renderDraftBreakAds();$('outputDevice').value=d.settings.output;$('mhWeatherCityInput').value=d.weatherCity;$('mhDetailLocation').textContent=d.weatherDetail;if(d.language)window.megahertzLanguage?.set?.(d.language);stopAdsPreview();stopInstitutional();showBreakPresets();instRender();studio.restore=null;studio.engine?.configure({...studio.options,volume:d.settings.volume,output:d.settings.output})}
+$('studioClose').onclick=$('studioCancel').onclick=()=>{if(!studio.committing)$('config').close()};$('config').addEventListener('close',studioCancel);
+function studioValidateGeneral(settings){for(const [key,id,min,max]of [['volume','volume',0,100],['threshold','threshold',-65,-20],['silenceSeconds','silenceSeconds',1,30]]){const el=$(id),n=Number(settings[key]);if(el.value.trim()===''||!Number.isFinite(n)||n<min||n>max||!Number.isInteger(n))throw Error('Valor no válido: '+key)}}
+function studioValidateLegacy(settings){for(const [key,min,max]of [['volume',0,100],['threshold',-65,-20],['silenceSeconds',1,30]])if(key in settings&&(typeof settings[key]!=='number'||!Number.isFinite(settings[key])||settings[key]<min||settings[key]>max||!Number.isInteger(settings[key])))throw Error('Valor no válido: '+key);for(const key of ['shuffle','repeat','endStop','silence','autoRecovery','programShuffle','programRepeat','programEndStop'])if(key in settings&&typeof settings[key]!=='boolean')throw Error('Valor no válido: '+key);if(settings.days&&(!Array.isArray(settings.days)||!settings.days.length||settings.days.some(d=>!Number.isInteger(d)||d<0||d>6)))throw Error('Días no válidos');if(settings.interfaceLanguage&&!['es','en','pt','fr','zh-CN'].includes(settings.interfaceLanguage))throw Error('Idioma no válido')}
+$('saveConfig').onclick=async()=>{if(studio.role!=='admin'||!studio.owner){$('settingsSaved').textContent='Se requiere administrador y control de emisión';return}const d=studio.draft;if(!d)return;const button=$('saveConfig');let rollback=null;button.disabled=true;studio.committing=true;try{const options=studioReadOptions(),settings={...collectSettings(),...(d.legacyModes||{})};studioValidateGeneral(settings);for(const b of breakPresets){S.validateEvent({...b,type:'ad'});if(!Number.isFinite(b.maxSeconds??0)||(b.maxSeconds||0)<0)throw Error('Duración máxima de tanda no válida')}for(const c of options.adCampaigns||[]){window.MHAds.validate(c);if(c.assetIds.some(id=>!breakAssets.get(id)?.file)||c.breakIds.some(id=>!breakPresets.some(p=>p.id===id)))throw Error('Una campaña referencia avisos o tandas que ya no existen')}const warningMessages=[];const adDay=S.zonedParts(Date.now(),options.timezone);for(const b of breakPresets){for(let offset=0;offset<7;offset++){const date=new Date(Date.parse(adDay.date+'T12:00:00Z')+offset*86400000).toISOString().slice(0,10),weekday=new Date(date+'T12:00:00Z').getUTCDay();if(!b.days.includes(weekday)||b.enabled===false||b.startDate&&date<b.startDate||b.endDate&&date>b.endDate)continue;for(const hour of b.times){const queue=window.MHAds.resolve(b,breakAssets,options.adCampaigns||[],{date,weekday,hour});for(const message of window.MHAds.warnings(queue,b.maxSeconds||0))warningMessages.push(b.name+' '+hour+': '+message)}}}if(warningMessages.length)throw Error([...new Set(warningMessages)].slice(0,6).join(' · '));const p=$('studioNewPassword').value;if(p!==$('studioRepeatPassword').value)throw Error('Las claves no coinciden');const secret=p?await S.passwordRecord(p):null;if(studio.restore){if([music,ads,programs,third,institutionalAir,studio.padAudio].filter(Boolean).some(playing))throw Error('Detené la emisión antes de restaurar un respaldo');await studioRestore(studio.restore);studio.draft=null;location.reload();return}
+ rollback={assets:await breakAssetTransaction('getAll'),institutions:await instStore('getAll'),storage:Object.fromEntries([settingKey,breakPresetKey,S.OPTIONS_KEY,S.SECURITY_KEY].map(k=>[k,localStorage.getItem(k)])),output:selectedOutput};
+ stopAdsPreview();stopInstitutional();
+ // Route validation precedes persistence and never falls back onto the default device.
+ if(settings.output!==selectedOutput&&!await routeOutput(settings.output))throw Error($('outputStatus').textContent);
+ studio.committing=true;for(const [method,item]of d.assetWrites)await studioRawAsset(method,item);for(const old of d.institutions)if(!institutionalItems.some(i=>i.id===old.id))await studioRawInst('delete',old.id);for(const item of institutionalItems)await studioRawInst('put',item);
+ localStorage.setItem(settingKey,JSON.stringify(settings));localStorage.setItem(breakPresetKey,JSON.stringify(breakPresets));localStorage.setItem(S.OPTIONS_KEY,JSON.stringify(options));if(secret)localStorage.setItem(S.SECURITY_KEY,JSON.stringify(secret));studio.options=options;const languagePending=d.languagePending;studio.draft=null;applySettings(settings);if(languagePending)window.megahertzLanguage?.set?.(languagePending);window.megahertzWeather?.commit?.(d.weather);studio.engine?.configure({...options,volume:settings.volume,output:settings.output});$('studioNewPassword').value=$('studioRepeatPassword').value='';$('config').close();stopAdsPreview();stopInstitutional();say('Configuración guardada y programación activada');studio.stamp=null;
+ }catch(e){if(rollback){try{await studioReplaceAssets(rollback.assets,rollback.institutions);for(const [k,v]of Object.entries(rollback.storage))if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v);if(studio.engine)await studio.engine.route(rollback.output);selectedOutput=rollback.output}catch(recovery){$('settingsSaved').textContent='No se pudo revertir la escritura: '+recovery.message;button.disabled=false;return}}$('settingsSaved').textContent='No se guardó: '+e.message}finally{studio.committing=false;button.disabled=false}};
+async function studioReplaceAssets(assets,institutions){for(const [name,rows]of [['showcase-demo-megahertz-break-assets-v1',assets],['showcase-demo-RMR-Mediateca',institutions]]){const db=await studioOpenDb(name);try{await new Promise((resolve,reject)=>{const tx=db.transaction('assets','readwrite'),st=tx.objectStore('assets');st.clear();rows.forEach(r=>st.put(r));tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})}finally{db.close()}}}
+const studioRawAsset=(method,item)=>{const d=studio.draft;studio.draft=null;const p=breakAssetTransaction(method,item);studio.draft=d;return p};
+const studioRawInst=(method,item)=>{const d=studio.draft;studio.draft=null;const p=instStore(method,item);studio.draft=d;return p};
+// Snapshot every station database, preserving keys, audio blobs and local settings.
+const studioDbSpec={'showcase-demo-megahertz-console-v2':{playlists:null},'showcase-demo-megahertz-break-assets-v1':{assets:'id'},'showcase-demo-RMR-Mediateca':{assets:'id'},'showcase-demo-megahertz-studio-v3':{logs:'id',meta:null}};
+async function studioOpenDb(name){return new Promise((resolve,reject)=>{const q=indexedDB.open(name,1);q.onupgradeneeded=()=>{for(const [store,keyPath]of Object.entries(studioDbSpec[name])){const st=q.result.createObjectStore(store,keyPath?{keyPath}:undefined);if(store==='logs')st.createIndex('startedAt','startedAt')}};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error)})}
+async function studioSnapshot(){const databases={};for(const name of Object.keys(studioDbSpec)){const db=await studioOpenDb(name);databases[name]={};for(const store of Object.keys(studioDbSpec[name]))databases[name][store]=await new Promise((resolve,reject)=>{const tx=db.transaction(store),st=tx.objectStore(store),keys=st.getAllKeys(),values=st.getAll();tx.oncomplete=()=>resolve(keys.result.map((key,i)=>({key,value:values.result[i]})));tx.onerror=()=>reject(tx.error)});db.close()}const storage={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('showcase-demo-megahertz-'))storage[k]=localStorage.getItem(k)}return {databases,storage}}
+async function studioEncode(value,files){if(value instanceof Blob){const n=files.push(value)-1;return {$mhBlob:n}}if(Array.isArray(value))return Promise.all(value.map(v=>studioEncode(v,files)));if(value&&typeof value==='object'){const o={};for(const [k,v]of Object.entries(value))if(k!=='url')o[k]=await studioEncode(v,files);return o}return value}
+function studioDecode(value,files){if(value&&Object.keys(value).length===1&&Number.isInteger(value.$mhBlob)){if(!files[value.$mhBlob])throw Error('Referencia de audio inválida');return files[value.$mhBlob]}if(Array.isArray(value))return value.map(v=>studioDecode(v,files));if(value&&typeof value==='object')return Object.fromEntries(Object.entries(value).map(([k,v])=>[k,studioDecode(v,files)]));return value}
+async function studioWriteSnapshot(snapshot){for(const [name,stores]of Object.entries(snapshot.databases)){if(!studioDbSpec[name])throw Error('Base no permitida');const db=await studioOpenDb(name);try{await new Promise((resolve,reject)=>{const tx=db.transaction(Object.keys(stores),'readwrite');for(const [store,rows]of Object.entries(stores)){if(!(store in studioDbSpec[name]))throw Error('Tabla no permitida');const st=tx.objectStore(store);st.clear();for(const row of rows)if(st.keyPath)st.put(row.value);else st.put(row.value,row.key)}tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||Error('Restauración interrumpida'))})}finally{db.close()}}for(const k of Object.keys(snapshot.storage))if(!k.startsWith('showcase-demo-megahertz-'))throw Error('Clave de configuración no permitida');const secret=localStorage.getItem(S.SECURITY_KEY);for(const k of Object.keys(localStorage))if(k.startsWith('showcase-demo-megahertz-')&&k!==S.SECURITY_KEY)localStorage.removeItem(k);for(const [k,v]of Object.entries(snapshot.storage))if(k!==S.SECURITY_KEY)localStorage.setItem(k,v);if(secret)localStorage.setItem(S.SECURITY_KEY,secret)}
+async function studioRestore(snapshot){const previous=await studioSnapshot();try{await studioWriteSnapshot(snapshot)}catch(e){await studioWriteSnapshot(previous);throw Error('Restauración revertida: '+e.message)}}
+$('exportConfig').onclick=async()=>{try{if(studio.role!=='admin')throw Error('Se requiere administrador');$('studioBackupStatus').textContent='Preparando audios y registro…';const files=[],snapshot=await studioEncode(await studioSnapshot(),files),blob=await S.packArchive({createdAt:new Date().toISOString(),fileRefs:[],snapshot},files,(n,t)=>$('studioBackupStatus').textContent='Verificando audio '+n+'/'+t);studioDownload(blob,'showcase-demo-megahertz-'+localScheduleDate()+'.mhbackup');$('studioBackupStatus').textContent='Respaldo completo descargado: configuración guardada, playlists, audios y registro. La clave actual se conserva al restaurar.'}catch(e){$('studioBackupStatus').textContent=e.message}};
+$('configFile').onchange=async e=>{try{if(studio.role!=='admin'||!studio.owner)throw Error('Se requiere administrador y control de emisión');const f=e.target.files[0];if(!f)return;if(f.name.endsWith('.json')){const settings=JSON.parse(await f.text());if(settings.version!==1)throw Error('Formato no compatible');studioValidateLegacy(settings);studio.draft.legacyModes={};for(const key of ['programShuffle','programRepeat','programEndStop'])if(key in settings)studio.draft.legacyModes[key]=settings[key];if(settings.interfaceLanguage)studio.draft.languagePending=settings.interfaceLanguage;if(settings.breakPresets)breakPresets=settings.breakPresets.map(b=>S.validateEvent({...b,type:'ad'}));for(const [id,key]of [['volume','volume'],['startupMode','mode'],['startPolicy','policy'],['threshold','threshold'],['silenceSeconds','silenceSeconds'],['breakLabel','breakLabel'],['adTime','adTime'],['extraTimes','extraTimes'],['outputDevice','output']])if(settings[key]!==undefined)$(id).value=settings[key];for(const [id,key]of [['startShuffle','shuffle'],['startRepeat','repeat'],['startEndStop','endStop'],['silenceEnabled','silence'],['autoRecoveryEnabled','autoRecovery']])$(id).checked=!!settings[key];if(settings.days)for(const box of dayHost.querySelectorAll('input'))box.checked=settings.days.includes(+box.value);refreshAdSlotsFromSettings();showBreakPresets();$('studioBackupStatus').textContent='Configuración antigua preparada. Pulsá Guardar para aplicar.'}else{const data=await S.unpackArchive(f,(n,t)=>$('studioBackupStatus').textContent='Comprobando audio '+n+'/'+t),snapshot=studioDecode(data.manifest.snapshot,data.files);if(!snapshot?.databases||!snapshot.storage)throw Error('Respaldo incompleto');for(const [name,stores]of Object.entries(snapshot.databases)){if(!studioDbSpec[name]||Object.keys(stores).some(k=>!(k in studioDbSpec[name])))throw Error('Estructura de base no admitida');for(const rows of Object.values(stores))if(!Array.isArray(rows)||rows.some(r=>!r||!('key'in r)||!('value'in r)))throw Error('Registros inválidos')}if(Object.keys(studioDbSpec).some(k=>!snapshot.databases[k]))throw Error('Faltan bases en el respaldo');if(snapshot.storage[S.OPTIONS_KEY])S.validateOptions(JSON.parse(snapshot.storage[S.OPTIONS_KEY]));studio.restore=snapshot;$('studioBackupStatus').textContent='Integridad comprobada. Guardar restaurará todo y recargará la consola. Cancelar conserva el estado actual.'}}catch(err){studio.restore=null;$('studioBackupStatus').textContent='No se importó: '+err.message}e.target.value=''};
+$('configForm').addEventListener('submit',e=>{e.preventDefault()});$('config').addEventListener('cancel',e=>{if(studio.committing)e.preventDefault()});
+const outputDetails=$('outputDevice').closest('details');if(outputDetails)$('studioOutputSlot').append(outputDetails);
+studioRole();studioFillOptions();studioNewEvent();
+// Stop controls are useful only while their independent preview is running.
+for(const [audio,id]of [[previewAds,'stopAdPreview'],[institutionalPreview,'instStopPreview']]){const sync=()=>{$(id).hidden=audio.paused||audio.ended};for(const event of ['playing','pause','ended','error','emptied'])audio.addEventListener(event,sync);sync()}
+
+S.installPads({studio,meter,say});
+function requireAdDraft(){if(studio.role!=='admin'||!studio.owner||!studio.draft)throw Error('Abrí Configuración como administrador para editar')}
+advertisingUI=window.MHAds.install({assets:()=>breakAssets,presets:()=>breakPresets,options:()=>studio.options,committedCampaigns:()=>(studio.draft?.options||studio.options).adCampaigns||[],requireDraft:requireAdDraft,selected:()=>editingAdIds,select:id=>{requireAdDraft();if(!editingAdIds.includes(id))editingAdIds.push(id);renderDraftBreakAds()},replace:async(id,file)=>{requireAdDraft();const draftAtStart=studio.draft;const old=breakAssets.get(id);if(!old)throw Error('Aviso no encontrado');if(!(file.type||'').startsWith('audio/')&&!/\.(mp3|wav|ogg|m4a|aac|flac)$/i.test(file.name))throw Error('Elegí un archivo de audio');const url=URL.createObjectURL(file);const duration=await detectBreakDuration(url);if(!Number.isFinite(duration)||duration<=0){URL.revokeObjectURL(url);throw Error('No se pudo leer la duración del audio')}const contentHash=Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256',await file.arrayBuffer())),n=>n.toString(16).padStart(2,'0')).join('');if(studio.draft!==draftAtStart){URL.revokeObjectURL(url);throw Error('La configuración cambió durante la carga')}const row={id,name:file.name,file,duration,contentHash,version:(old.version||1)+1};await breakAssetTransaction('put',row);breakAssets.set(id,{...row,url});renderDraftBreakAds()},remove:async id=>{requireAdDraft();await breakAssetTransaction('delete',id);breakAssets.delete(id)},logs:()=>studio.db.logs(),download:rows=>studioDownload(new Blob([S.csv(rows,['client','campaign','contracted','complete','interrupted','failed','pending'].map(key=>({key,label:key})))],{type:'text/csv;charset=utf-8'}),'showcase-demo-megahertz-cumplimiento.csv')});
+
+if(new URLSearchParams(location.search).get('whatsapp')==='prueba')window.MHWhatsAppTrial={
+ cue:audio=>{if(!studio.owner)throw Error('Otra pestaña tiene el control');return studioCue(audio)},
+ air:async file=>{if(!studio.owner||studioExclusive()||playing(ads))return false;const found=lists.programs.findIndex(x=>x.file===file);let position=found;if(position<0){if(!add('programs',[file]))return false;position=lists.programs.length-1}return startProgram(position)}
+};
+setInterval(()=>{const a=active(),on=playing(a);syncOnAirDisplay(a,on);syncDeckAir();syncProgramAir();$('vu').classList.toggle('mh-running',on);$('air').textContent=on?(a===studio.padAudio?'AL AIRE · PISADOR':a===institutionalAir?'AL AIRE · INSTITUCIONAL':a===ads?'AL AIRE · TANDA':a===programs?'AL AIRE · PROGRAMA':a===third?'AL AIRE · AUDIO AUXILIAR':'AL AIRE · MÚSICA'):'EN ESPERA';$('air').classList.toggle('live',on);$('elapsed').textContent=fmt(a.currentTime);$('duration').textContent=fmt(a.duration);$('seek').disabled=!Number.isFinite(a.duration)||a.duration<=0;$('seek').value=Number.isFinite(a.duration)&&a.duration>0?a.currentTime/a.duration*1000:0;
+if(analyser){studio.engine.update(performance.now());analyser.getByteFrequencyData(buffer);if((studio.draft?studio.draft.settings.silence:$('silenceEnabled').checked)&&on){const samples=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(samples);let sum=0;for(const x of samples)sum+=x*x;const db=20*Math.log10(Math.max(1e-8,Math.sqrt(sum/samples.length)));if(db<Number(studio.draft?studio.draft.settings.threshold:$('threshold').value)){if(!silentSince)silentSince=Date.now();if(Date.now()-silentSince>Math.max(1,Number(studio.draft?studio.draft.settings.silenceSeconds:$('silenceSeconds').value)||3)*1000){silentSince=0;a.currentTime=a.duration}}else silentSince=0}else silentSince=0}
 checkScheduledBreaks()
 },100);
 // DEMO ONLY: the production console never loads this initializer.
@@ -2437,11 +2640,6 @@ checkScheduledBreaks()
  finally{demoControls.forEach(id=>$(id).disabled=false)}
 })();
 
+
 })();
-</script><script>
-const example={mhWeatherPlace:'SAN MARTÍN DE LOS ANDES · DEMO',mhWeatherTemp:'16°',mhWeatherCondition:'Parcialmente nublado',mhWeatherUpdated:'Datos meteorológicos de ejemplo',mhFeelsLike:'15°',mhHumidity:'62%',mhWind:'14 km/h O',mhGust:'22 km/h',mhPressure:'1016 hPa',mhRain:'0 mm',mhUV:'3',mhAQI:'24',mhNewsCountry:'ARGENTINA · DEMO',mhNewsUpdated:'EJEMPLO',mhNewsFlow:'Tu radio, tu programación. Música, publicidad y programas en una misma consola.',mhNewsRegion:'DEMOSTRACIÓN'};
-for(const [id,text] of Object.entries(example)){const el=document.getElementById(id);if(el)el.textContent=text}
-document.getElementById('mhWeekStrip').innerHTML=['HOY','SÁB','DOM','LUN','MAR','MIÉ','JUE'].map((day,i)=>'<div class="mh-week-day"><b>'+day+'</b><span>☀</span><strong>'+(16+i%3)+'° / '+(4+i%3)+'°</strong></div>').join('');
-document.getElementById('mhNewsHeadlines').innerHTML='<div class="mh-news-empty">CENTRO INFORMATIVO · Titulares y región elegidos por el operador. Vista de demostración.</div>';
-setInterval(()=>document.getElementById('mhLocalClock').textContent=new Date().toLocaleTimeString('es-AR',{hour12:false}),1000);
-</script></main><script defer src="/aire/megahertz-i18n.js?v=20261027-lang2"></script><script defer src="/aire/megahertz-logo-progress-v2.js?v=20261024c3"></script></body></html>
+</script><script src="/aire/megahertz-weather.js?v=20261027-lang2" defer></script><script src="/aire/megahertz-i18n.js?v=20261027-lang2" defer></script></main><script defer src="/aire/megahertz-logo-progress-v2.js?v=20261024c3"></script><script defer src="/aire/megahertz-whatsapp-trial.js?v=20261101b"></script><script defer src="/aire/megahertz-visor-trial.js?v=20261101c"></script></body></html>

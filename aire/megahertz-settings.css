@@ -75,3 +75,6 @@
 #config .mh-unit-control{display:flex;align-items:center;gap:8px}
 #config .mh-unit-control input{width:100%}
 #config .config-tabs button[data-settings-tab].selected:not(#mode),#config .config-tabs button[data-settings-tab].selected:not(#mode):hover{background:#163545!important;box-shadow:inset 2px 0 #62d5ed!important;border-color:#2d6376!important;color:#c4f5ff!important}
+
+/* Beta 5 shared advertising library, within existing settings layout. */
+#mhAdLibrary,#mhCampaignList{max-height:240px;overflow:auto}#mhCampaignAssets,#mhCampaignBreaks{display:flex;flex-wrap:wrap;gap:8px;max-height:180px;overflow:auto}#mhAdLibrary .mh-record>span,#mhCampaignList .mh-record>span{flex:1;min-width:100px;overflow-wrap:anywhere}

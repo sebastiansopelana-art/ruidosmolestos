@@ -1,0 +1,37 @@
+MEGAHERTZ · BETA 5 · WINDOWS x64
+Automatic Radio System · Sebastián Sopelana
+
+INSTALAR
+1. Ejecutá MegaHertz-Beta5-Windows-x64-Setup.exe en Windows de 64 bits.
+2. Elegí la carpeta y terminá la instalación. No necesita permisos de administrador.
+3. Abrí MegaHertz Beta 5 desde el escritorio.
+
+PRIMERA PRUEBA
+1. Cargá música con + MÚSICA. Abrir la aplicación no inicia audio por sí solo.
+2. En CONFIGURACIÓN > AUDIO, elegí AIRE y una salida distinta para PREESCUCHA.
+3. En PUBLICIDAD, creá una tanda con nombre, días, horarios y avisos.
+4. PREPARAR TANDA Y HORARIOS prepara el borrador; GUARDAR Y CERRAR lo activa.
+5. La biblioteca central permite vincular un aviso a otra tanda sin recargarlo.
+6. Creá campañas por cliente, con fechas, franja, días, avisos en rotación y tandas.
+7. PREPARAR CAMPAÑA y después GUARDAR Y CERRAR aplican los cambios.
+8. REEMPLAZAR EN TODAS conserva el vínculo: el cambio rige para las próximas salidas.
+9. Probá Manual, Automático, hora exacta, fin de tema y el registro.
+
+TRASLADAR DATOS DE LA WEB
+En la consola web: CONFIGURACIÓN > RESPALDOS > DESCARGAR RESPALDO COMPLETO.
+En la aplicación: RESPALDOS > RESTAURAR RESPALDO, elegí el archivo, y guardá con
+toda la emisión detenida. No hay sincronización automática entre equipos.
+
+DATOS
+Se guardan en el perfil de Windows, dentro de AppData\Roaming\MegaHertz-Beta5.
+No se suben audios comerciales a Internet. Clima, noticias y búsqueda de datos
+musicales consultan servicios públicos y requieren conexión.
+La desinstalación conserva el perfil y sus audios. Antes de actualizar o cambiar
+de PC, descargá un respaldo completo desde la aplicación.
+
+ALCANCE DE ESTA ENTREGA
+Aplicación local de prueba para operación supervisada. Instalador generado desde
+Linux; no se ha ejecutado físicamente en un PC Windows en esta entrega.
+El instalador no tiene firma digital comercial. No es una versión Mac.
+La aplicación no incluye Redacción ni el Estudio personal de Ruidos Molestos.
+Las credenciales y sesiones del acceso privado web son independientes de esta Beta.
