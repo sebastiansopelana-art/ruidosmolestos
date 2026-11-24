@@ -97,7 +97,7 @@ const entradasVoz = (() => {
       tag.title=(mark.source||'Marca guardada')+' · '+mark.seconds.toFixed(1)+' s · Tocá para corregir';
     }
     const editCue=() => {
-      if (!id || !window.studioIntros || typeof studioIntros.editForTrack!=='function') return;
+      if (!id || typeof studioIntros==='undefined' || typeof studioIntros.editForTrack!=='function') return;
       studioIntros.editForTrack(row.closest('.player'),video,track.name||track.label||track.title||'Canción');
     };
     tag.onclick=editCue;
