@@ -292,7 +292,14 @@
       "label": "Ronnie Baker Brooks — Blues In My DNA",
       "pronunciacion": "BLÚS IN MÁI DI-EN-ÉI",
       "durationSeconds": 288,
-      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles."
+      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles.",
+      "introCue": {
+        "videoId": "Z7-jsCgyEpg",
+        "seconds": 0.73,
+        "source": "Letra sincronizada del mismo tema y álbum; primer sonido vocal indicado",
+        "reference": "lrclib:16853037",
+        "notacion": "El primer sonido vocal puede ser un exclamo; el inicio del verso principal puede suceder después."
+      }
     }
   ]
 }

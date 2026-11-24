@@ -80,35 +80,22 @@ const entradasVoz = (() => {
     const video=track.videoId;
     const id=video?'yt:'+video:null;
     tag.dataset.introId=id||'';
-    tag.setAttribute('role','button');
-    tag.tabIndex=0;
-    tag.style.cursor='pointer';
+    tag.setAttribute('aria-label','Segundos hasta la entrada de la voz');
     row.append(tag);
     function show(mark) {
       if (!mark || !Number.isFinite(mark.seconds) || mark.seconds<0) {
         tag.textContent='INTRO —';
         delete tag.dataset.introDetectada;
-        tag.title='Sin entrada de voz comprobada. Tocá para marcar los segundos en esta versión.';
+        tag.title='Sin entrada de voz verificada para este audio. No se muestra tiempo inventado.';
         return;
       }
-      const s=Math.floor(mark.seconds);
-      tag.textContent='Canta ≈ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+      const s=Math.ceil(mark.seconds);
+      tag.textContent='INTRO '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
       tag.dataset.introDetectada='true';
-      tag.title=(mark.source||'Marca guardada')+' · '+mark.seconds.toFixed(1)+' s · Tocá para corregir';
+      tag.title=(mark.source||'Marca verificada')+' · La voz entra a los '+mark.seconds.toFixed(1)+' s';
     }
-    const editCue=() => {
-      if (!id || typeof studioIntros==='undefined' || typeof studioIntros.editForTrack!=='function') return;
-      studioIntros.editForTrack(row.closest('.player'),video,track.name||track.label||track.title||'Canción');
-    };
-    tag.onclick=editCue;
-    tag.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();editCue();}};
-    tag.addEventListener('rm-intro-refresh', ({detail}) => {
-      if (detail.id!==id) return;
-      if (detail.seconds===null) { show(null); return; }
-      show({seconds:detail.seconds,source:'Marca guardada'});
-    });
     tag.textContent='Buscando voz…';
-    tag.title='Buscando entrada de voz verificada';
+    tag.title='Buscando segundos hasta la voz';
     const preset=known(track,video);
     if (preset) { show(preset); return; }
     let job=jobs.get(track);
