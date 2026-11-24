@@ -36,8 +36,24 @@ async function alternate(artist,title,duration) {
 }
 
 const YT_MUSIC_API_KEY='AIzaSyC9XL3ZjWddXya6X74dJoCTL-WEYFDNX30';
-const MUSIC_CONTEXT={client:{clientName:'WEB_REMIX',clientVersion:'1.20260707.12.00',hl:'es',gl:'AR'}};
-const MUSIC_ANDROID_CONTEXT={client:{clientName:'ANDROID_MUSIC',clientVersion:'7.21.50',hl:'en',gl:'US'}};
+const MUSIC_CONTEXT={client:{clientName:'WEB_REMIX',clientVersion:'1.'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'.01.00',hl:'es',gl:'AR'}};
+const MUSIC_ANDROID_CONTEXT={client:{clientName:'ANDROID_MUSIC',clientVersion:'7.21.50',hl:'es',gl:'AR'}};
+function lyricBrowseId(obj,depth=0){
+  if(!obj||typeof obj!=='object'||depth>20)return null;
+  if(typeof obj.browseId==='string'&&/^MPLY/.test(obj.browseId))return obj.browseId;
+  for(const v of Object.values(obj)){const id=lyricBrowseId(v,depth+1);if(id)return id}
+  return null;
+}
+function firstTimedVocal(lines){
+  if(!Array.isArray(lines)||!lines.length)return null;
+  const sung=lines.filter(x=>isSungLine(x.lyricLine??x.text));
+  if(!sung.length)return null;
+  // Never substitute a later line when the first vocal line has no timestamp.
+  const line=sung[0], raw=line.cueRange?.startTimeMilliseconds??line.startTimeMs;
+  if(raw==null||String(raw).trim()==='')return null;
+  const ms=Number(raw);
+  return Number.isFinite(ms)&&ms>=0?ms/1000:null;
+}
 function findTimedLyrics(obj,depth=0){
   if(!obj||depth>23)return null;
   if(Array.isArray(obj)){for(const v of obj){const found=findTimedLyrics(v,depth+1);if(found)return found}return null}
@@ -52,6 +68,7 @@ function findTimedLyrics(obj,depth=0){
 }
 function isSungLine(line){
   const t=String(line||'').replace(/[\u266A\u266B\u266C\u266D\uFE0F]/g,'').trim();
+  if(/^[\s.·…-]+$/.test(t)||/^\[.*\]$/.test(t))return false;
   return !!t&&!/^(instrumental|intro|music|instrumental break|solo|guitar solo|applause|interlude)([.!…\s]*)$/i.test(t);
 }
 async function musicRequest(endpoint,body,context,timeout=5500){
@@ -67,16 +84,11 @@ async function fromYouTubeMusic(video,artist,title,duration){
   try{
     const watch=await musicRequest('next',{videoId:video},MUSIC_CONTEXT,6500);
     const tabs=watch?.contents?.singleColumnMusicWatchNextResultsRenderer?.tabbedRenderer?.watchNextTabbedResultsRenderer?.tabs||[];
-    const lyr=tabs.map(t=>t?.tabRenderer?.endpoint?.browseEndpoint).find(e=>e?.browseEndpointContextSupportedConfigs?.browseEndpointContextMusicConfig?.pageType==='MUSIC_PAGE_TYPE_TRACK_LYRICS');
-    if(!/^MPLY/.test(lyr?.browseId||''))return null;
-    const browse=await musicRequest('browse',{browseId:lyr.browseId},MUSIC_ANDROID_CONTEXT,7500);
-    const lines=findTimedLyrics(browse);
-    if(!Array.isArray(lines))return null;
-    const line=lines.find(x=>isSungLine(x.lyricLine??x.text) && Number.isFinite(Number(x.cueRange?.startTimeMilliseconds??x.startTimeMs)) &&
-      Number(x.cueRange?.startTimeMilliseconds??x.startTimeMs)>=0);
-    if(!line)return null;
-    const seconds=Number(line.cueRange?.startTimeMilliseconds??line.startTimeMs)/1000;
-    if(!Number.isFinite(seconds)||seconds<0||seconds>180||(duration>0&&seconds>duration))return null;
+    const browseId=lyricBrowseId(tabs.length?tabs:watch?.contents);
+    if(!browseId)return null;
+    const browse=await musicRequest('browse',{browseId},MUSIC_ANDROID_CONTEXT,7500);
+    const seconds=firstTimedVocal(findTimedLyrics(browse));
+    if(seconds===null||seconds<0||(duration>0&&seconds>duration))return null;
     return {seconds:Number(seconds.toFixed(2)),source:'YouTube Music · letra sincronizada',reference:'ytmusic:'+video,videoId:video};
   }catch{return null}
 }
