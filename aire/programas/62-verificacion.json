@@ -1,0 +1,34 @@
+{
+  "programa": 62,
+  "titulo": "Chicago enchufado — El blues que no se rinde",
+  "fecha": "2026-11-24",
+  "capitulos": 4,
+  "guionPalabras": 7037,
+  "temas": 16,
+  "bloques": [
+    4,
+    4,
+    4,
+    4
+  ],
+  "videoIdsUnicos": true,
+  "foneticaEnEstudio": true,
+  "durationReferenceSeconds": 3056,
+  "durationMissing": [
+    3,
+    12,
+    13,
+    14
+  ],
+  "versionesEnVivo": [
+    12,
+    13,
+    14
+  ],
+  "reproduccionAudible": "PENDIENTE",
+  "silencios": "PENDIENTE",
+  "transicionesAutomaticas": "PENDIENTE",
+  "privado": "PENDIENTE",
+  "imagenes": "4 fotografías reales con atribución y fuente; no IA; no se distribuyen JPG por derechos de terceros",
+  "megahertzDeploy": "PENDIENTE"
+}
