@@ -97,8 +97,8 @@ const entradasVoz = (() => {
       tag.dataset.introDetectada='true';
       tag.title=(mark.source||'Marca verificada')+' · La voz entra a los '+mark.seconds.toFixed(1)+' s';
     }
-    tag.textContent='Buscando voz…';
-    tag.title='Buscando segundos hasta la voz';
+    tag.textContent='INTRO —';
+    tag.title='Calculando entrada de voz desde YouTube Music';
     const preset=known(track,video);
     if (preset) { show(preset); return; }
     let job=jobs.get(track);
