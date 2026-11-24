@@ -80,6 +80,7 @@ const entradasVoz = (() => {
       }
       const s=Math.floor(mark.seconds);
       tag.textContent='Canta ≈ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+      tag.dataset.introDetectada='true';
       tag.title=mark.source+' · '+mark.seconds.toFixed(1)+' s';
     });
   }
