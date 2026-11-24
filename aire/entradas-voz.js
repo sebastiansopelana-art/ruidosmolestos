@@ -54,10 +54,13 @@ const entradasVoz = (() => {
     if (saved) return saved;
     const [artist,title]=(track.name||'').split(' — ');
     const q=new URLSearchParams({video,artist:track.artist||artist,title:track.title||title||'',album:track.album||''});
-    const disk=await albumCue(video,q.get('artist'),q.get('title'),q.get('album')).catch(()=>null);
-    if(disk) return disk;
-    const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(15000)});
-    return res.ok ? res.json() : null;
+    // Prioridad: audio/catálogo de YouTube Music antes de fuentes externas.
+    // Los segundos pertenecen al ID exacto que reproduce este Estudio.
+    const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(25000)}).catch(()=>null);
+    const musicCue=res?.ok?await res.json().catch(()=>null):null;
+    if(musicCue?.videoId && musicCue.videoId!==video)return null;
+    if(musicCue&&Number.isFinite(musicCue.seconds))return musicCue;
+    return albumCue(video,q.get('artist'),q.get('title'),q.get('album')).catch(()=>null);
   }
   function next() {
     while(running<6 && queue.length) {

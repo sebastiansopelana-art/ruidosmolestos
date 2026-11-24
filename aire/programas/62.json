@@ -46,13 +46,15 @@
       "source": "Alligator, grabación de estudio",
       "numero": 1,
       "bloque": 1,
-      "videoId": "PiOTx-ykus0",
-      "url": "https://www.youtube.com/watch?v=PiOTx-ykus0",
+      "videoId": "CCU-iRpdL64",
+      "url": "https://music.youtube.com/watch?v=CCU-iRpdL64",
       "query": "Lil' Ed & The Blues Imperials Pride And Joy",
       "label": "Lil' Ed & The Blues Imperials — Pride And Joy",
       "pronunciacion": "PRÁID AND YÓI",
       "durationSeconds": 220,
-      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles."
+      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles.",
+      "previousVideoId": "PiOTx-ykus0",
+      "videoCatalogSource": "YouTube Music — Canción oficial"
     },
     {
       "artist": "Lil' Ed & The Blues Imperials",
@@ -94,13 +96,15 @@
       "source": "Alligator oficial, video de letras con grabación de estudio",
       "numero": 4,
       "bloque": 1,
-      "videoId": "Sp68ok-nFyE",
-      "url": "https://www.youtube.com/watch?v=Sp68ok-nFyE",
+      "videoId": "2xHmG8wV2uA",
+      "url": "https://music.youtube.com/watch?v=2xHmG8wV2uA",
       "query": "Lil' Ed & The Blues Imperials Bad All By Myself",
       "label": "Lil' Ed & The Blues Imperials — Bad All By Myself",
       "pronunciacion": "BÁD ÓL BÁI MÁI-SÉLF",
       "durationSeconds": 222,
-      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles."
+      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles.",
+      "previousVideoId": "Sp68ok-nFyE",
+      "videoCatalogSource": "YouTube Music — Canción oficial"
     },
     {
       "artist": "Dave Weld & The Imperial Flames",
@@ -222,13 +226,15 @@
       "source": "Video de presentación en vivo publicado por Dennis Gruenling; audio pendiente de escucha",
       "numero": 12,
       "bloque": 3,
-      "videoId": "Rik2BKsgHs8",
-      "url": "https://www.youtube.com/watch?v=Rik2BKsgHs8",
+      "videoId": "APAbz1Onym8",
+      "url": "https://music.youtube.com/watch?v=APAbz1Onym8",
       "query": "Nick Moss Band featuring Dennis Gruenling Get Your Hands Out Of My Pockets (Live)",
       "label": "Nick Moss Band featuring Dennis Gruenling — Get Your Hands Out Of My Pockets (Live)",
       "pronunciacion": "GUÉT IOR JÁNDS ÁUT OV MÁI PÓ-KETS",
       "durationSeconds": 0,
-      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles."
+      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles.",
+      "previousVideoId": "Rik2BKsgHs8",
+      "videoCatalogSource": "YouTube Music — Canción oficial"
     },
     {
       "artist": "Ronnie Baker Brooks",
@@ -254,13 +260,15 @@
       "source": "Alligator oficial, presentación en vivo",
       "numero": 14,
       "bloque": 4,
-      "videoId": "eJ8P5rTS69U",
-      "url": "https://www.youtube.com/watch?v=eJ8P5rTS69U",
+      "videoId": "0s7DLHxUYCE",
+      "url": "https://music.youtube.com/watch?v=0s7DLHxUYCE",
       "query": "Ronnie Baker Brooks My Love Will Make You Do Right (Live)",
       "label": "Ronnie Baker Brooks — My Love Will Make You Do Right (Live)",
       "pronunciacion": "MÁI LÁV UÍL MÉIK IÚ DÚ RÁIT",
       "durationSeconds": 0,
-      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles."
+      "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles.",
+      "previousVideoId": "eJ8P5rTS69U",
+      "videoCatalogSource": "YouTube Music — Canción oficial"
     },
     {
       "artist": "Ronnie Baker Brooks",
@@ -286,20 +294,15 @@
       "source": "Alligator oficial, video de letras con grabación de estudio",
       "numero": 16,
       "bloque": 4,
-      "videoId": "Z7-jsCgyEpg",
-      "url": "https://www.youtube.com/watch?v=Z7-jsCgyEpg",
+      "videoId": "8F0Rde90mlw",
+      "url": "https://music.youtube.com/watch?v=8F0Rde90mlw",
       "query": "Ronnie Baker Brooks Blues In My DNA",
       "label": "Ronnie Baker Brooks — Blues In My DNA",
       "pronunciacion": "BLÚS IN MÁI DI-EN-ÉI",
       "durationSeconds": 288,
       "verificacion": "ID y título recuperados de YouTube o búsqueda web; reproducción audible, silencios e inicio de audio: NO COMPROBADOS. Duraciones del álbum como referencia cuando disponibles.",
-      "introCue": {
-        "videoId": "Z7-jsCgyEpg",
-        "seconds": 0.73,
-        "source": "Letra sincronizada del mismo tema y álbum; primer sonido vocal indicado",
-        "reference": "lrclib:16853037",
-        "notacion": "El primer sonido vocal puede ser un exclamo; el inicio del verso principal puede suceder después."
-      }
+      "previousVideoId": "Z7-jsCgyEpg",
+      "videoCatalogSource": "YouTube Music — Canción oficial"
     }
   ]
 }
