@@ -87,17 +87,17 @@ const entradasVoz = (() => {
     row.append(tag);
     function show(mark) {
       if (!mark || !Number.isFinite(mark.seconds) || mark.seconds<0) {
-        tag.textContent='INTRO —';
+        tag.textContent='--:--';
         delete tag.dataset.introDetectada;
         tag.title='Sin entrada de voz verificada para este audio. No se muestra tiempo inventado.';
         return;
       }
       const s=Math.ceil(mark.seconds);
-      tag.textContent='INTRO '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+      tag.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
       tag.dataset.introDetectada='true';
       tag.title=(mark.source||'Marca verificada')+' · La voz entra a los '+mark.seconds.toFixed(1)+' s';
     }
-    tag.textContent='INTRO —';
+    tag.textContent='--:--';
     tag.title='Calculando entrada de voz desde YouTube Music';
     const preset=known(track,video);
     if (preset) { show(preset); return; }
