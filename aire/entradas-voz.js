@@ -53,14 +53,14 @@ const entradasVoz = (() => {
     const saved=known(track,video);
     if (saved) return saved;
     const [artist,title]=(track.name||'').split(' — ');
-    const q=new URLSearchParams({video,artist:track.artist||artist,title:track.title||title||'',album:track.album||''});
+    const q=new URLSearchParams({video,artist:track.artist||artist,title:track.title||title||'',album:track.album||'',duration:String(track.durationSeconds||0)});
     // Prioridad: audio/catálogo de YouTube Music antes de fuentes externas.
     // Los segundos pertenecen al ID exacto que reproduce este Estudio.
-    const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(25000)}).catch(()=>null);
+    const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(22000)}).catch(()=>null);
     const musicCue=res?.ok?await res.json().catch(()=>null):null;
     if(musicCue?.videoId && musicCue.videoId!==video)return null;
-    if(musicCue&&Number.isFinite(musicCue.seconds))return musicCue;
-    return albumCue(video,q.get('artist'),q.get('title'),q.get('album')).catch(()=>null);
+    if(musicCue&&Number.isFinite(musicCue.seconds)&&musicCue.seconds>=0)return musicCue;
+    return null; // No accept an album reference without matching recording duration.
   }
   function next() {
     while(running<6 && queue.length) {
@@ -92,7 +92,7 @@ const entradasVoz = (() => {
         tag.title='Sin entrada de voz verificada para este audio. No se muestra tiempo inventado.';
         return;
       }
-      const s=Math.ceil(mark.seconds);
+      const s=Math.floor(mark.seconds);
       tag.textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
       tag.dataset.introDetectada='true';
       tag.title=(mark.source||'Marca verificada')+' · La voz entra a los '+mark.seconds.toFixed(1)+' s';

@@ -93,44 +93,64 @@ async function fromYouTubeMusic(video,artist,title,duration){
   }catch{return null}
 }
 
-export async function onRequestGet({request}) {
-  const q = new URL(request.url).searchParams;
-  const id = q.get('video'), artist = q.get('artist'), title = q.get('title'), album = q.get('album') || '';
-  const reply = (value, maxAge=0) => Response.json(value,{headers:{'Cache-Control': 'public, max-age='+maxAge}});
-  if (!/^[\w-]{11}$/.test(id || '') || !artist || !title || artist.length+title.length+album.length>500) return reply(null);
+// Sources are independent. A slow YouTube response must not prevent the catalog lookup.
+async function recordingDuration(id,title) {
   try {
-    // Primero la propia edición de YouTube Music, con marcas de letra sincronizada.
-    const cueMusic=await fromYouTubeMusic(id,artist,title,0);
-    if(cueMusic)return reply(cueMusic,86400);
-    let duration=0;
-    try {
-      const watch=await fetch('https://www.youtube.com/watch?v='+id,{signal:AbortSignal.timeout(4500)});
-      const page=watch.ok ? await watch.text() : '';
-      const detail=/"videoDetails"\s*:\s*(\{.*?"lengthSeconds"\s*:\s*"(\d+)")/s.exec(page);
-      if(detail && detail[1].includes('"videoId":"'+id+'"')) {
-        const name=/"title":"((?:\\.|[^"\\])*)"/.exec(detail[1]);
-        if(!name || !clean(JSON.parse('"'+name[1]+'"')).includes(clean(title))) return reply(null);
-        duration=Number(detail[2]);
-      }
-    } catch {}
-    if(!duration) {
-      const params=new URLSearchParams({url:'https://www.youtube.com/watch?v='+id,format:'json'});
-      const embed=await fetch('https://www.youtube.com/oembed?'+params,{signal:AbortSignal.timeout(5000)});
-      if(!embed.ok) return reply(null);
-      const metadata=await embed.json();
-      if(clean(metadata.title)!==clean(title) || clean(metadata.author_name)!==clean(artist+' - Topic') || !album) return reply(null);
-    }
-    const params = new URLSearchParams({artist_name:artist.replace(/[“”"]/g,''),track_name:title});
-    const result = await fetch('https://lrclib.net/api/search?'+params,{signal:AbortSignal.timeout(7000)});
-    const rows=result.ok ? await result.json() : [];
-    if(!duration) {
-      const versions=rows.filter(x=>clean(x.albumName)===clean(album) && clean(x.artistName)===clean(artist) &&
-        clean(x.trackName)===clean(title) && firstLine(x.syncedLyrics)!==null);
-      const times=versions.map(x=>firstLine(x.syncedLyrics));
-      if(!times.length || Math.max(...times)-Math.min(...times)>1) return reply(null);
-      return reply({seconds:Math.min(...times),source:'Referencia del disco · letra sincronizada',reference:'lrclib:'+versions[0].id},86400);
-    }
-    const cue = choose(rows,artist,title,album,duration) || await alternate(artist,title,duration);
-    return reply(cue,cue?604800:300);
-  } catch { return reply(null); }
+    const response=await musicRequest('player',{videoId:id},MUSIC_CONTEXT,4500);
+    const d=response?.videoDetails;
+    if(d?.videoId===id && clean(d.title)===clean(title) && Number(d.lengthSeconds)>0)
+      return Number(d.lengthSeconds);
+  } catch {}
+  return 0;
+}
+async function catalogCue(artist,title,album,duration) {
+  if(!(duration>0))return null;
+  const variants=[title,title.replace(/\s*\((?:remaster(?:ed)?(?:\s+\d{4})?)\)\s*$/i,'').trim()];
+  const artists=[artist,artist.replace(/\s+(?:featuring|feat\.?|ft\.?)\s+.+$/i,'').trim()];
+  const requests=[];
+  for(const t of new Set(variants))for(const a of new Set(artists)){
+    requests.push((async()=>{
+      try{
+        const params=new URLSearchParams({artist_name:a,track_name:t});
+        const r=await fetch('https://lrclib.net/api/search?'+params,{signal:AbortSignal.timeout(5500)});
+        const rows=r.ok?await r.json():[];
+        if(!Array.isArray(rows))return null;
+        // Reject alternate versions that disagree on when singing starts.
+        const matching=rows.filter(x=>clean(x.artistName)===clean(a)&&clean(x.trackName)===clean(t)&&
+          Number.isFinite(x.duration)&&Math.abs(x.duration-duration)<=2&&firstLine(x.syncedLyrics)!==null);
+        const sameAlbum=matching.filter(x=>clean(x.albumName)===clean(album));
+        const pool=sameAlbum.length?sameAlbum:matching;
+        if(!pool.length)return null;
+        const times=pool.map(x=>firstLine(x.syncedLyrics));
+        if(Math.max(...times)-Math.min(...times)>1.5)return null;
+        // Relaxed performer/title matches must also agree on album.
+        if((a!==artist||t!==title)&&!sameAlbum.length)return null;
+        return choose(pool,a,t,album,duration);
+      }catch{return null}
+    })());
+  }
+  const results=await Promise.all(requests);
+  const found=results.filter(Boolean);
+  if(found.length&&Math.max(...found.map(x=>x.seconds))-Math.min(...found.map(x=>x.seconds))<=1.5)
+    return found[0];
+  if(found.length)return null;
+  return alternate(artist,title,duration).catch(()=>null);
+}
+export async function onRequestGet({request}) {
+  const q=new URL(request.url).searchParams;
+  const id=q.get('video'),artist=q.get('artist'),title=q.get('title'),album=q.get('album')||'';
+  const rawDuration=Number(q.get('duration'));
+  const supplied=Number.isFinite(rawDuration)&&rawDuration>0&&rawDuration<86400?rawDuration:0;
+  const reply=(value,maxAge=0)=>Response.json(value,{headers:{'Cache-Control':'public, max-age='+maxAge}});
+  if(!/^[\w-]{11}$/.test(id||'')||!artist||!title||artist.length+title.length+album.length>500)return reply(null);
+  const youtube=fromYouTubeMusic(id,artist,title,supplied).catch(()=>null);
+  const fallback=(async()=>{
+    const duration=supplied||await recordingDuration(id,title);
+    if(!duration)return null;
+    const cue=await catalogCue(artist,title,album,duration);
+    return cue?{...cue,source:'Estimación · '+cue.source,videoId:id}:null;
+  })().catch(()=>null);
+  const [direct,reference]=await Promise.all([youtube,fallback]);
+  const cue=direct||reference;
+  return reply(cue,cue?86400:60);
 }
