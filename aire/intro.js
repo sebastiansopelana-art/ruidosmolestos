@@ -139,6 +139,7 @@ const studioIntros = (() => {
         if (value === null) localStorage.removeItem(memoryKey(item.id));
         else localStorage.setItem(memoryKey(item.id), JSON.stringify(value));
         marks.set(item.id, value);
+        window.dispatchEvent(new CustomEvent('rm-intro-saved',{detail:{id:item.id,seconds:value}}));
         dialog.close();
       } catch { status.textContent = 'El navegador no pudo guardar la marca.'; }
     }
@@ -155,5 +156,10 @@ const studioIntros = (() => {
     dialog.showModal();
     if (saved == null) startDetection?.();
   }
-  return {attach, select, local, video, rowButton};
+  function editForTrack(deck, id, name) {
+    if(!/^[A-Za-z0-9_-]{11}$/.test(id||'')) return;
+    const current=deck?active.get(deck):null;
+    edit(current?.id==='yt:'+id ? current : video(id,name||'Canción',()=>null));
+  }
+  return {attach, select, local, video, rowButton, editForTrack};
 })();

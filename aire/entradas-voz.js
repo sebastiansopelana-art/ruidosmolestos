@@ -56,32 +56,70 @@ const entradasVoz = (() => {
     const q=new URLSearchParams({video,artist:track.artist||artist,title:track.title||title||'',album:track.album||''});
     const disk=await albumCue(video,q.get('artist'),q.get('title'),q.get('album')).catch(()=>null);
     if(disk) return disk;
-    const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(30000)});
+    const res=await fetch('/api/entrada-voz?'+q,{signal:AbortSignal.timeout(15000)});
     return res.ok ? res.json() : null;
   }
   function next() {
-    while(running<3 && queue.length) {
+    while(running<6 && queue.length) {
       const {track,resolve}=queue.shift();running++;
       measure(track).catch(()=>null).then(resolve).finally(()=>{running--;next();});
     }
   }
+  // Refrescar el número sin volver a cargar el programa ni agregar contadores.
+  // El evento también llega al guardar una marca desde el diálogo existente.
+  window.addEventListener('rm-intro-saved', ({detail}) => {
+    if (!detail?.id) return;
+    for (const node of document.querySelectorAll('.rm-voz[data-intro-id]')) {
+      if (node.dataset.introId === detail.id)
+        node.dispatchEvent(new CustomEvent('rm-intro-refresh', {detail}));
+    }
+  });
   function label(row,track) {
     const tag=document.createElement('span');
-    tag.className='rm-voz'; tag.textContent='Buscando voz…';row.append(tag);
-    const preset=known(track,track.videoId);
-    let job=preset?Promise.resolve(preset):jobs.get(track);
+    tag.className='rm-voz';
+    const video=track.videoId;
+    const id=video?'yt:'+video:null;
+    tag.dataset.introId=id||'';
+    tag.setAttribute('role','button');
+    tag.tabIndex=0;
+    tag.style.cursor='pointer';
+    row.append(tag);
+    function show(mark) {
+      if (!mark || !Number.isFinite(mark.seconds) || mark.seconds<0) {
+        tag.textContent='INTRO —';
+        delete tag.dataset.introDetectada;
+        tag.title='Sin entrada de voz comprobada. Tocá para marcar los segundos en esta versión.';
+        return;
+      }
+      const s=Math.floor(mark.seconds);
+      tag.textContent='Canta ≈ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+      tag.dataset.introDetectada='true';
+      tag.title=(mark.source||'Marca guardada')+' · '+mark.seconds.toFixed(1)+' s · Tocá para corregir';
+    }
+    const editCue=() => {
+      if (!id || !window.studioIntros || typeof studioIntros.editForTrack!=='function') return;
+      studioIntros.editForTrack(row.closest('.player'),video,track.name||track.label||track.title||'Canción');
+    };
+    tag.onclick=editCue;
+    tag.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();editCue();}};
+    tag.addEventListener('rm-intro-refresh', ({detail}) => {
+      if (detail.id!==id) return;
+      if (detail.seconds===null) { show(null); return; }
+      show({seconds:detail.seconds,source:'Marca guardada'});
+    });
+    tag.textContent='Buscando voz…';
+    tag.title='Buscando entrada de voz verificada';
+    const preset=known(track,video);
+    if (preset) { show(preset); return; }
+    let job=jobs.get(track);
     if(!job) {
       job=new Promise(resolve=>queue.push({track,resolve}));
       jobs.set(track,job);next();
     }
     job.then(mark=>{
-      if (!mark || !Number.isFinite(mark.seconds) || mark.seconds<0) {
-        tag.textContent='Voz sin dato';return;
-      }
-      const s=Math.floor(mark.seconds);
-      tag.textContent='Canta ≈ '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
-      tag.dataset.introDetectada='true';
-      tag.title=mark.source+' · '+mark.seconds.toFixed(1)+' s';
+      // Una corrección hecha durante la búsqueda tiene prioridad sobre el servidor.
+      const current=known(track,video);
+      show(current || mark);
     });
   }
   return {label};
