@@ -1253,12 +1253,16 @@ const blocks=[[],[],[],[]],auxFiles=[];let activeBlock=0;
 const rmDurationText=s=>Number(s)>0&&Number.isFinite(Number(s))?fmt(Number(s)):'--:--';
 function rmReadFileDuration(file,done){const a=new Audio(),url=URL.createObjectURL(file);a.preload='metadata';a.onloadedmetadata=()=>{file.rmDuration=a.duration;URL.revokeObjectURL(url);done()};a.onerror=()=>URL.revokeObjectURL(url);a.src=url}
 const programRow=document.createElement('div');programRow.className='rm-program-row';
-const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA 50';programLoad.title='Cargar los cuatro bloques del programa 50: Charly García';
+const programLoad=document.createElement('button');programLoad.type='button';programLoad.className='rm-program-load';programLoad.textContent='CARGAR PROGRAMA';programLoad.title='Cargar los cuatro bloques del último programa';
 programRow.append(programLoad);blockPanel.querySelector('h3').append(programRow);
 const programInfo=document.createElement('div');programInfo.className='rm-program-info';programInfo.textContent='Elegí CARGAR PROGRAMA para ver sus 16 temas';/* La información de estado ya se muestra en el reproductor; no agregar renglón debajo de bloques. */
-async function loadStudioProgram(number=50){
- programLoad.disabled=true;programInfo.textContent='Cargando programa '+number+'…';
+async function loadStudioProgram(){
+ programLoad.disabled=true;programInfo.textContent='Cargando último programa…';
  try{
+  const latestResponse=await fetch('/aire/programas/ultimo.json',{cache:'no-store'});
+  if(!latestResponse.ok)throw Error('No se encontró el último programa');
+  const {numero:number}=await latestResponse.json();
+  if(!Number.isSafeInteger(number)||number<1)throw Error('Número de programa inválido');
   const response=await fetch('/aire/programas/'+encodeURIComponent(number)+'.json',{cache:'no-store'});
   if(!response.ok)throw Error('No se encontró el programa');
   const manifest=await response.json();
@@ -1293,11 +1297,11 @@ async function loadStudioProgram(number=50){
      }
     })();
    }
-  programLoad.textContent='CARGAR PROGRAMA 50';
+  programLoad.textContent='CARGAR PROGRAMA '+number;
  }catch(error){programInfo.textContent='No se pudo cargar: '+error.message}
  finally{programLoad.disabled=false}
 }
-programLoad.addEventListener('click',()=>loadStudioProgram(50));
+programLoad.addEventListener('click',()=>loadStudioProgram());
 const tabs=document.createElement('div');tabs.className='tabs';blockPanel.append(tabs);
 const blockItems=document.createElement('div');blockItems.className='items';blockPanel.append(blockItems);
 const blockUpload=document.createElement('label');blockUpload.className='upload';blockUpload.textContent='＋ CARGAR AUDIO EN BLOQUE';const blockFile=document.createElement('input');blockFile.type='file';blockFile.accept='audio/*';blockFile.multiple=true;blockUpload.append(blockFile);/* Control de carga oculto; se conserva el input para no alterar los manejadores. */
@@ -1976,5 +1980,5 @@ document.addEventListener('keydown',event=>{
 })();
 
 // Programa activo: cargar las cuatro listas al abrir, sin iniciar audio.
-loadStudioProgram(50);
+loadStudioProgram();
 </script></body></html>
