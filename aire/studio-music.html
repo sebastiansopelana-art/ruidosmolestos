@@ -1308,7 +1308,11 @@ const blockUpload=document.createElement('label');blockUpload.className='upload'
 const blockAudio=decks[0].querySelector('.footer input[type=file]');decks[0].querySelector('.footer .file').style.display='none';
 // Motor independiente de los cuatro bloques, recuperado del flujo Beta 3 final.
 const blockDeck=decks[0],blockScreen=blockDeck.querySelector('.screen');
-const blockHost=document.createElement('div');blockHost.id='rm-block-youtube';blockHost.style.cssText='position:absolute;width:1px;height:1px;opacity:0;pointer-events:none';blockDeck.append(blockHost);
+const blockHost=document.createElement('div');blockHost.id='rm-block-youtube';const blockVideoPanel=document.createElement('details');
+const blockVideoLabel=document.createElement('summary');
+blockVideoLabel.textContent='Reproductor de YouTube · controles de audio';
+blockVideoPanel.append(blockVideoLabel,blockHost);
+blockDeck.append(blockVideoPanel);
 // Transiciones suaves entre consolas: bajar el volumen antes de detener, sin bloquear la nueva pista.
 function rmFadeOut(getVolume,setVolume,stop,ms=850){
  let initial=0;try{initial=Number(getVolume())||0}catch(e){stop();return}
@@ -1379,7 +1383,8 @@ function setBlockAir(on){
 }
 function blockYTInit(){
  if(blockYT||!window.YT?.Player)return;
- blockYT=new YT.Player('rm-block-youtube',{height:'1',width:'1',playerVars:{playsinline:1,controls:0,origin:location.origin},events:{
+ blockYT=new YT.Player('rm-block-youtube',{height:'220',width:'100%',playerVars:{playsinline:1,controls:1,origin:location.origin},events:{
+ onAutoplayBlocked:()=>{if(blockYTActive)blockVideoPanel.open=true},
  onReady:()=>{blockYTReady=true;blockYT.setVolume(Number(blockDeck.querySelector('.vol').value)||85)},
  onStateChange:e=>{
   const state=e.data;
@@ -1497,8 +1502,11 @@ function blockRefreshTime(){
 }
 blockTick=setInterval(blockRefreshTime,350);
 blockDeck.querySelector('.buttons').addEventListener('click',e=>{
- if(!blockYTActive)return;
  const action=e.target.closest('[data-action]')?.dataset.action;
+ if(!blockYTActive){
+  if(action==='play'&&!blockAudio.files.length&&blockPlaylist()[0]?.programTrack){e.stopImmediatePropagation();playBlockTrack(0)}
+  return;
+ }
  if(action==='play'){blockYT?.playVideo();if(autoSepPending&&!autoSepFinished)autoSepAudio.play().catch(()=>{})}
  if(action==='pause'){blockYT?.pauseVideo();autoSepAudio.pause()}
  if(action==='stop'){stopBlockEndSeparator();stopAutoSep();blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}
@@ -1598,6 +1606,7 @@ function playBlockTrack(index,preserveSeparatorTail=false){
   stopAutoSep(preserveSeparatorTail);
  const selected=blocks[activeBlock],f=selected[index];if(!f)return;
  if(f.programTrack){
+  blockVideoPanel.open=true;
   blockCurrent=index;blockYTActive=true;loadBlockFacts(f);
   prepareNextAutoSeparator();
   const upcomingTrack=selected[index+1];if(upcomingTrack?.programTrack&&!upcomingTrack.videoId)blockResolve(upcomingTrack).catch(()=>{});
