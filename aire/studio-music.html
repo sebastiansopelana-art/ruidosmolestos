@@ -1650,7 +1650,19 @@ function drawBlocks(){
    row.addEventListener('dblclick',e=>{e.preventDefault();window.getSelection()?.removeAllRanges();if(activeBlock!==b){stopAutoSep();if(blockYTActive){blockYT?.stopVideo();blockYTActive=false;setBlockAir(false)}blockCurrent=-1;activeBlock=b}playBlockTrack(i)});
    const duration=document.createElement('span');duration.className='rm-duration';duration.textContent=rmDurationText(f.durationSeconds||f.rmDuration);
    if(f.programTrack){const status=f.rmAudioQualityStatus||'pendiente';row.title=status==='oficial_verificado'?'FUENTE OFICIAL · Calidad técnica del stream no verificable':status==='no_apto'?'NO APTO PARA EMISIÓN':'PENDIENTE DE VERIFICACIÓN';}
-   row.append(t,duration);blockItems.append(row);
+   row.append(t);
+   if(f.programTrack && /^[A-Za-z0-9_-]{11}$/.test(f.videoId||'')){
+    const link=document.createElement('a');
+    link.href='https://music.youtube.com/watch?v='+f.videoId;
+    link.target='_blank';
+    link.rel='noopener';
+    link.textContent='YouTube Music ↗';
+    link.setAttribute('aria-label','Abrir '+f.name+' en YouTube Music');
+    link.style.cssText='flex:none;color:inherit;text-decoration:underline;font-size:11px';
+    link.addEventListener('dblclick',e=>e.stopPropagation());
+    row.append(link);
+   }
+   row.append(duration);blockItems.append(row);
   }
  }
 }
