@@ -1,7 +1,7 @@
 {
   "titulo": "El rock no se despide",
   "fecha": "2026-11-27",
-  "estado": "borrador musical; enlaces de búsqueda",
+  "estado": "16 grabaciones con enlace directo",
   "artistas": [
     "The Beatles",
     "AC/DC",
@@ -17,8 +17,9 @@
       "artist": "The Beatles",
       "title": "Come Together",
       "query": "The Beatles Come Together",
-      "url": "https://music.youtube.com/search?q=The%20Beatles%20Come%20Together",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=oolpPmuK2I8",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "oolpPmuK2I8"
     },
     {
       "numero": 2,
@@ -27,8 +28,9 @@
       "artist": "The Beatles",
       "title": "Get Back",
       "query": "The Beatles Get Back",
-      "url": "https://music.youtube.com/search?q=The%20Beatles%20Get%20Back",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=IKJqecxswCA",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "IKJqecxswCA"
     },
     {
       "numero": 3,
@@ -37,8 +39,9 @@
       "artist": "The Beatles",
       "title": "Don't Let Me Down",
       "query": "The Beatles Don't Let Me Down",
-      "url": "https://music.youtube.com/search?q=The%20Beatles%20Don't%20Let%20Me%20Down",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=xk7f6i0CNfs",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "xk7f6i0CNfs"
     },
     {
       "numero": 4,
@@ -47,8 +50,9 @@
       "artist": "The Beatles",
       "title": "Let It Be",
       "query": "The Beatles Let It Be",
-      "url": "https://music.youtube.com/search?q=The%20Beatles%20Let%20It%20Be",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=QDYfEBY9NM4",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "QDYfEBY9NM4"
     },
     {
       "numero": 5,
@@ -57,8 +61,9 @@
       "artist": "AC/DC",
       "title": "Hells Bells",
       "query": "AC/DC Hells Bells",
-      "url": "https://music.youtube.com/search?q=AC%2FDC%20Hells%20Bells",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=GL56LY6fE0E",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "GL56LY6fE0E"
     },
     {
       "numero": 6,
@@ -67,8 +72,9 @@
       "artist": "AC/DC",
       "title": "Back in Black",
       "query": "AC/DC Back in Black",
-      "url": "https://music.youtube.com/search?q=AC%2FDC%20Back%20in%20Black",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=9vWNauaZAgg",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "9vWNauaZAgg"
     },
     {
       "numero": 7,
@@ -77,8 +83,9 @@
       "artist": "AC/DC",
       "title": "Shoot to Thrill",
       "query": "AC/DC Shoot to Thrill",
-      "url": "https://music.youtube.com/search?q=AC%2FDC%20Shoot%20to%20Thrill",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=wLoWd2KyUro",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "wLoWd2KyUro"
     },
     {
       "numero": 8,
@@ -87,8 +94,9 @@
       "artist": "AC/DC",
       "title": "For Those About to Rock (We Salute You)",
       "query": "AC/DC For Those About to Rock (We Salute You)",
-      "url": "https://music.youtube.com/search?q=AC%2FDC%20For%20Those%20About%20to%20Rock%20(We%20Salute%20You)",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=qsaTFcXVCNU",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "qsaTFcXVCNU"
     },
     {
       "numero": 9,
@@ -97,8 +105,9 @@
       "artist": "Pink Floyd",
       "title": "Time",
       "query": "Pink Floyd Time",
-      "url": "https://music.youtube.com/search?q=Pink%20Floyd%20Time",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=Qr0-7Ds79zo",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "Qr0-7Ds79zo"
     },
     {
       "numero": 10,
@@ -107,8 +116,9 @@
       "artist": "Pink Floyd",
       "title": "Wish You Were Here",
       "query": "Pink Floyd Wish You Were Here",
-      "url": "https://music.youtube.com/search?q=Pink%20Floyd%20Wish%20You%20Were%20Here",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=4K6cvc27_CE",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "4K6cvc27_CE"
     },
     {
       "numero": 11,
@@ -117,8 +127,9 @@
       "artist": "Pink Floyd",
       "title": "Money",
       "query": "Pink Floyd Money",
-      "url": "https://music.youtube.com/search?q=Pink%20Floyd%20Money",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=q9NtWkikVAE",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "q9NtWkikVAE"
     },
     {
       "numero": 12,
@@ -127,8 +138,9 @@
       "artist": "Pink Floyd",
       "title": "Comfortably Numb",
       "query": "Pink Floyd Comfortably Numb",
-      "url": "https://music.youtube.com/search?q=Pink%20Floyd%20Comfortably%20Numb",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=4FLjT5V5Hog",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "4FLjT5V5Hog"
     },
     {
       "numero": 13,
@@ -137,8 +149,9 @@
       "artist": "Bruce Springsteen",
       "title": "Badlands",
       "query": "Bruce Springsteen Badlands",
-      "url": "https://music.youtube.com/search?q=Bruce%20Springsteen%20Badlands",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=pfOhCoGKHso",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "pfOhCoGKHso"
     },
     {
       "numero": 14,
@@ -147,8 +160,9 @@
       "artist": "Bruce Springsteen",
       "title": "Born to Run",
       "query": "Bruce Springsteen Born to Run",
-      "url": "https://music.youtube.com/search?q=Bruce%20Springsteen%20Born%20to%20Run",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=Wu4_zVxmufY",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "Wu4_zVxmufY"
     },
     {
       "numero": 15,
@@ -157,8 +171,9 @@
       "artist": "Bruce Springsteen",
       "title": "The Rising",
       "query": "Bruce Springsteen The Rising",
-      "url": "https://music.youtube.com/search?q=Bruce%20Springsteen%20The%20Rising",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=r5_8gpiSotI",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "r5_8gpiSotI"
     },
     {
       "numero": 16,
@@ -167,8 +182,9 @@
       "artist": "Bruce Springsteen",
       "title": "Land of Hope and Dreams",
       "query": "Bruce Springsteen Land of Hope and Dreams",
-      "url": "https://music.youtube.com/search?q=Bruce%20Springsteen%20Land%20of%20Hope%20and%20Dreams",
-      "verificacion": "pendiente de enlace directo e intro"
+      "url": "https://music.youtube.com/watch?v=KHpJhS99Q60",
+      "verificacion": "Grabación identificada en catálogo oficial; reproducción en cabina e intro pendientes",
+      "videoId": "KHpJhS99Q60"
     }
   ],
   "bloques": [
